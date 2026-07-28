@@ -975,7 +975,7 @@ const state = window.state;  // local alias for handlers
 window.$ = function(id){return document.getElementById(id)};
 
 window.show = function(id){
-  ["home","test","result"].forEach(s => window.$(s).classList.add("hidden"));
+  ["home","test","result","hub","letter","type","social","socialArticle","romance","romanceArticle"].forEach(s => window.$(s).classList.add("hidden"));
   window.$(id).classList.remove("hidden");
   window.scrollTo(0,0);
 };
