@@ -1158,8 +1158,9 @@ window.openHub = function(){
 
 // ====================== Social Guide Functions ======================
 window.openSocial = function(){
-  // 渲染 5 個社交場景
+  // 渲染 5 個社交場景到 container
   const container = $("socialScenarios");
+  if(!container) return;
   let html = "";
   Object.keys(window.SOCIAL).forEach(key => {
     const s = window.SOCIAL[key];
@@ -1179,14 +1180,17 @@ window.openSocial = function(){
   });
   container.innerHTML = html;
   show("social");
+  window.scrollTo(0,0);
 };
 
 window.openSocialScenario = function(scenarioKey){
   const s = window.SOCIAL[scenarioKey];
   if(!s) return;
-  // 渲染 16 個類型 grid
+  // 渲染 16 個類型 grid — 寫入 container 而唔係整個 section
+  const container = $("socialScenarios");
+  if(!container) return;
   const html = `
-    <button onclick="openSocial()" class="text-sm text-gray-500 mb-4">← 返回場景</button>
+    <button onclick="openSocial()" class="text-sm text-gray-500 mb-4 block">← 返回場景</button>
     <div class="card p-5 mb-4">
       <div class="text-4xl mb-2">${s.emoji}</div>
       <h3 class="text-xl font-black mb-2">${s.name}</h3>
@@ -1204,8 +1208,7 @@ window.openSocialScenario = function(scenarioKey){
       }).join("")}
     </div>
   `;
-  // 用臨時 section override
-  $("social").innerHTML = html;
+  container.innerHTML = html;
   window.scrollTo(0,0);
 };
 
@@ -1233,6 +1236,7 @@ window.goRomanceFromSocial = function(){
 // ====================== Romance Guide Functions ======================
 window.openRomance = function(){
   const container = $("romanceScenarios");
+  if(!container) return;
   let html = "";
   Object.keys(window.ROMANCE).forEach(key => {
     const s = window.ROMANCE[key];
@@ -1252,13 +1256,16 @@ window.openRomance = function(){
   });
   container.innerHTML = html;
   show("romance");
+  window.scrollTo(0,0);
 };
 
 window.openRomanceScenario = function(scenarioKey){
   const s = window.ROMANCE[scenarioKey];
   if(!s) return;
+  const container = $("romanceScenarios");
+  if(!container) return;
   const html = `
-    <button onclick="openRomance()" class="text-sm text-gray-500 mb-4">← 返回場景</button>
+    <button onclick="openRomance()" class="text-sm text-gray-500 mb-4 block">← 返回場景</button>
     <div class="card p-5 mb-4">
       <div class="text-4xl mb-2">${s.emoji}</div>
       <h3 class="text-xl font-black mb-2">${s.name}</h3>
@@ -1276,7 +1283,7 @@ window.openRomanceScenario = function(scenarioKey){
       }).join("")}
     </div>
   `;
-  $("romance").innerHTML = html;
+  container.innerHTML = html;
   window.scrollTo(0,0);
 };
 
