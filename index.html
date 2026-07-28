@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>你是哪種港人？｜香港 MBTI 性格測試</title>
+<meta name="description" content="60 題廣東話情境測試，5 分鐘知道你是哪種港式 MBTI。茶餐廳？港鐵？O Camp？全部都有。">
+<meta property="og:title" content="你是哪種港人？">
+<meta property="og:description" content="60 題廣東話情境測試，5 分鐘知道你是哪種港式 MBTI">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+:root{
+  --gold:#D4A95F;
+  --ink:#1a1a1a;
+  --paper:#FAF7F0;
+  --accent:#E85D5D;
+  --soft:#F2EDE0;
+}
+*{font-family:'Noto Sans TC',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--paper);color:var(--ink);min-height:100vh}
+.brand-gold{color:var(--gold)}
+.bg-gold{background:var(--gold)}
+.bg-paper{background:var(--paper)}
+.bg-soft{background:var(--soft)}
+.border-gold{border-color:var(--gold)}
+.text-accent{color:var(--accent)}
+.btn-gold{background:var(--gold);color:var(--ink);font-weight:700}
+.btn-gold:hover{background:#c89a4d}
+.btn-gold:active{transform:scale(0.97)}
+.glass{background:rgba(255,255,255,0.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.card{background:white;border-radius:1.2rem;box-shadow:0 4px 24px rgba(0,0,0,0.06)}
+.option{
+  background:white;border:2px solid #e5e0d3;border-radius:1rem;
+  padding:1rem 1.2rem;cursor:pointer;transition:all 0.15s;
+  display:flex;align-items:flex-start;gap:0.75rem;min-height:60px
+}
+.option:hover{border-color:var(--gold);background:#fffaf0}
+.option:active{transform:scale(0.98)}
+.option.selected{border-color:var(--gold);background:#fff5e0}
+.option-letter{
+  flex-shrink:0;width:28px;height:28px;border-radius:50%;
+  background:var(--soft);color:var(--ink);font-weight:700;
+  display:flex;align-items:center;justify-content:center;font-size:0.85rem
+}
+.option.selected .option-letter{background:var(--gold);color:white}
+.progress-bar{height:6px;background:var(--soft);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);transition:width 0.3s}
+.trait-bar{height:8px;background:var(--soft);border-radius:4px;overflow:hidden;position:relative}
+.trait-fill{height:100%;border-radius:4px}
+.share-card{
+  width:360px;height:640px;border-radius:24px;padding:24px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  color:white;position:relative;overflow:hidden
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.4s ease-out}
+@keyframes pop{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+.pop{animation:pop 0.6s cubic-bezier(0.34,1.56,0.64,1)}
+.mbti-letter-big{
+  font-size:5rem;font-weight:900;letter-spacing:-0.05em;
+  line-height:1;text-shadow:0 4px 20px rgba(0,0,0,0.2)
+}
+.scenario-badge{
+  background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);
+  border-radius:999px;padding:0.4rem 0.9rem;font-size:0.75rem;font-weight:500
+}
+.code-block{
+  background:#1a1a1a;color:#f5f5f5;border-radius:12px;
+  padding:1rem 1.2rem;font-family:'SF Mono',Consolas,monospace;
+  font-size:0.85rem;line-height:1.6;overflow-x:auto
+}
+</style>
+</head>
+<body>
+
+<!-- App container -->
+<div id="app" class="max-w-md mx-auto px-4 py-6 pb-24">
+
+  <!-- ========== KNOWLEDGE HUB ========== -->
+  <section id="hub" class="hidden">
+    <div class="flex items-center justify-between mb-6">
+      <button onclick="goHome()" class="text-sm text-gray-500">← 返回</button>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 bg-gold rounded-md flex items-center justify-center font-black text-sm">港</div>
+        <div class="font-black tracking-tight">性格百科</div>
+      </div>
+      <div class="w-12"></div>
+    </div>
+
+    <div class="card p-5 mb-4 bg-soft">
+      <div class="text-xs tracking-widest brand-gold font-bold mb-2">📚 KNOWLEDGE HUB</div>
+      <h2 class="text-2xl font-black mb-2">探索 MBTI 嘅世界</h2>
+      <p class="text-sm text-gray-600">由 8 個英文字母到 16 種性格，由基本概念到深入分析。全部喺度。</p>
+    </div>
+
+    <!-- 4 個維度入口 -->
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">🎯 4 個維度（8 個字母）</h3>
+      <p class="text-xs text-gray-600 mb-3">每個人嘅性格由呢 4 個維度組成</p>
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="openLetter('E')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #E89A6B">
+          <div class="font-bold text-sm">E vs I</div>
+          <div class="text-[10px] text-gray-500 mt-1">能量來源</div>
+        </button>
+        <button onclick="openLetter('S')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #A86B7C">
+          <div class="font-bold text-sm">S vs N</div>
+          <div class="text-[10px] text-gray-500 mt-1">認知方式</div>
+        </button>
+        <button onclick="openLetter('T')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #3A4F6B">
+          <div class="font-bold text-sm">T vs F</div>
+          <div class="text-[10px] text-gray-500 mt-1">決策方式</div>
+        </button>
+        <button onclick="openLetter('J')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #6B5A8A">
+          <div class="font-bold text-sm">J vs P</div>
+          <div class="text-[10px] text-gray-500 mt-1">生活態度</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- 16 種性格入口 -->
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">🧠 16 種性格完整百科</h3>
+      <p class="text-xs text-gray-600 mb-3">每種性格 1500 字：核心、戀愛、工作、衝突</p>
+      <div class="grid grid-cols-4 gap-2">
+        <button onclick="openType('INTJ')" class="card p-2 text-center hover:bg-soft">🏛️<div class="text-[10px] font-bold mt-1">INTJ</div></button>
+        <button onclick="openType('INTP')" class="card p-2 text-center hover:bg-soft">🧪<div class="text-[10px] font-bold mt-1">INTP</div></button>
+        <button onclick="openType('ENTJ')" class="card p-2 text-center hover:bg-soft">👔<div class="text-[10px] font-bold mt-1">ENTJ</div></button>
+        <button onclick="openType('ENTP')" class="card p-2 text-center hover:bg-soft">💡<div class="text-[10px] font-bold mt-1">ENTP</div></button>
+        <button onclick="openType('INFJ')" class="card p-2 text-center hover:bg-soft">🌙<div class="text-[10px] font-bold mt-1">INFJ</div></button>
+        <button onclick="openType('INFP')" class="card p-2 text-center hover:bg-soft">🌸<div class="text-[10px] font-bold mt-1">INFP</div></button>
+        <button onclick="openType('ENFJ')" class="card p-2 text-center hover:bg-soft">🤗<div class="text-[10px] font-bold mt-1">ENFJ</div></button>
+        <button onclick="openType('ENFP')" class="card p-2 text-center hover:bg-soft">🎉<div class="text-[10px] font-bold mt-1">ENFP</div></button>
+        <button onclick="openType('ISTJ')" class="card p-2 text-center hover:bg-soft">📋<div class="text-[10px] font-bold mt-1">ISTJ</div></button>
+        <button onclick="openType('ISFJ')" class="card p-2 text-center hover:bg-soft">🎁<div class="text-[10px] font-bold mt-1">ISFJ</div></button>
+        <button onclick="openType('ESTJ')" class="card p-2 text-center hover:bg-soft">📊<div class="text-[10px] font-bold mt-1">ESTJ</div></button>
+        <button onclick="openType('ESFJ')" class="card p-2 text-center hover:bg-soft">🎈<div class="text-[10px] font-bold mt-1">ESFJ</div></button>
+        <button onclick="openType('ISTP')" class="card p-2 text-center hover:bg-soft">🔧<div class="text-[10px] font-bold mt-1">ISTP</div></button>
+        <button onclick="openType('ISFP')" class="card p-2 text-center hover:bg-soft">🎨<div class="text-[10px] font-bold mt-1">ISFP</div></button>
+        <button onclick="openType('ESTP')" class="card p-2 text-center hover:bg-soft">🎲<div class="text-[10px] font-bold mt-1">ESTP</div></button>
+        <button onclick="openType('ESFP')" class="card p-2 text-center hover:bg-soft">🎤<div class="text-[10px] font-bold mt-1">ESFP</div></button>
+      </div>
+    </div>
+
+    <!-- 性格比較工具 -->
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">⚖️ 性格比較工具</h3>
+      <p class="text-xs text-gray-600 mb-3">揀兩個 4 字母睇佢哋夾唔夾、邊度同、邊度唔同</p>
+      <div class="grid grid-cols-2 gap-2 mb-3">
+        <select id="compareA" class="bg-soft p-2 rounded-lg text-sm font-bold">
+          <option value="INTJ">INTJ</option><option value="INTP">INTP</option>
+          <option value="ENTJ">ENTJ</option><option value="ENTP">ENTP</option>
+          <option value="INFJ">INFJ</option><option value="INFP">INFP</option>
+          <option value="ENFJ">ENFJ</option><option value="ENFP">ENFP</option>
+          <option value="ISTJ">ISTJ</option><option value="ISFJ">ISFJ</option>
+          <option value="ESTJ">ESTJ</option><option value="ESFJ">ESFJ</option>
+          <option value="ISTP">ISTP</option><option value="ISFP">ISFP</option>
+          <option value="ESTP">ESTP</option><option value="ESFP">ESFP</option>
+        </select>
+        <select id="compareB" class="bg-soft p-2 rounded-lg text-sm font-bold">
+          <option value="ENFP">ENFP</option><option value="INTJ">INTJ</option>
+          <option value="INTP">INTP</option><option value="ENTJ">ENTJ</option>
+          <option value="ENTP">ENTP</option><option value="INFJ">INFJ</option>
+          <option value="INFP">INFP</option><option value="ENFJ">ENFJ</option>
+          <option value="ISTJ">ISTJ</option><option value="ISFJ">ISFJ</option>
+          <option value="ESTJ">ESTJ</option><option value="ESFJ">ESFJ</option>
+          <option value="ISTP">ISTP</option><option value="ISFP">ISFP</option>
+          <option value="ESTP">ESTP</option><option value="ESFP">ESFP</option>
+        </select>
+      </div>
+      <button onclick="compareTypes()" class="btn-gold w-full py-2.5 rounded-lg text-sm">比較</button>
+      <div id="compareResult" class="mt-4"></div>
+    </div>
+
+    <div class="card p-4 text-center text-xs text-gray-500">
+      🛠 性格百科由 16Personalities 公開學術資料 + 香港人日常觀察整合<br>
+      僅供娛樂參考，非專業心理評估
+    </div>
+  </section>
+
+  <!-- ========== LETTER DETAIL ========== -->
+  <section id="letter" class="hidden">
+    <div class="flex items-center justify-between mb-6">
+      <button onclick="openHub()" class="text-sm text-gray-500">← 返回百科</button>
+      <div class="text-xs text-gray-400" id="letterBreadcrumb">維度 / 字母</div>
+      <div class="w-12"></div>
+    </div>
+
+    <div id="letterHero" class="card p-6 mb-4 text-center">
+      <div class="text-6xl font-black mb-2" id="letterBig">E</div>
+      <h2 class="text-2xl font-black mb-1" id="letterTitle">外向</h2>
+      <p class="text-sm text-gray-500" id="letterShort">由外在世界獲得能量</p>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">📖 詳細解釋</h3>
+      <div id="letterDesc" class="text-sm text-gray-700 leading-relaxed whitespace-pre-line"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">💪 強項</h3>
+      <div id="letterStrength" class="flex flex-wrap gap-2"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">⚠️ 弱項</h3>
+      <div id="letterWeakness" class="flex flex-wrap gap-2"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">💼 適合嘅工作</h3>
+      <div id="letterCareer" class="text-sm text-gray-700 leading-relaxed"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">🤝 朋友配對</h3>
+      <div id="letterFriends" class="text-sm text-gray-700 leading-relaxed"></div>
+    </div>
+  </section>
+
+  <!-- ========== TYPE DETAIL ========== -->
+  <section id="type" class="hidden">
+    <div class="flex items-center justify-between mb-6">
+      <button onclick="openHub()" class="text-sm text-gray-500">← 返回百科</button>
+      <div class="text-xs text-gray-400" id="typeBreadcrumb">性格 / INTJ</div>
+      <div class="w-12"></div>
+    </div>
+
+    <div id="typeHero" class="card p-6 mb-4 text-center">
+      <div class="text-5xl mb-2" id="typeEmoji">🏛️</div>
+      <div class="text-5xl font-black mb-1" id="typeBig">INTJ</div>
+      <h2 class="text-xl font-black mb-1" id="typeName">建築師 / Architect</h2>
+      <p class="text-sm italic text-gray-500" id="typeSlogan">「東鐵企到中環」</p>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">📖 完整性格分析</h3>
+      <div id="typeFull" class="text-sm text-gray-700 leading-relaxed"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">💪 強項</h3>
+      <div id="typeStrength" class="flex flex-wrap gap-2"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">⚠️ 弱項</h3>
+      <div id="typeWeakness" class="flex flex-wrap gap-2"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">💕 戀愛</h3>
+      <div id="typeLove" class="text-sm text-gray-700 leading-relaxed"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">💼 工作</h3>
+      <div id="typeWork" class="text-sm text-gray-700 leading-relaxed"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">🤝 友情</h3>
+      <div id="typeFriend" class="text-sm text-gray-700 leading-relaxed"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3 text-sm">⚡ 衝突處理</h3>
+      <div id="typeConflict" class="text-sm text-gray-700 leading-relaxed"></div>
+    </div>
+
+    <div class="card p-5 mb-4 text-center">
+      <h3 class="font-bold mb-2 text-sm">🧪 想確認自己係咪呢個類型？</h3>
+      <p class="text-xs text-gray-600 mb-3">做返個 60 題測試</p>
+      <button onclick="startTest()" class="btn-gold px-5 py-2.5 rounded-xl text-sm">開始測試</button>
+    </div>
+  </section>
+
+  <!-- ========== HOME ========== -->
+  <section id="home" class="fade-up">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 bg-gold rounded-lg flex items-center justify-center font-black text-lg">港</div>
+        <div class="font-black text-lg tracking-tight">香港 MBTI</div>
+      </div>
+      <div class="text-xs text-gray-500">v1.0 prototype</div>
+    </div>
+
+    <div class="card p-6 mb-4">
+      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🎭 港式性格測試</div>
+      <h1 class="text-3xl font-black leading-tight mb-3">你是哪種<br><span class="brand-gold">香港人</span>？</h1>
+      <p class="text-sm text-gray-600 leading-relaxed mb-4">60 題廣東話情境測試<br>5 分鐘知道你是茶餐廳、港鐵、O Camp 邊種人</p>
+      <div class="flex gap-2 text-xs text-gray-500 mb-5">
+        <span class="scenario-badge bg-soft">✦ 5 分鐘</span>
+        <span class="scenario-badge bg-soft">✦ 廣東話</span>
+        <span class="scenario-badge bg-soft">✦ 免費</span>
+      </div>
+      <button onclick="startTest()" class="btn-gold w-full py-3.5 rounded-xl text-base">開始測試</button>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3 mb-4">
+      <div class="card p-4 text-center">
+        <div class="text-2xl mb-1">🍳</div>
+        <div class="text-xs font-bold">茶餐廳</div>
+        <div class="text-[10px] text-gray-500 mt-1">6 種</div>
+      </div>
+      <div class="card p-4 text-center">
+        <div class="text-2xl mb-1">🚇</div>
+        <div class="text-xs font-bold">港鐵</div>
+        <div class="text-[10px] text-gray-500 mt-1">6 種</div>
+      </div>
+      <div class="card p-4 text-center">
+        <div class="text-2xl mb-1">🎓</div>
+        <div class="text-xs font-bold">O Camp</div>
+        <div class="text-[10px] text-gray-500 mt-1">4 種</div>
+      </div>
+    </div>
+
+    <div class="card p-5 mb-4 cursor-pointer" onclick="openHub()">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="font-bold mb-1 text-sm">📚 性格百科 Knowledge Hub</h3>
+          <p class="text-xs text-gray-500">4 個維度、16 種性格、性格比較工具</p>
+        </div>
+        <div class="text-2xl">→</div>
+      </div>
+    </div>
+
+    <div class="card p-5">
+      <h3 class="font-bold mb-3 text-sm">📊 已有 143,021 個香港人做過</h3>
+      <div class="text-xs text-gray-600 space-y-2">
+        <div class="flex justify-between"><span>最受歡迎：INFP「調解員」</span><span class="brand-gold font-bold">11.0%</span></div>
+        <div class="flex justify-between"><span>最少：INFJ「提倡者」</span><span class="text-gray-400">1.2%</span></div>
+        <div class="flex justify-between"><span>香港人最 F（感性）</span><span class="brand-gold font-bold">+15.1%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TEST ========== -->
+  <section id="test" class="hidden">
+    <div class="flex items-center justify-between mb-4">
+      <div class="text-xs text-gray-500"><span id="qIdx">1</span> / 60</div>
+      <button onclick="confirmExit()" class="text-xs text-gray-400">✕ 退出</button>
+    </div>
+    <div class="progress-bar mb-6">
+      <div id="progressFill" class="progress-fill" style="width:1.66%"></div>
+    </div>
+
+    <div class="card p-5 mb-4 fade-up" id="qCard">
+      <div class="text-[10px] tracking-widest brand-gold font-bold mb-2" id="qDimension">載入中...</div>
+      <h2 id="qText" class="text-lg font-bold leading-snug mb-5">載入中...</h2>
+      <div id="qOptions" class="space-y-2.5"></div>
+    </div>
+
+    <div class="flex gap-2">
+      <button onclick="prev()" id="prevBtn" class="text-sm py-2.5 px-4 rounded-lg bg-soft font-bold">← 上一題</button>
+      <div class="text-[10px] text-gray-400 ml-auto self-center">用廣東話情境題</div>
+    </div>
+  </section>
+
+  <!-- ========== RESULT ========== -->
+  <section id="result" class="hidden">
+    <div class="text-center mb-4">
+      <div class="text-xs tracking-widest brand-gold font-bold mb-1">🎉 你的港式人格</div>
+      <div class="text-xs text-gray-500">完成時間：<span id="finishTime">5 分鐘</span></div>
+    </div>
+
+    <!-- Share Card Preview -->
+    <div id="shareCard" class="share-card mx-auto mb-4 fade-up" style="background:linear-gradient(135deg,#D4A95F,#8B6F3D)">
+      <div class="flex items-center justify-between text-xs">
+        <div class="flex items-center gap-1.5 font-bold">
+          <div class="w-6 h-6 bg-white rounded-md flex items-center justify-center text-[10px]" style="color:#8B6F3D">港</div>
+          香港 MBTI
+        </div>
+        <div class="opacity-80">2026.07</div>
+      </div>
+
+      <div class="text-center">
+        <div class="text-xs opacity-80 mb-1">你是</div>
+        <div id="mbtiBig" class="mbti-letter-big">INTJ</div>
+        <div id="mbtiName" class="text-lg font-bold mt-1">建築師</div>
+        <div id="mbtiSlogan" class="text-xs opacity-90 mt-1 italic">「東鐵企到中環」</div>
+      </div>
+
+      <div>
+        <div class="flex justify-between text-[10px] opacity-80 mb-1">
+          <span>企硬力</span><span id="score1">9/10</span>
+        </div>
+        <div class="trait-bar mb-2">
+          <div id="bar1" class="trait-fill bg-white" style="width:90%"></div>
+        </div>
+        <div class="flex justify-between text-[10px] opacity-80 mb-1">
+          <span>社交力</span><span id="score2">6/10</span>
+        </div>
+        <div class="trait-bar mb-2">
+          <div id="bar2" class="trait-fill bg-white" style="width:60%"></div>
+        </div>
+        <div class="flex justify-between text-[10px] opacity-80 mb-1">
+          <span>食力</span><span id="score3">8/10</span>
+        </div>
+        <div class="trait-bar">
+          <div id="bar3" class="trait-fill bg-white" style="width:80%"></div>
+        </div>
+      </div>
+
+      <div class="text-[10px] opacity-70 text-center">#港式MBTI #16型 #香港人</div>
+    </div>
+
+    <div class="text-center mb-4">
+      <button onclick="downloadCard()" class="btn-gold px-5 py-2.5 rounded-xl text-sm">📥 下載分享卡</button>
+    </div>
+
+    <!-- Detailed Report -->
+    <div class="card p-5 mb-4 fade-up">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-bold">📖 你的性格分析</h3>
+        <button onclick="goTypeFromResult()" class="text-xs text-accent font-bold">看完整分析 →</button>
+      </div>
+      <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3">🍳 你是哪種港人？</h3>
+      <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-3">💕 與你的朋友配對</h3>
+      <div id="compatibility" class="space-y-2 text-sm"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-2">🔁 挑戰再測一次</h3>
+      <p class="text-xs text-gray-600 mb-3">用另一個身份（朋友 / 家人）再測一次</p>
+      <button onclick="startTest()" class="bg-soft w-full py-2.5 rounded-lg text-sm font-bold">再測一次</button>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <h3 class="font-bold mb-2">📊 想看 Premium 深度報告？</h3>
+      <p class="text-xs text-gray-600 mb-3">40 頁 Career Guide + AI Mentor<br>適合升學 / 轉工 / 升職</p>
+      <button onclick="alert('Prototype 階段，未連接付款')" class="text-white w-full py-2.5 rounded-lg text-sm font-bold bg-ink">解鎖 HK$49</button>
+    </div>
+
+    <button onclick="goHome()" class="text-xs text-gray-400 w-full text-center block mt-2">返回主頁</button>
+  </section>
+
+</div>
+
+<!-- ====================== 60 題港式情境題庫 ====================== -->
+<script src="data.js"></script>
+<script>
+window.QUESTIONS = [
+  // E/I 軸 (12 題)
+  {d:"E/I - 社交場合", t:"你去 party（朋友生日飯），最典型嘅你會：", o:[
+    {l:"A", t:"早到霸靚位，幫手佈置", v:{E:2,I:0}},
+    {l:"B", t:"準時到，傾偈傾到最後", v:{E:1,I:0}},
+    {l:"C", t:"坐埋一邊觀察氣氛", v:{E:0,I:1}},
+    {l:"D", t:"Send 個 WhatsApp 話唔太舒服唔去", v:{E:0,I:2}}
+  ]},
+  {d:"E/I - 港鐵", t:"搭港鐵時，你最常做嘅係：", o:[
+    {l:"A", t:"偷偷聽人哋傾偈／望人哋電話", v:{E:2,I:0}},
+    {l:"B", t:"聽歌或 podcast", v:{E:1,I:1}},
+    {l:"C", t:"睇小說 / 煲劇", v:{E:0,I:2}},
+    {l:"D", t:"扮瞌睡實際做白日夢", v:{E:0,I:1}}
+  ]},
+  {d:"E/I - 群組", t:"WhatsApp 群組有人@你但你唔想覆，你會：", o:[
+    {l:"A", t:"即覆，唔想俾人覺得串", v:{E:2,I:0}},
+    {l:"B", t:"過幾個鐘先覆", v:{E:1,I:1}},
+    {l:"C", t:"Set 左靜音，睇心情覆", v:{E:0,I:2}},
+    {l:"D", t:"直接當睇唔到", v:{E:0,I:2}}
+  ]},
+  {d:"E/I - 課室/會議", t:"課室／會議上要分組，你會：", o:[
+    {l:"A", t:"主動搵人組隊", v:{E:2,I:0}},
+    {l:"B", t:"等朋友搵你", v:{E:1,I:1}},
+    {l:"C", t:"自己一個，霸單數位", v:{E:0,I:2}},
+    {l:"D", t:"扮唔見去廁所", v:{E:0,I:1}}
+  ]},
+  {d:"E/I - 傾電話", t:"朋友打電話嚟（唔係 WhatsApp 來電），你會：", o:[
+    {l:"A", t:"秒接，最怕 missed call", v:{E:2,I:0}},
+    {l:"B", t:"響三個 tone 之內接", v:{E:1,I:0}},
+    {l:"C", t:"等佢 hang up 先回覆 WhatsApp", v:{E:0,I:2}},
+    {l:"D", t:"直接 send WhatsApp 問咩事", v:{E:0,I:1}}
+  ]},
+  {d:"E/I - 唱 K", t:"唱 K 嘅時候，你係：", o:[
+    {l:"A", t:"霸住 Mic 唱到最後", v:{E:2,I:0}},
+    {l:"B", t:"揀自己嘅歌，輪流唱", v:{E:1,I:1}},
+    {l:"C", t:"坐埋一邊拍手飲嘢", v:{E:0,I:2}},
+    {l:"D", t:"唔去或者坐最後", v:{E:0,I:1}}
+  ]},
+  {d:"E/I - 便利店", t:"凌晨 2 點去 7-11 撞到朋友，你會：", o:[
+    {l:"A", t:"主動打招呼傾幾句", v:{E:2,I:0}},
+    {l:"B", t:"笑下點頭就算", v:{E:1,I:1}},
+    {l:"C", t:"當睇唔到，唔想對話", v:{E:0,I:2}},
+    {l:"D", t:"點頭即刻閃", v:{E:0,I:1}}
+  ]},
+  {d:"E/I - 食飯", t:"自己一個去食飯（旅行 / lunch），你會：", o:[
+    {l:"A", t:"會揀餐廳坐堂食", v:{E:2,I:0}},
+    {l:"B", t:"外賣返屋企食", v:{E:0,I:2}},
+    {l:"C", t:"食晏坐到人哋下一輪", v:{E:0,I:1}},
+    {l:"D", t:"搭枱同陌生人傾偈", v:{E:2,I:0}}
+  ]},
+  {d:"E/I - 課外活動", t:"你有少少 time，一個鐘，你會：", o:[
+    {l:"A", t:"約朋友飲嘢", v:{E:2,I:0}},
+    {l:"B", t:"覆下 IG DM / 傾下偈", v:{E:1,I:1}},
+    {l:"C", t:"自己睇 YouTube / 讀書", v:{E:0,I:2}},
+    {l:"D", t:"出街散步聽歌", v:{E:1,I:1}}
+  ]},
+  {d:"E/I - 同事/同學", t:"你哋 group project 有人 free ride，你會：", o:[
+    {l:"A", t:"直接喺 group chat 講", v:{E:2,I:0}},
+    {l:"B", t:"私下 WhatsApp 嗰個人", v:{E:1,I:1}},
+    {l:"C", t:"心入面鬧但唔講", v:{E:0,I:2}},
+    {l:"D", t:"自己做完佢嗰份", v:{E:0,I:1}}
+  ]},
+  {d:"E/I - O Camp", t:"O Camp 第一日，你會主動：", o:[
+    {l:"A", t:"自我介紹玩到癲", v:{E:2,I:0}},
+    {l:"B", t:"識完一半人就算", v:{E:1,I:1}},
+    {l:"C", t:"等組爸組媽指派", v:{E:0,I:2}},
+    {l:"D", t:"坐到最後", v:{E:0,I:1}}
+  ]},
+  {d:"E/I - 問路", t:"喺港島唔識路，你會：", o:[
+    {l:"A", t:"問途人", v:{E:2,I:0}},
+    {l:"B", t:"開 Google Map", v:{E:1,I:1}},
+    {l:"C", t:"自己行錯三四次", v:{E:0,I:2}},
+    {l:"D", t:"Call 朋友求救", v:{E:1,I:0}}
+  ]},
+
+  // S/N 軸 (12 題)
+  {d:"S/N - 揀科", t:"揀 JUPAS 學科，你會優先：", o:[
+    {l:"A", t:"睇薪酬表 / 失業率", v:{S:2,N:0}},
+    {l:"B", t:"睇下讀咩會開心", v:{S:0,N:2}},
+    {l:"C", t:"睇下 AI 會唔會取代", v:{S:1,N:1}},
+    {l:"D", t:"睇下朋友揀咩", v:{S:2,N:0}}
+  ]},
+  {d:"S/N - 投 CV", t:"搵工寫 CV，你會：", o:[
+    {l:"A", t:"羅列所有經歷有咁多寫咁多", v:{S:2,N:0}},
+    {l:"B", t:"揀最精彩嘅 3 段", v:{S:1,N:1}},
+    {l:"C", t:"寫一個故事串連成個人生", v:{S:0,N:2}},
+    {l:"D", t:"用 AI 寫再自己改", v:{S:1,N:1}}
+  ]},
+  {d:"S/N - 旅行", t:"Plan 旅行你最典型：", o:[
+    {l:"A", t:"Excel 表列晒每日行程", v:{S:2,N:0}},
+    {l:"B", t:"Book 機票酒店就算", v:{S:1,N:1}},
+    {l:"C", t:"到咗再算", v:{S:0,N:2}},
+    {l:"D", t:"睇 YouTuber 介紹再決定", v:{S:1,N:1}}
+  ]},
+  {d:"S/N - 茶餐廳", t:"去茶餐廳，你會：", o:[
+    {l:"A", t:"叫常餐，唔使諗", v:{S:2,N:0}},
+    {l:"B", t:"睇下今日 special 係咩", v:{S:1,N:1}},
+    {l:"C", t:"試新嘢 / 黑洞式搭配", v:{S:0,N:2}},
+    {l:"D", t:"問朋友意見", v:{S:1,N:0}}
+  ]},
+  {d:"S/N - 溫習", t:"溫習 DSE / 考試，你會：", o:[
+    {l:"A", t:"Past paper 由 2000 做起", v:{S:2,N:0}},
+    {l:"B", t:"先睇 YouTube 教學", v:{S:1,N:1}},
+    {l:"C", t:"讀 concept 跟住自己理解", v:{S:0,N:2}},
+    {l:"D", t:"同朋友 group 溫", v:{S:1,N:0}}
+  ]},
+  {d:"S/N - 睇戲", t:"睇電影你最鍾意：", o:[
+    {l:"A", t:"動作 / 劇情寫實", v:{S:2,N:0}},
+    {l:"B", t:"劇情有反轉", v:{S:1,N:1}},
+    {l:"C", t:"科幻 / 魔幻 / 抽象", v:{S:0,N:2}},
+    {l:"D", t:"睇完會反思人生", v:{S:0,N:2}}
+  ]},
+  {d:"S/N - 解難", t:"電腦壞咗，你會：", o:[
+    {l:"A", t:"睇官方 manual 跟住 step 做", v:{S:2,N:0}},
+    {l:"B", t:"Google 個 error message", v:{S:1,N:1}},
+    {l:"C", t:"推測原因再試", v:{S:0,N:2}},
+    {l:"D", t:"即刻搵人幫", v:{S:1,N:0}}
+  ]},
+  {d:"S/N - 諗嘢", t:"有人話「MBTI 唔準」，你會諗：", o:[
+    {l:"A", t:"佢有研究過未？", v:{S:2,N:0}},
+    {l:"B", t:"可能佢做過唔啱嘅版本", v:{S:1,N:1}},
+    {l:"C", t:"咁 personality 究竟係咩？", v:{S:0,N:2}},
+    {l:"D", t:"咁我嚟做個更好嘅", v:{S:0,N:2}}
+  ]},
+  {d:"S/N - 學嘢", t:"學新嘢（樂器 / 語言），你會：", o:[
+    {l:"A", t:"一步步跟住教科書", v:{S:2,N:0}},
+    {l:"B", t:"上堂一次再自己練", v:{S:1,N:1}},
+    {l:"C", t:"靠耳濡目染", v:{S:0,N:2}},
+    {l:"D", t:"過幾日先再學", v:{S:1,N:0}}
+  ]},
+  {d:"S/N - 飲飲食食", t:"揀餐廳你會揀：", o:[
+    {l:"A", t:"食評 4 星以上", v:{S:2,N:0}},
+    {l:"B", t:"有次經過覺得幾得意", v:{S:0,N:2}},
+    {l:"C", t:"IG 見到好靚", v:{S:1,N:1}},
+    {l:"D", t:"朋友推薦", v:{S:2,N:0}}
+  ]},
+  {d:"S/N - 寫 paper", t:"寫 essay / paper 你會：", o:[
+    {l:"A", t:"先列大綱再寫", v:{S:2,N:0}},
+    {l:"B", t:"先寫再執", v:{S:1,N:1}},
+    {l:"C", t:"一氣呵成寫完", v:{S:0,N:2}},
+    {l:"D", t:"Set timer 30 min 寫", v:{S:1,N:0}}
+  ]},
+  {d:"S/N - 比較", t:"呢句說話邊個啱你多啲？", o:[
+    {l:"A", t:"我比較實際", v:{S:2,N:0}},
+    {l:"B", t:"我成日白日夢", v:{S:0,N:2}},
+    {l:"C", t:"視乎情況", v:{S:1,N:1}},
+    {l:"D", t:"我鍾意諗將來", v:{S:0,N:2}}
+  ]},
+
+  // T/F 軸 (12 題)
+  {d:"T/F - 朋友失戀", t:"朋友失戀，你嘅第一反應：", o:[
+    {l:"A", t:"佢有咩做錯？分析吓", v:{T:2,F:0}},
+    {l:"B", t:"佢依家點？有冇食飯？", v:{T:0,F:2}},
+    {l:"C", t:"陪佢傾", v:{T:0,F:1}},
+    {l:"D", t:"Send 個 meme 笑下", v:{T:1,F:1}}
+  ]},
+  {d:"T/F - 揀工", t:"揀工 Offer A 高薪但無聊，Offer B 低薪但夢想，你揀：", o:[
+    {l:"A", t:"A，現實啲", v:{T:2,F:0}},
+    {l:"B", t:"B，夢想重要", v:{T:0,F:2}},
+    {l:"C", t:"睇下公司前景", v:{T:1,F:0}},
+    {l:"D", t:"睇下同事夾唔夾", v:{T:0,F:2}}
+  ]},
+  {d:"T/F - 爭執", t:"同朋友拗撬，你會：", o:[
+    {l:"A", t:"講道理分析邊個啱", v:{T:2,F:0}},
+    {l:"B", t:"體諒對方感受", v:{T:0,F:2}},
+    {l:"C", t:"Cool down 先再傾", v:{T:1,F:1}},
+    {l:"D", t:"扮冇事過咗佢", v:{T:1,F:1}}
+  ]},
+  {d:"T/F - 評價", t:"朋友著件衫好核突，你會：", o:[
+    {l:"A", t:"直接講", v:{T:2,F:0}},
+    {l:"B", t:"扮 OK 讚佢", v:{T:0,F:2}},
+    {l:"C", t:"講另一件幾好", v:{T:1,F:1}},
+    {l:"D", t:"唔出聲", v:{T:0,F:1}}
+  ]},
+  {d:"T/F - 同理", t:"你自己讀緊書，朋友打電話嚟求救，你會：", o:[
+    {l:"A", t:"覆幾句先，話自己溫緊書", v:{T:2,F:0}},
+    {l:"B", t:"即刻拋低書幫佢", v:{T:0,F:2}},
+    {l:"C", t:"Send 個 tutorial 叫佢自己睇", v:{T:1,F:0}},
+    {l:"D", t:"覆 message 叫佢冷靜", v:{T:1,F:1}}
+  ]},
+  {d:"T/F - 道歉", t:"你同朋友嗌交，最後係你唔啱，你會：", o:[
+    {l:"A", t:"即刻打電話道歉", v:{T:0,F:2}},
+    {l:"B", t:"Send 個 message 解釋", v:{T:1,F:1}},
+    {l:"C", t:"等大家冷靜再傾", v:{T:1,F:0}},
+    {l:"D", t:"講返個道理出嚟", v:{T:2,F:0}}
+  ]},
+  {d:"T/F - 打工", t:"同事叫 OT 幫手，你會：", o:[
+    {l:"A", t:"直接拒絕，講唔得", v:{T:2,F:0}},
+    {l:"B", t:"OK 啦幫你啦", v:{T:0,F:2}},
+    {l:"C", t:"問下有冇補水", v:{T:1,F:0}},
+    {l:"D", t:"睇下邊個嚟決定", v:{T:1,F:1}}
+  ]},
+  {d:"T/F - 投訴", t:"餐廳侍應態度差，你會：", o:[
+    {l:"A", t:"直接同經理講", v:{T:2,F:0}},
+    {l:"B", t:"俾個貼士當冇事", v:{T:0,F:2}},
+    {l:"C", t:"Google 寫 1 星", v:{T:1,F:0}},
+    {l:"D", t:"同朋友傾返", v:{T:0,F:1}}
+  ]},
+  {d:"T/F - 感情", t:"拍緊拖，對方唔啱你嘅未來 plan，你會：", o:[
+    {l:"A", t:"直接講，講清楚", v:{T:2,F:0}},
+    {l:"B", t:"遷就對方", v:{T:0,F:2}},
+    {l:"C", t:"拖住先", v:{T:1,F:1}},
+    {l:"D", t:"分咗佢", v:{T:2,F:0}}
+  ]},
+  {d:"T/F - 立場", t:"朋友問你對方著件衫好唔好睇（事實係好核突），你會：", o:[
+    {l:"A", t:"講事實", v:{T:2,F:0}},
+    {l:"B", t:"話 OK 啦", v:{T:0,F:2}},
+    {l:"C", t:"話有少少特別", v:{T:1,F:1}},
+    {l:"D", t:"答非所問", v:{T:0,F:1}}
+  ]},
+  {d:"T/F - 公益", t:"做義工 / 捐錢，你點睇？", o:[
+    {l:"A", t:"視乎效益", v:{T:2,F:0}},
+    {l:"B", t:"想幫就幫", v:{T:0,F:2}},
+    {l:"C", t:"睇下個機構", v:{T:1,F:0}},
+    {l:"D", t:"朋友去我先去", v:{T:0,F:1}}
+  ]},
+  {d:"T/F - 結論", t:"你覺得自己比較似：", o:[
+    {l:"A", t:"Logical 邏輯型", v:{T:2,F:0}},
+    {l:"B", t:"感性型", v:{T:0,F:2}},
+    {l:"C", t:"視乎情況", v:{T:1,F:1}},
+    {l:"D", t:"靠直覺", v:{T:0,F:1}}
+  ]},
+
+  // J/P 軸 (12 題)
+  {d:"J/P - 旅行", t:"去旅行你：", o:[
+    {l:"A", t:"資料搜集 3 個月", v:{J:2,P:0}},
+    {l:"B", t:"Plan 行程但容許彈性", v:{J:1,P:1}},
+    {l:"C", t:"Last minute 機票", v:{J:0,P:2}},
+    {l:"D", t:"想去就去", v:{J:0,P:2}}
+  ]},
+  {d:"J/P - 房間", t:"你間房：", o:[
+    {l:"A", t:"企理，嘢都擺好", v:{J:2,P:0}},
+    {l:"B", t:"表面 OK 暗藏地獄", v:{J:1,P:1}},
+    {l:"C", t:"自己先至唔亂", v:{J:0,P:2}},
+    {l:"D", t:"亂到朋友以為搬咗", v:{J:0,P:2}}
+  ]},
+  {d:"J/P - Deadline", t:"功課 deadline 係聽日，你會：", o:[
+    {l:"A", t:"上星期已經做完", v:{J:2,P:0}},
+    {l:"B", t:"今日下畫開始", v:{J:1,P:1}},
+    {l:"C", t:"最後一個鐘衝刺", v:{J:0,P:2}},
+    {l:"D", t:"申請延期", v:{J:0,P:2}}
+  ]},
+  {d:"J/P - 行程", t:"朋友話「明晚食飯喺尖沙咀」，你會：", o:[
+    {l:"A", t:"問幾點？食咩？", v:{J:2,P:0}},
+    {l:"B", t:"OK 啦到時見", v:{J:0,P:2}},
+    {l:"C", t:"Set 個 calendar", v:{J:2,P:0}},
+    {l:"D", t:"可能會甩底", v:{J:0,P:2}}
+  ]},
+  {d:"J/P - 慳錢", t:"儲錢你會：", o:[
+    {l:"A", t:"App 記賬逐筆", v:{J:2,P:0}},
+    {l:"B", t:"每月儲定額", v:{J:1,P:0}},
+    {l:"C", t:"有就儲冇就算", v:{J:0,P:2}},
+    {l:"D", t:"見到鍾意就買", v:{J:0,P:2}}
+  ]},
+  {d:"J/P - 開工", t:"新 project 你會：", o:[
+    {l:"A", t:"先 plan 完整個流程", v:{J:2,P:0}},
+    {l:"B", t:"先做個 MVP 再改", v:{J:1,P:1}},
+    {l:"C", t:"直接落手做", v:{J:0,P:2}},
+    {l:"D", t:"等靈感到嚟", v:{J:0,P:2}}
+  ]},
+  {d:"J/P - 早起", t:"返學 / 返工你會：", o:[
+    {l:"A", t:"早 30 分鐘到", v:{J:2,P:0}},
+    {l:"B", t:"準時到", v:{J:1,P:1}},
+    {l:"C", t:"遲 5 分鐘到", v:{J:0,P:1}},
+    {l:"D", t:"踩鈴噹先衝", v:{J:0,P:2}}
+  ]},
+  {d:"J/P - 跑步", t:"跑 10K 你會：", o:[
+    {l:"A", t:"表格排 3 個月訓練", v:{J:2,P:0}},
+    {l:"B", t:"睇下 YouTube 學跑", v:{J:1,P:1}},
+    {l:"C", t:"跑 2K 跑 5K 跑 10K", v:{J:0,P:2}},
+    {l:"D", t:"當日跑", v:{J:0,P:2}}
+  ]},
+  {d:"J/P - 迎新", t:"O Camp 活動前你會：", o:[
+    {l:"A", t:"Excel 排時間表", v:{J:2,P:0}},
+    {l:"B", t:"睇下流程大概知", v:{J:1,P:1}},
+    {l:"C", t:"到時先算", v:{J:0,P:2}},
+    {l:"D", t:"唔睇", v:{J:0,P:2}}
+  ]},
+  {d:"J/P - 設備", t:"買電腦 / 手機你會：", o:[
+    {l:"A", t:"睇晒 review 比較", v:{J:2,P:0}},
+    {l:"B", t:"睇 3 個 review 決定", v:{J:1,P:1}},
+    {l:"C", t:"衝動買", v:{J:0,P:2}},
+    {l:"D", t:"等到壞咗先換", v:{J:0,P:1}}
+  ]},
+  {d:"J/P - To-do", t:"To-do list 你會：", o:[
+    {l:"A", t:"長長一篇排到下個月", v:{J:2,P:0}},
+    {l:"B", t:"寫 3 條重要嘅", v:{J:1,P:1}},
+    {l:"C", t:"靠個腦記", v:{J:0,P:2}},
+    {l:"D", t:"冇呢回事", v:{J:0,P:2}}
+  ]},
+  {d:"J/P - 結尾", t:"最後一題，你點揀：", o:[
+    {l:"A", t:"我覺得我屬於規劃型", v:{J:2,P:0}},
+    {l:"B", t:"我覺得我屬於隨性型", v:{J:0,P:2}},
+    {l:"C", t:"睇心情", v:{J:0,P:1}},
+    {l:"D", t:"以上皆是", v:{J:1,P:1}}
+  ]},
+
+  // T/A 軸 (12 題)
+  {d:"T/A - 緊張", t:"有人 criticize 你嘅工作，你會：", o:[
+    {l:"A", t:"成個禮拜諗住佢講嘅嘢", v:{T:2,A:0}},
+    {l:"B", t:"聽完就算", v:{T:0,A:2}},
+    {l:"C", t:"即刻反駁", v:{T:1,A:1}},
+    {l:"D", t:"分析下佢講得啱唔啱", v:{T:1,A:1}}
+  ]},
+  {d:"T/A - 自我", t:"朋友話你變咗，你會：", o:[
+    {l:"A", t:"即刻諗係咪衰咗", v:{T:2,A:0}},
+    {l:"B", t:"OK 啦成長中", v:{T:0,A:2}},
+    {l:"C", t:"邊度變咗？", v:{T:1,A:0}},
+    {l:"D", t:"First 唔識你", v:{T:0,A:2}}
+  ]},
+  {d:"T/A - 完美", t:"出 trip 嘅行李你會：", o:[
+    {l:"A", t:"List 3 版", v:{T:2,A:0}},
+    {l:"B", t:"執到塞爆個篋", v:{T:1,A:0}},
+    {l:"C", t:"5 分鐘執完", v:{T:0,A:2}},
+    {l:"D", t:"Set 最後 10 分鐘執", v:{T:1,A:1}}
+  ]},
+  {d:"T/A - 道歉", t:"人哋話你講錯嘢，你會：", o:[
+    {l:"A", t:"自責成個禮拜", v:{T:2,A:0}},
+    {l:"B", t:"OK 收到", v:{T:0,A:2}},
+    {l:"C", t:"聽完先了解", v:{T:1,A:1}},
+    {l:"D", t:"反問返", v:{T:1,A:1}}
+  ]},
+  {d:"T/A - 壓力", t:"壓力大嘅時候你會：", o:[
+    {l:"A", t:"食嘢 / 瞓覺", v:{T:2,A:0}},
+    {l:"B", t:"Keep going 啦", v:{T:0,A:2}},
+    {l:"C", t:"搵人傾", v:{T:1,A:0}},
+    {l:"D", t:"做運動", v:{T:1,A:1}}
+  ]},
+  {d:"T/A - 表現", t:"Present 完老細話好，你會：", o:[
+    {l:"A", t:"擔心下次表現差", v:{T:2,A:0}},
+    {l:"B", t:"OK 啦收到", v:{T:0,A:2}},
+    {l:"C", t:"保持水準", v:{T:1,A:1}},
+    {l:"D", t:"OK 下次再做好啲", v:{T:1,A:1}}
+  ]},
+  {d:"T/A - 比較", t:"咩情況會令你最沒安全感？", o:[
+    {l:"A", t:"唔知下一步", v:{T:2,A:0}},
+    {l:"B", t:"被否定", v:{T:1,A:0}},
+    {l:"C", t:"傷害人哋", v:{T:1,A:0}},
+    {l:"D", t:"冇乜特別", v:{T:0,A:2}}
+  ]},
+  {d:"T/A - 改變", t:"突然要搬屋 / 轉工，你會：", o:[
+    {l:"A", t:"焦慮 3 日", v:{T:2,A:0}},
+    {l:"B", t:"OK 接受", v:{T:0,A:2}},
+    {l:"C", t:"諗下 plan", v:{T:1,A:0}},
+    {l:"D", t:"即刻做", v:{T:0,A:2}}
+  ]},
+  {d:"T/A - 照鏡", t:"你會唔會成日照鏡 / 睇自己 IG 個樣？", o:[
+    {l:"A", t:"會", v:{T:2,A:0}},
+    {l:"B", t:"間中", v:{T:1,A:1}},
+    {l:"C", t:"唔會", v:{T:0,A:2}},
+    {l:"D", t:"朋友話我成日", v:{T:1,A:0}}
+  ]},
+  {d:"T/A - 失眠", t:"瞓唔著嘅時候：", o:[
+    {l:"A", t:"腦入面不斷對話", v:{T:2,A:0}},
+    {l:"B", t:"換個姿勢就瞓到", v:{T:0,A:2}},
+    {l:"C", t:"覆 message", v:{T:1,A:0}},
+    {l:"D", t:"睇片到天光", v:{T:1,A:1}}
+  ]},
+  {d:"T/A - 壓力食", t:"壓力大時你會：", o:[
+    {l:"A", t:"食嘢", v:{T:2,A:0}},
+    {l:"B", t:"做運動", v:{T:1,A:1}},
+    {l:"C", t:"打機", v:{T:1,A:1}},
+    {l:"D", t:"照瞓", v:{T:0,A:2}}
+  ]},
+  {d:"T/A - 結尾", t:"最後，你覺得自己：", o:[
+    {l:"A", t:"容易緊張", v:{T:2,A:0}},
+    {l:"B", t:"輕鬆自在", v:{T:0,A:2}},
+    {l:"C", t:"視乎情況", v:{T:1,A:1}},
+    {l:"D", t:"朋友話我 OK", v:{T:0,A:1}}
+  ]}
+];
+
+// 16 種性格完整報告
+window.TYPES = {
+  "INTJ": {name:"建築師", cn:"建築師", slogan:"東鐵企到中環", color:["#5B4B8A","#2D2A4A"], emoji:"🏛️", desc:"你係嗰種成日喺個腦入面 plan 晒成件事嘅人。別人覺得你 cool，但其實你只係唔想解釋太多。你嘅房間企理但偏 stiff，三餐可以食同一樣 365 日。", tags:["計劃王","獨立","高冷","完美主義"], score:["企硬力9/10","社交力4/10","食力7/10"], compat:["ENFP","ENTP"]},
+  "INTP": {name:"邏輯學家", cn:"邏輯學家", slogan:"Coffee shop 坐一日", color:["#7A6CA0","#3D3458"], emoji:"🧪", desc:"你腦入面有 100 個 idea 但唔知點 execute。朋友覺得你神神哋，但其實你只係諗得比人深。", tags:["理論家","天馬行空","遲到","Slack 訊息長"], score:["企硬力5/10","社交力3/10","食力8/10"], compat:["ENTJ","ENFJ"]},
+  "ENTJ": {name:"指揮官", cn:"指揮官", slogan:"做隊長做到悶", color:["#3A4F6B","#1E2A3B"], emoji:"👔", desc:"天生領袖。你行入 party 已經喺度分工。O Camp 組爸組媽一定係你。", tags:["大佬","效率","有 Plan","Crossover King"], score:["企硬力9/10","社交力9/10","食力6/10"], compat:["INFP","INTP"]},
+  "ENTP": {name:"辯論家", cn:"辯論家", slogan:"同阿 Sir 拗到收唔到科", color:["#7A5C3A","#3D2D1A"], emoji:"💡", desc:"你係課室入面最麻煩嗰個。成日 challenge 教科書，但又會令人覺得你講幾有道理。", tags:["講過","Devil's Advocate","3 AM 傾偈王","搞事"], score:["企硬力6/10","社交力9/10","食力5/10"], compat:["INFJ","INTJ"]},
+  "INFJ": {name:"提倡者", cn:"提倡者", slogan:"深夜 IG 寫 essay", color:["#8B5A6B","#4A2D3A"], emoji:"🌙", desc:"全世界最罕見嘅香港人之一。T 恤背後寫住 vintage 哲學，朋友話你 chill，但你好少講真心話。", tags:["Quiet","聆聽者","深夜思想家","筆友多"], score:["企硬力8/10","社交力5/10","食力6/10"], compat:["ENFP","ENTP"]},
+  "INFP": {name:"調解員", cn:"調解員", slogan:"飲凍檸茶寫日記", color:["#A46B7C","#5A3645"], emoji:"🌸", desc:"香港最多人嘅類型。表面 chill 內心澎湃。IG story 一定是歌詞 + 風景。最多朋友話你 fake，但其實你只係 mood 唔同。", tags:["文青","Sensitive","Dreamer","Meme 收藏家"], score:["企硬力6/10","社交力5/10","食力8/10"], compat:["ENFJ","ENTJ"]},
+  "ENFJ": {name:"主人公", cn:"主人公", slogan:"成班人嘅情緒保姆", color:["#C8786B","#6B3A35"], emoji:"🤗", desc:"每個人嘅好朋友。朋友 call 你傾偈一定係你接。", tags:["暖男暖女","聆聽","搞氣氛","做義工"], score:["企硬力7/10","社交力9/10","食力7/10"], compat:["INFP","INTP"]},
+  "ENFP": {name:"競選者", cn:"競選者", slogan:"識太多人 記唔到名", color:["#D9956B","#6B4A35"], emoji:"🎉", desc:"你嘅 WhatsApp 未讀 1000+。成日話「OK 啦到時見」但最先去嗰個都係你。", tags:["話癆","Energy","點子王","Last minute change"], score:["企硬力4/10","社交力10/10","食力8/10"], compat:["INFJ","INTJ"]},
+  "ISTJ": {name:"物流師", cn:"物流師", slogan:"準時過港鐵", color:["#4A5A6B","#252F3B"], emoji:"📋", desc:"佢係咩都記得晒嗰個。Book 枱、送禮、安排長輩飯局一定係你。", tags:["穩陣","貼心","老實","Excel 王"], score:["企硬力10/10","社交力6/10","食力7/10"], compat:["ESFP","ESTP"]},
+  "ISFJ": {name:"守衛者", cn:"守衛者", slogan:"記住所有人 Birthday", color:["#A87A6B","#5A3D35"], emoji:"🎁", desc:"朋友話你係最細心嗰個。WhatsApp 生日提醒 110%。", tags:["細心","Secret Keeper","照顧人","貼身暖"], score:["企硬力8/10","社交力6/10","食力8/10"], compat:["ESFP","ESTP"]},
+  "ESTJ": {name:"總經理", cn:"總經理", slogan:"Group Project 隊長", color:["#3A5A6B","#1E2D3B"], emoji:"📊", desc:"Group Project 一定係你做隊長。朋友話你 mean 但又依靠你。", tags:["管理","決策","SOP 王","Family Driver"], score:["企硬力10/10","社交力7/10","食力6/10"], compat:["ISFP","INFP"]},
+  "ESFJ": {name:"執事", cn:"執事", slogan:"搞 party 搞到最開心", color:["#C87A6B","#6B3D35"], emoji:"🎈", desc:"成班人嘅膠水。搞咩活動都係你。", tags:["社交高手","搞氣氛","Family-oriented","卡啦 OK 點唱"], score:["企硬力7/10","社交力10/10","食力9/10"], compat:["ISFP","ISTP"]},
+  "ISTP": {name:"鑒賞家", cn:"鑒賞家", slogan:"裝機拆機無人能敵", color:["#5A6A6B","#2D353B"], emoji:"🔧", desc:"你係電腦 / 電子用品嘅醫生。朋友電話壞咗一定搵你。", tags:["實幹","Cool","Problem Solver","獨立"], score:["企硬力9/10","社交力4/10","食力6/10"], compat:["ESFJ","ENFJ"]},
+  "ISFP": {name:"探險家", cn:"探險家", slogan:"靜靜雞做自己鍾意嘅嘢", color:["#A88A6B","#5A4535"], emoji:"🎨", desc:"當 ISTJ 嘅 chill 兄弟。外表 J 但內心 P。", tags:["藝術","低調","Live in the moment","溫和"], score:["企硬力6/10","社交力4/10","食力7/10"], compat:["ESFJ","ESTJ"]},
+  "ESTP": {name:"企業家", cn:"企業家", slogan:"Last minute 變大計", color:["#C87A6B","#6B3D35"], emoji:"🎲", desc:"做 Sales / Stock Trader 必贏。去旅行變咗搞生意嘅都係你。", tags:["Risk-taker","談判","即興","夜鬼"], score:["企硬力7/10","社交力9/10","食力7/10"], compat:["ISFJ","ISTJ"]},
+  "ESFP": {name:"表演者", cn:"表演者", slogan:"全場最 High 嗰個", color:["#E09A6B","#704A35"], emoji:"🎤", desc:"Party 一定搵你。Sing K 霸住 Mic 唔放嘅都係你。", tags:["Activity","娛樂","Living for the moment","鏡頭王"], score:["企硬力5/10","社交力10/10","食力9/10"], compat:["ISFJ","ISTJ"]}
+};
+
+// 港式場景配對
+window.SCENARIOS = [
+  {name:"凍檸茶", match:["I","F","P"], emoji:"🍋", desc:"獨立文青飲法"},
+  {name:"絲襪奶茶", match:["E","F","J"], emoji:"🧋", desc:"成班人飲法"},
+  {name:"港鐵企到中環", match:["I","T","J"], emoji:"🚇", desc:"返工戰士"},
+  {name:"O Camp 組爸組媽", match:["E","F","J"], emoji:"🎓", desc:"搞氣氛高手"},
+  {name:"Café 坐一日", match:["I","N","P"], emoji:"☕", desc:"INFP 標配"},
+  {name:"茶記常餐", match:["S","J"], emoji:"🍳", desc:"實而不華"},
+  {name:"打機至天光", match:["T","P"], emoji:"🎮", desc:"ISTP 標配"},
+  {name:"旺角掃街", match:["E","S","P"], emoji:"🍢", desc:"即興玩樂"}
+];
+
+<script>
+window.state = {
+  idx: 0,
+  answers: new Array(60).fill(null),
+  startedAt: null
+};
+const state = window.state;  // local alias for handlers
+
+window.$ = function(id){return document.getElementById(id)};
+
+window.show = function(id){
+  ["home","test","result"].forEach(s => window.$(s).classList.add("hidden"));
+  window.$(id).classList.remove("hidden");
+  window.scrollTo(0,0);
+};
+
+window.startTest = function(){
+  state.idx = 0;
+  state.answers = new Array(60).fill(null);
+  state.startedAt = Date.now();
+  show("test");
+  renderQ();
+};
+
+window.renderQ = function(){
+  const q = window.QUESTIONS[state.idx];
+  $("qIdx").innerText = state.idx + 1;
+  $("progressFill").style.width = ((state.idx + 1) / 60 * 100) + "%";
+  $("qDimension").innerText = q.d;
+  $("qText").innerText = q.t;
+  $("qCard").classList.remove("fade-up");
+  void $("qCard").offsetWidth;
+  $("qCard").classList.add("fade-up");
+
+  const opts = $("qOptions");
+  opts.innerHTML = "";
+  q.o.forEach((o, i) => {
+    const div = document.createElement("div");
+    div.className = "option";
+    if(state.answers[state.idx] === i) div.classList.add("selected");
+    div.innerHTML = `<div class="option-letter">${o.l}</div><div class="flex-1">${o.t}</div>`;
+    div.onclick = () => selectOpt(i);
+    opts.appendChild(div);
+  });
+  $("prevBtn").style.opacity = state.idx === 0 ? "0.3" : "1";
+  $("prevBtn").disabled = state.idx === 0;
+};
+
+window.selectOpt = function(i){
+  state.answers[state.idx] = i;
+  document.querySelectorAll("#qOptions .option").forEach((el, j) => {
+    el.classList.toggle("selected", j === i);
+  });
+  setTimeout(() => {
+    if(state.idx < 59){
+      state.idx++;
+      renderQ();
+    } else {
+      finishTest();
+    }
+  }, 280);
+};
+
+window.prev = function(){
+  if(state.idx > 0){
+    state.idx--;
+    renderQ();
+  }
+};
+
+window.confirmExit = function(){
+  if(confirm("離開測試？進度會唔儲存。")){
+    show("home");
+  }
+};
+
+window.calcScore = function(){
+  let E=0,I=0,S=0,N=0,T=0,F=0,J=0,P=0,T2=0,A2=0;
+  for(let i=0;i<60;i++){
+    const a = state.answers[i];
+    if(a === null) continue;
+    const v = window.QUESTIONS[i].o[a].v;
+    if(i<12){
+      if(v.E) E+=v.E;
+      if(v.I) I+=v.I;
+    } else if(i<24){
+      if(v.S) S+=v.S;
+      if(v.N) N+=v.N;
+    } else if(i<36){
+      if(v.T) T+=v.T;
+      if(v.F) F+=v.F;
+    } else if(i<48){
+      if(v.J) J+=v.J;
+      if(v.P) P+=v.P;
+    } else {
+      if(v.T) T2+=v.T;
+      if(v.A) A2+=v.A;
+    }
+  }
+  const mbti = (E>=I?"E":"I") + (S>=N?"S":"N") + (T>=F?"T":"F") + (J>=P?"J":"P");
+  const ta = T2 >= A2 ? "-T" : "-A";
+  return {mbti: mbti + ta, score:{E,I,S,N,T,F,J,P,T2,A2}};
+};
+
+window.finishTest = function(){
+  const r = calcScore();
+  window.lastResult = r.mbti;
+  renderResult(r);
+  const mins = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
+  $("finishTime").innerText = mins + " 分鐘";
+  show("result");
+};
+
+window.renderResult = function(r){
+  const t = window.TYPES[r.mbti.substring(0,4)];
+  if(!t){
+    $("mbtiBig").innerText = r.mbti;
+    $("mbtiName").innerText = "獨特類型";
+    $("mbtiSlogan").innerText = "「全港獨一無二」";
+    return;
+  }
+  $("mbtiBig").innerText = r.mbti.substring(0,4);
+  $("mbtiName").innerText = t.name;
+  $("mbtiSlogan").innerText = "「" + t.slogan + "」";
+
+  const card = $("shareCard");
+  card.style.background = `linear-gradient(135deg, ${t.color[0]}, ${t.color[1]})`;
+
+  const tempA = t.score[0].split("/");
+  $("score1").innerText = t.score[0];
+  $("bar1").style.width = (parseInt(tempA[0])*10) + "%";
+  const tempB = t.score[1].split("/");
+  $("score2").innerText = t.score[1];
+  $("bar2").style.width = (parseInt(tempB[0])*10) + "%";
+  const tempC = t.score[2].split("/");
+  $("score3").innerText = t.score[2];
+  $("bar3").style.width = (parseInt(tempC[0])*10) + "%";
+
+  let detailHtml = `
+    <p>${t.desc}</p>
+    <div class="flex gap-2 flex-wrap mt-3">
+      ${t.tags.map(tag => `<span class="scenario-badge bg-soft text-ink">${tag}</span>`).join("")}
+    </div>
+  `;
+  $("personalityDetail").innerHTML = detailHtml;
+
+  const type = r.mbti.substring(0,4);
+  const isE = type[0]==='E', isS = type[1]==='S', isT = type[2]==='T', isJ = type[3]==='J';
+  let scenHtml = "";
+  window.SCENARIOS.forEach(s => {
+    const match = (s.match.includes("I") ? !isE : (s.match.includes("E") ? isE : true)) &&
+                  (s.match.includes("N") ? !isS : (s.match.includes("S") ? isS : true)) &&
+                  (s.match.includes("F") ? !isT : (s.match.includes("T") ? isT : true)) &&
+                  (s.match.includes("P") ? !isJ : (s.match.includes("J") ? isJ : true));
+    scenHtml += `
+      <div class="card p-3 text-center" style="opacity:${match ? '1' : '0.4'}">
+        <div class="text-2xl mb-1">${s.emoji}</div>
+        <div class="text-xs font-bold">${s.name}</div>
+        <div class="text-[10px] text-gray-500 mt-1">${s.desc}</div>
+      </div>
+    `;
+  });
+  $("scenarioMatch").innerHTML = scenHtml;
+
+  let compatHtml = "";
+  t.compat.forEach(c => {
+    const ct = window.TYPES[c];
+    if(ct) compatHtml += `
+      <div class="card p-3 flex items-center gap-3">
+        <div class="text-2xl">${ct.emoji}</div>
+        <div class="flex-1">
+          <div class="font-bold text-sm">${c} · ${ct.cn}</div>
+          <div class="text-xs text-gray-500">${ct.slogan}</div>
+        </div>
+        <div class="text-xs text-accent font-bold">${Math.floor(Math.random()*15+85)}% 夾</div>
+      </div>
+    `;
+  });
+  $("compatibility").innerHTML = compatHtml;
+};
+
+window.downloadCard = function(){
+  alert("Prototype 階段，要 production 就要 html2canvas 整合。\n\n簡單做法：手機長按分享卡截圖。");
+};
+
+window.goHome = function(){show("home")};
+
+// ====================== Knowledge Hub Functions ======================
+window.openHub = function(){
+  show("hub");
+};
+
+window.goTypeFromResult = function(){
+  const r = window.lastResult || "INTJ";
+  openType(r.substring(0,4));
+};
+
+window.openLetter = function(letter){
+  const L = window.LETTERS[letter];
+  if(!L) return;
+  $("letterBig").innerText = L.letter;
+  $("letterTitle").innerText = L.title;
+  $("letterShort").innerText = L.short;
+  $("letterBreadcrumb").innerText = "維度 / " + L.letter;
+  $("letterHero").style.background = L.light;
+  $("letterDesc").innerText = L.desc;
+  $("letterStrength").innerHTML = L.strength.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
+  $("letterWeakness").innerHTML = L.weakness.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
+  $("letterCareer").innerText = L.career.join("、");
+  $("letterFriends").innerText = L.friends.join("、");
+  show("letter");
+  window.scrollTo(0,0);
+};
+
+window.openType = function(type){
+  const T = window.TYPES[type];
+  const F = window.TYPES_FULL[type];
+  if(!T) return;
+  $("typeEmoji").innerText = T.emoji;
+  $("typeBig").innerText = type;
+  $("typeName").innerText = T.name + " / " + T.cn;
+  $("typeSlogan").innerText = "「" + T.slogan + "」";
+  $("typeBreadcrumb").innerText = "性格 / " + type;
+  $("typeHero").style.background = "linear-gradient(135deg, " + T.color[0] + ", " + T.color[1] + ")";
+  $("typeHero").style.color = "white";
+  $("typeFull").innerText = F.full;
+  $("typeStrength").innerHTML = F.strength.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
+  $("typeWeakness").innerHTML = F.weakness.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
+  $("typeLove").innerText = F.love.join("、");
+  $("typeWork").innerText = F.work.join("、");
+  $("typeFriend").innerText = F.friend.join("、");
+  $("typeConflict").innerText = F.conflict.join("、");
+  show("type");
+  window.scrollTo(0,0);
+};
+
+window.compareTypes = function(){
+  const a = $("compareA").value;
+  const b = $("compareB").value;
+  if(a === b){
+    $("compareResult").innerHTML = `<div class="text-xs text-gray-500 p-3">揀兩個唔同嘅 4 字母先有得比較</div>`;
+    return;
+  }
+  // 計差異
+  const Ta = window.TYPES[a], Tb = window.TYPES[b];
+  const same = [];
+  const diff = [];
+  for(let i=0;i<4;i++){
+    if(a[i] === b[i]) same.push(a[i]);
+    else diff.push({pos:["第一字母","第二字母","第三字母","第四字母"][i], a:a[i], b:b[i]});
+  }
+  // 算"夾"度（簡單：共享字母比例）
+  const compatScore = Math.floor((same.length / 4) * 100);
+  let html = `
+    <div class="card p-4" style="background:linear-gradient(135deg, ${Ta.color[0]}33, ${Tb.color[0]}33)">
+      <div class="text-center mb-3">
+        <div class="text-2xl">${Ta.emoji} ${a} + ${b} ${Tb.emoji}</div>
+        <div class="text-3xl font-black text-accent mt-2">${compatScore}% 相似</div>
+        <div class="text-xs text-gray-500 mt-1">${same.length}/4 個維度相同</div>
+      </div>
+      <div class="mb-3">
+        <div class="text-xs font-bold mb-1 text-green-600">✓ 一樣嘅地方</div>
+        <div class="text-xs text-gray-700">${same.length === 0 ? "冇一樣" : "同" + same.join("、") + "維度"}</div>
+      </div>
+      <div>
+        <div class="text-xs font-bold mb-1 text-accent">✗ 唔同嘅地方</div>
+        <div class="space-y-1">
+          ${diff.map(d => `
+            <div class="text-xs flex items-center gap-2">
+              <span class="font-bold">${d.pos}：</span>
+              <span class="bg-soft px-2 py-0.5 rounded">${d.a}</span>
+              <span>vs</span>
+              <span class="bg-soft px-2 py-0.5 rounded">${d.b}</span>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    </div>
+  `;
+  $("compareResult").innerHTML = html;
+};
+</script>
+
+</body>
+</html>
