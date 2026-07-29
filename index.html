@@ -5,8 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>你是哪種港人？｜香港 MBTI 性格測試</title>
 <meta name="description" content="60 題廣東話版 MBTI 測試｜5 分鐘知道你是哪種港式性格。茶餐廳、港鐵、O Camp 邊種人？全港最地道嘅性格測試。">
+<meta name="theme-color" content="#D4A95F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="港MBTI">
 <meta property="og:title" content="你是哪種港人？">
 <meta property="og:description" content="60 題廣東話版 MBTI 測試｜5 分鐘知道你是哪種港式性格。茶餐廳、港鐵、O Camp 邊種人？">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
@@ -76,6 +83,61 @@ body{background:var(--paper);color:var(--ink);min-height:100vh}
 
 <!-- App container -->
 <div id="app" class="max-w-md mx-auto px-4 py-6 pb-24">
+
+ <!-- ========== PWA Install Banner ========== -->
+ <div id="installBanner" class="hidden fixed bottom-0 left-0 right-0 z-50 p-3 bg-white border-t-2 border-gold shadow-2xl">
+   <div class="max-w-md mx-auto flex items-center gap-3">
+     <img src="icon-192.png" class="w-12 h-12 rounded-xl flex-shrink-0" alt="港MBTI">
+     <div class="flex-1 min-w-0">
+       <div class="font-black text-sm">加到主畫面</div>
+       <div class="text-xs text-gray-500 truncate">港MBTI · 隨時玩 60 題測試</div>
+     </div>
+     <button id="installBtn" class="btn-gold px-4 py-2 rounded-lg text-sm font-bold flex-shrink-0">安裝</button>
+     <button id="installDismiss" class="text-gray-400 text-xl px-2 flex-shrink-0">✕</button>
+   </div>
+ </div>
+
+ <script>
+ // ========== PWA Install Prompt ==========
+ let deferredPrompt = null;
+ window.addEventListener("beforeinstallprompt", e => {
+   e.preventDefault();
+   deferredPrompt = e;
+   // 第二次 visit 先問（避免即時煩住用戶）
+   const visitCount = parseInt(localStorage.getItem("hkmbti_visits") || "0") + 1;
+   localStorage.setItem("hkmbti_visits", String(visitCount));
+   const dismissed = localStorage.getItem("hkmbti_install_dismissed");
+   if(visitCount >= 2 && !dismissed){
+     setTimeout(() => {
+       document.getElementById("installBanner").classList.remove("hidden");
+     }, 3000);  // 3 秒後先彈
+   }
+ });
+ document.getElementById("installBtn").addEventListener("click", async () => {
+   if(!deferredPrompt) return;
+   document.getElementById("installBanner").classList.add("hidden");
+   deferredPrompt.prompt();
+   const { outcome } = await deferredPrompt.userChoice;
+   if(outcome === "accepted"){
+     localStorage.setItem("hkmbti_installed", "1");
+   }
+   deferredPrompt = null;
+ });
+ document.getElementById("installDismiss").addEventListener("click", () => {
+   document.getElementById("installBanner").classList.add("hidden");
+   localStorage.setItem("hkmbti_install_dismissed", "1");
+ });
+ window.addEventListener("appinstalled", () => {
+   document.getElementById("installBanner").classList.add("hidden");
+   localStorage.setItem("hkmbti_installed", "1");
+ });
+ // Service worker
+ if("serviceWorker" in navigator){
+   window.addEventListener("load", () => {
+     navigator.serviceWorker.register("sw.js").catch(() => {});
+   });
+ }
+ </script>
 
   <!-- ========== KNOWLEDGE HUB ========== -->
   <section id="hub" class="hidden">

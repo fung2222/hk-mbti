@@ -1,0 +1,45 @@
+{
+  "name": "香港 MBTI",
+  "short_name": "港MBTI",
+  "description": "60 題廣東話版 MBTI 測試，全港最地道嘅性格測試",
+  "start_url": "/hk-mbti/",
+  "scope": "/hk-mbti/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FAF7F0",
+  "theme_color": "#D4A95F",
+  "lang": "zh-HK",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["lifestyle", "entertainment"],
+  "shortcuts": [
+    {
+      "name": "做測試",
+      "url": "/hk-mbti/?start=1",
+      "description": "立即開始 60 題 MBTI 測試"
+    },
+    {
+      "name": "性格百科",
+      "url": "/hk-mbti/?hub=1",
+      "description": "查看 16 種性格完整百科"
+    }
+  ]
+}
