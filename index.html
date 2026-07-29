@@ -1304,12 +1304,12 @@ window.renderResult = function(r){
   $("compatibility").innerHTML = compatHtml;
 };
 
-window.downloadCard = function(){
+window.downloadCard = async function(){
   // 從 img tag 拎現有 dataURL → trigger download
   const img = $("shareCardImg");
   if(!img || !img.src || !img.src.startsWith("data:")){
-    // 重新生成
-    generateCardImage();
+    // 重新生成 (async 因為要 load icon)
+    await generateCardImage();
   }
   const img2 = $("shareCardImg");
   if(!img2 || !img2.src || !img2.src.startsWith("data:")){
@@ -1341,15 +1341,59 @@ window.generateCardImage = function(){
   grad.addColorStop(1, "#1E2A3B");
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 720, 1280);
-  // 頂部 header
+  // 頂部 header：先用 placeholder，icon 載完再 draw
   ctx.fillStyle = "white";
   ctx.font = "bold 32px sans-serif";
   ctx.textAlign = "left";
-  ctx.fillText("港", 60, 75);
   ctx.fillText("香港 MBTI", 110, 75);
   ctx.textAlign = "right";
   ctx.font = "24px sans-serif";
   ctx.fillText("2026.07", 660, 75);
+  // Icon logo（用真實 PNG 而非 fillText 文字）
+  // 用 Promise async load icon
+  const drawIcon = new Promise((resolve) => {
+    const iconImg = new Image();
+    iconImg.crossOrigin = "anonymous";
+    iconImg.onload = function(){
+      // Icon 圓角 64x64 在 (40, 40)
+      ctx.save();
+      // 圓角遮罩
+      const r = 16;
+      const x = 40, y = 40, w = 64, h = 64;
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.arcTo(x + w, y, x + w, y + r, r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+      ctx.lineTo(x + r, y + h);
+      ctx.arcTo(x, y + h, x, y + h - r, r);
+      ctx.lineTo(x, y + r);
+      ctx.arcTo(x, y, x + r, y, r);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(iconImg, x, y, w, h);
+      ctx.restore();
+      resolve();
+    };
+    iconImg.onerror = function(){
+      // Fallback：fillText "港"
+      ctx.fillStyle = "white";
+      ctx.font = "bold 40px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("港", 72, 85);
+      ctx.textAlign = "left";
+      resolve();
+    };
+    iconImg.src = "icon-192.png";
+  });
+  // 用 Promise 等 icon load 完先繼續
+  return drawIcon.then(() => {
+    renderCardBody(ctx, t, canvas);
+  });
+};
+
+function renderCardBody(ctx, t, canvas){
   // 中間
   ctx.textAlign = "center";
   ctx.fillStyle = "rgba(255,255,255,0.8)";
@@ -1367,7 +1411,7 @@ window.generateCardImage = function(){
   ctx.fillStyle = "rgba(255,255,255,0.85)";
   ctx.fillText("「" + t.slogan + "」", 360, 730);
   // 3 個分數
-  const scores = t.score;  // ["企硬力9/10","社交力4/10","食力7/10"]
+  const scores = t.score;
   ctx.fillStyle = "white";
   ctx.font = "24px sans-serif";
   ctx.textAlign = "left";
@@ -1376,14 +1420,11 @@ window.generateCardImage = function(){
     const parts = scores[i].split("/");
     const label = parts[0];
     const value = parts[0].match(/\d+/)[0] + "/10";
-    // Label
     ctx.fillStyle = "rgba(255,255,255,0.8)";
     ctx.fillText(label, 60, y);
-    // Value
     ctx.textAlign = "right";
     ctx.fillStyle = "white";
     ctx.fillText(value, 660, y);
-    // Bar
     ctx.fillStyle = "rgba(255,255,255,0.2)";
     ctx.fillRect(60, y + 12, 600, 12);
     ctx.fillStyle = "white";
@@ -1404,7 +1445,7 @@ window.generateCardImage = function(){
     img.dataset.downloadName = `港式MBTI-${window.lastResult}.png`;
   }
   return dataUrl;
-};
+}
 
 // ====================== Save / Share Result ======================
 window.saveResult = function(){
@@ -1435,13 +1476,13 @@ window.generateResultText = function(){
 ${location.origin}${location.pathname}`;
 };
 
-window.downloadResult = function(){
+window.downloadResult = async function(){
   const text = generateResultText();
   if(!text){ alert("冇結果可以下載"); return; }
   // 確保 share card img 已生成
   const img = $("shareCardImg");
   if(!img || !img.src || !img.src.startsWith("data:")){
-    generateCardImage();
+    await generateCardImage();
   }
   const img2 = $("shareCardImg");
   if(!img2 || !img2.src || !img2.src.startsWith("data:")){
@@ -1780,8 +1821,9 @@ window.openType = function(type){
   $("typeWeakness").innerHTML = F.weakness.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
   $("typeLove").innerText = F.love.join("、");
   $("typeWork").innerText = F.work.join("、");
-  $("typeFriend").innerText = F.friend.join("、");
-  $("typeConflict").innerText = F.conflict.join("、");
+  // 兼容：friend 同 conflict 可能冇定義，fallback 用 love
+  $("typeFriend").innerText = (F.friend || F.love).join("、");
+  $("typeConflict").innerText = (F.conflict || F.love).join("、");
   show("type");
   window.scrollTo(0,0);
 };
