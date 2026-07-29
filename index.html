@@ -25,7 +25,29 @@
   --soft:#F2EDE0;
 }
 *{font-family:'Noto Sans TC',sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:var(--paper);color:var(--ink);min-height:100vh}
+body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
+/* 全局字體加大：text-xs / 10px 太細 → 抬一檔 */
+#app .text-\[10px\]{font-size:0.8rem!important;line-height:1.4}
+#app .text-xs{font-size:0.95rem!important;line-height:1.45}
+#app .text-sm{font-size:1.05rem!important;line-height:1.5}
+#app .text-base{font-size:1.12rem!important}
+#app .text-lg{font-size:1.25rem!important}
+.option{font-size:1.05rem}
+.option .flex-1{font-size:1.05rem;line-height:1.45}
+/* 版本雙擊確認 */
+.ver-btn{transition:all .2s cubic-bezier(.34,1.56,.64,1);transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.ver-btn:active{transform:scale(.98)}
+.ver-btn.ver-lit{
+  border-color:var(--gold)!important;border-width:2px!important;
+  background:linear-gradient(135deg,#fff8e8,#ffe8c8)!important;
+  box-shadow:0 8px 24px rgba(212,169,95,.35),0 0 0 3px rgba(212,169,95,.2);
+  transform:translateY(-2px) scale(1.02)
+}
+.ver-btn .ver-hint{display:none;margin-top:.4rem;font-weight:800;color:#8B6F3D}
+.ver-btn.ver-lit .ver-hint{display:block;animation:fadeUp .3s ease-out}
+.ver-btn.ver-lit .ver-arrow{color:var(--gold)!important;transform:translateX(4px)}
+.stat-bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
+.stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
 .brand-gold{color:var(--gold)}
 .bg-gold{background:var(--gold)}
 .bg-paper{background:var(--paper)}
@@ -138,6 +160,9 @@ body{background:var(--paper);color:var(--ink);min-height:100vh}
    }
    if(typeof window.loadHistory === "function"){
      window.loadHistory();
+   }
+   if(typeof window.renderTypeStats === "function"){
+     window.renderTypeStats();
    }
  });
  </script>
@@ -476,40 +501,44 @@ body{background:var(--paper);color:var(--ink);min-height:100vh}
       </div>
     </div>
 
-    <!-- 3 個版本選擇 -->
+    <!-- 3 個版本選擇（一按著燈，再按進入） -->
     <div class="card p-5 mb-4">
       <div class="text-xs tracking-widest brand-gold font-bold mb-2">🎯 揀你嘅版本</div>
-      <div class="text-sm font-bold mb-3">3 種長度揀最適合嘅</div>
-      <div class="space-y-2">
-        <button onclick="startTestWithVersion('life')" class="w-full p-4 rounded-xl border-2 border-gold bg-gradient-to-r from-yellow-50 to-orange-50 text-left hover:shadow-md transition">
+      <div class="text-sm font-bold mb-1">3 種長度揀最適合嘅</div>
+      <div class="text-xs text-gray-600 mb-3">先撳一次著燈確認 → 再撳一次開始測試</div>
+      <div class="space-y-2.5" id="versionList">
+        <button type="button" data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full p-4 rounded-xl border-2 border-gold bg-gradient-to-r from-yellow-50 to-orange-50 text-left">
           <div class="flex items-center justify-between">
             <div>
               <div class="text-base font-black text-ink">🌟 生活版（完整測試）</div>
               <div class="text-xs text-gray-600 mt-0.5">60 題 · 5 分鐘 · 最準確</div>
+              <div class="ver-hint text-xs">✨ 再撳一次進入生活版 →</div>
             </div>
-            <div class="text-2xl">→</div>
+            <div class="ver-arrow text-2xl transition">→</div>
           </div>
         </button>
-        <button onclick="startTestWithVersion('advanced')" class="w-full p-4 rounded-xl border border-gray-300 bg-white text-left hover:border-gold hover:bg-soft transition">
+        <button type="button" data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full p-4 rounded-xl border border-gray-300 bg-white text-left">
           <div class="flex items-center justify-between">
             <div>
               <div class="text-base font-bold text-ink">🎯 進階版（快速版）</div>
               <div class="text-xs text-gray-600 mt-0.5">30 題 · 3 分鐘 · 平衡選擇</div>
+              <div class="ver-hint text-xs">✨ 再撳一次進入進階版 →</div>
             </div>
-            <div class="text-2xl text-gray-400">→</div>
+            <div class="ver-arrow text-2xl text-gray-400 transition">→</div>
           </div>
         </button>
-        <button onclick="startTestWithVersion('bb')" class="w-full p-4 rounded-xl border border-gray-300 bg-white text-left hover:border-gold hover:bg-soft transition">
+        <button type="button" data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full p-4 rounded-xl border border-gray-300 bg-white text-left">
           <div class="flex items-center justify-between">
             <div>
               <div class="text-base font-bold text-ink">🍼 BB 版（極簡版）</div>
               <div class="text-xs text-gray-600 mt-0.5">10 題 · 1 分鐘 · 純粹試下</div>
+              <div class="ver-hint text-xs">✨ 再撳一次進入 BB 版 →</div>
             </div>
-            <div class="text-2xl text-gray-400">→</div>
+            <div class="ver-arrow text-2xl text-gray-400 transition">→</div>
           </div>
         </button>
       </div>
-      <div class="text-[10px] text-gray-500 mt-3 text-center">3 個版本結果互通 · 揀咗可隨時重測</div>
+      <div class="text-xs text-gray-500 mt-3 text-center">題目每次打亂 · 3 個版本結果互通</div>
     </div>
 
     <div class="card p-4 mb-4 bg-soft">
@@ -619,11 +648,15 @@ body{background:var(--paper);color:var(--ink);min-height:100vh}
     </div>
 
     <div class="card p-5">
-      <h3 class="font-bold mb-3 text-sm">📊 已有 143,021 個香港人做過</h3>
-      <div class="text-xs text-gray-600 space-y-2">
-        <div class="flex justify-between"><span>最受歡迎：INFP「調解員」</span><span class="brand-gold font-bold">11.0%</span></div>
-        <div class="flex justify-between"><span>最少：INFJ「提倡者」</span><span class="text-gray-400">1.2%</span></div>
-        <div class="flex justify-between"><span>香港人最 F（感性）</span><span class="brand-gold font-bold">+15.1%</span></div>
+      <h3 class="font-bold mb-1 text-base">📊 香港 16 型結果統計</h3>
+      <p class="text-xs text-gray-600 mb-3">參考基線（公開分佈估算）+ 本機完成次數。每完成一次測試會更新。</p>
+      <div class="flex justify-between text-xs text-gray-600 mb-2">
+        <span>累積樣本 <b id="statTotal" class="brand-gold">—</b> 人</span>
+        <span>香港人口約 <b>750 萬</b></span>
+      </div>
+      <div id="typeStats" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
+      <div class="text-xs text-gray-500 mt-3 pt-2 border-t border-gray-100">
+        * 基線參考 16Personalities 常見分佈 × 143,021 香港樣本量級；本機每次完成 +1。唔係全港實時普查。
       </div>
     </div>
   </section>
@@ -1110,10 +1143,12 @@ window.SCENARIOS = [
 
 window.state = {
   idx: 0,
-  answers: new Array(60).fill(null),
+  answers: [],
   startedAt: null,
   version: "life",
-  maxQ: 60
+  maxQ: 60,
+  deck: null,
+  selectedVersion: null
 };
 const state = window.state;  // local alias for handlers
 
@@ -1123,35 +1158,167 @@ window.show = function(id){
   ["home","test","result","hub","letter","type","social","socialArticle","romance","romanceArticle"].forEach(s => window.$(s).classList.add("hidden"));
   window.$(id).classList.remove("hidden");
   window.scrollTo(0,0);
+  if(id === "home"){
+    try{ loadHistory(); }catch(e){}
+    try{ renderTypeStats(); }catch(e){}
+    try{ clearVersionUI(); }catch(e){}
+  }
+};
+
+// ===== 版本雙擊確認（著燈 → 再撳進入）=====
+window.clearVersionUI = function(){
+  state.selectedVersion = null;
+  document.querySelectorAll(".ver-btn").forEach(b => b.classList.remove("ver-lit"));
+};
+
+window.selectVersion = function(version){
+  if(state.selectedVersion === version){
+    clearVersionUI();
+    startTestWithVersion(version);
+    return;
+  }
+  state.selectedVersion = version;
+  document.querySelectorAll(".ver-btn").forEach(b => {
+    b.classList.toggle("ver-lit", b.getAttribute("data-ver") === version);
+  });
+};
+
+// ===== Fisher-Yates =====
+window.shuffleArr = function(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    const t = a[i]; a[i]=a[j]; a[j]=t;
+  }
+  return a;
+};
+
+// 題目變體：同一計分向量，換港式情景字眼（保準確）
+window.Q_ALTS = {
+  "E/I - 社交場合": [
+    "朋友生日飯你最典型會：",
+    "有人請你去派對，你最自然嘅反應係："
+  ],
+  "E/I - 港鐵": [
+    "搭港鐵成日點過時間？",
+    "港鐵逼車廂入面，你通常："
+  ],
+  "E/I - 群組": [
+    "WhatsApp 群有人@你但你唔想覆，你會：",
+    "公司／班群有人狂 tag 你，你會："
+  ],
+  "S/N - 揀科": [
+    "揀 JUPAS／轉行方向，你會優先：",
+    "要揀一條長遠路，你最先睇："
+  ],
+  "S/N - 旅行": [
+    "去旅行你會：",
+    "放長假去玩，你點 plan："
+  ],
+  "T/F - 爭執": [
+    "朋友同你嗌交，你通常：",
+    "屋企人鬧交你會："
+  ],
+  "J/P - 旅行": [
+    "有三日長假，你會：",
+    "突然放一天假，你會："
+  ],
+  "T/A - 壓力": [
+    "壓力大嘅時候你會：",
+    "死線逼近你通常："
+  ],
+  "E/I - 便利店": [
+    "凌晨 2 點去 7-11 撞到熟人，你會：",
+    "便利店排隊撞到舊同學，你會："
+  ],
+  "J/P - Deadline": [
+    "Deadline 逼近，你通常：",
+    "功課／報告死線前你會："
+  ],
+  "T/F - 揀餐廳": [
+    "一班人揀餐廳，你會：",
+    "約飯定地點你通常："
+  ]
+};
+
+window.dimOf = function(q){
+  const d = (q.d || "").split(" - ")[0];
+  if(d.indexOf("E/I")===0) return "EI";
+  if(d.indexOf("S/N")===0) return "SN";
+  if(d.indexOf("T/F")===0) return "TF";
+  if(d.indexOf("J/P")===0) return "JP";
+  if(d.indexOf("T/A")===0) return "TA";
+  // fallback by option keys
+  const v = (q.o && q.o[0] && q.o[0].v) || {};
+  if("E" in v || "I" in v) return "EI";
+  if("S" in v || "N" in v) return "SN";
+  if("A" in v) return "TA";
+  if("F" in v || "T" in v) return "TF";
+  if("J" in v || "P" in v) return "JP";
+  return "EI";
+};
+
+// 建立本次測試題庫：按維度分層抽樣 + 打亂順序 + 題目/選項變體
+window.buildDeck = function(version){
+  let perDim = 12;
+  if(version === "advanced") perDim = 6;
+  else if(version === "bb") perDim = 2;
+
+  const buckets = {EI:[], SN:[], TF:[], JP:[], TA:[]};
+  window.QUESTIONS.forEach(q => {
+    const dim = dimOf(q);
+    if(buckets[dim]) buckets[dim].push(q);
+  });
+
+  let picked = [];
+  Object.keys(buckets).forEach(dim => {
+    const pool = shuffleArr(buckets[dim]);
+    picked = picked.concat(pool.slice(0, Math.min(perDim, pool.length)));
+  });
+
+  // 組裝可突變副本：題目字 + 選項順序打亂
+  const deck = shuffleArr(picked).map(q => {
+    const copy = {d:q.d, t:q.t, o:q.o.map(o => ({l:o.l, t:o.t, v:Object.assign({}, o.v)}))};
+    // 題目變體
+    const alts = window.Q_ALTS[q.d];
+    if(alts && alts.length){
+      const pool = [q.t].concat(alts);
+      copy.t = pool[Math.floor(Math.random()*pool.length)];
+    }
+    // 選項順序打亂（分數向量跟住走）— 保準確
+    copy.o = shuffleArr(copy.o).map((o, i) => ({
+      l: String.fromCharCode(65+i), // A B C D
+      t: o.t,
+      v: o.v
+    }));
+    return copy;
+  });
+
+  return deck;
 };
 
 window.startTest = function(){
-  window.state.version = "life";
-  state.idx = 0;
-  state.answers = new Array(60).fill(null);
-  state.startedAt = Date.now();
-  show("test");
-  renderQ();
+  startTestWithVersion("life");
 };
 
 window.startTestWithVersion = function(version){
   // version: 'life' (60題), 'advanced' (30題), 'bb' (10題)
   window.state.version = version;
-  let max = 60;
-  if(version === "advanced") max = 30;
-  else if(version === "bb") max = 10;
-  window.state.maxQ = max;
+  const deck = buildDeck(version);
+  window.state.deck = deck;
+  window.state.maxQ = deck.length;
   state.idx = 0;
-  state.answers = new Array(60).fill(null);
+  state.answers = new Array(deck.length).fill(null);
   state.startedAt = Date.now();
-  // 更新 progress 文字
   show("test");
   renderQ();
 };
 
 window.renderQ = function(){
-  const q = window.QUESTIONS[state.idx];
-  const max = state.maxQ || 60;
+  const deck = state.deck || window.QUESTIONS;
+  const q = deck[state.idx];
+  if(!q){ finishTest(); return; }
+  const max = state.maxQ || deck.length;
   const verName = state.version === "bb" ? "BB版" : state.version === "advanced" ? "進階版" : "生活版";
   $("qIdx").innerText = (state.idx + 1) + " / " + max + " · " + verName;
   $("progressFill").style.width = ((state.idx + 1) / max * 100) + "%";
@@ -1181,7 +1348,7 @@ window.selectOpt = function(i){
     el.classList.toggle("selected", j === i);
   });
   setTimeout(() => {
-    const max = state.maxQ || 60;
+    const max = state.maxQ || (state.deck ? state.deck.length : 60);
     if(state.idx < max - 1){
       state.idx++;
       renderQ();
@@ -1200,41 +1367,27 @@ window.prev = function(){
 
 window.confirmExit = function(){
   if(confirm("離開測試？進度會唔儲存。")){
-    show("home");
+    clearVersionUI();
+    goHome();
   }
 };
 
+// 按答案向量計分（唔再靠題序分段）— shuffle 後仍然準
 window.calcScore = function(){
   let E=0,I=0,S=0,N=0,T=0,F=0,J=0,P=0,T2=0,A2=0;
-  const max = state.maxQ || 60;
-  // 60 題版本：每維度 12 題
-  // 30 題版本：每維度 6 題（前 6 題）
-  // 10 題版本：每維度 2 題（前 2 題）
-  // 邊界：i<dimEnd
-  // 60 題: 0-12, 12-24, 24-36, 36-48, 48-60
-  // 30 題: 0-6, 6-12, 12-18, 18-24, 24-30
-  // 10 題: 0-2, 2-4, 4-6, 6-8, 8-10
-  const seg = max / 5;  // 每個 segment 嘅 size
+  const deck = state.deck || window.QUESTIONS;
+  const max = state.maxQ || deck.length;
   for(let i=0;i<max;i++){
     const a = state.answers[i];
-    if(a === null) continue;
-    const v = window.QUESTIONS[i].o[a].v;
-    if(i<seg){
-      if(v.E) E+=v.E;
-      if(v.I) I+=v.I;
-    } else if(i<seg*2){
-      if(v.S) S+=v.S;
-      if(v.N) N+=v.N;
-    } else if(i<seg*3){
-      if(v.T) T+=v.T;
-      if(v.F) F+=v.F;
-    } else if(i<seg*4){
-      if(v.J) J+=v.J;
-      if(v.P) P+=v.P;
-    } else {
-      if(v.T) T2+=v.T;
-      if(v.A) A2+=v.A;
-    }
+    if(a === null || a === undefined) continue;
+    const q = deck[i];
+    if(!q || !q.o[a]) continue;
+    const v = q.o[a].v;
+    if("E" in v || "I" in v){ E += v.E||0; I += v.I||0; }
+    else if("S" in v || "N" in v){ S += v.S||0; N += v.N||0; }
+    else if("A" in v){ T2 += v.T||0; A2 += v.A||0; }
+    else if("F" in v || "T" in v){ T += v.T||0; F += v.F||0; }
+    else if("J" in v || "P" in v){ J += v.J||0; P += v.P||0; }
   }
   const mbti = (E>=I?"E":"I") + (S>=N?"S":"N") + (T>=F?"T":"F") + (J>=P?"J":"P");
   const ta = T2 >= A2 ? "-T" : "-A";
@@ -1456,7 +1609,76 @@ window.saveResult = function(){
     completed: true
   };
   localStorage.setItem("hkmbti_last_result", JSON.stringify(record));
+  try{ recordTypeStat(window.lastResult); }catch(e){}
   setShareStatus("✅ 已儲存喺主頁，自動記錄你嘅測試");
+};
+
+// ===== 16 型統計（基線 + 本機）=====
+// 基線 % 參考常見 16P 分佈（香港／華語圈偏 F 型），× 143021 樣本量級
+window.STAT_BASE_PCT = {
+  INFP:0.110, ENFP:0.092, ISFJ:0.088, ESFJ:0.085,
+  ISTJ:0.078, ESTJ:0.072, ISFP:0.065, ESFP:0.060,
+  INTP:0.055, ENTP:0.050, INFJ:0.048, ENFJ:0.045,
+  INTJ:0.042, ENTJ:0.038, ISTP:0.036, ESTP:0.036
+};
+window.STAT_BASE_N = 143021;
+window.HK_POP = 7500000;
+
+window.getTypeStats = function(){
+  let local = {};
+  try{ local = JSON.parse(localStorage.getItem("hkmbti_type_counts")||"{}") || {}; }catch(e){ local = {}; }
+  const counts = {};
+  let total = 0;
+  Object.keys(window.STAT_BASE_PCT).forEach(k => {
+    const base = Math.round(window.STAT_BASE_PCT[k] * window.STAT_BASE_N);
+    const extra = parseInt(local[k]||0, 10) || 0;
+    counts[k] = base + extra;
+    total += counts[k];
+  });
+  return {counts, total, local};
+};
+
+window.recordTypeStat = function(mbtiFull){
+  const code = (mbtiFull||"").substring(0,4).toUpperCase();
+  if(!window.STAT_BASE_PCT[code]) return;
+  let local = {};
+  try{ local = JSON.parse(localStorage.getItem("hkmbti_type_counts")||"{}") || {}; }catch(e){ local = {}; }
+  local[code] = (parseInt(local[code]||0,10)||0) + 1;
+  localStorage.setItem("hkmbti_type_counts", JSON.stringify(local));
+  try{ renderTypeStats(); }catch(e){}
+};
+
+window.renderTypeStats = function(){
+  const box = $("typeStats");
+  const totalEl = $("statTotal");
+  if(!box) return;
+  const {counts, total} = getTypeStats();
+  if(totalEl) totalEl.innerText = total.toLocaleString("en-HK");
+  const ranked = Object.keys(counts).sort((a,b) => counts[b]-counts[a]);
+  const maxC = counts[ranked[0]] || 1;
+  const names = {};
+  if(window.TYPES){
+    Object.keys(window.TYPES).forEach(k => { names[k] = window.TYPES[k].cn || window.TYPES[k].name || k; });
+  }
+  box.innerHTML = ranked.map((code, i) => {
+    const n = counts[code];
+    const pct = total ? (n/total*100) : 0;
+    const hkEst = Math.round(window.HK_POP * (n/total));
+    const bar = Math.max(4, Math.round(n/maxC*100));
+    const medal = i===0 ? "🥇 " : i===1 ? "🥈 " : i===2 ? "🥉 " : "";
+    const label = names[code] ? `${code} ${names[code]}` : code;
+    return `<div class="bg-soft rounded-lg p-2.5">
+      <div class="flex justify-between items-baseline gap-2 mb-1">
+        <span class="text-xs font-bold">${medal}${label}</span>
+        <span class="text-xs brand-gold font-black">${pct.toFixed(1)}%</span>
+      </div>
+      <div class="stat-bar mb-1"><div class="stat-fill" style="width:${bar}%"></div></div>
+      <div class="flex justify-between text-xs text-gray-600">
+        <span>${n.toLocaleString("en-HK")} 人</span>
+        <span>約香港 ${hkEst.toLocaleString("en-HK")} 人</span>
+      </div>
+    </div>`;
+  }).join("");
 };
 
 window.setShareStatus = function(msg){
@@ -1606,14 +1828,15 @@ window.viewHistoryResult = function(){
     const raw = localStorage.getItem("hkmbti_last_result");
     if(!raw) return;
     const rec = JSON.parse(raw);
+    const code = (rec.mbti||"").substring(0,4);
     window.lastResult = rec.mbti;
-    // 用 fake state 重新生成結果頁
-    window.state.answers = new Array(60).fill(0);  // 用 fake answers
-    const r = calcScore();
-    window.lastResult = r.mbti;
+    // 直接用儲存結果顯示，唔重新亂計
+    const r = {mbti: rec.mbti, score:{}, version: "life", totalQ: 60};
     renderResult(r);
-    generateCardImage();  // 重新生成 card image
+    generateCardImage();
     $("finishTime").innerText = formatTimeAgo(rec.timestamp);
+    if($("versionBadge")) $("versionBadge").innerText = "紀錄";
+    if($("finishQ")) $("finishQ").innerText = "—";
     show("result");
   } catch(e){
     alert("載入失敗");
