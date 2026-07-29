@@ -131,12 +131,15 @@ body{background:var(--paper);color:var(--ink);min-height:100vh}
    document.getElementById("installBanner").classList.add("hidden");
    localStorage.setItem("hkmbti_installed", "1");
  });
- // Service worker
- if("serviceWorker" in navigator){
-   window.addEventListener("load", () => {
+ // Service worker + 首次主頁 load history
+ window.addEventListener("load", () => {
+   if("serviceWorker" in navigator){
      navigator.serviceWorker.register("sw.js").catch(() => {});
-   });
- }
+   }
+   if(typeof window.loadHistory === "function"){
+     window.loadHistory();
+   }
+ });
  </script>
 
   <!-- ========== KNOWLEDGE HUB ========== -->
@@ -439,6 +442,26 @@ body{background:var(--paper);color:var(--ink);min-height:100vh}
       <div class="text-xs text-gray-500">廣東話版 v1.2</div>
     </div>
 
+    <!-- 用戶測試記錄（localStorage） -->
+    <div id="userHistory" class="hidden card p-4 mb-4" style="background:linear-gradient(135deg, #FFF5E0, #FFFAF0); border-left:4px solid #D4A95F;">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-xs text-gray-500 mb-1">📌 你上次嘅測試</div>
+          <div class="flex items-center gap-2">
+            <div class="text-2xl" id="historyEmoji">🌸</div>
+            <div>
+              <div class="font-black text-lg" id="historyMbti">INFP</div>
+              <div class="text-xs text-gray-600" id="historyTime">3 日前</div>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <button onclick="viewHistoryResult()" class="text-xs bg-gold text-ink font-bold px-3 py-1.5 rounded">查看</button>
+          <button onclick="clearHistory()" class="text-xs text-gray-400 underline">清除</button>
+        </div>
+      </div>
+    </div>
+
     <div class="card p-6 mb-4">
       <div class="flex items-center justify-between mb-3">
         <div class="text-xs tracking-widest brand-gold font-bold">🎭 港式性格測試</div>
@@ -664,15 +687,20 @@ body{background:var(--paper);color:var(--ink);min-height:100vh}
     </div>
 
     <div class="card p-5 mb-4">
-      <h3 class="font-bold mb-2">🔁 挑戰再測一次</h3>
-      <p class="text-xs text-gray-600 mb-3">用另一個身份（朋友 / 家人）再測一次</p>
-      <button onclick="startTest()" class="bg-soft w-full py-2.5 rounded-lg text-sm font-bold">再測一次</button>
+      <h3 class="font-bold mb-2">💾 儲存 + 分享</h3>
+      <p class="text-xs text-gray-600 mb-3">下載結果圖 / Share 俾朋友 / 自動記錄喺主頁</p>
+      <div class="grid grid-cols-3 gap-2">
+        <button onclick="downloadResult()" class="bg-gold text-ink py-2.5 rounded-lg text-sm font-bold">📥 下載圖</button>
+        <button onclick="shareResult()" class="bg-soft py-2.5 rounded-lg text-sm font-bold">📤 Share</button>
+        <button onclick="copyResult()" class="bg-soft py-2.5 rounded-lg text-sm font-bold">📋 Copy</button>
+      </div>
+      <div id="shareStatus" class="text-[10px] text-gray-500 mt-2 text-center"></div>
     </div>
 
     <div class="card p-5 mb-4">
-      <h3 class="font-bold mb-2">📊 想看 Premium 深度報告？</h3>
-      <p class="text-xs text-gray-600 mb-3">40 頁 Career Guide + AI Mentor<br>適合升學 / 轉工 / 升職</p>
-      <button onclick="alert('Prototype 階段，未連接付款')" class="text-white w-full py-2.5 rounded-lg text-sm font-bold bg-ink">解鎖 HK$49</button>
+      <h3 class="font-bold mb-2">🔁 挑戰再測一次</h3>
+      <p class="text-xs text-gray-600 mb-3">用另一個身份（朋友 / 家人）再測一次</p>
+      <button onclick="startTest()" class="bg-soft w-full py-2.5 rounded-lg text-sm font-bold">再測一次</button>
     </div>
 
     <button onclick="goHome()" class="text-xs text-gray-400 w-full text-center block mt-2">返回主頁</button>
@@ -746,11 +774,11 @@ window.QUESTIONS = [
     {l:"C", t:"心入面鬧但唔講", v:{E:0,I:2}},
     {l:"D", t:"自己做完佢嗰份", v:{E:0,I:1}}
   ]},
-  {d:"E/I - 7-11", t:"凌晨 2 點你去 7-11 撞到朋友，你會：", o:[
-    {l:"A", t:"主動打招呼傾幾句", v:{E:2,I:0}},
-    {l:"B", t:"笑下點頭就算", v:{E:1,I:1}},
-    {l:"C", t:"當睇唔到，唔想對話", v:{E:0,I:2}},
-    {l:"D", t:"點頭即刻閃", v:{E:0,I:1}}
+  {d:"E/I - 排隊", t:"餐廳等位 30 分鐘，你會：", o:[
+    {l:"A", t:"主動同人搭訕打發時間", v:{E:2,I:0}},
+    {l:"B", t:"聽下其他人傾偈", v:{E:1,I:1}},
+    {l:"C", t:"戴住耳機自己睇手機", v:{E:0,I:2}},
+    {l:"D", t:"行出去其他地方先", v:{E:0,I:1}}
   ]},
   {d:"E/I - 問路", t:"喺港島唔識路，你會：", o:[
     {l:"A", t:"問途人", v:{E:2,I:0}},
@@ -900,11 +928,11 @@ window.QUESTIONS = [
     {l:"C", t:"睇下個機構", v:{T:1,F:0}},
     {l:"D", t:"朋友去我先去", v:{T:0,F:1}}
   ]},
-  {d:"T/F - 結論", t:"你覺得自己比較似：", o:[
-    {l:"A", t:"Logical 邏輯型", v:{T:2,F:0}},
-    {l:"B", t:"感性型", v:{T:0,F:2}},
-    {l:"C", t:"視乎情況", v:{T:1,F:1}},
-    {l:"D", t:"靠直覺", v:{T:0,F:1}}
+  {d:"T/F - 揀餐廳", t:"揀餐廳你會：", o:[
+    {l:"A", t:"睇評分 + 食物 + 價錢", v:{T:2,F:0}},
+    {l:"B", t:"朋友推薦邊間就食邊間", v:{T:0,F:2}},
+    {l:"C", t:"列 pros & cons 比較", v:{T:1,F:0}},
+    {l:"D", t:"睇環境靚唔靚 + 氣氛", v:{T:0,F:2}}
   ]},
 
   // J/P 軸 (12 題)
@@ -1042,17 +1070,17 @@ window.QUESTIONS = [
     {l:"C", t:"覆 message", v:{T:1,A:0}},
     {l:"D", t:"睇片到天光", v:{T:1,A:1}}
   ]},
-  {d:"T/A - 壓力食", t:"壓力大時你會：", o:[
-    {l:"A", t:"食嘢", v:{T:2,A:0}},
-    {l:"B", t:"做運動", v:{T:1,A:1}},
-    {l:"C", t:"打機", v:{T:1,A:1}},
-    {l:"D", t:"照瞓", v:{T:0,A:2}}
+  {d:"T/A - 預備", t:"朋友約你 1 小時後食飯，你會：", o:[
+    {l:"A", t:"即刻諗要著咩衫", v:{T:2,A:0}},
+    {l:"B", t:"睇下做緊咩決定去唔去", v:{T:1,A:1}},
+    {l:"C", t:"到時再算", v:{T:0,A:2}},
+    {l:"D", t:"照舊 plan 唔改", v:{T:0,A:2}}
   ]},
-  {d:"T/A - 結尾", t:"最後，你覺得自己：", o:[
-    {l:"A", t:"容易緊張", v:{T:2,A:0}},
-    {l:"B", t:"輕鬆自在", v:{T:0,A:2}},
-    {l:"C", t:"視乎情況", v:{T:1,A:1}},
-    {l:"D", t:"朋友話我 OK", v:{T:0,A:1}}
+  {d:"T/A - 結尾", t:"朋友話你最近瘦咗 / 肥咗，你會：", o:[
+    {l:"A", t:"即刻想點解，係咪暗示咩", v:{T:2,A:0}},
+    {l:"B", t:"輕鬆笑下就算", v:{T:0,A:2}},
+    {l:"C", t:"會暗地留意吓", v:{T:1,A:0}},
+    {l:"D", t:"完全冇感覺", v:{T:0,A:2}}
   ]}
 ];
 
@@ -1195,6 +1223,7 @@ window.finishTest = function(){
   const r = calcScore();
   window.lastResult = r.mbti;
   renderResult(r);
+  saveResult();  // 自動儲存
   const mins = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
   $("finishTime").innerText = mins + " 分鐘";
   show("result");
@@ -1272,7 +1301,218 @@ window.downloadCard = function(){
   alert("Prototype 階段，要 production 就要 html2canvas 整合。\n\n簡單做法：手機長按分享卡截圖。");
 };
 
-window.goHome = function(){show("home")};
+// ====================== Save / Share Result ======================
+window.saveResult = function(){
+  if(!window.lastResult) return;
+  const record = {
+    mbti: window.lastResult,
+    timestamp: Date.now(),
+    completed: true
+  };
+  localStorage.setItem("hkmbti_last_result", JSON.stringify(record));
+  setShareStatus("✅ 已儲存喺主頁，自動記錄你嘅測試");
+};
+
+window.setShareStatus = function(msg){
+  const el = $("shareStatus");
+  if(el) el.innerText = msg;
+  setTimeout(() => { if(el) el.innerText = ""; }, 3000);
+};
+
+window.generateResultText = function(){
+  if(!window.lastResult) return "";
+  const t = window.TYPES[window.lastResult.substring(0,4)];
+  if(!t) return "";
+  return `我嘅港式 MBTI：${window.lastResult} ${t.name}（${t.cn}）
+「${t.slogan}」
+
+60 題廣東話版 MBTI 測試
+${location.origin}${location.pathname}`;
+};
+
+window.downloadResult = function(){
+  const text = generateResultText();
+  if(!text){ alert("冇結果可以下載"); return; }
+  // 用 canvas 生成 1080x1920 圖片
+  const canvas = document.createElement("canvas");
+  canvas.width = 1080;
+  canvas.height = 1920;
+  const ctx = canvas.getContext("2d");
+  // 金色背景
+  const grad = ctx.createLinearGradient(0, 0, 0, 1920);
+  grad.addColorStop(0, "#E89A6B");
+  grad.addColorStop(0.5, "#D4A95F");
+  grad.addColorStop(1, "#8B6F3D");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1080, 1920);
+  // 黑色文字
+  ctx.fillStyle = "#1a1a1a";
+  ctx.textAlign = "center";
+  ctx.font = "bold 80px sans-serif";
+  ctx.fillText("我嘅港式 MBTI", 540, 300);
+  // 4 字母
+  const t = window.TYPES[window.lastResult.substring(0,4)];
+  ctx.font = "bold 320px serif";
+  ctx.fillText(window.lastResult.substring(0,4), 540, 750);
+  // 性格名
+  ctx.font = "bold 90px sans-serif";
+  ctx.fillText(t.name, 540, 900);
+  // 港式 slogan
+  ctx.font = "italic 60px sans-serif";
+  ctx.fillText("「" + t.slogan + "」", 540, 1020);
+  // 描述
+  ctx.font = "50px sans-serif";
+  const descLines = wrapText(ctx, t.desc, 900, 70);
+  let y = 1180;
+  descLines.slice(0, 6).forEach(line => {
+    ctx.fillText(line, 540, y);
+    y += 70;
+  });
+  // 底部 QR code + URL
+  ctx.font = "bold 40px sans-serif";
+  ctx.fillText("掃 QR 做測試：", 540, 1700);
+  ctx.font = "35px monospace";
+  ctx.fillText("fung2222.github.io/hk-mbti", 540, 1780);
+  // 下載
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `我的港式MBTI-${window.lastResult}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setShareStatus("✅ 圖片已下載！");
+    saveResult();
+  }, "image/png");
+};
+
+function wrapText(ctx, text, maxWidth, lineHeight){
+  // 中文 wrap
+  const chars = text.split("");
+  const lines = [];
+  let line = "";
+  for(let i=0;i<chars.length;i++){
+    const testLine = line + chars[i];
+    if(ctx.measureText(testLine).width > maxWidth && line.length > 0){
+      lines.push(line);
+      line = chars[i];
+    } else {
+      line = testLine;
+    }
+  }
+  if(line) lines.push(line);
+  return lines;
+}
+
+window.shareResult = function(){
+  const text = generateResultText();
+  if(!text){ alert("冇結果可以分享"); return; }
+  if(navigator.share){
+    navigator.share({
+      title: "我嘅港式 MBTI",
+      text: text,
+      url: location.href
+    }).then(() => {
+      setShareStatus("✅ 已分享！");
+      saveResult();
+    }).catch(() => copyResult());
+  } else {
+    copyResult();
+  }
+};
+
+window.copyResult = function(){
+  const text = generateResultText();
+  if(!text){ alert("冇結果可以 copy"); return; }
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(() => {
+      setShareStatus("✅ 已 Copy 到剪貼簿！");
+      saveResult();
+    }).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+};
+
+function fallbackCopy(text){
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand("copy");
+    setShareStatus("✅ 已 Copy！");
+  } catch(e) {
+    setShareStatus("❌ Copy 失敗");
+  }
+  document.body.removeChild(ta);
+  saveResult();
+};
+
+window.goHome = function(){
+  show("home");
+  loadHistory();
+};
+
+// ====================== History Functions ======================
+window.loadHistory = function(){
+  try{
+    const raw = localStorage.getItem("hkmbti_last_result");
+    if(!raw){ $("userHistory").classList.add("hidden"); return; }
+    const rec = JSON.parse(raw);
+    const t = window.TYPES[rec.mbti.substring(0,4)];
+    if(!t){ $("userHistory").classList.add("hidden"); return; }
+    $("historyEmoji").innerText = t.emoji;
+    $("historyMbti").innerText = rec.mbti;
+    $("historyTime").innerText = formatTimeAgo(rec.timestamp);
+    $("userHistory").classList.remove("hidden");
+  } catch(e){
+    $("userHistory").classList.add("hidden");
+  }
+};
+
+function formatTimeAgo(ts){
+  const diff = Date.now() - ts;
+  const min = Math.floor(diff / 60000);
+  const hour = Math.floor(diff / 3600000);
+  const day = Math.floor(diff / 86400000);
+  if(min < 1) return "剛剛";
+  if(min < 60) return min + " 分鐘前";
+  if(hour < 24) return hour + " 小時前";
+  if(day < 7) return day + " 日前";
+  if(day < 30) return Math.floor(day/7) + " 週前";
+  if(day < 365) return Math.floor(day/30) + " 個月前";
+  return Math.floor(day/365) + " 年前";
+}
+
+window.viewHistoryResult = function(){
+  try{
+    const raw = localStorage.getItem("hkmbti_last_result");
+    if(!raw) return;
+    const rec = JSON.parse(raw);
+    window.lastResult = rec.mbti;
+    // 用 fake state 重新生成結果頁
+    window.state.answers = new Array(60).fill(0);  // 用 fake answers
+    const r = calcScore();
+    window.lastResult = r.mbti;
+    renderResult(r);
+    $("finishTime").innerText = formatTimeAgo(rec.timestamp);
+    show("result");
+  } catch(e){
+    alert("載入失敗");
+  }
+};
+
+window.clearHistory = function(){
+  if(confirm("確定要清除測試記錄？")){
+    localStorage.removeItem("hkmbti_last_result");
+    $("userHistory").classList.add("hidden");
+  }
+};
 
 // ====================== Knowledge Hub Functions ======================
 window.openHub = function(){
