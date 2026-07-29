@@ -657,49 +657,17 @@ body{background:var(--paper);color:var(--ink);min-height:100vh}
       <div class="text-xs text-gray-500">完成時間：<span id="finishTime">5 分鐘</span> · 用咗 <span id="finishQ">60</span> 題</div>
     </div>
 
-    <!-- Share Card Preview -->
-    <div id="shareCard" class="share-card mx-auto mb-4 fade-up" style="background:linear-gradient(135deg,#D4A95F,#8B6F3D)">
-      <div class="flex items-center justify-between text-xs">
-        <div class="flex items-center gap-1.5 font-bold">
-          <div class="w-6 h-6 bg-white rounded-md flex items-center justify-center text-[10px]" style="color:#8B6F3D">港</div>
-          香港 MBTI
-        </div>
-        <div class="opacity-80">2026.07</div>
-      </div>
-
-      <div class="text-center">
-        <div class="text-xs opacity-80 mb-1">你是</div>
-        <div id="mbtiBig" class="mbti-letter-big">INTJ</div>
-        <div id="mbtiName" class="text-lg font-bold mt-1">建築師</div>
-        <div id="mbtiSlogan" class="text-xs opacity-90 mt-1 italic">「東鐵企到中環」</div>
-      </div>
-
-      <div>
-        <div class="flex justify-between text-[10px] opacity-80 mb-1">
-          <span>企硬力</span><span id="score1">9/10</span>
-        </div>
-        <div class="trait-bar mb-2">
-          <div id="bar1" class="trait-fill bg-white" style="width:90%"></div>
-        </div>
-        <div class="flex justify-between text-[10px] opacity-80 mb-1">
-          <span>社交力</span><span id="score2">6/10</span>
-        </div>
-        <div class="trait-bar mb-2">
-          <div id="bar2" class="trait-fill bg-white" style="width:60%"></div>
-        </div>
-        <div class="flex justify-between text-[10px] opacity-80 mb-1">
-          <span>食力</span><span id="score3">8/10</span>
-        </div>
-        <div class="trait-bar">
-          <div id="bar3" class="trait-fill bg-white" style="width:80%"></div>
-        </div>
-      </div>
-
-      <div class="text-[10px] opacity-70 text-center">#港式MBTI #16型 #香港人</div>
+    <!-- Share Card - 真實圖片（用戶可長按儲存） -->
+    <div class="text-center mb-2">
+      <div class="text-[10px] text-gray-500">👆 長按圖片可儲存 / 分享</div>
     </div>
-
+    <div class="mx-auto mb-4 fade-up" style="width:360px; max-width:100%;">
+      <img id="shareCardImg" class="w-full rounded-2xl shadow-lg" alt="分享卡" style="display:block;">
+    </div>
     <div class="text-center mb-4">
-      <button onclick="downloadCard()" class="btn-gold px-5 py-2.5 rounded-xl text-sm">📥 下載分享卡</button>
+      <button onclick="downloadCard()" class="btn-gold px-5 py-2.5 rounded-xl text-sm mr-2">📥 下載</button>
+      <button onclick="shareResult()" class="bg-soft px-5 py-2.5 rounded-xl text-sm">📤 Share</button>
+      <div id="shareStatus" class="text-[10px] text-gray-500 mt-2"></div>
     </div>
 
     <!-- Detailed Report -->
@@ -719,17 +687,6 @@ body{background:var(--paper);color:var(--ink);min-height:100vh}
     <div class="card p-5 mb-4">
       <h3 class="font-bold mb-3">💕 與你的朋友配對</h3>
       <div id="compatibility" class="space-y-2 text-sm"></div>
-    </div>
-
-    <div class="card p-5 mb-4">
-      <h3 class="font-bold mb-2">💾 儲存 + 分享</h3>
-      <p class="text-xs text-gray-600 mb-3">下載結果圖 / Share 俾朋友 / 自動記錄喺主頁</p>
-      <div class="grid grid-cols-3 gap-2">
-        <button onclick="downloadResult()" class="bg-gold text-ink py-2.5 rounded-lg text-sm font-bold">📥 下載圖</button>
-        <button onclick="shareResult()" class="bg-soft py-2.5 rounded-lg text-sm font-bold">📤 Share</button>
-        <button onclick="copyResult()" class="bg-soft py-2.5 rounded-lg text-sm font-bold">📋 Copy</button>
-      </div>
-      <div id="shareStatus" class="text-[10px] text-gray-500 mt-2 text-center"></div>
     </div>
 
     <div class="card p-5 mb-4">
@@ -1288,6 +1245,7 @@ window.finishTest = function(){
   const r = calcScore();
   window.lastResult = r.mbti;
   renderResult(r);
+  generateCardImage();  // 即時生成真實 PNG img
   saveResult();  // 自動儲存
   const mins = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
   $("finishTime").innerText = mins + " 分鐘";
@@ -1366,7 +1324,105 @@ window.renderResult = function(r){
 };
 
 window.downloadCard = function(){
-  alert("Prototype 階段，要 production 就要 html2canvas 整合。\n\n簡單做法：手機長按分享卡截圖。");
+  // 從 img tag 拎現有 dataURL → trigger download
+  const img = $("shareCardImg");
+  if(!img || !img.src || !img.src.startsWith("data:")){
+    // 重新生成
+    generateCardImage();
+  }
+  const img2 = $("shareCardImg");
+  if(!img2 || !img2.src || !img2.src.startsWith("data:")){
+    alert("生成圖片失敗，請再試一次");
+    return;
+  }
+  const a = document.createElement("a");
+  a.href = img2.src;
+  a.download = img2.dataset.downloadName || "港式MBTI.png";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setShareStatus("✅ 圖片已下載！");
+};
+
+// ====================== Generate Card as Image (real PNG) ======================
+window.generateCardImage = function(){
+  if(!window.lastResult) return;
+  const t = window.TYPES[window.lastResult.substring(0,4)];
+  if(!t) return;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 720;   // 2x 視網膜密度
+  canvas.height = 1280;
+  const ctx = canvas.getContext("2d");
+  // 深藍漸層背景（match 原本 dark blue card）
+  const grad = ctx.createLinearGradient(0, 0, 0, 1280);
+  grad.addColorStop(0, "#3B4960");
+  grad.addColorStop(1, "#1E2A3B");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 720, 1280);
+  // 頂部 header
+  ctx.fillStyle = "white";
+  ctx.font = "bold 32px sans-serif";
+  ctx.textAlign = "left";
+  ctx.fillText("港", 60, 75);
+  ctx.fillText("香港 MBTI", 110, 75);
+  ctx.textAlign = "right";
+  ctx.font = "24px sans-serif";
+  ctx.fillText("2026.07", 660, 75);
+  // 中間
+  ctx.textAlign = "center";
+  ctx.fillStyle = "rgba(255,255,255,0.8)";
+  ctx.font = "28px sans-serif";
+  ctx.fillText("你是", 360, 280);
+  // 4 字母（大）
+  ctx.fillStyle = "white";
+  ctx.font = "bold 240px serif";
+  ctx.fillText(window.lastResult.substring(0,4), 360, 560);
+  // 性格名
+  ctx.font = "bold 52px sans-serif";
+  ctx.fillText(t.name, 360, 660);
+  // 港式 slogan
+  ctx.font = "italic 32px sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.fillText("「" + t.slogan + "」", 360, 730);
+  // 3 個分數
+  const scores = t.score;  // ["企硬力9/10","社交力4/10","食力7/10"]
+  ctx.fillStyle = "white";
+  ctx.font = "24px sans-serif";
+  ctx.textAlign = "left";
+  let y = 880;
+  for(let i=0;i<3;i++){
+    const parts = scores[i].split("/");
+    const label = parts[0];
+    const value = parts[0].match(/\d+/)[0] + "/10";
+    // Label
+    ctx.fillStyle = "rgba(255,255,255,0.8)";
+    ctx.fillText(label, 60, y);
+    // Value
+    ctx.textAlign = "right";
+    ctx.fillStyle = "white";
+    ctx.fillText(value, 660, y);
+    // Bar
+    ctx.fillStyle = "rgba(255,255,255,0.2)";
+    ctx.fillRect(60, y + 12, 600, 12);
+    ctx.fillStyle = "white";
+    ctx.fillRect(60, y + 12, 600 * (parseInt(value)/10), 12);
+    ctx.textAlign = "left";
+    y += 80;
+  }
+  // 底部 hashtag
+  ctx.fillStyle = "rgba(255,255,255,0.5)";
+  ctx.font = "22px sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("#港式MBTI #16型 #香港人", 360, 1220);
+  // Set 落 img tag
+  const dataUrl = canvas.toDataURL("image/png");
+  const img = $("shareCardImg");
+  if(img){
+    img.src = dataUrl;
+    img.dataset.downloadName = `港式MBTI-${window.lastResult}.png`;
+  }
+  return dataUrl;
 };
 
 // ====================== Save / Share Result ======================
@@ -1401,59 +1457,25 @@ ${location.origin}${location.pathname}`;
 window.downloadResult = function(){
   const text = generateResultText();
   if(!text){ alert("冇結果可以下載"); return; }
-  // 用 canvas 生成 1080x1920 圖片
-  const canvas = document.createElement("canvas");
-  canvas.width = 1080;
-  canvas.height = 1920;
-  const ctx = canvas.getContext("2d");
-  // 金色背景
-  const grad = ctx.createLinearGradient(0, 0, 0, 1920);
-  grad.addColorStop(0, "#E89A6B");
-  grad.addColorStop(0.5, "#D4A95F");
-  grad.addColorStop(1, "#8B6F3D");
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 1080, 1920);
-  // 黑色文字
-  ctx.fillStyle = "#1a1a1a";
-  ctx.textAlign = "center";
-  ctx.font = "bold 80px sans-serif";
-  ctx.fillText("我嘅港式 MBTI", 540, 300);
-  // 4 字母
-  const t = window.TYPES[window.lastResult.substring(0,4)];
-  ctx.font = "bold 320px serif";
-  ctx.fillText(window.lastResult.substring(0,4), 540, 750);
-  // 性格名
-  ctx.font = "bold 90px sans-serif";
-  ctx.fillText(t.name, 540, 900);
-  // 港式 slogan
-  ctx.font = "italic 60px sans-serif";
-  ctx.fillText("「" + t.slogan + "」", 540, 1020);
-  // 描述
-  ctx.font = "50px sans-serif";
-  const descLines = wrapText(ctx, t.desc, 900, 70);
-  let y = 1180;
-  descLines.slice(0, 6).forEach(line => {
-    ctx.fillText(line, 540, y);
-    y += 70;
-  });
-  // 底部 QR code + URL
-  ctx.font = "bold 40px sans-serif";
-  ctx.fillText("掃 QR 做測試：", 540, 1700);
-  ctx.font = "35px monospace";
-  ctx.fillText("fung2222.github.io/hk-mbti", 540, 1780);
-  // 下載
-  canvas.toBlob(blob => {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `我的港式MBTI-${window.lastResult}.png`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    setShareStatus("✅ 圖片已下載！");
-    saveResult();
-  }, "image/png");
+  // 確保 share card img 已生成
+  const img = $("shareCardImg");
+  if(!img || !img.src || !img.src.startsWith("data:")){
+    generateCardImage();
+  }
+  const img2 = $("shareCardImg");
+  if(!img2 || !img2.src || !img2.src.startsWith("data:")){
+    alert("生成圖片失敗");
+    return;
+  }
+  // 從 dataURL → blob → 下載
+  const a = document.createElement("a");
+  a.href = img2.src;
+  a.download = img2.dataset.downloadName || `我的港式MBTI.png`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setShareStatus("✅ 圖片已下載！");
+  saveResult();
 };
 
 function wrapText(ctx, text, maxWidth, lineHeight){
@@ -1568,6 +1590,7 @@ window.viewHistoryResult = function(){
     const r = calcScore();
     window.lastResult = r.mbti;
     renderResult(r);
+    generateCardImage();  // 重新生成 card image
     $("finishTime").innerText = formatTimeAgo(rec.timestamp);
     show("result");
   } catch(e){
