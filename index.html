@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="港MBTI">
 <meta property="og:title" content="你是哪種港人？">
-<meta property="og:description" content="60 題廣東話版 MBTI 測試｜5 分鐘知道你是茶餐廳、港鐵、7-11 三種情景裡面邊一種人。">
+<meta property="og:description" content="60 題廣東話版 MBTI 測試｜5 分鐘知道你是茶餐廳、港鐵、7-11 三種情景裡面你喺邊一種人。">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -217,7 +217,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 
     <div class="card p-5 mb-4">
       <div class="text-xs tracking-widest brand-gold font-bold mb-2">📖 先睇清楚：你喺度做緊啲乜</div>
-      <h2 class="text-lg font-black mb-3">MBTI 係咩？廣東話版又有咩唔同？</h2>
+      <h2 class="text-lg font-black mb-3">MBTI 喺咩？廣東話版又有咩唔同？</h2>
 
       <div class="space-y-4 text-sm text-gray-700 leading-relaxed">
         <div>
@@ -276,6 +276,71 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
     <div class="card p-4 mb-4 text-center">
       <p class="text-xs text-gray-600 mb-3">睇完想試？返主頁揀版本開始</p>
       <button onclick="goHome()" class="btn-gold px-6 py-2.5 rounded-xl text-sm font-bold">返主頁開始測試 →</button>
+    </div>
+  </section>
+
+  <!-- ========== SPECTRUM ========== -->
+  <section id="spectrum" class="hidden fade-up">
+    <div class="flex items-center justify-between mb-6">
+      <button onclick="goHome()" class="text-sm text-gray-500">← 返回</button>
+      <div class="flex items-center gap-2">
+        <img src="icon-192.png" class="w-7 h-7 rounded-md flex-shrink-0" alt="港">
+        <div class="font-black tracking-tight">性格光譜</div>
+      </div>
+      <div class="w-10"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🔤 4 個英文字母代表咩？</div>
+      <h3 class="text-lg font-black mb-2">MBTI 性格光譜（學術正規解釋）</h3>
+      <p class="text-xs text-gray-600 mb-3">每個人嘅性格由 4 個維度組成，每個維度有 2 個極端。你喺中間某個位置，唔係 100% 一邊。</p>
+
+      <div class="space-y-3 mt-3">
+        <div class="border-l-4 pl-3 py-1" style="border-color:#E89A6B">
+          <div class="text-xs font-bold mb-1">第一個字母：E vs I <span class="text-gray-400">（能量來源）</span></div>
+          <div class="text-[11px] text-gray-700 leading-relaxed">
+            <span class="font-bold text-accent">E（Extraverted 外向）</span>：能量嚟自外界同人相處。佢哋喺派對、傾偈、social 活動之後會覺得充滿電。
+            <br><span class="font-bold text-accent">I（Introverted 內向）</span>：能量嚟自內在世界。佢哋喺獨處、閱讀、反思之後先會覺得充滿電。社交耐咗會攰。
+          </div>
+          <div class="text-[10px] text-gray-500 mt-1">📌 唔係「內向 = 怕醜」— 內向只係「邊度攞能量」</div>
+        </div>
+
+        <div class="border-l-4 pl-3 py-1" style="border-color:#A86B7C">
+          <div class="text-xs font-bold mb-1">第二個字母：S vs N <span class="text-gray-400">（認知方式）</span></div>
+          <div class="text-[11px] text-gray-700 leading-relaxed">
+            <span class="font-bold text-accent">S（Observant 實感）</span>：睇重具體事實、實際經驗、當下發生嘅事。佢哋較務實，鍾意 step-by-step 處理問題。
+            <br><span class="font-bold text-accent">N（Intuitive 直覺）</span>：睇重可能性、模式、未來趨勢。佢哋較抽象，鍾意諗大 picture 同可能性。
+          </div>
+          <div class="text-[10px] text-gray-500 mt-1">📌 唔係「N 型 = 神秘」— N 只係「鍾意抽象概念」</div>
+        </div>
+
+        <div class="border-l-4 pl-3 py-1" style="border-color:#3A4F6B">
+          <div class="text-xs font-bold mb-1">第三個字母：T vs F <span class="text-gray-400">（決策方式）</span></div>
+          <div class="text-[11px] text-gray-700 leading-relaxed">
+            <span class="font-bold text-accent">T（Thinking 思考）</span>：做決定用邏輯同原則，客觀分析利弊。佢哋可能俾人覺得「冷靜」、「理性」。
+            <br><span class="font-bold text-accent">F（Feeling 情感）</span>：做決定用價值觀同人情，考慮對方感受。佢哋可能俾人覺得「暖」、「貼心」。
+          </div>
+          <div class="text-[10px] text-gray-500 mt-1">📌 唔係「F 型 = 軟弱」— F 只係「做決定用感覺」</div>
+        </div>
+
+        <div class="border-l-4 pl-3 py-1" style="border-color:#6B5A8A">
+          <div class="text-xs font-bold mb-1">第四個字母：J vs P <span class="text-gray-400">（生活態度）</span></div>
+          <div class="text-[11px] text-gray-700 leading-relaxed">
+            <span class="font-bold text-accent">J（Judging 判斷）</span>：鍾意有計劃、有結構。佢哋 deadline 前一定做完，房間企理。
+            <br><span class="font-bold text-accent">P（Prospecting 感知）</span>：鍾意彈性、即興。佢哋 deadline 前一晚先衝刺，房間「自己嘅秩序」。
+          </div>
+          <div class="text-[10px] text-gray-500 mt-1">📌 唔係「P 型 = 散漫」— P 只係「鍾意 plan 到最後一刻先做」</div>
+        </div>
+      </div>
+
+      <div class="text-[10px] text-gray-500 mt-4 pt-3 border-t border-gray-200">
+        💡 16 種性格 = 4 個維度組合，例如 <span class="font-bold">INTJ</span> = 內向 + 直覺 + 思考 + 判斷
+      </div>
+    </div>
+
+    <div class="card p-4 mb-4 text-center">
+      <p class="text-xs text-gray-600 mb-3">想睇 16 種詳細？去性格百科</p>
+      <button onclick="openHub()" class="btn-gold px-6 py-2.5 rounded-xl text-sm font-bold">去性格百科 →</button>
     </div>
   </section>
 
@@ -594,7 +659,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
         <div class="text-[10px] bg-gold text-ink font-black px-2 py-0.5 rounded-full">🇭🇰 廣東話改版</div>
       </div>
       <h1 class="text-3xl font-black leading-tight mb-3">你是哪種<br><span class="brand-gold">香港人</span>？</h1>
-      <p class="text-sm text-gray-600 leading-relaxed mb-4">60 題廣東話版 MBTI 測試<br>5 分鐘知道你是茶餐廳、港鐵、7-11 三種情景裡面，邊一種人</p>
+      <p class="text-sm text-gray-600 leading-relaxed mb-4">60 題廣東話版 MBTI 測試<br>5 分鐘知道你是茶餐廳、港鐵、7-11 三種情景裡面你喺邊一種人</p>
       <div class="flex gap-2 text-xs text-gray-500 mb-5">
         <span class="scenario-badge bg-soft">✦ 廣東話</span>
         <span class="scenario-badge bg-soft">✦ 免費</span>
@@ -605,7 +670,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 
     <!-- 3 個版本選擇（一按著燈，再按進入） -->
     <div class="card p-5 mb-4">
-      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🎯 揀你嘅版本</div>
+      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🎯 開始前揀你嘅版本</div>
       <div class="text-sm font-bold mb-1">3 種長度揀最適合嘅</div>
       <div class="text-xs text-gray-600 mb-3">先撳一次著燈確認 → 再撳一次開始測試</div>
       <div class="space-y-2.5" id="versionList">
@@ -671,53 +736,6 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
       </div>
     </div>
 
-    <div class="card p-5 mb-4">
-      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🔤 4 個英文字母代表咩？</div>
-      <h3 class="text-lg font-black mb-2">MBTI 性格光譜（學術正規解釋）</h3>
-      <p class="text-xs text-gray-600 mb-3">每個人嘅性格由 4 個維度組成，每個維度有 2 個極端。你喺中間某個位置，唔係 100% 一邊。</p>
-
-      <div class="space-y-3 mt-3">
-        <div class="border-l-4 pl-3 py-1" style="border-color:#E89A6B">
-          <div class="text-xs font-bold mb-1">第一個字母：E vs I <span class="text-gray-400">（能量來源）</span></div>
-          <div class="text-[11px] text-gray-700 leading-relaxed">
-            <span class="font-bold text-accent">E（Extraverted 外向）</span>：能量嚟自外界同人相處。佢哋喺派對、傾偈、social 活動之後會覺得充滿電。
-            <br><span class="font-bold text-accent">I（Introverted 內向）</span>：能量嚟自內在世界。佢哋喺獨處、閱讀、反思之後先會覺得充滿電。社交耐咗會攰。
-          </div>
-          <div class="text-[10px] text-gray-500 mt-1">📌 唔係「內向 = 怕醜」— 內向只係「邊度攞能量」</div>
-        </div>
-
-        <div class="border-l-4 pl-3 py-1" style="border-color:#A86B7C">
-          <div class="text-xs font-bold mb-1">第二個字母：S vs N <span class="text-gray-400">（認知方式）</span></div>
-          <div class="text-[11px] text-gray-700 leading-relaxed">
-            <span class="font-bold text-accent">S（Observant 實感）</span>：睇重具體事實、實際經驗、當下發生嘅事。佢哋較務實，鍾意 step-by-step 處理問題。
-            <br><span class="font-bold text-accent">N（Intuitive 直覺）</span>：睇重可能性、模式、未來趨勢。佢哋較抽象，鍾意諗大 picture 同可能性。
-          </div>
-          <div class="text-[10px] text-gray-500 mt-1">📌 唔係「N 型 = 神秘」— N 只係「鍾意抽象概念」</div>
-        </div>
-
-        <div class="border-l-4 pl-3 py-1" style="border-color:#3A4F6B">
-          <div class="text-xs font-bold mb-1">第三個字母：T vs F <span class="text-gray-400">（決策方式）</span></div>
-          <div class="text-[11px] text-gray-700 leading-relaxed">
-            <span class="font-bold text-accent">T（Thinking 思考）</span>：做決定用邏輯同原則，客觀分析利弊。佢哋可能俾人覺得「冷靜」、「理性」。
-            <br><span class="font-bold text-accent">F（Feeling 情感）</span>：做決定用價值觀同人情，考慮對方感受。佢哋可能俾人覺得「暖」、「貼心」。
-          </div>
-          <div class="text-[10px] text-gray-500 mt-1">📌 唔係「F 型 = 軟弱」— F 只係「做決定用感覺」</div>
-        </div>
-
-        <div class="border-l-4 pl-3 py-1" style="border-color:#6B5A8A">
-          <div class="text-xs font-bold mb-1">第四個字母：J vs P <span class="text-gray-400">（生活態度）</span></div>
-          <div class="text-[11px] text-gray-700 leading-relaxed">
-            <span class="font-bold text-accent">J（Judging 判斷）</span>：鍾意有計劃、有結構。佢哋 deadline 前一定做完，房間企理。
-            <br><span class="font-bold text-accent">P（Prospecting 感知）</span>：鍾意彈性、即興。佢哋 deadline 前一晚先衝刺，房間「自己嘅秩序」。
-          </div>
-          <div class="text-[10px] text-gray-500 mt-1">📌 唔係「P 型 = 散漫」— P 只係「鍾意 plan 到最後一刻先做」</div>
-        </div>
-      </div>
-
-      <div class="text-[10px] text-gray-500 mt-4 pt-3 border-t border-gray-200">
-        💡 16 種性格 = 4 個維度組合，例如 <span class="font-bold">INTJ</span> = 內向 + 直覺 + 思考 + 判斷
-      </div>
-    </div>
 
     <!-- 探索四欄 · 風琴式 -->
     <div class="mb-4">
@@ -726,12 +744,23 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
         <div class="home-acc-item" data-acc="about">
           <button type="button" class="home-acc-head" onclick="toggleHomeAcc('about')">
             <span class="home-acc-ico">📖</span>
-            <span class="home-acc-title">MBTI 係咩</span>
+            <span class="home-acc-title">MBTI 喺咩？</span>
             <span class="home-acc-chev">▼</span>
           </button>
           <div class="home-acc-body">
             <p class="home-acc-desc">由來、同普通版分別、測完可以得到咩資訊。有興趣先入去睇清楚。</p>
             <button type="button" class="home-acc-go" onclick="event.stopPropagation();openAbout()">進入簡介 →</button>
+          </div>
+        </div>
+        <div class="home-acc-item" data-acc="spectrum">
+          <button type="button" class="home-acc-head" onclick="toggleHomeAcc('spectrum')">
+            <span class="home-acc-ico">🔤</span>
+            <span class="home-acc-title">MBTI 性格光譜</span>
+            <span class="home-acc-chev">▼</span>
+          </button>
+          <div class="home-acc-body">
+            <p class="home-acc-desc">E/I · S/N · T/F · J/P 四個維度正規解釋，幫你讀明 4 個字母。</p>
+            <button type="button" class="home-acc-go" onclick="event.stopPropagation();openSpectrum()">進入光譜 →</button>
           </div>
         </div>
         <div class="home-acc-item" data-acc="hub">
@@ -1304,7 +1333,7 @@ const state = window.state;  // local alias for handlers
 window.$ = function(id){return document.getElementById(id)};
 
 window.show = function(id){
-  ["home","profile","test","result","about","hub","letter","type","social","socialArticle","romance","romanceArticle"].forEach(s => window.$(s).classList.add("hidden"));
+  ["home","profile","test","result","about","spectrum","hub","letter","type","social","socialArticle","romance","romanceArticle"].forEach(s => window.$(s).classList.add("hidden"));
   window.$(id).classList.remove("hidden");
   window.scrollTo(0,0);
   if(id === "home"){
