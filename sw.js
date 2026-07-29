@@ -1,4 +1,4 @@
-const CACHE = "hk-mbti-v1.5";
+const CACHE = "hk-mbti-v1.6";
 const ASSETS = [
   "/hk-mbti/",
   "/hk-mbti/index.html",
