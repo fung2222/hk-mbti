@@ -48,6 +48,10 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 .ver-btn.ver-lit .ver-arrow{color:var(--gold)!important;transform:translateX(4px)}
 .stat-bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
 .stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
+#nickGrid button{transition:all .15s}
+#nickGrid button:active{transform:scale(.96)}
+#profileName:focus{box-shadow:0 0 0 3px rgba(212,169,95,.25)}
+
 .brand-gold{color:var(--gold)}
 .bg-gold{background:var(--gold)}
 .bg-paper{background:var(--paper)}
@@ -467,24 +471,13 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
       <div class="text-xs text-gray-500">廣東話版 v1.5</div>
     </div>
 
-    <!-- 用戶測試記錄（localStorage） -->
+    <!-- 用戶測試記錄（最近 5 次） -->
     <div id="userHistory" class="hidden card p-4 mb-4" style="background:linear-gradient(135deg, #FFF5E0, #FFFAF0); border-left:4px solid #D4A95F;">
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="text-xs text-gray-500 mb-1">📌 你上次嘅測試</div>
-          <div class="flex items-center gap-2">
-            <div class="text-2xl" id="historyEmoji">🌸</div>
-            <div>
-              <div class="font-black text-lg" id="historyMbti">INFP</div>
-              <div class="text-xs text-gray-600" id="historyTime">3 日前</div>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-col gap-1">
-          <button onclick="viewHistoryResult()" class="text-xs bg-gold text-ink font-bold px-3 py-1.5 rounded">查看</button>
-          <button onclick="clearHistory()" class="text-xs text-gray-400 underline">清除</button>
-        </div>
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-xs text-gray-500 font-bold">📌 最近測試紀錄（最多 5 次）</div>
+        <button onclick="clearHistory()" class="text-xs text-gray-400 underline">全部清除</button>
       </div>
+      <div id="historyList" class="space-y-2"></div>
     </div>
 
     <div class="card p-6 mb-4">
@@ -659,6 +652,28 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
         * 基線參考 16Personalities 常見分佈 × 143,021 香港樣本量級；本機每次完成 +1。唔係全港實時普查。
       </div>
     </div>
+  </section>
+
+  <!-- ========== PROFILE（測前姓名+稱呼） ========== -->
+  <section id="profile" class="hidden fade-up">
+    <div class="flex items-center justify-between mb-4">
+      <button onclick="goHome()" class="text-sm text-gray-500">← 返回</button>
+      <div class="text-xs tracking-widest brand-gold font-bold">測前資料</div>
+      <div class="w-10"></div>
+    </div>
+    <div class="card p-5 mb-4">
+      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🪪 你係邊位？</div>
+      <h2 class="text-xl font-black mb-1">輸入姓名 + 揀個稱呼</h2>
+      <p class="text-xs text-gray-600 mb-4">會印喺結果分享卡同紀錄入面 · 可揀匿名</p>
+      <label class="text-xs font-bold text-gray-600">姓名 / 花名</label>
+      <input id="profileName" type="text" maxlength="12" placeholder="例如：阿明、KaKa" class="w-full mt-1 mb-4 px-3 py-3 rounded-xl border-2 border-gray-200 focus:border-gold outline-none text-base bg-white">
+      <div class="text-xs font-bold text-gray-600 mb-2">稱呼（港式有趣款）</div>
+      <div id="nickGrid" class="flex flex-wrap gap-2 mb-4"></div>
+      <div class="text-xs text-gray-500 mb-4">已揀：<span id="nickPreview" class="font-black brand-gold">未揀</span></div>
+      <button onclick="confirmProfileAndStart()" class="btn-gold w-full py-3.5 rounded-xl text-base font-black">開始測試 →</button>
+      <button onclick="confirmProfileAndStart(true)" class="w-full mt-2 py-2.5 rounded-xl text-sm text-gray-500 underline">匿名港人 · 直接開始</button>
+    </div>
+    <div class="text-xs text-center text-gray-400">版本：<span id="profileVersionLabel">生活版</span></div>
   </section>
 
   <!-- ========== TEST ========== -->
@@ -1150,14 +1165,16 @@ window.state = {
   version: "life",
   maxQ: 60,
   deck: null,
-  selectedVersion: null
+  selectedVersion: null,
+  displayName: "",
+  nickname: ""
 };
 const state = window.state;  // local alias for handlers
 
 window.$ = function(id){return document.getElementById(id)};
 
 window.show = function(id){
-  ["home","test","result","hub","letter","type","social","socialArticle","romance","romanceArticle"].forEach(s => window.$(s).classList.add("hidden"));
+  ["home","profile","test","result","hub","letter","type","social","socialArticle","romance","romanceArticle"].forEach(s => window.$(s).classList.add("hidden"));
   window.$(id).classList.remove("hidden");
   window.scrollTo(0,0);
   if(id === "home"){
@@ -1176,7 +1193,7 @@ window.clearVersionUI = function(){
 window.selectVersion = function(version){
   if(state.selectedVersion === version){
     clearVersionUI();
-    startTestWithVersion(version);
+    openProfile(version);
     return;
   }
   state.selectedVersion = version;
@@ -1297,6 +1314,67 @@ window.buildDeck = function(version){
   });
 
   return deck;
+};
+
+
+// ===== 港式稱呼 =====
+window.NICKNAMES = [
+  "宅男","港女","渣男","銀髮族","拜金女",
+  "社畜","廢青","靚仔","靚女","打工皇帝",
+  "師奶","大叔","港爸","港媽","大學生",
+  "斜槓青年","夜青","港漂","富二代","月光族",
+  "佛系青年","卷王","打工人","兄弟","閨密",
+  "煲劇廢","健身狂","茶記常客","港鐵戰士","OL"
+];
+
+window.openProfile = function(version){
+  state.pendingVersion = version;
+  const verName = version === "bb" ? "BB版" : version === "advanced" ? "進階版" : "生活版";
+  if($("profileVersionLabel")) $("profileVersionLabel").innerText = verName;
+  // restore last used name/nick
+  try{
+    const last = JSON.parse(localStorage.getItem("hkmbti_profile")||"null");
+    if(last){
+      if($("profileName") && last.name) $("profileName").value = last.name;
+      if(last.nickname) state.nickname = last.nickname;
+    }
+  }catch(e){}
+  renderNickGrid();
+  show("profile");
+};
+
+window.renderNickGrid = function(){
+  const box = $("nickGrid");
+  if(!box) return;
+  const cur = state.nickname || "";
+  box.innerHTML = window.NICKNAMES.map(n => {
+    const on = n === cur;
+    return `<button type="button" onclick="pickNickname('${n}')" class="px-3 py-1.5 rounded-full text-xs font-bold border ${on ? 'bg-gold text-ink border-gold' : 'bg-white text-ink border-gray-200'}">${n}</button>`;
+  }).join("");
+  if($("nickPreview")) $("nickPreview").innerText = cur || "未揀";
+};
+
+window.pickNickname = function(n){
+  state.nickname = n;
+  renderNickGrid();
+};
+
+window.confirmProfileAndStart = function(anon){
+  let name = ($("profileName") && $("profileName").value || "").trim();
+  let nick = state.nickname || "";
+  if(anon){
+    name = name || "匿名港人";
+    nick = nick || "神秘人";
+  } else {
+    if(!name){ alert("請輸入姓名，或者撳「匿名港人」"); return; }
+    if(!nick){ alert("請揀一個稱呼"); return; }
+  }
+  if(name.length > 12) name = name.slice(0,12);
+  state.displayName = name;
+  state.nickname = nick;
+  try{ localStorage.setItem("hkmbti_profile", JSON.stringify({name, nickname: nick})); }catch(e){}
+  const v = state.pendingVersion || "life";
+  startTestWithVersion(v);
 };
 
 window.startTest = function(){
@@ -1562,6 +1640,12 @@ window.generateCardImage = function(){
 function renderCardBody(ctx, t, canvas){
   // 中間
   ctx.textAlign = "center";
+  const who = [window.state.displayName, window.state.nickname].filter(Boolean).join(" · ");
+  if(who){
+    ctx.fillStyle = "rgba(255,255,255,0.9)";
+    ctx.font = "bold 30px sans-serif";
+    ctx.fillText(who, 360, 230);
+  }
   ctx.fillStyle = "rgba(255,255,255,0.8)";
   ctx.font = "28px sans-serif";
   ctx.fillText("你是", 360, 280);
@@ -1617,13 +1701,25 @@ function renderCardBody(ctx, t, canvas){
 window.saveResult = function(){
   if(!window.lastResult) return;
   const record = {
+    id: Date.now() + "-" + Math.random().toString(36).slice(2,7),
     mbti: window.lastResult,
     timestamp: Date.now(),
-    completed: true
+    completed: true,
+    name: window.state.displayName || "",
+    nickname: window.state.nickname || "",
+    version: window.state.version || "life"
   };
+  // 兼容舊 key + 新 5 次 list
   localStorage.setItem("hkmbti_last_result", JSON.stringify(record));
+  let list = [];
+  try{ list = JSON.parse(localStorage.getItem("hkmbti_history")||"[]") || []; }catch(e){ list = []; }
+  if(!Array.isArray(list)) list = [];
+  list.unshift(record);
+  list = list.slice(0, 5);
+  localStorage.setItem("hkmbti_history", JSON.stringify(list));
   try{ recordTypeStat(window.lastResult); }catch(e){}
-  setShareStatus("✅ 已儲存喺主頁，自動記錄你嘅測試");
+  setShareStatus("✅ 已儲存（最近 5 次）");
+  try{ loadHistory(); }catch(e){}
 };
 
 // ===== 16 型統計（基線 + 本機）=====
@@ -1852,21 +1948,55 @@ window.goHome = function(){
 };
 
 // ====================== History Functions ======================
+window.getHistoryList = function(){
+  let list = [];
+  try{ list = JSON.parse(localStorage.getItem("hkmbti_history")||"[]") || []; }catch(e){ list = []; }
+  if(!Array.isArray(list) || !list.length){
+    // migrate 舊單次紀錄
+    try{
+      const raw = localStorage.getItem("hkmbti_last_result");
+      if(raw){
+        const rec = JSON.parse(raw);
+        if(rec && rec.mbti){
+          list = [rec];
+          localStorage.setItem("hkmbti_history", JSON.stringify(list));
+        }
+      }
+    }catch(e){}
+  }
+  return list.slice(0, 5);
+};
+
 window.loadHistory = function(){
   try{
-    const raw = localStorage.getItem("hkmbti_last_result");
-    if(!raw){ $("userHistory").classList.add("hidden"); return; }
-    const rec = JSON.parse(raw);
-    const t = window.TYPES[rec.mbti.substring(0,4)];
-    if(!t){ $("userHistory").classList.add("hidden"); return; }
-    $("historyEmoji").innerText = t.emoji;
-    $("historyMbti").innerText = rec.mbti;
-    $("historyTime").innerText = formatTimeAgo(rec.timestamp);
-    $("userHistory").classList.remove("hidden");
+    const list = getHistoryList();
+    const box = $("historyList");
+    const wrap = $("userHistory");
+    if(!wrap || !box) return;
+    if(!list.length){ wrap.classList.add("hidden"); return; }
+    box.innerHTML = list.map((rec, i) => {
+      const code = (rec.mbti||"").substring(0,4);
+      const T = window.TYPES && window.TYPES[code];
+      const emoji = T ? T.emoji : "🎭";
+      const who = [rec.name, rec.nickname].filter(Boolean).join(" · ") || "匿名港人";
+      const ver = rec.version === "bb" ? "BB" : rec.version === "advanced" ? "進階" : "生活";
+      return `<div class="flex items-center gap-2 bg-white/80 rounded-xl p-2.5">
+        <div class="text-2xl flex-shrink-0">${emoji}</div>
+        <div class="flex-1 min-w-0">
+          <div class="font-black text-sm truncate">${who}</div>
+          <div class="text-xs text-gray-600">${code}${T ? " · "+(T.cn||T.name) : ""} · ${ver}版</div>
+          <div class="text-[10px] text-gray-400">${formatTimeAgo(rec.timestamp)}</div>
+        </div>
+        <button onclick="viewHistoryResult(${i})" class="text-xs bg-gold text-ink font-bold px-3 py-1.5 rounded flex-shrink-0">查看</button>
+      </div>`;
+    }).join("");
+    wrap.classList.remove("hidden");
   } catch(e){
-    $("userHistory").classList.add("hidden");
+    const wrap = $("userHistory");
+    if(wrap) wrap.classList.add("hidden");
   }
 };
+;
 
 function formatTimeAgo(ts){
   const diff = Date.now() - ts;
@@ -1882,15 +2012,15 @@ function formatTimeAgo(ts){
   return Math.floor(day/365) + " 年前";
 }
 
-window.viewHistoryResult = function(){
+window.viewHistoryResult = function(idx){
   try{
-    const raw = localStorage.getItem("hkmbti_last_result");
-    if(!raw) return;
-    const rec = JSON.parse(raw);
-    const code = (rec.mbti||"").substring(0,4);
+    const list = getHistoryList();
+    const rec = list[idx||0];
+    if(!rec) return;
     window.lastResult = rec.mbti;
-    // 直接用儲存結果顯示，唔重新亂計
-    const r = {mbti: rec.mbti, score:{}, version: "life", totalQ: 60};
+    window.state.displayName = rec.name || "";
+    window.state.nickname = rec.nickname || "";
+    const r = {mbti: rec.mbti, score:{}, version: rec.version || "life", totalQ: 60};
     renderResult(r);
     generateCardImage();
     $("finishTime").innerText = formatTimeAgo(rec.timestamp);
@@ -1903,9 +2033,11 @@ window.viewHistoryResult = function(){
 };
 
 window.clearHistory = function(){
-  if(confirm("確定要清除測試記錄？")){
+  if(confirm("確定要清除全部測試記錄？")){
     localStorage.removeItem("hkmbti_last_result");
+    localStorage.removeItem("hkmbti_history");
     $("userHistory").classList.add("hidden");
+    if($("historyList")) $("historyList").innerHTML = "";
   }
 };
 
