@@ -23,7 +23,7 @@ E 人香港名人參考：
 - 補習天王全部 E`,
     strength:["容易識朋友","表達能力強","充滿活力","帶動氣氛"],
     weakness:["講嘢太快可能得罪人","需要外在肯定","有時忽視自己感受","好難獨處"],
-    career:["Sales","Marketing","老師","公關","主持"],
+    career:["銷售","市場推廣","老師","公關","主持"],
     friends:["I 人嘅好朋友","E 人之間可以做玩伴"]
   },
   I: {
@@ -49,7 +49,7 @@ I 人香港名人參考：
 - 黃子華棟篤笑有 E 也有 I，但私下 I`,
     strength:["深度思考","專注","自我覺察強","獨立"],
     weakness:["難以主動 social","容易被誤會高冷","network 機會少","壓力無處宣洩"],
-    career:["研究","寫作","Programmer","設計師","會計"],
+    career:["研究","寫作","程式設計師","設計師","會計"],
     friends:["E 人嘅好朋友","I 人之間可以深度交流"]
   },
   S: {
@@ -99,7 +99,7 @@ N 人香港名人參考：
 - 倪匡（科幻小說）`,
     strength:["創意強","全局觀","有遠見","善於比喻"],
     weakness:["離地","唔理細節","難執行","易放棄"],
-    career:["創意","策略","研究","藝術","Startup"],
+    career:["創意","策略","研究","藝術","初創"],
     friends:["S 人可以幫你落地"]
   },
   T: {
@@ -147,18 +147,18 @@ F 人香港名人參考：
 - 香港女性大多 F（+15.1%）`,
     strength:["同理心","體貼","重視和諧","善於聆聽"],
     weakness:["過度敏感","難做艱難決定","太在意別人","委屈自己"],
-    career:["輔導","教育","社工","HR","藝術"],
+    career:["輔導","教育","社工","人力資源","藝術"],
     friends:["T 人教你分析"]
   },
   J: {
     letter:"J", title:"判斷 Judging", color:"#6B5A8A", light:"#EFEBF5",
     short:"喜歡有計劃有結構",
-    desc:`J 人（判斷型）喜歡「有計劃」、「有結構」。佢哋做嘢有系統、deadline 前一定做完。房間企理、行程確定。朋友覺得佢哋「可靠」、「穩陣」。
+    desc:`J 人（判斷型）喜歡「有計劃」、「有結構」。佢哋做嘢有系統、死線期 前一定做完。房間企理、行程確定。朋友覺得佢哋「可靠」、「穩陣」。
 
 港式 J 人日常：
 - 旅行 Excel 排晒
 - To-do list 長過 30 條
-- Deadline 前 3 日已經做完
+- 死線期 前 3 日已經做完
 - 房間企理，嘢都擺好
 - 銀行儲蓄 App 記賬
 
@@ -172,7 +172,7 @@ J 人香港名人參考：
 - 校長、老師`,
     strength:["計劃強","可靠","有條理","自律"],
     weakness:["僵硬","抗拒改變","完美主義","容易焦慮"],
-    career:["管理","律師","會計","公務員","Project Manager"],
+    career:["管理","律師","會計","公務員","項目經理"],
     friends:["P 人教你 chill"]
   },
   P: {
@@ -183,13 +183,13 @@ J 人香港名人參考：
 港式 P 人日常：
 - 旅行 last minute book
 - To-do list 唔存在
-- Deadline 最後 1 小時衝刺
+- 死線期 最後 1 小時衝刺
 - 房間「有自己嘅秩序」
 - 錢有就儲冇就算
 
 P 人嘅盲點：
 - 拖延
-- 容易錯失 deadline
+- 容易錯失 死線
 - 缺乏長期規劃
 - 容易散漫
 
@@ -197,8 +197,8 @@ P 人香港名人參考：
 - 自由工作者
 - 藝術家`,
     strength:["靈活","即興","適應力強","開心"],
-    weakness:["拖延","散漫","難以做長線","容易錯 deadline"],
-    career:["創意","自由業","Sales","Startup","設計"],
+    weakness:["拖延","散漫","難以做長線","容易錯 死線"],
+    career:["創意","自由業","銷售","初創","設計"],
     friends:["J 人教你 plan"]
   }
 };
@@ -233,7 +233,7 @@ window.TYPES_FULL = {
 
 **工作**
 - 適合：Strategy、Architecture、Engineering、Investment、Law、Scientist
-- 避免：Routine、Customer Service、純社交
+- 避免：規律、Customer Service、純社交
 - 工作風格：Quiet but productive，自己一個完成 complex task
 
 **友情**
@@ -246,9 +246,9 @@ window.TYPES_FULL = {
 - 不耐煩 emotional drama
 - 有時太冷`,
     strength:["戰略思維","獨立","高標準","系統思考","long-term 規劃"],
-    weakness:["arrogant","社交笨拙","完美主義","冷漠","情緒表達弱"],
-    love:["慢熱","deep connection","要 intelligent partner","需要 personal space"],
-    work:["Strategy","Architecture","Engineering","Investment","Law","Scientist"],
+    weakness:["自大","社交笨拙","完美主義","冷漠","情緒表達弱"],
+    love:["慢熱","深層連結","要 intelligent partner","需要 personal space"],
+    work:["策略","建築","工程","投資","法律","科學家"],
     conflict:["直接講","不耐煩 drama","太冷","要 space 反思"]
   },
   "INTP": {
@@ -257,8 +257,8 @@ window.TYPES_FULL = {
 **核心特質**
 - 內向思考，腦入面有 100 個 idea 同時
 - 對理論、概念、邏輯有強烈興趣
-- 唔鍾意 routine
-- 對人唔敏感但對 system 敏感
+- 唔鍾意 規律
+- 對人唔敏感但對 系統 敏感
 
 **強項**
 - 抽象思考
@@ -268,19 +268,19 @@ window.TYPES_FULL = {
 
 **弱項**
 - 拖延
-- 難以 execute
+- 難以 執行
 - 社交差
 - 對細節冇耐性
 
 **戀愛**
-- 揀對手要 intellectual
+- 揀對手要 知識型
 - 唔會主動表達愛意
 - 最佳配對：ENTJ、ENFJ
 
 **工作**
 - 適合：Research、Programming、Philosophy、Writing、Academic
 - 避免：Sales、Management
-- 工作風格：獨立 deep work，討厭 meeting
+- 工作風格：獨立 deep work，討厭 會議
 
 **友情**
 - 少數 deep friend
@@ -291,11 +291,11 @@ window.TYPES_FULL = {
 - 會 retreat
 - 唔想 conflict
 - 內化情緒`,
-    strength:["抽象思維","創意","獨立","分析力強","logic"],
-    weakness:["拖延","難 execute","社交差","過度分析","routine 抗拒"],
-    love:["intellectual connection","不主動","需要 space","慢熱"],
-    work:["Research","Programming","Philosophy","Writing","Academic"],
-    conflict:["retreat","內化","避免 confront","需要時間"]
+    strength:["抽象思維","創意","獨立","分析力強","邏輯"],
+    weakness:["拖延","難 執行","社交差","過度分析","規律 抗拒"],
+    love:["智識交流","不主動","需要 space","慢熱"],
+    work:["研究","程式設計","哲學","寫作","學術界"],
+    conflict:["退縮","內化","避免 confront","需要時間"]
   },
   "ENTJ": {
     full:`ENTJ（指揮官 / Commander）佔全球人口約 2-3%，係天生嘅領袖。佢哋外向、思考、果斷、有系統，係 16 種中最愛指揮嘅人。
@@ -325,7 +325,7 @@ window.TYPES_FULL = {
 
 **工作**
 - 適合：CEO、Management、Law、Consulting、Investment
-- 避免：Routine、Support
+- 避免：規律、Support
 - 工作風格：Decisive，愛做決策
 
 **友情**
@@ -337,11 +337,11 @@ window.TYPES_FULL = {
 - 直接 confront
 - 要贏
 - 不妥協`,
-    strength:["決策力","領導","策略","自信","efficient"],
-    weakness:["arrogant","不耐煩","dominant","impatient","冷漠"],
-    love:["主動","要求 partner strong","長遠關係","supportive"],
-    work:["CEO","Management","Law","Consulting","Investment"],
-    conflict:["直接 confront","要贏","不妥協","aggressive"]
+    strength:["決策力","領導","策略","自信","高效率"],
+    weakness:["自大","不耐煩","主導型","冇耐性","冷漠"],
+    love:["主動","要求 partner strong","長遠關係","支持"],
+    work:["CEO","管理","法律","顧問","投資"],
+    conflict:["直接 confront","要贏","不妥協","進取"]
   },
   "ENTP": {
     full:`ENTP（辯論家 / Debater）佔全球人口約 3%，係 16 種中最愛辯論嘅人。佢哋外向、直覺、思考、感知，成日 challenge status quo。
@@ -349,7 +349,7 @@ window.TYPES_FULL = {
 **核心特質**
 - 講嘢叻，反應快
 - 創意多
-- 唔鍾意 routine
+- 唔鍾意 規律
 - 愛 challenge 別人
 
 **強項**
@@ -361,8 +361,8 @@ window.TYPES_FULL = {
 **弱項**
 - 不專注
 - 容易挑釁
-- 難以 finish project
-- routine 抗拒
+- 難以 完成 project
+- 規律 抗拒
 
 **戀愛**
 - 風趣幽默
@@ -371,8 +371,8 @@ window.TYPES_FULL = {
 
 **工作**
 - 適合：Startup、Marketing、Law、Consulting、Sales
-- 避免：Routine、Detail work
-- 工作風格：Big picture，愛 brainstorm
+- 避免：規律、Detail work
+- 工作風格：大局，愛 腦爆
 
 **友情**
 - 多朋友
@@ -383,10 +383,10 @@ window.TYPES_FULL = {
 - 當辯論
 - 不讓步
 - 用 logic 攻`,
-    strength:["辯論","創意","quick thinking","charismatic","network"],
-    weakness:["不專注","挑釁","難 finish","arrogant","routine 抗拒"],
-    love:["humor","intellectual","open-minded","需要 mental stimulation"],
-    work:["Startup","Marketing","Law","Consulting","Sales","創意"],
+    strength:["辯論","創意","反應快","有魅力","人脈"],
+    weakness:["不專注","挑釁","難 完成","自大","規律 抗拒"],
+    love:["幽默","知識型","開明","需要 mental stimulation"],
+    work:["初創","市場推廣","法律","顧問","銷售","創意"],
     conflict:["辯論","不讓步","用 logic 攻","喜歡"]
   },
   "INFJ": {
@@ -417,7 +417,7 @@ window.TYPES_FULL = {
 
 **工作**
 - 適合：Counseling、Writing、HR、Art、Non-profit
-- 避免：Routine、純 Logic
+- 避免：規律、純 Logic
 - 工作風格：Quiet deep work
 
 **友情**
@@ -429,11 +429,11 @@ window.TYPES_FULL = {
 - 內化
 - Avoid conflict
 - 寫日記反思`,
-    strength:["同理心","insight","創意","deep thinking","vision"],
-    weakness:["sensitive","self-doubt","burnout","過度付出","完美主義"],
-    love:["deep connection","meaningful","慢熱","devoted"],
-    work:["Counseling","Writing","HR","Art","Non-profit"],
-    conflict:["內化","avoid","寫日記","需要時間"]
+    strength:["同理心","洞察力","創意","深度思考","遠見"],
+    weakness:["敏感","自我懷疑","容易 burn out","過度付出","完美主義"],
+    love:["深層連結","有意義","慢熱","專一"],
+    work:["輔導","寫作","人力資源","藝術","非牟利"],
+    conflict:["內化","逃避","寫日記","需要時間"]
   },
   "INFP": {
     full:`INFP（調解員 / Mediator）佔全球人口約 4-5%，係香港最多人嘅類型（11.0%）。佢哋內向、直覺、情感、感知，係天生的理想主義者 + 情感型。
@@ -463,7 +463,7 @@ window.TYPES_FULL = {
 
 **工作**
 - 適合：Writing、Art、Counseling、HR、Non-profit
-- 避免：Routine、Pure Logic
+- 避免：規律、Pure Logic
 - 工作風格：獨立 deep work
 
 **友情**
@@ -475,11 +475,11 @@ window.TYPES_FULL = {
 - Avoid
 - 內化
 - 寫日記`,
-    strength:["同理心","創意","寫作","depth","idealism"],
-    weakness:["sensitive","procrastination","self-doubt","過度理想化","practical 差"],
-    love:["romantic","deep","authentic","devoted"],
-    work:["Writing","Art","Counseling","HR","Non-profit"],
-    conflict:["avoid","內化","寫日記","retreat"]
+    strength:["同理心","創意","寫作","深度","理想主義"],
+    weakness:["敏感","拖延","自我懷疑","過度理想化","practical 差"],
+    love:["浪漫","深入","真誠","專一"],
+    work:["寫作","藝術","輔導","人力資源","非牟利"],
+    conflict:["逃避","內化","寫日記","退縮"]
   },
   "ENFJ": {
     full:`ENFJ（主人公 / Protagonist）佔全球人口約 2-3%，係天生嘅 mentor。佢哋外向、直覺、情感、判斷，識得照顧身邊所有人。
@@ -521,11 +521,11 @@ window.TYPES_FULL = {
 - Mediator
 - 化解
 - Self-sacrifice`,
-    strength:["同理心","領導","溝通","激勵","warm"],
-    weakness:["過度付出","太在意別人","burnout","self-neglect","sensitive"],
-    love:["devoted","supportive","romantic","long-term"],
-    work:["Teaching","HR","PR","Counseling","Management"],
-    conflict:["mediator","化解","self-sacrifice","avoid own feeling"]
+    strength:["同理心","領導","溝通","激勵","溫暖"],
+    weakness:["過度付出","太在意別人","容易 burn out","忽略自己","敏感"],
+    love:["專一","支持","浪漫","長線"],
+    work:["教學","人力資源","公關","輔導","管理"],
+    conflict:["和事佬","化解","自我犧牲","壓抑自己感受"]
   },
   "ENFP": {
     full:`ENFP（競選者 / Campaigner）佔全球人口約 6-8%，係 16 種中最外向 + 創意。佢哋外向、直覺、情感、感知，成日有新 idea + 識人。
@@ -534,7 +534,7 @@ window.TYPES_FULL = {
 - Energy 高
 - 創意
 - 識人
-- 唔鍾意 routine
+- 唔鍾意 規律
 
 **強項**
 - 溝通
@@ -546,7 +546,7 @@ window.TYPES_FULL = {
 - 不專注
 - Procrastination
 - 過度樂觀
-- Routine 差
+- 規律 差
 
 **戀愛**
 - 熱情
@@ -555,7 +555,7 @@ window.TYPES_FULL = {
 
 **工作**
 - 適合：Marketing、Sales、PR、Creative、Startup
-- 避免：Routine、Detail
+- 避免：規律、Detail
 - 工作風格：People + 創意
 
 **友情**
@@ -567,10 +567,10 @@ window.TYPES_FULL = {
 - 直接
 - 化解
 - 不記仇`,
-    strength:["溝通","創意","empathy","network","energy"],
-    weakness:["不專注","procrastination","過度樂觀","routine 差","scatter"],
-    love:["熱情","fun","open","romantic","需要 mental stimulation"],
-    work:["Marketing","Sales","PR","Creative","Startup","Teaching"],
+    strength:["溝通","創意","同理心","人脈","能量"],
+    weakness:["不專注","拖延","過度樂觀","規律 差","散漫"],
+    love:["熱情","輕鬆","開放","浪漫","需要 mental stimulation"],
+    work:["市場推廣","銷售","公關","創作","初創","教學"],
     conflict:["直接","化解","不記仇","用 charm"]
   },
   "ISTJ": {
@@ -602,7 +602,7 @@ window.TYPES_FULL = {
 **工作**
 - 適合：Accounting、Law、Government、Military、Engineering
 - 避免：Creative、Spontaneous
-- 工作風格：Routine 強
+- 工作風格：規律 強
 
 **友情**
 - Deep friend 唔多
@@ -614,10 +614,10 @@ window.TYPES_FULL = {
 - 守原則
 - 不妥協`,
     strength:["可靠","細節","紀律","耐心","忠誠"],
-    weakness:["僵硬","抗拒改變","過度 serious","唔識變通","judgmental"],
-    love:["devoted","stable","long-term","loyal"],
-    work:["Accounting","Law","Government","Military","Engineering"],
-    conflict:["講事實","守原則","不妥協","logical"]
+    weakness:["僵硬","抗拒改變","過度 serious","唔識變通","批判"],
+    love:["專一","穩定","長線","忠心"],
+    work:["會計","法律","政府工","軍警","工程"],
+    conflict:["講事實","守原則","不妥協","邏輯型"]
   },
   "ISFJ": {
     full:`ISFJ（守衛者 / Defender）佔全球人口約 9-14%，係 16 種中最 caring。佢哋內向、實感、情感、判斷，重視和諧、責任、傳統。
@@ -659,11 +659,11 @@ window.TYPES_FULL = {
 - Avoid
 - 內化
 - 照顧對方`,
-    strength:["同理心","細心","可靠","loyal","caring"],
-    weakness:["over-giving","self-neglect","sensitive","抗拒改變","過度 humble"],
-    love:["devoted","caring","loyal","long-term"],
-    work:["HR","Nursing","Teaching","Social Work","Admin"],
-    conflict:["avoid","內化","照顧對方","self-sacrifice"]
+    strength:["同理心","細心","可靠","忠心","有愛心"],
+    weakness:["過度付出","忽略自己","敏感","抗拒改變","過度 humble"],
+    love:["專一","有愛心","忠心","長線"],
+    work:["人力資源","護理","教學","社工","行政"],
+    conflict:["逃避","內化","照顧對方","自我犧牲"]
   },
   "ESTJ": {
     full:`ESTJ（總經理 / Executive）佔全球人口約 8-12%，係天生嘅 manager。佢哋外向、實感、思考、判斷，重視秩序、傳統、效率。
@@ -705,11 +705,11 @@ window.TYPES_FULL = {
 - 直接
 - 講道理
 - 守規則`,
-    strength:["領導","組織","紀律","執行力","loyal"],
-    weakness:["僵硬","judgmental","arrogant","唔識變通","stubborn"],
-    love:["devoted","stable","loyal","traditional"],
-    work:["Management","Law","Military","Government","Business"],
-    conflict:["直接","講道理","守規則","decisive"]
+    strength:["領導","組織","紀律","執行力","忠心"],
+    weakness:["僵硬","批判","自大","唔識變通","固執"],
+    love:["專一","穩定","忠心","傳統"],
+    work:["管理","法律","軍警","政府工","商業"],
+    conflict:["直接","講道理","守規則","果斷"]
   },
   "ESFJ": {
     full:`ESFJ（執事 / Consul）佔全球人口約 9-13%，係天生嘅 host。佢哋外向、實感、情感、判斷，重視和諧、傳統、social connection。
@@ -751,11 +751,11 @@ window.TYPES_FULL = {
 - Mediator
 - Avoid own feeling
 - 和解`,
-    strength:["社交","empathy","組織","loyal","caring"],
-    weakness:["過度在意別人","sensitive","conflict 抗拒","self-neglect","gossip"],
-    love:["devoted","caring","social","loyal"],
-    work:["HR","PR","Sales","Teaching","Healthcare","Event"],
-    conflict:["mediator","avoid own feeling","和解","sacrifice"]
+    strength:["社交","同理心","組織","忠心","有愛心"],
+    weakness:["過度在意別人","敏感","conflict 抗拒","忽略自己","八卦"],
+    love:["專一","有愛心","社交","忠心"],
+    work:["人力資源","公關","銷售","教學","醫療","活動策劃"],
+    conflict:["和事佬","壓抑自己感受","和解","犧牲"]
   },
   "ISTP": {
     full:`ISTP（鑒賞家 / Virtuoso）佔全球人口約 5-6%，係天生嘅 problem solver。佢哋內向、實感、思考、感知，重視邏輯、效率、practical。
@@ -776,7 +776,7 @@ window.TYPES_FULL = {
 - 冷漠
 - Risk-taker
 - 唔識表達
-- Routine 抗拒
+- 規律 抗拒
 
 **戀愛**
 - 慢熱
@@ -785,7 +785,7 @@ window.TYPES_FULL = {
 
 **工作**
 - 適合：Engineering、Programming、Mechanic、Forensic、Military
-- 避免：Pure Social、Long meeting
+- 避免：Pure Social、Long 會議
 - 工作風格：Hands-on
 
 **友情**
@@ -797,11 +797,11 @@ window.TYPES_FULL = {
 - Withdraw
 - Logic
 - Avoid emotional`,
-    strength:["分析","實幹","calm","獨立","practical"],
-    weakness:["冷漠","risk-taker","唔識表達","routine 抗拒","blunt"],
-    love:["慢熱","independent","practical","需要 space"],
-    work:["Engineering","Programming","Mechanic","Forensic","Military"],
-    conflict:["withdraw","logic","avoid emotional","independent"]
+    strength:["分析","實幹","冷靜","獨立","實際"],
+    weakness:["冷漠","敢冒險","唔識表達","規律 抗拒","直接"],
+    love:["慢熱","獨立","實際","需要 space"],
+    work:["工程","程式設計","技工","法醫","軍警"],
+    conflict:["退縮","邏輯","逃避情緒","獨立"]
   },
   "ISFP": {
     full:`ISFP（探險家 / Adventurer）佔全球人口約 8-9%，係天生嘅 artist。佢哋內向、實感、情感、感知，重視美感、價值、present。
@@ -831,7 +831,7 @@ window.TYPES_FULL = {
 
 **工作**
 - 適合：Art、Music、Design、Healthcare、Nature
-- 避免：Routine、Conflict
+- 避免：規律、Conflict
 - 工作風格：Hands-on creative
 
 **友情**
@@ -843,11 +843,11 @@ window.TYPES_FULL = {
 - Withdraw
 - Avoid
 - 內化`,
-    strength:["藝術","empathy","靈活","loyal","aesthetic"],
-    weakness:["sensitive","唔識 plan","conflict 抗拒","self-doubt","too quiet"],
-    love:["devoted","caring","romantic","loyal"],
-    work:["Art","Music","Design","Healthcare","Nature"],
-    conflict:["withdraw","avoid","內化","quiet"]
+    strength:["藝術","同理心","靈活","忠心","審美觀強"],
+    weakness:["敏感","唔識 plan","conflict 抗拒","自我懷疑","太靜"],
+    love:["專一","有愛心","浪漫","忠心"],
+    work:["藝術","音樂","設計","醫療","自然相關"],
+    conflict:["退縮","逃避","內化","安靜"]
   },
   "ESTP": {
     full:`ESTP（企業家 / Entrepreneur）佔全球人口約 4-6%，係天生嘅 doer。佢哋外向、實感、思考、感知，重視 action、present、practical。
@@ -877,7 +877,7 @@ window.TYPES_FULL = {
 
 **工作**
 - 適合：Sales、Marketing、Entrepreneur、Police、Real Estate
-- 避免：Routine、Isolated
+- 避免：規律、Isolated
 - 工作風格：Action
 
 **友情**
@@ -889,11 +889,11 @@ window.TYPES_FULL = {
 - 直接 confront
 - 不讓步
 - 行動解決`,
-    strength:["行動","persuasion","realistic","adaptable","energetic"],
-    weakness:["impatient","risk-taker","唔諗長遠","過度 direct","bored easily"],
-    love:["主動","fun","open","spontaneous"],
-    work:["Sales","Marketing","Entrepreneur","Police","Real Estate"],
-    conflict:["直接 confront","不讓步","行動解決","quick"]
+    strength:["行動","說服力","務實","適應力強","精力充沛"],
+    weakness:["冇耐性","敢冒險","唔諗長遠","過度 direct","容易悶"],
+    love:["主動","輕鬆","開放","即興"],
+    work:["銷售","市場推廣","Entrepreneur","紀律部隊","地產"],
+    conflict:["直接 confront","不讓步","行動解決","快"]
   },
   "ESFP": {
     full:`ESFP（表演者 / Entertainer）佔全球人口約 6-9%，係天生嘅 performer。佢哋外向、實感、情感、感知，重視 fun、present、social。
@@ -922,8 +922,8 @@ window.TYPES_FULL = {
 - 最佳配對：ISFJ、ISTJ
 
 **工作**
-- 適合：Sales、PR、Event、Performing、Teaching
-- 避免：Routine、Isolated
+- 適合：Sales、PR、活動、Performing、Teaching
+- 避免：規律、Isolated
 - 工作風格：People-oriented
 
 **友情**
@@ -935,10 +935,10 @@ window.TYPES_FULL = {
 - 直接
 - 化解
 - 不記仇`,
-    strength:["表演","empathy","社交","adaptable","energetic"],
-    weakness:["不專注","過度樂觀","不喜 plan","sensitive","scatter"],
-    love:["熱情","fun","social","romantic"],
-    work:["Sales","PR","Event","Performing","Teaching"],
-    conflict:["直接","化解","不記仇","optimistic"]
+    strength:["表演","同理心","社交","適應力強","精力充沛"],
+    weakness:["不專注","過度樂觀","不喜 plan","敏感","散漫"],
+    love:["熱情","輕鬆","社交","浪漫"],
+    work:["銷售","公關","活動策劃","表演","教學"],
+    conflict:["直接","化解","不記仇","樂觀"]
   }
 };
