@@ -470,11 +470,46 @@ body{background:var(--paper);color:var(--ink);min-height:100vh}
       <h1 class="text-3xl font-black leading-tight mb-3">你是哪種<br><span class="brand-gold">香港人</span>？</h1>
       <p class="text-sm text-gray-600 leading-relaxed mb-4">60 題廣東話版 MBTI 測試<br>5 分鐘知道你是茶餐廳、港鐵、7-11 邊種人</p>
       <div class="flex gap-2 text-xs text-gray-500 mb-5">
-        <span class="scenario-badge bg-soft">✦ 5 分鐘</span>
         <span class="scenario-badge bg-soft">✦ 廣東話</span>
         <span class="scenario-badge bg-soft">✦ 免費</span>
+        <span class="scenario-badge bg-soft">✦ 3 個版本</span>
       </div>
-      <button onclick="startTest()" class="btn-gold w-full py-3.5 rounded-xl text-base">開始測試</button>
+    </div>
+
+    <!-- 3 個版本選擇 -->
+    <div class="card p-5 mb-4">
+      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🎯 揀你嘅版本</div>
+      <div class="text-sm font-bold mb-3">3 種長度揀最適合嘅</div>
+      <div class="space-y-2">
+        <button onclick="startTestWithVersion('life')" class="w-full p-4 rounded-xl border-2 border-gold bg-gradient-to-r from-yellow-50 to-orange-50 text-left hover:shadow-md transition">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-base font-black text-ink">🌟 生活版（完整測試）</div>
+              <div class="text-xs text-gray-600 mt-0.5">60 題 · 5 分鐘 · 最準確</div>
+            </div>
+            <div class="text-2xl">→</div>
+          </div>
+        </button>
+        <button onclick="startTestWithVersion('advanced')" class="w-full p-4 rounded-xl border border-gray-300 bg-white text-left hover:border-gold hover:bg-soft transition">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-base font-bold text-ink">🎯 進階版（快速版）</div>
+              <div class="text-xs text-gray-600 mt-0.5">30 題 · 3 分鐘 · 平衡選擇</div>
+            </div>
+            <div class="text-2xl text-gray-400">→</div>
+          </div>
+        </button>
+        <button onclick="startTestWithVersion('bb')" class="w-full p-4 rounded-xl border border-gray-300 bg-white text-left hover:border-gold hover:bg-soft transition">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-base font-bold text-ink">🍼 BB 版（極簡版）</div>
+              <div class="text-xs text-gray-600 mt-0.5">10 題 · 1 分鐘 · 純粹試下</div>
+            </div>
+            <div class="text-2xl text-gray-400">→</div>
+          </div>
+        </button>
+      </div>
+      <div class="text-[10px] text-gray-500 mt-3 text-center">3 個版本結果互通 · 揀咗可隨時重測</div>
     </div>
 
     <div class="card p-4 mb-4 bg-soft">
@@ -618,8 +653,8 @@ body{background:var(--paper);color:var(--ink);min-height:100vh}
   <!-- ========== RESULT ========== -->
   <section id="result" class="hidden">
     <div class="text-center mb-4">
-      <div class="text-xs tracking-widest brand-gold font-bold mb-1">🎉 你的港式人格</div>
-      <div class="text-xs text-gray-500">完成時間：<span id="finishTime">5 分鐘</span></div>
+      <div class="text-xs tracking-widest brand-gold font-bold mb-1">🎉 你的港式人格 <span id="versionBadge" class="text-[9px] bg-soft text-ink font-black px-2 py-0.5 rounded-full ml-1">生活版</span></div>
+      <div class="text-xs text-gray-500">完成時間：<span id="finishTime">5 分鐘</span> · 用咗 <span id="finishQ">60</span> 題</div>
     </div>
 
     <!-- Share Card Preview -->
@@ -1119,7 +1154,9 @@ window.SCENARIOS = [
 window.state = {
   idx: 0,
   answers: new Array(60).fill(null),
-  startedAt: null
+  startedAt: null,
+  version: "life",
+  maxQ: 60
 };
 const state = window.state;  // local alias for handlers
 
@@ -1132,6 +1169,7 @@ window.show = function(id){
 };
 
 window.startTest = function(){
+  window.state.version = "life";
   state.idx = 0;
   state.answers = new Array(60).fill(null);
   state.startedAt = Date.now();
@@ -1139,10 +1177,27 @@ window.startTest = function(){
   renderQ();
 };
 
+window.startTestWithVersion = function(version){
+  // version: 'life' (60題), 'advanced' (30題), 'bb' (10題)
+  window.state.version = version;
+  let max = 60;
+  if(version === "advanced") max = 30;
+  else if(version === "bb") max = 10;
+  window.state.maxQ = max;
+  state.idx = 0;
+  state.answers = new Array(60).fill(null);
+  state.startedAt = Date.now();
+  // 更新 progress 文字
+  show("test");
+  renderQ();
+};
+
 window.renderQ = function(){
   const q = window.QUESTIONS[state.idx];
-  $("qIdx").innerText = state.idx + 1;
-  $("progressFill").style.width = ((state.idx + 1) / 60 * 100) + "%";
+  const max = state.maxQ || 60;
+  const verName = state.version === "bb" ? "BB版" : state.version === "advanced" ? "進階版" : "生活版";
+  $("qIdx").innerText = (state.idx + 1) + " / " + max + " · " + verName;
+  $("progressFill").style.width = ((state.idx + 1) / max * 100) + "%";
   $("qDimension").innerText = q.d;
   $("qText").innerText = q.t;
   $("qCard").classList.remove("fade-up");
@@ -1169,7 +1224,8 @@ window.selectOpt = function(i){
     el.classList.toggle("selected", j === i);
   });
   setTimeout(() => {
-    if(state.idx < 59){
+    const max = state.maxQ || 60;
+    if(state.idx < max - 1){
       state.idx++;
       renderQ();
     } else {
@@ -1193,20 +1249,29 @@ window.confirmExit = function(){
 
 window.calcScore = function(){
   let E=0,I=0,S=0,N=0,T=0,F=0,J=0,P=0,T2=0,A2=0;
-  for(let i=0;i<60;i++){
+  const max = state.maxQ || 60;
+  // 60 題版本：每維度 12 題
+  // 30 題版本：每維度 6 題（前 6 題）
+  // 10 題版本：每維度 2 題（前 2 題）
+  // 邊界：i<dimEnd
+  // 60 題: 0-12, 12-24, 24-36, 36-48, 48-60
+  // 30 題: 0-6, 6-12, 12-18, 18-24, 24-30
+  // 10 題: 0-2, 2-4, 4-6, 6-8, 8-10
+  const seg = max / 5;  // 每個 segment 嘅 size
+  for(let i=0;i<max;i++){
     const a = state.answers[i];
     if(a === null) continue;
     const v = window.QUESTIONS[i].o[a].v;
-    if(i<12){
+    if(i<seg){
       if(v.E) E+=v.E;
       if(v.I) I+=v.I;
-    } else if(i<24){
+    } else if(i<seg*2){
       if(v.S) S+=v.S;
       if(v.N) N+=v.N;
-    } else if(i<36){
+    } else if(i<seg*3){
       if(v.T) T+=v.T;
       if(v.F) F+=v.F;
-    } else if(i<48){
+    } else if(i<seg*4){
       if(v.J) J+=v.J;
       if(v.P) P+=v.P;
     } else {
@@ -1216,7 +1281,7 @@ window.calcScore = function(){
   }
   const mbti = (E>=I?"E":"I") + (S>=N?"S":"N") + (T>=F?"T":"F") + (J>=P?"J":"P");
   const ta = T2 >= A2 ? "-T" : "-A";
-  return {mbti: mbti + ta, score:{E,I,S,N,T,F,J,P,T2,A2}};
+  return {mbti: mbti + ta, score:{E,I,S,N,T,F,J,P,T2,A2}, version: state.version || "life", totalQ: max};
 };
 
 window.finishTest = function(){
@@ -1226,6 +1291,9 @@ window.finishTest = function(){
   saveResult();  // 自動儲存
   const mins = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
   $("finishTime").innerText = mins + " 分鐘";
+  const verName = r.version === "bb" ? "BB版" : r.version === "advanced" ? "進階版" : "生活版";
+  $("versionBadge").innerText = verName;
+  $("finishQ").innerText = r.totalQ;
   show("result");
 };
 
