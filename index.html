@@ -1256,29 +1256,10 @@ window.finishTest = function(){
 };
 
 window.renderResult = function(r){
+  // 結果已經由 generateCardImage() 渲染落 <img id="shareCardImg">
+  // hero 嗰個 "🎉 你的港式人格" 已經喺 HTML
+  // 詳細報告（desc + tags）繼續 render
   const t = window.TYPES[r.mbti.substring(0,4)];
-  if(!t){
-    $("mbtiBig").innerText = r.mbti;
-    $("mbtiName").innerText = "獨特類型";
-    $("mbtiSlogan").innerText = "「全港獨一無二」";
-    return;
-  }
-  $("mbtiBig").innerText = r.mbti.substring(0,4);
-  $("mbtiName").innerText = t.name;
-  $("mbtiSlogan").innerText = "「" + t.slogan + "」";
-
-  const card = $("shareCard");
-  card.style.background = `linear-gradient(135deg, ${t.color[0]}, ${t.color[1]})`;
-
-  const tempA = t.score[0].split("/");
-  $("score1").innerText = t.score[0];
-  $("bar1").style.width = (parseInt(tempA[0])*10) + "%";
-  const tempB = t.score[1].split("/");
-  $("score2").innerText = t.score[1];
-  $("bar2").style.width = (parseInt(tempB[0])*10) + "%";
-  const tempC = t.score[2].split("/");
-  $("score3").innerText = t.score[2];
-  $("bar3").style.width = (parseInt(tempC[0])*10) + "%";
 
   let detailHtml = `
     <p>${t.desc}</p>
