@@ -1740,29 +1740,75 @@ function wrapText(ctx, text, maxWidth, lineHeight){
   return lines;
 }
 
-window.shareResult = function(){
-  const text = generateResultText();
-  if(!text){ alert("冇結果可以分享"); return; }
-  if(navigator.share){
-    navigator.share({
-      title: "我嘅港式 MBTI",
-      text: text,
-      url: location.href
-    }).then(() => {
-      setShareStatus("✅ 已分享！");
+window.shareResult = async function(){
+  if(!window.lastResult){ alert("冇結果可以分享"); return; }
+
+  // 確保分享卡 PNG 已生成
+  let img = $("shareCardImg");
+  if(!img || !img.src || !img.src.startsWith("data:")){
+    try{ await generateCardImage(); }catch(e){}
+  }
+  img = $("shareCardImg");
+  const siteUrl = (location.origin + (location.pathname.replace(/\/index\.html.*$/i, "/") || "/")).replace(/\/+$/, "/") ;
+  // 固定公開網址（WhatsApp 好開）
+  const shareUrl = "https://fung2222.github.io/hk-mbti/";
+  const fileName = (img && img.dataset.downloadName) || (`港式MBTI-${(window.lastResult||"").substring(0,4)}.png`);
+
+  // 1) 優先：圖片 File + 網址做 caption（WhatsApp / IG / 系統 share sheet）
+  if(img && img.src && img.src.startsWith("data:") && navigator.share){
+    try{
+      const blob = await (await fetch(img.src)).blob();
+      const file = new File([blob], fileName, {type: blob.type || "image/png"});
+      const payload = { files: [file], title: "我嘅港式 MBTI", text: shareUrl };
+      if(navigator.canShare && navigator.canShare({ files: [file] })){
+        await navigator.share(payload);
+        setShareStatus("✅ 已分享圖片 + 網址！");
+        saveResult();
+        return;
+      }
+      // 有 share 但唔 support files（例如部分桌面）→ 退回純文字含網址
+      await navigator.share({ title: "我嘅港式 MBTI", text: `我嘅港式 MBTI：${window.lastResult}\n${shareUrl}` });
+      setShareStatus("✅ 已分享（呢個裝置唔支援直接 share 圖，已用文字+網址）");
       saveResult();
-    }).catch(() => copyResult());
-  } else {
-    copyResult();
+      return;
+    }catch(e){
+      if(e && e.name === "AbortError") return; // 用戶取消
+      // fall through 去下載 fallback
+    }
+  }
+
+  // 2) Fallback：自動下載圖片 + copy 網址
+  try{
+    if(img && img.src && img.src.startsWith("data:")){
+      const a = document.createElement("a");
+      a.href = img.src;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+    const clip = shareUrl;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(clip);
+      setShareStatus("✅ 圖片已下載 + 網址已 copy，可貼去 WhatsApp");
+    } else {
+      fallbackCopy(clip);
+      setShareStatus("✅ 圖片已下載，網址已 copy");
+    }
+    saveResult();
+  }catch(e2){
+    alert("分享失敗，請長按圖片儲存，再手動 share");
   }
 };
 
 window.copyResult = function(){
-  const text = generateResultText();
-  if(!text){ alert("冇結果可以 copy"); return; }
+  const shareUrl = "https://fung2222.github.io/hk-mbti/";
+  const text = window.lastResult
+    ? `我嘅港式 MBTI：${window.lastResult}\n${shareUrl}`
+    : shareUrl;
   if(navigator.clipboard){
     navigator.clipboard.writeText(text).then(() => {
-      setShareStatus("✅ 已 Copy 到剪貼簿！");
+      setShareStatus("✅ 已 Copy 網址到剪貼簿！");
       saveResult();
     }).catch(() => fallbackCopy(text));
   } else {
