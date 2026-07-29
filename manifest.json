@@ -1,7 +1,7 @@
 {
   "name": "香港 MBTI",
   "short_name": "港MBTI",
-  "description": "60 題廣東話版 MBTI 測試，全港最地道嘅性格測試",
+  "description": "60 題廣東話版 MBTI 測試 v1.5｜茶餐廳、港鐵、7-11 港式性格測試",
   "start_url": "/hk-mbti/",
   "scope": "/hk-mbti/",
   "display": "standalone",
@@ -9,6 +9,7 @@
   "background_color": "#FAF7F0",
   "theme_color": "#D4A95F",
   "lang": "zh-HK",
+  "version": "1.5.0",
   "icons": [
     {
       "src": "icon-192.png",
@@ -34,7 +35,7 @@
     {
       "name": "做測試",
       "url": "/hk-mbti/?start=1",
-      "description": "立即開始 60 題 MBTI 測試"
+      "description": "立即開始 MBTI 測試"
     },
     {
       "name": "性格百科",
