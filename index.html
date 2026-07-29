@@ -51,6 +51,39 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 #nickGrid button{transition:all .15s}
 #nickGrid button:active{transform:scale(.96)}
 #profileName:focus{box-shadow:0 0 0 3px rgba(212,169,95,.25)}
+/* 主頁探索風琴 */
+.home-acc{background:#fff;border-radius:1.2rem;box-shadow:0 4px 24px rgba(0,0,0,.06);overflow:hidden}
+.home-acc-item{border-bottom:1px solid #f0ebe3}
+.home-acc-item:last-child{border-bottom:none}
+.home-acc-head{
+  width:100%;display:flex;align-items:center;gap:.75rem;
+  padding:1rem 1.15rem;text-align:left;background:transparent;border:0;cursor:pointer;
+  transition:background .15s
+}
+.home-acc-head:hover{background:#fffaf0}
+.home-acc-head:active{background:#fff5e0}
+.home-acc-ico{font-size:1.35rem;flex-shrink:0;line-height:1}
+.home-acc-title{flex:1;font-weight:800;font-size:1rem;color:var(--ink)}
+.home-acc-chev{
+  flex-shrink:0;width:28px;height:28px;border-radius:999px;
+  background:var(--soft);display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;color:#8a7a5a;transition:transform .25s ease,background .15s
+}
+.home-acc-item.open .home-acc-head{background:linear-gradient(90deg,#fff8ec,#fff)}
+.home-acc-item.open .home-acc-chev{transform:rotate(180deg);background:var(--gold);color:var(--ink)}
+.home-acc-body{
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .28s ease,opacity .2s ease,padding .2s ease;
+  padding:0 1.15rem
+}
+.home-acc-item.open .home-acc-body{max-height:160px;opacity:1;padding:0 1.15rem .95rem}
+.home-acc-desc{font-size:.9rem;color:#6b6560;line-height:1.45;margin-bottom:.65rem}
+.home-acc-go{
+  display:inline-flex;align-items:center;gap:.35rem;
+  background:var(--gold);color:var(--ink);font-weight:800;font-size:.9rem;
+  border:0;border-radius:.75rem;padding:.55rem 1rem;cursor:pointer
+}
+.home-acc-go:active{transform:scale(.97)}
 
 .brand-gold{color:var(--gold)}
 .bg-gold{background:var(--gold)}
@@ -686,43 +719,54 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
       </div>
     </div>
 
-    <div class="card p-5 mb-4 cursor-pointer" onclick="openAbout()" style="border-left:4px solid #D4A95F;">
-      <div class="flex items-center justify-between">
-        <div>
-          <h3 class="font-bold mb-1 text-sm">📖 MBTI 係咩？廣東話版有咩唔同</h3>
-          <p class="text-xs text-gray-500">由來 · 同普通版分別 · 測完可以得到咩資訊</p>
+    <!-- 探索四欄 · 風琴式 -->
+    <div class="mb-4">
+      <div class="text-xs tracking-widest brand-gold font-bold mb-2 px-1">📂 探索更多</div>
+      <div class="home-acc" id="homeAccordion">
+        <div class="home-acc-item" data-acc="about">
+          <button type="button" class="home-acc-head" onclick="toggleHomeAcc('about')">
+            <span class="home-acc-ico">📖</span>
+            <span class="home-acc-title">MBTI 係咩</span>
+            <span class="home-acc-chev">▼</span>
+          </button>
+          <div class="home-acc-body">
+            <p class="home-acc-desc">由來、同普通版分別、測完可以得到咩資訊。有興趣先入去睇清楚。</p>
+            <button type="button" class="home-acc-go" onclick="event.stopPropagation();openAbout()">進入簡介 →</button>
+          </div>
         </div>
-        <div class="text-2xl">→</div>
-      </div>
-    </div>
-
-    <div class="card p-5 mb-4 cursor-pointer" onclick="openHub()">
-      <div class="flex items-center justify-between">
-        <div>
-          <h3 class="font-bold mb-1 text-sm">📚 性格百科 Knowledge Hub</h3>
-          <p class="text-xs text-gray-500">4 個維度、16 種性格、性格比較工具</p>
+        <div class="home-acc-item" data-acc="hub">
+          <button type="button" class="home-acc-head" onclick="toggleHomeAcc('hub')">
+            <span class="home-acc-ico">📚</span>
+            <span class="home-acc-title">性格百科</span>
+            <span class="home-acc-chev">▼</span>
+          </button>
+          <div class="home-acc-body">
+            <p class="home-acc-desc">4 個維度、16 種性格完整介紹、性格比較工具。</p>
+            <button type="button" class="home-acc-go" onclick="event.stopPropagation();openHub()">進入百科 →</button>
+          </div>
         </div>
-        <div class="text-2xl">→</div>
-      </div>
-    </div>
-
-    <div class="card p-5 mb-4 cursor-pointer" onclick="openSocial()">
-      <div class="flex items-center justify-between">
-        <div>
-          <h3 class="font-bold mb-1 text-sm">🤝 點同每個人相處</h3>
-          <p class="text-xs text-gray-500">5 個場景 × 16 種性格 = 80 篇攻略</p>
+        <div class="home-acc-item" data-acc="social">
+          <button type="button" class="home-acc-head" onclick="toggleHomeAcc('social')">
+            <span class="home-acc-ico">🤝</span>
+            <span class="home-acc-title">個人相處</span>
+            <span class="home-acc-chev">▼</span>
+          </button>
+          <div class="home-acc-body">
+            <p class="home-acc-desc">點同每種人傾偈、共事、做朋友。5 個場景 × 16 型攻略。</p>
+            <button type="button" class="home-acc-go" onclick="event.stopPropagation();openSocial()">進入相處攻略 →</button>
+          </div>
         </div>
-        <div class="text-2xl">→</div>
-      </div>
-    </div>
-
-    <div class="card p-5 mb-4 cursor-pointer" onclick="openRomance()">
-      <div class="flex items-center justify-between">
-        <div>
-          <h3 class="font-bold mb-1 text-sm">💕 點同每個人拍拖</h3>
-          <p class="text-xs text-gray-500">3 個場景 × 16 種性格 = 48 篇攻略</p>
+        <div class="home-acc-item" data-acc="romance">
+          <button type="button" class="home-acc-head" onclick="toggleHomeAcc('romance')">
+            <span class="home-acc-ico">💕</span>
+            <span class="home-acc-title">個人拍拖</span>
+            <span class="home-acc-chev">▼</span>
+          </button>
+          <div class="home-acc-body">
+            <p class="home-acc-desc">點同每種人拍拖、吵架、復合。3 個場景 × 16 型攻略。</p>
+            <button type="button" class="home-acc-go" onclick="event.stopPropagation();openRomance()">進入拍拖攻略 →</button>
+          </div>
         </div>
-        <div class="text-2xl">→</div>
       </div>
     </div>
 
@@ -2130,6 +2174,16 @@ window.clearHistory = function(){
 // ====================== Knowledge Hub Functions ======================
 window.openAbout = function(){
   show("about");
+};
+
+window.toggleHomeAcc = function(id){
+  const root = document.getElementById("homeAccordion");
+  if(!root) return;
+  root.querySelectorAll(".home-acc-item").forEach(el => {
+    const on = el.getAttribute("data-acc") === id;
+    if(on) el.classList.toggle("open");
+    else el.classList.remove("open");
+  });
 };
 
 window.openHub = function(){
