@@ -23,7 +23,7 @@ E 人香港名人參考：
 - 補習天王全部 E`,
     strength:["容易識朋友","表達能力強","充滿活力","帶動氣氛"],
     weakness:["講嘢太快可能得罪人","需要外在肯定","有時忽視自己感受","好難獨處"],
-    career:["銷售","市場推廣","老師","公關","主持"],
+    事業:["銷售","市場推廣","老師","公關","主持"],
     friends:["I 人嘅好朋友","E 人之間可以做玩伴"]
   },
   I: {
@@ -41,7 +41,7 @@ E 人香港名人參考：
 I 人嘅盲點：
 - 太內向可能錯失 networking 機會
 - 有嘢唔講出嚟，人哋唔知你點諗
-- 太少曝光可能影響 career 升遷
+- 太少曝光可能影響 事業 升遷
 
 I 人香港名人參考：
 - 林夕 — 寫詞為主
@@ -49,7 +49,7 @@ I 人香港名人參考：
 - 黃子華棟篤笑有 E 也有 I，但私下 I`,
     strength:["深度思考","專注","自我覺察強","獨立"],
     weakness:["難以主動 social","容易被誤會高冷","network 機會少","壓力無處宣洩"],
-    career:["研究","寫作","程式設計師","設計師","會計"],
+    事業:["研究","寫作","程式設計師","設計師","會計"],
     friends:["E 人嘅好朋友","I 人之間可以深度交流"]
   },
   S: {
@@ -74,7 +74,7 @@ S 人香港名人參考：
 - 大多數紀律部隊`,
     strength:["務實","可靠","細節強","執行力強"],
     weakness:["抗拒改變","過於保守","創意有限","容易忽略長遠"],
-    career:["會計","工程","醫療","法律","公務員"],
+    事業:["會計","工程","醫療","法律","公務員"],
     friends:["N 人可以帶你探索新可能"]
   },
   N: {
@@ -99,7 +99,7 @@ N 人香港名人參考：
 - 倪匡（科幻小說）`,
     strength:["創意強","全局觀","有遠見","善於比喻"],
     weakness:["離地","唔理細節","難執行","易放棄"],
-    career:["創意","策略","研究","藝術","初創"],
+    事業:["創意","策略","研究","藝術","初創"],
     friends:["S 人可以幫你落地"]
   },
   T: {
@@ -123,7 +123,7 @@ T 人香港名人參考：
 - 梁特首（技術官僚）`,
     strength:["邏輯強","客觀","分析力強","公平"],
     weakness:["傷感情","冷漠","過度批判","難表達感受"],
-    career:["工程","法律","醫生","分析師","管理"],
+    事業:["工程","法律","醫生","分析師","管理"],
     friends:["F 人教你感受世界"]
   },
   F: {
@@ -147,7 +147,7 @@ F 人香港名人參考：
 - 香港女性大多 F（+15.1%）`,
     strength:["同理心","體貼","重視和諧","善於聆聽"],
     weakness:["過度敏感","難做艱難決定","太在意別人","委屈自己"],
-    career:["輔導","教育","社工","人力資源","藝術"],
+    事業:["輔導","教育","社工","人力資源","藝術"],
     friends:["T 人教你分析"]
   },
   J: {
@@ -172,7 +172,7 @@ J 人香港名人參考：
 - 校長、老師`,
     strength:["計劃強","可靠","有條理","自律"],
     weakness:["僵硬","抗拒改變","完美主義","容易焦慮"],
-    career:["管理","律師","會計","公務員","項目經理"],
+    事業:["管理","律師","會計","公務員","項目經理"],
     friends:["P 人教你 chill"]
   },
   P: {
@@ -198,7 +198,7 @@ P 人香港名人參考：
 - 藝術家`,
     strength:["靈活","即興","適應力強","開心"],
     weakness:["拖延","散漫","難以做長線","容易錯 死線"],
-    career:["創意","自由業","銷售","初創","設計"],
+    事業:["創意","自由業","銷售","初創","設計"],
     friends:["J 人教你 plan"]
   }
 };
@@ -209,7 +209,7 @@ window.TYPES_FULL = {
     full:`INTJ（建築師 / Architect）係 16 種人格中最稀有嘅之一，佔全球人口約 2%。佢哋結合內省、直覺、思考同判斷，係天生的策略家同系統設計師。
 
 **核心特質**
-- 腦入面成日有 long-term 計劃（5 年 / 10 年）
+- 腦入面成日有 長線 計劃（5 年 / 10 年）
 - 獨立思考，唔受主流影響
 - 高標準，對自己同人都要求高
 - 重視知識同能力多過 social status
@@ -227,29 +227,29 @@ window.TYPES_FULL = {
 - 唔識表達感情
 
 **戀愛**
-- 慢熱，但一旦投入就 long-term
-- 揀對手要 intelligent + independent
+- 慢熱，但一旦投入就 長線
+- 揀對手要 聰明 + 獨立
 - 最佳配對：ENFP、ENTP（互補型）
 
 **工作**
 - 適合：Strategy、Architecture、Engineering、Investment、Law、Scientist
 - 避免：規律、Customer Service、純社交
-- 工作風格：Quiet but productive，自己一個完成 complex task
+- 工作風格：安靜 but productive，自己一個完成 complex task
 
 **友情**
-- 朋友唔多但 deep
-- 鍾意 deep conversation 多過 chit chat
+- 朋友唔多但 深入
+- 鍾意 深度對話 多過 吹水
 - 同 NP 配最夾
 
 **衝突處理**
 - 直接講解決方法
-- 不耐煩 emotional drama
+- 不耐煩 情緒化 情緒戲
 - 有時太冷`,
-    strength:["戰略思維","獨立","高標準","系統思考","long-term 規劃"],
+    strength:["戰略思維","獨立","高標準","系統思考","長線 規劃"],
     weakness:["自大","社交笨拙","完美主義","冷漠","情緒表達弱"],
-    love:["慢熱","深層連結","要 intelligent partner","需要 personal space"],
+    love:["慢熱","深層連結","要 聰明嘅對手","需要 個人空間"],
     work:["策略","建築","工程","投資","法律","科學家"],
-    conflict:["直接講","不耐煩 drama","太冷","要 space 反思"]
+    conflict:["直接講","不耐煩 情緒戲","太冷","要 空間 反思"]
   },
   "INTP": {
     full:`INTP（邏輯學家 / Logician）佔全球人口約 3-5%，係 16 種中最「腦入面」嘅人。佢哋成日思考抽象概念、理論、可能性。
@@ -280,10 +280,10 @@ window.TYPES_FULL = {
 **工作**
 - 適合：Research、Programming、Philosophy、Writing、Academic
 - 避免：Sales、Management
-- 工作風格：獨立 deep work，討厭 會議
+- 工作風格：獨立 深入 工作，討厭 會議
 
 **友情**
-- 少數 deep friend
+- 少數 深交
 - 鍾意 discuss idea
 - 同 NP 配最夾
 
@@ -293,7 +293,7 @@ window.TYPES_FULL = {
 - 內化情緒`,
     strength:["抽象思維","創意","獨立","分析力強","邏輯"],
     weakness:["拖延","難 執行","社交差","過度分析","規律 抗拒"],
-    love:["智識交流","不主動","需要 space","慢熱"],
+    love:["智識交流","不主動","需要 空間","慢熱"],
     work:["研究","程式設計","哲學","寫作","學術界"],
     conflict:["退縮","內化","避免 confront","需要時間"]
   },
@@ -329,7 +329,7 @@ window.TYPES_FULL = {
 - 工作風格：Decisive，愛做決策
 
 **友情**
-- 一班追隨者但 deep friend 唔多
+- 一班追隨者但 深交 唔多
 - 鍾意 lead project
 - 同 NP 配最夾
 
@@ -366,12 +366,12 @@ window.TYPES_FULL = {
 
 **戀愛**
 - 風趣幽默
-- 揀對手要 smart 同 open-minded
+- 揀對手要 smart 同 開放-minded
 - 最佳配對：INFJ、INTJ
 
 **工作**
 - 適合：Startup、Marketing、Law、Consulting、Sales
-- 避免：規律、Detail work
+- 避免：規律、Detail 工作
 - 工作風格：大局，愛 腦爆
 
 **友情**
@@ -405,23 +405,23 @@ window.TYPES_FULL = {
 - 深度思考
 
 **弱項**
-- 太 sensitive
+- 太 敏感
 - 自我懷疑
 - Burnout
 - 過度付出
 
 **戀愛**
-- 慢熱 deep connection
-- 揀對手要 deep + meaningful
+- 慢熱 深層連結
+- 揀對手要 深入 + 有意義
 - 最佳配對：ENFP、ENTP
 
 **工作**
 - 適合：Counseling、Writing、HR、Art、Non-profit
 - 避免：規律、純 Logic
-- 工作風格：Quiet deep work
+- 工作風格：安靜地深入 工作
 
 **友情**
-- 少數 deep friend
+- 少數 深交
 - 聆聽者
 - 同 NP 配最夾
 
@@ -451,23 +451,23 @@ window.TYPES_FULL = {
 - 深度思考
 
 **弱項**
-- 太 sensitive
+- 太 敏感
 - Procrastination
 - 自我懷疑
 - 過度理想化
 
 **戀愛**
 - 浪漫派
-- 揀對手要 deep + authentic
+- 揀對手要 深入 + 真誠
 - 最佳配對：ENFJ、ENTJ
 
 **工作**
 - 適合：Writing、Art、Counseling、HR、Non-profit
 - 避免：規律、Pure Logic
-- 工作風格：獨立 deep work
+- 工作風格：獨立 深入 工作
 
 **友情**
-- 少數 deep friend
+- 少數 深交
 - 聆聽者
 - 同 NJ 配最夾
 
@@ -500,7 +500,7 @@ window.TYPES_FULL = {
 - 過度付出
 - 太在意別人
 - Burnout
-- Self-neglect
+- 自我neglect
 
 **戀愛**
 - Devoted
@@ -520,7 +520,7 @@ window.TYPES_FULL = {
 **衝突處理**
 - Mediator
 - 化解
-- Self-sacrifice`,
+- 自我犧牲`,
     strength:["同理心","領導","溝通","激勵","溫暖"],
     weakness:["過度付出","太在意別人","容易 burn out","忽略自己","敏感"],
     love:["專一","支持","浪漫","長線"],
@@ -550,7 +550,7 @@ window.TYPES_FULL = {
 
 **戀愛**
 - 熱情
-- 揀對手要 fun + open
+- 揀對手要 fun + 開放
 - 最佳配對：INFJ、INTJ
 
 **工作**
@@ -596,7 +596,7 @@ window.TYPES_FULL = {
 
 **戀愛**
 - Devoted
-- 揀對手要 stable
+- 揀對手要 穩定
 - 最佳配對：ESFP、ESTP
 
 **工作**
@@ -605,7 +605,7 @@ window.TYPES_FULL = {
 - 工作風格：規律 強
 
 **友情**
-- Deep friend 唔多
+- 深交 唔多
 - 守信用
 - 同 EP 配最夾
 
@@ -635,8 +635,8 @@ window.TYPES_FULL = {
 - Loyal
 
 **弱項**
-- Over-giving
-- Self-neglect
+- 過度giving
+- 自我neglect
 - 過度敏感
 - 抗拒改變
 
@@ -651,7 +651,7 @@ window.TYPES_FULL = {
 - 工作風格：People-oriented
 
 **友情**
-- Deep friend 唔多
+- 深交 唔多
 - Caring
 - 同 EP 配最夾
 
@@ -712,7 +712,7 @@ window.TYPES_FULL = {
     conflict:["直接","講道理","守規則","果斷"]
   },
   "ESFJ": {
-    full:`ESFJ（執事 / Consul）佔全球人口約 9-13%，係天生嘅 host。佢哋外向、實感、情感、判斷，重視和諧、傳統、social connection。
+    full:`ESFJ（執事 / Consul）佔全球人口約 9-13%，係天生嘅 host。佢哋外向、實感、情感、判斷，重視和諧、傳統、social 連結。
 
 **核心特質**
 - 暖
@@ -730,7 +730,7 @@ window.TYPES_FULL = {
 - 過度在意別人
 - 敏感
 - Conflict 抗拒
-- Self-neglect
+- 自我neglect
 
 **戀愛**
 - Devoted
@@ -780,7 +780,7 @@ window.TYPES_FULL = {
 
 **戀愛**
 - 慢熱
-- 揀對手要 independent
+- 揀對手要 獨立
 - 最佳配對：ESFJ、ENFJ
 
 **工作**
@@ -789,17 +789,17 @@ window.TYPES_FULL = {
 - 工作風格：Hands-on
 
 **友情**
-- 少數 deep friend
+- 少數 深交
 - Cool
 - 同 EP 配最夾
 
 **衝突處理**
 - Withdraw
 - Logic
-- Avoid emotional`,
+- Avoid 情緒化`,
     strength:["分析","實幹","冷靜","獨立","實際"],
     weakness:["冷漠","敢冒險","唔識表達","規律 抗拒","直接"],
-    love:["慢熱","獨立","實際","需要 space"],
+    love:["慢熱","獨立","實際","需要 空間"],
     work:["工程","程式設計","技工","法醫","軍警"],
     conflict:["退縮","邏輯","逃避情緒","獨立"]
   },
@@ -819,10 +819,10 @@ window.TYPES_FULL = {
 - Loyal
 
 **弱項**
-- 過度 sensitive
+- 過度 敏感
 - 唔識 plan
 - Conflict 抗拒
-- Self-doubt
+- 自我doubt
 
 **戀愛**
 - Devoted
@@ -832,10 +832,10 @@ window.TYPES_FULL = {
 **工作**
 - 適合：Art、Music、Design、Healthcare、Nature
 - 避免：規律、Conflict
-- 工作風格：Hands-on creative
+- 工作風格：Hands-on 創作
 
 **友情**
-- Deep friend 唔多
+- 深交 唔多
 - Caring
 - 同 EJ 配最夾
 
@@ -872,7 +872,7 @@ window.TYPES_FULL = {
 
 **戀愛**
 - 主動
-- 揀對手要 fun + open
+- 揀對手要 fun + 開放
 - 最佳配對：ISFJ、ISTJ
 
 **工作**
