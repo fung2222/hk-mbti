@@ -871,10 +871,12 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
     <div class="mx-auto mb-4 fade-up" style="width:360px; max-width:100%;">
       <img id="shareCardImg" class="w-full rounded-2xl shadow-lg" alt="分享卡" style="display:block;">
     </div>
-    <div class="text-center mb-2 flex flex-wrap gap-2 justify-center">
-      <button onclick="downloadCard()" class="btn-gold px-4 py-2.5 rounded-xl text-sm">📥 儲存圖片</button>
-      <button onclick="shareResult()" class="bg-soft px-4 py-2.5 rounded-xl text-sm font-bold">📤 分享圖片</button>
-      <button onclick="shareLinkOnly()" class="bg-soft px-4 py-2.5 rounded-xl text-sm">🔗 分享網址</button>
+    <div class="mb-2 px-1">
+      <div class="grid grid-cols-3 gap-2 max-w-sm mx-auto">
+        <button onclick="downloadCard()" class="btn-gold py-2.5 px-1 rounded-xl text-[12px] font-bold leading-tight">📥 儲存圖片</button>
+        <button onclick="shareResult()" class="bg-soft py-2.5 px-1 rounded-xl text-[12px] font-bold leading-tight">📤 分享圖片</button>
+        <button onclick="shareLinkOnly()" class="bg-soft py-2.5 px-1 rounded-xl text-[12px] font-bold leading-tight">🔗 分享網址</button>
+      </div>
     </div>
     <div id="shareStatus" class="text-[10px] text-gray-500 mt-1 text-center px-2"></div>
     <div id="shareHint" class="text-[10px] text-gray-400 mt-2 text-center px-3 leading-relaxed mb-4"></div>
