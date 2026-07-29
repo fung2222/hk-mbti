@@ -1138,7 +1138,9 @@ window.SCENARIOS = [
   {name:"Café 坐一日", match:["I","N","P"], emoji:"☕", desc:"INFP 標配"},
   {name:"茶記常餐", match:["S","J"], emoji:"🍳", desc:"實而不華"},
   {name:"打機至天光", match:["T","P"], emoji:"🎮", desc:"ISTP 標配"},
-  {name:"旺角掃街", match:["E","S","P"], emoji:"🍢", desc:"即興玩樂"}
+  {name:"旺角掃街", match:["E","S","P"], emoji:"🍢", desc:"即興玩樂"},
+  {name:"Boardroom 開波", match:["E","N","T","J"], emoji:"📈", desc:"ENTJ 指揮位"},
+  {name:"腦內黑客松", match:["I","N","T","P"], emoji:"🧠", desc:"INTP 思維遊樂場"}
 ];
 
 window.state = {
@@ -1423,15 +1425,26 @@ window.renderResult = function(r){
   $("personalityDetail").innerHTML = detailHtml;
 
   const type = r.mbti.substring(0,4);
-  const isE = type[0]==='E', isS = type[1]==='S', isT = type[2]==='T', isJ = type[3]==='J';
+  // 場景配對：按字母重疊計分（唔再要求全中，否則 ENTJ 等會零著燈）
+  const letterHit = (L) => type.indexOf(L) >= 0;
+  const scored = window.SCENARIOS.map(s => {
+    let score = 0;
+    (s.match || []).forEach(L => { if(letterHit(L)) score++; });
+    return {s, score};
+  });
+  const maxScore = Math.max(0, ...scored.map(x => x.score));
   let scenHtml = "";
-  window.SCENARIOS.forEach(s => {
-    const match = (s.match.includes("I") ? !isE : (s.match.includes("E") ? isE : true)) &&
-                  (s.match.includes("N") ? !isS : (s.match.includes("S") ? isS : true)) &&
-                  (s.match.includes("F") ? !isT : (s.match.includes("T") ? isT : true)) &&
-                  (s.match.includes("P") ? !isJ : (s.match.includes("J") ? isJ : true));
+  scored.forEach(({s, score}) => {
+    const isTop = maxScore > 0 && score === maxScore;
+    const isClose = maxScore > 0 && score === maxScore - 1 && score > 0;
+    const wrapCls = isTop
+      ? "card p-3 text-center border-2 border-gold bg-gradient-to-b from-yellow-50 to-white shadow-md"
+      : isClose
+        ? "card p-3 text-center border border-gold opacity-90"
+        : "card p-3 text-center opacity-40";
     scenHtml += `
-      <div class="card p-3 text-center" style="opacity:${match ? '1' : '0.4'}">
+      <div class="${wrapCls}">
+        ${isTop ? `<div class="text-[10px] font-black brand-gold mb-0.5">✦ 最似你</div>` : ``}
         <div class="text-2xl mb-1">${s.emoji}</div>
         <div class="text-xs font-bold">${s.name}</div>
         <div class="text-[10px] text-gray-500 mt-1">${s.desc}</div>
