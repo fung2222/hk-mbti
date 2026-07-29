@@ -866,16 +866,18 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 
     <!-- Share Card - 真實圖片（用戶可長按儲存） -->
     <div class="text-center mb-2">
-      <div class="text-[10px] text-gray-500">👆 長按圖片可儲存 / 分享</div>
+      <div class="text-[10px] text-gray-500">👆 長按圖片可儲存（iPhone 最穩）</div>
     </div>
     <div class="mx-auto mb-4 fade-up" style="width:360px; max-width:100%;">
       <img id="shareCardImg" class="w-full rounded-2xl shadow-lg" alt="分享卡" style="display:block;">
     </div>
-    <div class="text-center mb-4">
-      <button onclick="downloadCard()" class="btn-gold px-5 py-2.5 rounded-xl text-sm mr-2">📥 下載</button>
-      <button onclick="shareResult()" class="bg-soft px-5 py-2.5 rounded-xl text-sm">📤 Share</button>
-      <div id="shareStatus" class="text-[10px] text-gray-500 mt-2"></div>
+    <div class="text-center mb-2 flex flex-wrap gap-2 justify-center">
+      <button onclick="downloadCard()" class="btn-gold px-4 py-2.5 rounded-xl text-sm">📥 儲存圖片</button>
+      <button onclick="shareResult()" class="bg-soft px-4 py-2.5 rounded-xl text-sm font-bold">📤 分享圖片</button>
+      <button onclick="shareLinkOnly()" class="bg-soft px-4 py-2.5 rounded-xl text-sm">🔗 分享網址</button>
     </div>
+    <div id="shareStatus" class="text-[10px] text-gray-500 mt-1 text-center px-2"></div>
+    <div id="shareHint" class="text-[10px] text-gray-400 mt-2 text-center px-3 leading-relaxed mb-4"></div>
 
     <!-- Detailed Report -->
     <div class="card p-5 mb-4 fade-up">
@@ -2008,44 +2010,119 @@ function wrapText(ctx, text, maxWidth, lineHeight){
   return lines;
 }
 
+window.isIOS = function(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+};
+
+window.setShareHint = function(){
+  const el = $("shareHint");
+  if(!el) return;
+  if(window.isIOS()){
+    el.innerHTML = "📱 iPhone 提示：系統 Share 有時只送網址。想出圖最穩係 <b>長按圖片 → 儲存圖像</b>，再開 WhatsApp / IG 相簿揀圖。Android 多數可以直接「分享圖片」。";
+  } else {
+    el.innerHTML = "📱 撳「分享圖片」可開系統選單（WhatsApp 等）。若對方只收到 link，改用「儲存圖片」再手動傳送。IG 通常要先存圖再發 Story。";
+  }
+};
+
+// 結果頁顯示時更新提示
+const _origShow = window.show;
+window.show = function(id){
+  _origShow(id);
+  if(id === "result"){
+    try{ setShareHint(); }catch(e){}
+  }
+};
+
+window.shareLinkOnly = async function(){
+  const shareUrl = "https://fung2222.github.io/hk-mbti/";
+  const text = window.lastResult
+    ? `我嘅港式 MBTI：${window.lastResult}\n一齊測：${shareUrl}`
+    : shareUrl;
+  try{
+    if(navigator.share){
+      await navigator.share({ title: "港式 MBTI", text: text, url: shareUrl });
+      setShareStatus("✅ 已分享網址");
+      return;
+    }
+  }catch(e){
+    if(e && e.name === "AbortError") return;
+  }
+  try{
+    if(navigator.clipboard) await navigator.clipboard.writeText(text);
+    else fallbackCopy(text);
+    setShareStatus("✅ 網址已 copy，可貼去 WhatsApp");
+  }catch(e2){
+    fallbackCopy(text);
+  }
+};
+
 window.shareResult = async function(){
   if(!window.lastResult){ alert("冇結果可以分享"); return; }
 
-  // 確保分享卡 PNG 已生成
   let img = $("shareCardImg");
   if(!img || !img.src || !img.src.startsWith("data:")){
     try{ await generateCardImage(); }catch(e){}
   }
   img = $("shareCardImg");
-  const siteUrl = (location.origin + (location.pathname.replace(/\/index\.html.*$/i, "/") || "/")).replace(/\/+$/, "/") ;
-  // 固定公開網址（WhatsApp 好開）
   const shareUrl = "https://fung2222.github.io/hk-mbti/";
-  const fileName = (img && img.dataset.downloadName) || (`港式MBTI-${(window.lastResult||"").substring(0,4)}.png`);
+  const code = (window.lastResult||"").substring(0,4);
+  const fileName = (img && img.dataset.downloadName) || (`港式MBTI-${code}.png`);
+  const caption = `我嘅港式 MBTI：${window.lastResult}\n${shareUrl}`;
 
-  // 1) 優先：圖片 File + 網址做 caption（WhatsApp / IG / 系統 share sheet）
-  if(img && img.src && img.src.startsWith("data:") && navigator.share){
+  // 準備 PNG File
+  let file = null;
+  if(img && img.src && img.src.startsWith("data:")){
     try{
       const blob = await (await fetch(img.src)).blob();
-      const file = new File([blob], fileName, {type: blob.type || "image/png"});
-      const payload = { files: [file], title: "我嘅港式 MBTI", text: shareUrl };
-      if(navigator.canShare && navigator.canShare({ files: [file] })){
+      // iOS 對 type 好敏感，強制 image/png
+      file = new File([blob], fileName, { type: "image/png" });
+    }catch(e){ file = null; }
+  }
+
+  const canFile = !!(file && navigator.share && navigator.canShare && (() => {
+    try { return navigator.canShare({ files: [file] }); } catch(e){ return false; }
+  })());
+
+  if(canFile){
+    // iPhone：files + url 一齊 share 時，WhatsApp 成日淨拎 url → 先試「淨圖片」
+    const attempts = window.isIOS()
+      ? [
+          { files: [file] },
+          { files: [file], text: caption },
+          { files: [file], title: "我嘅港式 MBTI", text: caption }
+        ]
+      : [
+          { files: [file], text: caption },
+          { files: [file] },
+          { files: [file], title: "我嘅港式 MBTI", text: caption, url: shareUrl }
+        ];
+    for(const payload of attempts){
+      try{
         await navigator.share(payload);
-        setShareStatus("✅ 已分享圖片 + 網址！");
+        setShareStatus(payload.files ? "✅ 已叫起分享（請揀 WhatsApp / 訊息）" : "✅ 已分享");
         saveResult();
         return;
+      }catch(e){
+        if(e && e.name === "AbortError") return; // 用戶取消
+        // 試下一個 payload
       }
-      // 有 share 但唔 support files（例如部分桌面）→ 退回純文字含網址
-      await navigator.share({ title: "我嘅港式 MBTI", text: `我嘅港式 MBTI：${window.lastResult}\n${shareUrl}` });
-      setShareStatus("✅ 已分享（呢個裝置唔支援直接 share 圖，已用文字+網址）");
-      saveResult();
-      return;
-    }catch(e){
-      if(e && e.name === "AbortError") return; // 用戶取消
-      // fall through 去下載 fallback
     }
   }
 
-  // 2) Fallback：自動下載圖片 + copy 網址
+  // 有 share 但唔 support 圖
+  if(navigator.share){
+    try{
+      await navigator.share({ title: "我嘅港式 MBTI", text: caption, url: shareUrl });
+      setShareStatus("⚠️ 呢部機只支援分享網址；要出圖請「儲存圖片」或長按圖片");
+      saveResult();
+      return;
+    }catch(e){
+      if(e && e.name === "AbortError") return;
+    }
+  }
+
+  // Fallback：下載 + copy
   try{
     if(img && img.src && img.src.startsWith("data:")){
       const a = document.createElement("a");
@@ -2055,17 +2132,15 @@ window.shareResult = async function(){
       a.click();
       document.body.removeChild(a);
     }
-    const clip = shareUrl;
     if(navigator.clipboard && navigator.clipboard.writeText){
-      await navigator.clipboard.writeText(clip);
-      setShareStatus("✅ 圖片已下載 + 網址已 copy，可貼去 WhatsApp");
+      await navigator.clipboard.writeText(caption);
     } else {
-      fallbackCopy(clip);
-      setShareStatus("✅ 圖片已下載，網址已 copy");
+      fallbackCopy(caption);
     }
+    setShareStatus("✅ 已嘗試儲存圖片 + copy 文案。iPhone 若無下載，請長按圖片 → 儲存圖像");
     saveResult();
   }catch(e2){
-    alert("分享失敗，請長按圖片儲存，再手動 share");
+    alert("分享失敗。請長按結果圖片 → 儲存圖像，再開 WhatsApp 傳送相片。");
   }
 };
 
