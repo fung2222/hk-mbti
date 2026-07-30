@@ -1733,6 +1733,13 @@ window.downloadCard = async function(){
 };
 
 // ====================== Generate Card as Image (real PNG) ======================
+window.getTestVersionLabel = function(version, totalQ){
+  const labels = { life: "生活版", advanced: "進階版", bb: "BB版" };
+  const counts = { life: 60, advanced: 30, bb: 10 };
+  const key = labels[version] ? version : "life";
+  return labels[key] + " · " + (totalQ || counts[key]) + "題";
+};
+
 window.generateCardImage = function(){
   if(!window.lastResult) return;
   const t = window.TYPES[window.lastResult.substring(0,4)];
@@ -1756,6 +1763,10 @@ window.generateCardImage = function(){
   ctx.textAlign = "right";
   ctx.font = "24px sans-serif";
   ctx.fillText("2026.07", 660, 75);
+  const versionLabel = window.getTestVersionLabel(window.state.version, window.state.maxQ);
+  ctx.fillStyle = "rgba(255,255,255,0.72)";
+  ctx.font = "bold 20px sans-serif";
+  ctx.fillText(versionLabel, 660, 108);
   // Icon logo（用真實 PNG 而非 fillText 文字）
   // 用 Promise async load icon
   const drawIcon = new Promise((resolve) => {
