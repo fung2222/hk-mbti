@@ -35,18 +35,45 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 #app .text-lg{font-size:1.25rem!important}
 .option{font-size:1.05rem}
 .option .flex-1{font-size:1.05rem;line-height:1.45}
-/* 版本雙擊確認 */
-.ver-btn{transition:all .2s cubic-bezier(.34,1.56,.64,1);transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+/* 版本雙擊確認 · 三色預設 */
+.ver-btn{transition:all .2s cubic-bezier(.34,1.56,.64,1);transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,.06);border-width:2px;border-style:solid}
 .ver-btn:active{transform:scale(.98)}
-.ver-btn.ver-lit{
-  border-color:var(--gold)!important;border-width:2px!important;
-  background:linear-gradient(135deg,#fff8e8,#ffe8c8)!important;
-  box-shadow:0 8px 24px rgba(212,169,95,.35),0 0 0 3px rgba(212,169,95,.2);
-  transform:translateY(-2px) scale(1.02)
+/* 生活版 · 金 */
+.ver-btn[data-ver="life"]{
+  border-color:#D4A95F;background:linear-gradient(135deg,#FFF9ED,#FFF1D6);
 }
-.ver-btn .ver-hint{display:none;margin-top:.4rem;font-weight:800;color:#8B6F3D}
+.ver-btn[data-ver="life"] .ver-arrow{color:#C4922E}
+.ver-btn[data-ver="life"] .ver-hint{color:#8B6F3D}
+.ver-btn[data-ver="life"].ver-lit{
+  box-shadow:0 8px 24px rgba(212,169,95,.35),0 0 0 3px rgba(212,169,95,.22);
+  transform:translateY(-2px) scale(1.02);
+  background:linear-gradient(135deg,#fff8e8,#ffe8c8);
+}
+/* 進階版 · 藍青 */
+.ver-btn[data-ver="advanced"]{
+  border-color:#5B8FD9;background:linear-gradient(135deg,#F0F6FF,#E4EFFC);
+}
+.ver-btn[data-ver="advanced"] .ver-arrow{color:#3B6FB8}
+.ver-btn[data-ver="advanced"] .ver-hint{color:#2F5A96}
+.ver-btn[data-ver="advanced"].ver-lit{
+  box-shadow:0 8px 24px rgba(91,143,217,.32),0 0 0 3px rgba(91,143,217,.22);
+  transform:translateY(-2px) scale(1.02);
+  background:linear-gradient(135deg,#EAF3FF,#D6E8FC);
+}
+/* BB 版 · 粉紫 */
+.ver-btn[data-ver="bb"]{
+  border-color:#C48BC9;background:linear-gradient(135deg,#FBF3FC,#F5E8F8);
+}
+.ver-btn[data-ver="bb"] .ver-arrow{color:#A66BAD}
+.ver-btn[data-ver="bb"] .ver-hint{color:#8A4F92}
+.ver-btn[data-ver="bb"].ver-lit{
+  box-shadow:0 8px 24px rgba(196,139,201,.32),0 0 0 3px rgba(196,139,201,.22);
+  transform:translateY(-2px) scale(1.02);
+  background:linear-gradient(135deg,#F8EBFA,#EFD9F2);
+}
+.ver-btn .ver-hint{display:none;margin-top:.4rem;font-weight:800}
 .ver-btn.ver-lit .ver-hint{display:block;animation:fadeUp .3s ease-out}
-.ver-btn.ver-lit .ver-arrow{color:var(--gold)!important;transform:translateX(4px)}
+.ver-btn.ver-lit .ver-arrow{transform:translateX(4px)}
 .stat-bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
 .stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
 #nickGrid button{transition:all .15s}
@@ -666,7 +693,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
       <div class="text-sm font-bold mb-1">3 種長度揀最適合嘅</div>
       <div class="text-xs text-gray-600 mb-3">先撳一次著燈確認 → 再撳一次開始測試</div>
       <div class="space-y-2.5" id="versionList">
-        <button type="button" data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full p-4 rounded-xl border-2 border-gold bg-gradient-to-r from-yellow-50 to-orange-50 text-left">
+        <button type="button" data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full p-4 rounded-xl text-left">
           <div class="flex items-center justify-between">
             <div>
               <div class="text-base font-black text-ink">🌟 生活版（完整測試）</div>
@@ -676,24 +703,24 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
             <div class="ver-arrow text-2xl transition">→</div>
           </div>
         </button>
-        <button type="button" data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full p-4 rounded-xl border border-gray-300 bg-white text-left">
+        <button type="button" data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full p-4 rounded-xl text-left">
           <div class="flex items-center justify-between">
             <div>
-              <div class="text-base font-bold text-ink">🎯 進階版（快速版）</div>
+              <div class="text-base font-black text-ink">🎯 進階版（快速版）</div>
               <div class="text-xs text-gray-600 mt-0.5">30 題 · 3 分鐘 · 平衡選擇</div>
               <div class="ver-hint text-xs">✨ 再撳一次進入進階版 →</div>
             </div>
-            <div class="ver-arrow text-2xl text-gray-400 transition">→</div>
+            <div class="ver-arrow text-2xl transition">→</div>
           </div>
         </button>
-        <button type="button" data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full p-4 rounded-xl border border-gray-300 bg-white text-left">
+        <button type="button" data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full p-4 rounded-xl text-left">
           <div class="flex items-center justify-between">
             <div>
-              <div class="text-base font-bold text-ink">🍼 BB 版（極簡版）</div>
+              <div class="text-base font-black text-ink">🍼 BB 版（極簡版）</div>
               <div class="text-xs text-gray-600 mt-0.5">10 題 · 1 分鐘 · 純粹試下</div>
               <div class="ver-hint text-xs">✨ 再撳一次進入 BB 版 →</div>
             </div>
-            <div class="ver-arrow text-2xl text-gray-400 transition">→</div>
+            <div class="ver-arrow text-2xl transition">→</div>
           </div>
         </button>
       </div>
