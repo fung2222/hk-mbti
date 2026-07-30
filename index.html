@@ -2226,6 +2226,34 @@ window.toggleHistory = function(){
   if(chev) chev.style.transform = hidden ? "rotate(0deg)" : "rotate(90deg)";
 };
 
+window.openHistoryRow = function(idx){
+  // close all rows
+  document.querySelectorAll("[data-history-row]").forEach(el => {
+    el.dataset.open = "0";
+    const body = el.querySelector("[data-history-body]");
+    if(body) body.classList.add("hidden");
+    const chev = el.querySelector("[data-history-chev]");
+    if(chev) chev.style.transform = "rotate(0deg)";
+  });
+  // open only the clicked one (or close if same)
+  const row = document.querySelector('[data-history-row="'+idx+'"]');
+  if(!row) return;
+  const wasOpen = row.dataset.open === "1";
+  if(wasOpen){
+    row.dataset.open = "0";
+    const body = row.querySelector("[data-history-body]");
+    if(body) body.classList.add("hidden");
+    const chev = row.querySelector("[data-history-chev]");
+    if(chev) chev.style.transform = "rotate(0deg)";
+    return;
+  }
+  row.dataset.open = "1";
+  const body = row.querySelector("[data-history-body]");
+  if(body) body.classList.remove("hidden");
+  const chev = row.querySelector("[data-history-chev]");
+  if(chev) chev.style.transform = "rotate(90deg)";
+};
+
 window.loadHistory = function(){
   try{
     const list = getHistoryList();
@@ -2240,25 +2268,28 @@ window.loadHistory = function(){
       const who = [rec.name, rec.nickname].filter(Boolean).join(" · ") || "匿名港人";
       const ver = rec.version === "bb" ? "BB" : rec.version === "advanced" ? "進階" : "生活";
       const cn = T ? (T.cn || T.name) : "";
-      return `<div class="bg-white/85 rounded-xl p-3 border border-gold/30">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="text-3xl flex-shrink-0">${emoji}</div>
-          <div class="flex-1 min-w-0">
-            <div class="font-black text-base truncate">${who}</div>
-            <div class="text-sm text-gray-700 mt-0.5">${code}${cn ? " · "+cn : ""}</div>
+      return `<div data-history-row="${i}" data-open="0" class="historyRow border-b border-gray-200">
+        <button onclick="openHistoryRow(${i})" class="w-full flex items-center justify-between py-2.5 active:opacity-60">
+          <div class="flex items-center gap-2 min-w-0 flex-1">
+            <span data-history-chev class="inline-block transition-transform duration-200 text-gray-400 text-xs">▶</span>
+            <span class="text-lg flex-shrink-0">${emoji}</span>
+            <span class="font-bold text-sm truncate">${who}</span>
+            <span class="text-xs text-gray-500 flex-shrink-0">${code}${cn ? " · "+cn : ""}</span>
           </div>
-        </div>
-        <div class="flex items-center justify-between text-xs text-gray-500 mb-2 px-1">
-          <span class="bg-soft px-2 py-0.5 rounded">${ver}版</span>
-          <span>${formatTimeAgo(rec.timestamp)}</span>
-        </div>
-        <div class="flex gap-2">
-          <button onclick="viewHistoryResult(${i})" class="flex-1 text-xs bg-gold text-ink font-bold py-2 rounded">查看</button>
-          <button id="delBtn_${i}" onclick="armDeleteHistory(${i})" data-armed="0" class="del-btn text-xs bg-white border border-gray-300 text-gray-500 font-bold w-12 rounded flex items-center justify-center" title="刪除紀錄">🗑</button>
+          <span class="text-[10px] text-gray-400 flex-shrink-0">${formatTimeAgo(rec.timestamp)}</span>
+        </button>
+        <div data-history-body class="hidden pl-7 pr-1 pb-3">
+          <div class="flex items-center gap-2 mb-2 text-xs text-gray-600">
+            <span class="bg-soft px-2 py-0.5 rounded">${ver}版</span>
+            <span class="text-gray-400">${new Date(rec.timestamp).toLocaleString("zh-HK")}</span>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="viewHistoryResult(${i})" class="flex-1 text-xs bg-gold text-ink font-bold py-2 rounded">查看</button>
+            <button id="delBtn_${i}" onclick="armDeleteHistory(${i})" data-armed="0" class="del-btn text-xs bg-white border border-gray-300 text-gray-500 font-bold w-12 rounded flex items-center justify-center" title="刪除紀錄">🗑</button>
+          </div>
         </div>
       </div>`;
     }).join("");
-    // Refresh chevron state in case list rendered while collapsed
     const chev = $("historyChevron");
     if(chev) chev.style.transform = box.classList.contains("hidden") ? "rotate(0deg)" : "rotate(90deg)";
     wrap.classList.remove("hidden");
