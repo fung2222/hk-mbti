@@ -645,18 +645,6 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
       <div class="text-xs text-gray-500">廣東話版 v1.7</div>
     </div>
 
-    <!-- 用戶測試記錄（最近 5 次） -->
-    <div id="userHistory" class="hidden card p-4 mb-4" style="background:linear-gradient(135deg, #FFF5E0, #FFFAF0); border-left:4px solid #D4A95F;">
-      <button id="historyToggle" onclick="toggleHistory()" class="w-full flex items-center justify-between mb-2 active:opacity-60">
-        <div class="text-xs text-gray-500 font-bold flex items-center gap-1">
-          <span id="historyChevron" class="inline-block transition-transform duration-200">▶</span>
-          <span>📌 最近測試紀錄（最多 5 次）</span>
-        </div>
-        <button onclick="event.stopPropagation();clearHistory()" class="text-xs text-gray-400 underline">全部清除</button>
-      </button>
-      <div id="historyList" class="space-y-2 hidden"></div>
-    </div>
-
     <div class="card p-6 mb-4">
       <div class="flex items-center justify-between mb-3">
         <div class="text-xs tracking-widest brand-gold font-bold">🎭 港式性格測試</div>
@@ -710,6 +698,19 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
         </button>
       </div>
       <div class="text-xs text-gray-500 mt-3 text-center">題目每次打亂 · 3 個版本結果互通</div>
+    </div>
+
+    <!-- 用戶測試記錄（最近 5 次）· 放喺揀版本下面 -->
+    <div id="userHistory" class="hidden card p-4 mb-4" style="background:linear-gradient(135deg, #FFF5E0, #FFFAF0); border-left:4px solid #D4A95F;">
+      <div class="flex items-center justify-between mb-1">
+        <button id="historyToggle" type="button" onclick="toggleHistory()" class="flex items-center gap-1.5 text-xs text-gray-600 font-bold active:opacity-60">
+          <span id="historyChevron" class="inline-block transition-transform duration-200">▶</span>
+          <span>📌 最近測試紀錄</span>
+          <span id="historyCount" class="text-gray-400 font-normal"></span>
+        </button>
+        <button type="button" onclick="clearHistory()" class="text-xs text-gray-400 underline">全部清除</button>
+      </div>
+      <div id="historyList" class="hidden"></div>
     </div>
 
     <div class="card p-4 mb-4 bg-soft">
@@ -2227,7 +2228,10 @@ window.toggleHistory = function(){
 };
 
 window.openHistoryRow = function(idx){
-  // close all rows
+  const row = document.querySelector('[data-history-row="'+idx+'"]');
+  if(!row) return;
+  const wasOpen = row.dataset.open === "1";
+  // 先全部合上
   document.querySelectorAll("[data-history-row]").forEach(el => {
     el.dataset.open = "0";
     const body = el.querySelector("[data-history-body]");
@@ -2235,18 +2239,8 @@ window.openHistoryRow = function(idx){
     const chev = el.querySelector("[data-history-chev]");
     if(chev) chev.style.transform = "rotate(0deg)";
   });
-  // open only the clicked one (or close if same)
-  const row = document.querySelector('[data-history-row="'+idx+'"]');
-  if(!row) return;
-  const wasOpen = row.dataset.open === "1";
-  if(wasOpen){
-    row.dataset.open = "0";
-    const body = row.querySelector("[data-history-body]");
-    if(body) body.classList.add("hidden");
-    const chev = row.querySelector("[data-history-chev]");
-    if(chev) chev.style.transform = "rotate(0deg)";
-    return;
-  }
+  // 再撳同一筆 = 合上；否則只開呢一筆
+  if(wasOpen) return;
   row.dataset.open = "1";
   const body = row.querySelector("[data-history-body]");
   if(body) body.classList.remove("hidden");
@@ -2261,31 +2255,37 @@ window.loadHistory = function(){
     const wrap = $("userHistory");
     if(!wrap || !box) return;
     if(!list.length){ wrap.classList.add("hidden"); return; }
+    const countEl = $("historyCount");
+    if(countEl) countEl.innerText = "（" + list.length + "）";
     box.innerHTML = list.map((rec, i) => {
       const code = (rec.mbti||"").substring(0,4);
       const T = window.TYPES && window.TYPES[code];
       const emoji = T ? T.emoji : "🎭";
       const who = [rec.name, rec.nickname].filter(Boolean).join(" · ") || "匿名港人";
-      const ver = rec.version === "bb" ? "BB" : rec.version === "advanced" ? "進階" : "生活";
+      const ver = rec.version === "bb" ? "BB版" : rec.version === "advanced" ? "進階版" : "生活版";
       const cn = T ? (T.cn || T.name) : "";
-      return `<div data-history-row="${i}" data-open="0" class="historyRow border-b border-gray-200">
-        <button onclick="openHistoryRow(${i})" class="w-full flex items-center justify-between py-2.5 active:opacity-60">
-          <div class="flex items-center gap-2 min-w-0 flex-1">
-            <span data-history-chev class="inline-block transition-transform duration-200 text-gray-400 text-xs">▶</span>
-            <span class="text-lg flex-shrink-0">${emoji}</span>
-            <span class="font-bold text-sm truncate">${who}</span>
-            <span class="text-xs text-gray-500 flex-shrink-0">${code}${cn ? " · "+cn : ""}</span>
+      const ago = formatTimeAgo(rec.timestamp);
+      const when = new Date(rec.timestamp).toLocaleString("zh-HK", {year:"numeric",month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"});
+      return `<div data-history-row="${i}" data-open="0" class="historyRow border-t border-gray-200/80">
+        <button type="button" onclick="openHistoryRow(${i})" class="w-full text-left py-3 active:opacity-60">
+          <div class="flex items-start gap-2">
+            <span data-history-chev class="inline-block transition-transform duration-200 text-gray-400 text-xs mt-1">▶</span>
+            <span class="text-xl flex-shrink-0 leading-none mt-0.5">${emoji}</span>
+            <div class="flex-1 min-w-0">
+              <div class="font-bold text-sm text-ink truncate">${who}</div>
+              <div class="text-xs text-gray-500 mt-0.5">${code}${cn ? " · " + cn : ""} · ${ago}</div>
+            </div>
           </div>
-          <span class="text-[10px] text-gray-400 flex-shrink-0">${formatTimeAgo(rec.timestamp)}</span>
         </button>
-        <div data-history-body class="hidden pl-7 pr-1 pb-3">
-          <div class="flex items-center gap-2 mb-2 text-xs text-gray-600">
-            <span class="bg-soft px-2 py-0.5 rounded">${ver}版</span>
-            <span class="text-gray-400">${new Date(rec.timestamp).toLocaleString("zh-HK")}</span>
+        <div data-history-body class="hidden pb-3 pl-8">
+          <div class="space-y-1.5 text-sm mb-3">
+            <div class="flex justify-between gap-3"><span class="text-gray-500">類型</span><span class="font-bold text-ink text-right">${code}${cn ? " · " + cn : ""}</span></div>
+            <div class="flex justify-between gap-3"><span class="text-gray-500">版本</span><span class="font-medium text-ink text-right">${ver}</span></div>
+            <div class="flex justify-between gap-3"><span class="text-gray-500">時間</span><span class="font-medium text-ink text-right">${when}</span></div>
           </div>
           <div class="flex gap-2">
-            <button onclick="viewHistoryResult(${i})" class="flex-1 text-xs bg-gold text-ink font-bold py-2 rounded">查看</button>
-            <button id="delBtn_${i}" onclick="armDeleteHistory(${i})" data-armed="0" class="del-btn text-xs bg-white border border-gray-300 text-gray-500 font-bold w-12 rounded flex items-center justify-center" title="刪除紀錄">🗑</button>
+            <button type="button" onclick="viewHistoryResult(${i})" class="flex-1 text-sm bg-gold text-ink font-bold py-2.5 rounded-lg">查看結果</button>
+            <button type="button" id="delBtn_${i}" onclick="armDeleteHistory(${i})" data-armed="0" class="del-btn text-sm bg-white border border-gray-300 text-gray-500 font-bold w-12 rounded-lg flex items-center justify-center" title="刪除紀錄">🗑</button>
           </div>
         </div>
       </div>`;
