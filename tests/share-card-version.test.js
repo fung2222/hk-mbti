@@ -15,5 +15,7 @@ assert.strictEqual(context.window.getTestVersionLabel('advanced', 30), '進階�
 assert.strictEqual(context.window.getTestVersionLabel('bb', 10), 'BB版 · 10題');
 assert.strictEqual(context.window.getTestVersionLabel(undefined, undefined), '生活版 · 60題');
 
-assert(/ctx\.fillText\(versionLabel,\s*660,\s*108\)/.test(html), '分享卡右上角應畫出測試版本');
-console.log('PASS: 分享卡顯示測試版本及題數');
+assert(/ctx\.fillText\(versionLabel,\s*680,\s*headerMidY \+ 16\)/.test(html), '分享卡右上角應畫出版本（垂直置中）');
+assert(/headerMidY/.test(html), 'header 要用 midY 對齊');
+assert(!html.includes('長按圖片可儲存'), '結果頁唔應再有長按提示');
+console.log('PASS: 分享卡 header 對齊 + 版本標籤');

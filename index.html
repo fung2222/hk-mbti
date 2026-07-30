@@ -896,10 +896,7 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
       <div class="text-xs text-gray-500">完成時間：<span id="finishTime">5 分鐘</span> · 用咗 <span id="finishQ">60</span> 題</div>
     </div>
 
-    <!-- Share Card - 真實圖片（用戶可長按儲存） -->
-    <div class="text-center mb-2">
-      <div class="text-[10px] text-gray-500">👆 長按圖片可儲存（iPhone 最穩）</div>
-    </div>
+    <!-- Share Card -->
     <div class="mx-auto mb-4 fade-up" style="width:360px; max-width:100%;">
       <img id="shareCardImg" class="w-full rounded-2xl shadow-lg" alt="分享卡" style="display:block;">
     </div>
@@ -1787,29 +1784,42 @@ window.generateCardImage = function(){
   grad.addColorStop(1, "#1E2A3B");
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 720, 1280);
-  // 頂部 header：先用 placeholder，icon 載完再 draw
-  ctx.fillStyle = "white";
-  ctx.font = "bold 32px sans-serif";
-  ctx.textAlign = "left";
-  ctx.fillText("港式 MBTI", 110, 75);
-  ctx.textAlign = "right";
-  ctx.font = "24px sans-serif";
-  ctx.fillText("2026.07", 660, 75);
+
+  // 頂部 header 一列垂直對齊：icon | 品牌 | 日期+版本
+  const headerTop = 36;
+  const iconSize = 64;
+  const iconX = 40;
+  const iconY = headerTop;
+  const headerMidY = iconY + iconSize / 2; // 68
   const versionLabel = window.getTestVersionLabel(window.state.version, window.state.maxQ);
+  const now = new Date();
+  const dateLabel = now.getFullYear() + "." + String(now.getMonth()+1).padStart(2,"0");
+
+  // 品牌名（垂直置中跟 icon）
+  ctx.fillStyle = "white";
+  ctx.font = "bold 34px sans-serif";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.fillText("港式 MBTI", iconX + iconSize + 18, headerMidY);
+
+  // 右側：日期 + 版本兩行，整體垂直置中
+  ctx.textAlign = "right";
+  ctx.fillStyle = "rgba(255,255,255,0.92)";
+  ctx.font = "bold 24px sans-serif";
+  ctx.fillText(dateLabel, 680, headerMidY - 14);
   ctx.fillStyle = "rgba(255,255,255,0.72)";
   ctx.font = "bold 20px sans-serif";
-  ctx.fillText(versionLabel, 660, 108);
-  // Icon logo（用真實 PNG 而非 fillText 文字）
-  // 用 Promise async load icon
+  ctx.fillText(versionLabel, 680, headerMidY + 16);
+  ctx.textBaseline = "alphabetic";
+
+  // Icon logo（用真實 PNG）
   const drawIcon = new Promise((resolve) => {
     const iconImg = new Image();
     iconImg.crossOrigin = "anonymous";
     iconImg.onload = function(){
-      // Icon 圓角 64x64 在 (40, 40)
       ctx.save();
-      // 圓角遮罩
       const r = 16;
-      const x = 40, y = 40, w = 64, h = 64;
+      const x = iconX, y = iconY, w = iconSize, h = iconSize;
       ctx.beginPath();
       ctx.moveTo(x + r, y);
       ctx.lineTo(x + w - r, y);
@@ -1827,17 +1837,17 @@ window.generateCardImage = function(){
       resolve();
     };
     iconImg.onerror = function(){
-      // Fallback：fillText "港"
       ctx.fillStyle = "white";
       ctx.font = "bold 40px sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText("港", 72, 85);
+      ctx.textBaseline = "middle";
+      ctx.fillText("港", iconX + iconSize/2, headerMidY);
+      ctx.textBaseline = "alphabetic";
       ctx.textAlign = "left";
       resolve();
     };
     iconImg.src = "icon-192.png";
   });
-  // 用 Promise 等 icon load 完先繼續
   return drawIcon.then(() => {
     renderCardBody(ctx, t, canvas);
   });
