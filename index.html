@@ -2236,6 +2236,7 @@ window.loadHistory = function(){
           <div class="text-[10px] text-gray-400">${formatTimeAgo(rec.timestamp)}</div>
         </div>
         <button onclick="viewHistoryResult(${i})" class="text-xs bg-gold text-ink font-bold px-3 py-1.5 rounded flex-shrink-0">查看</button>
+        <button id="delBtn_${i}" onclick="armDeleteHistory(${i})" data-armed="0" class="del-btn text-xs bg-white border border-gray-300 text-gray-500 font-bold w-8 h-8 rounded flex-shrink-0 flex items-center justify-center" title="刪除紀錄">🗑</button>
       </div>`;
     }).join("");
     wrap.classList.remove("hidden");
@@ -2243,6 +2244,63 @@ window.loadHistory = function(){
     const wrap = $("userHistory");
     if(wrap) wrap.classList.add("hidden");
   }
+};
+
+// ====================== History delete (two-tap + confirm) ======================
+window._deleteArmTimer = null;
+
+window.armDeleteHistory = function(idx){
+  try{
+    const btn = document.getElementById("delBtn_" + idx);
+    if(!btn) return;
+    if(btn.dataset.armed === "1"){
+      // 第二次撳：詢問確認
+      window._deleteArmTimer && clearTimeout(window._deleteArmTimer);
+      window._deleteArmTimer = null;
+      btn.dataset.armed = "0";
+      btn.classList.remove("bg-gold","text-ink","border-gold");
+      btn.classList.add("bg-white","text-gray-500","border-gray-300");
+      btn.innerText = "🗑";
+      window.deleteHistoryConfirm(idx);
+      return;
+    }
+    // 第一次撳：著燈
+    btn.dataset.armed = "1";
+    btn.classList.remove("bg-white","text-gray-500","border-gray-300");
+    btn.classList.add("bg-gold","text-ink","border-gold","border-2");
+    btn.innerText = "⚠️ 再撳";
+    window._deleteArmTimer && clearTimeout(window._deleteArmTimer);
+    window._deleteArmTimer = setTimeout(function(){
+      btn.dataset.armed = "0";
+      btn.classList.remove("bg-gold","text-ink","border-gold","border-2");
+      btn.classList.add("bg-white","text-gray-500","border-gray-300");
+      btn.innerText = "🗑";
+    }, 5000);
+  }catch(e){ console.error(e); }
+};
+
+window.deleteHistoryConfirm = function(idx){
+  if(!confirm("確定要刪除呢個紀錄？\n刪咗就返唔到。" + (idx!=null?("\n（第 " + (idx+1) + " 筆）"):""))){
+    return;
+  }
+  window.deleteHistoryItem(idx);
+};
+
+window.deleteHistoryItem = function(idx){
+  try{
+    let list = getHistoryList();
+    if(!Array.isArray(list) || !list[idx]) return;
+    list.splice(idx, 1);
+    localStorage.setItem("hkmbti_history", JSON.stringify(list));
+    // sync last_result to top item if exists
+    if(list[0]){
+      localStorage.setItem("hkmbti_last_result", JSON.stringify(list[0]));
+    } else {
+      localStorage.removeItem("hkmbti_last_result");
+    }
+    if(window._deleteArmTimer){ clearTimeout(window._deleteArmTimer); window._deleteArmTimer = null; }
+    loadHistory();
+  }catch(e){ console.error(e); }
 };
 ;
 
