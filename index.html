@@ -647,11 +647,14 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 
     <!-- 用戶測試記錄（最近 5 次） -->
     <div id="userHistory" class="hidden card p-4 mb-4" style="background:linear-gradient(135deg, #FFF5E0, #FFFAF0); border-left:4px solid #D4A95F;">
-      <div class="flex items-center justify-between mb-2">
-        <div class="text-xs text-gray-500 font-bold">📌 最近測試紀錄（最多 5 次）</div>
-        <button onclick="clearHistory()" class="text-xs text-gray-400 underline">全部清除</button>
-      </div>
-      <div id="historyList" class="space-y-2"></div>
+      <button id="historyToggle" onclick="toggleHistory()" class="w-full flex items-center justify-between mb-2 active:opacity-60">
+        <div class="text-xs text-gray-500 font-bold flex items-center gap-1">
+          <span id="historyChevron" class="inline-block transition-transform duration-200">▶</span>
+          <span>📌 最近測試紀錄（最多 5 次）</span>
+        </div>
+        <button onclick="event.stopPropagation();clearHistory()" class="text-xs text-gray-400 underline">全部清除</button>
+      </button>
+      <div id="historyList" class="space-y-2 hidden"></div>
     </div>
 
     <div class="card p-6 mb-4">
@@ -2215,6 +2218,14 @@ window.getHistoryList = function(){
   return list.slice(0, 5);
 };
 
+window.toggleHistory = function(){
+  const list = $("historyList");
+  const chev = $("historyChevron");
+  if(!list) return;
+  const hidden = list.classList.toggle("hidden");
+  if(chev) chev.style.transform = hidden ? "rotate(0deg)" : "rotate(90deg)";
+};
+
 window.loadHistory = function(){
   try{
     const list = getHistoryList();
@@ -2228,17 +2239,28 @@ window.loadHistory = function(){
       const emoji = T ? T.emoji : "🎭";
       const who = [rec.name, rec.nickname].filter(Boolean).join(" · ") || "匿名港人";
       const ver = rec.version === "bb" ? "BB" : rec.version === "advanced" ? "進階" : "生活";
-      return `<div class="flex items-center gap-2 bg-white/80 rounded-xl p-2.5">
-        <div class="text-2xl flex-shrink-0">${emoji}</div>
-        <div class="flex-1 min-w-0">
-          <div class="font-black text-sm truncate">${who}</div>
-          <div class="text-xs text-gray-600">${code}${T ? " · "+(T.cn||T.name) : ""} · ${ver}版</div>
-          <div class="text-[10px] text-gray-400">${formatTimeAgo(rec.timestamp)}</div>
+      const cn = T ? (T.cn || T.name) : "";
+      return `<div class="bg-white/85 rounded-xl p-3 border border-gold/30">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="text-3xl flex-shrink-0">${emoji}</div>
+          <div class="flex-1 min-w-0">
+            <div class="font-black text-base truncate">${who}</div>
+            <div class="text-sm text-gray-700 mt-0.5">${code}${cn ? " · "+cn : ""}</div>
+          </div>
         </div>
-        <button onclick="viewHistoryResult(${i})" class="text-xs bg-gold text-ink font-bold px-3 py-1.5 rounded flex-shrink-0">查看</button>
-        <button id="delBtn_${i}" onclick="armDeleteHistory(${i})" data-armed="0" class="del-btn text-xs bg-white border border-gray-300 text-gray-500 font-bold w-8 h-8 rounded flex-shrink-0 flex items-center justify-center" title="刪除紀錄">🗑</button>
+        <div class="flex items-center justify-between text-xs text-gray-500 mb-2 px-1">
+          <span class="bg-soft px-2 py-0.5 rounded">${ver}版</span>
+          <span>${formatTimeAgo(rec.timestamp)}</span>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="viewHistoryResult(${i})" class="flex-1 text-xs bg-gold text-ink font-bold py-2 rounded">查看</button>
+          <button id="delBtn_${i}" onclick="armDeleteHistory(${i})" data-armed="0" class="del-btn text-xs bg-white border border-gray-300 text-gray-500 font-bold w-12 rounded flex items-center justify-center" title="刪除紀錄">🗑</button>
+        </div>
       </div>`;
     }).join("");
+    // Refresh chevron state in case list rendered while collapsed
+    const chev = $("historyChevron");
+    if(chev) chev.style.transform = box.classList.contains("hidden") ? "rotate(0deg)" : "rotate(90deg)";
     wrap.classList.remove("hidden");
   } catch(e){
     const wrap = $("userHistory");

@@ -1,33 +1,33 @@
-// Test: history accordion must collapse by default and expand on toggle
+// Test: history accordion — single-row style, only one item open at a time
 const fs = require('fs');
 const assert = require('assert');
 
 const html = fs.readFileSync('index.html', 'utf8');
 
-// History list collapsed by default
-assert(/id="historyList"\s+class="space-y-2 hidden"/.test(html), 'historyList must be hidden by default');
+// Find loadHistory function start
+const start = html.indexOf('window.loadHistory = function()');
+assert(start > 0, 'loadHistory must exist');
+const inner = html.slice(start, start + 3000);
 
-// Toggle button present
-assert(/id="historyToggle"/.test(html), 'historyToggle button must exist');
+// Each row must use the simple row style (no nested card box)
+assert(/data-history-row="\${i}"/.test(inner), 'each row must use data-history-row attribute');
 
-// toggleHistory function defined
-assert(/window\.toggleHistory\s*=/.test(html), 'toggleHistory function must be defined');
+// Open state control
+assert(/data-open/.test(inner), 'each row must track open state');
 
-// Extract loadHistory function body (greedy until the closing `};` followed by blank line)
-const idx = html.indexOf('window.loadHistory = function()');
-assert(idx > 0, 'loadHistory must exist');
-// Take 2000 chars after the start, enough to cover the row template
-const inner = html.slice(idx, idx + 2500);
+// openOne only-one-open helper must exist
+assert(/window\._openHistoryOnly/.test(html) || /historyOnly|openHistoryRow/.test(html),
+  'only-one-open helper must exist');
 
-// Each row template must include these tokens
-assert(/\$\{who\}/.test(inner), 'each row must show who');
-assert(/\$\{code\}/.test(inner), 'each row must show MBTI code');
-assert(/\$\{ver\}版/.test(inner), 'each row must show version');
-assert(/\$\{formatTimeAgo/.test(inner), 'each row must show timestamp');
-assert(/viewHistoryResult/.test(inner), 'each row must have 查看 button');
-assert(/armDeleteHistory/.test(inner), 'each row must have 刪除 button');
+// Row template must contain who, code, ver, formatTimeAgo, view, del
+assert(/\$\{who\}/.test(inner), 'must show who');
+assert(/\$\{code\}/.test(inner), 'must show code');
+assert(/\$\{ver\}版/.test(inner), 'must show version');
+assert(/\$\{formatTimeAgo/.test(inner), 'must show timestamp');
+assert(/viewHistoryResult/.test(inner), 'must have 查看 button');
+assert(/armDeleteHistory/.test(inner), 'must have 刪除 button');
 
-// Chevron must rotate on toggle
-assert(/chev.*rotate/.test(html), 'chevron rotation must be wired');
+// No box-inside-box heavy border (the original `bg-white/85 rounded-xl p-3 border` must be gone)
+assert(!/bg-white\/85 rounded-xl p-3 border border-gold/.test(inner), 'must drop heavy card style');
 
-console.log('PASS: history accordion structure verified');
+console.log('PASS: history accordion single-row only-one-open');
