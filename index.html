@@ -473,6 +473,74 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
     </div>
   </section>
 
+  <!-- ========== PRIVACY（私隱聲明 · Play Store 強制） ========== -->
+  <section id="privacy" class="hidden fade-up">
+    <div class="flex items-center justify-between mb-6">
+      <button onclick="goHome()" class="text-sm text-gray-500">← 返回</button>
+      <div class="flex items-center gap-2">
+        <img src="icon-192.png" class="w-7 h-7 rounded-md flex-shrink-0" alt="港">
+        <div class="font-black tracking-tight">私隱聲明</div>
+      </div>
+      <div class="w-10"></div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🔒 私隱聲明</div>
+      <h2 class="text-lg font-black mb-3">本 App 點處理你嘅資料</h2>
+
+      <div class="space-y-4 text-sm text-gray-700 leading-relaxed">
+        <div>
+          <div class="font-black text-ink mb-1">① 我哋收集咩</div>
+          <ul class="list-disc pl-5 space-y-1 text-xs">
+            <li>你輸入嘅姓名同稱呼（<b>可選</b>，唔輸入亦可匿名使用）</li>
+            <li>你嘅測試結果（4 字母類型）、版本、時間</li>
+            <li>本機最近 5 次測試紀錄</li>
+          </ul>
+        </div>
+
+        <div class="border-t border-gray-100 pt-3">
+          <div class="font-black text-ink mb-1">② 我哋點儲存</div>
+          <p class="text-xs">所有資料<b>只儲存喺你部機嘅瀏覽器</b>（localStorage），由系統管理。</p>
+          <ul class="list-disc pl-5 mt-2 space-y-1 text-xs">
+            <li>開發者 <b>無法存取</b>你嘅資料</li>
+            <li>資料 <b>唔會上傳</b>到任何伺服器</li>
+            <li>清除瀏覽器資料 = 永久刪除所有紀錄</li>
+          </ul>
+        </div>
+
+        <div class="border-t border-gray-100 pt-3">
+          <div class="font-black text-ink mb-1">③ 我哋點分享</div>
+          <p class="text-xs"><b>唔會</b>分享畀任何第三方。冇廣告 SDK、冇分析追蹤、冇第三方 cookies。</p>
+        </div>
+
+        <div class="border-t border-gray-100 pt-3">
+          <div class="font-black text-ink mb-1">④ 你嘅權利</div>
+          <ul class="list-disc pl-5 space-y-1 text-xs">
+            <li><b>逐筆刪除</b>：喺主頁「歷史紀錄」風琴內，每筆都有 🗑 掣</li>
+            <li><b>全部清除</b>：歷史紀錄頂部「全部清除」掣</li>
+            <li><b>永久刪除</b>：喺瀏覽器設定清除網站資料</li>
+          </ul>
+        </div>
+
+        <div class="border-t border-gray-100 pt-3">
+          <div class="font-black text-ink mb-1">⑤ 聯絡</div>
+          <p class="text-xs">如對私隱有任何查詢，可透過 GitHub Issues 聯絡開發者：<br>
+            <a href="https://github.com/fung2222/hk-mbti/issues" target="_blank" rel="noopener" class="text-accent underline">github.com/fung2222/hk-mbti/issues</a>
+          </p>
+        </div>
+
+        <div class="bg-soft rounded-lg p-3 text-xs text-gray-600">
+          <b>最後更新：</b>2026-07-31 · v1.7.0
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-4 mb-4 text-center">
+      <p class="text-xs text-gray-600 mb-3">睇完想試？返主頁揀版本開始</p>
+      <button onclick="goHome()" class="btn-gold px-6 py-2.5 rounded-xl text-sm font-bold">返主頁開始測試 →</button>
+    </div>
+  </section>
+
   <!-- ========== LETTER DETAIL ========== -->
   <section id="letter" class="hidden">
     <div class="flex items-center justify-between mb-6">
@@ -826,6 +894,17 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
           <div class="home-acc-body">
             <p class="home-acc-desc">點同每種人拍拖、吵架、復合。3 個場景 × 16 型攻略。</p>
             <button type="button" class="home-acc-go" onclick="event.stopPropagation();openRomance()">進入拍拖攻略 →</button>
+          </div>
+        </div>
+        <div class="home-acc-item" data-acc="privacy">
+          <button type="button" class="home-acc-head" onclick="toggleHomeAcc('privacy')">
+            <span class="home-acc-ico">🔒</span>
+            <span class="home-acc-title">私隱聲明</span>
+            <span class="home-acc-chev">▼</span>
+          </button>
+          <div class="home-acc-body">
+            <p class="home-acc-desc">本 App 點處理你嘅資料、儲存喺邊、可唔可以刪。</p>
+            <button type="button" class="home-acc-go" onclick="event.stopPropagation();openPrivacy()">查看私隱聲明 →</button>
           </div>
         </div>
       </div>
@@ -1428,7 +1507,7 @@ const state = window.state;  // local alias for handlers
 window.$ = function(id){return document.getElementById(id)};
 
 window.show = function(id){
-  ["home","profile","test","result","about","spectrum","hub","letter","type","social","socialArticle","romance","romanceArticle"].forEach(s => window.$(s).classList.add("hidden"));
+  ["home","profile","test","result","about","spectrum","hub","letter","type","social","socialArticle","romance","romanceArticle","privacy"].forEach(s => window.$(s).classList.add("hidden"));
   window.$(id).classList.remove("hidden");
   window.scrollTo(0,0);
   if(id === "home"){
@@ -2502,6 +2581,10 @@ window.clearHistory = function(){
 // ====================== Knowledge Hub Functions ======================
 window.openAbout = function(){
   show("about");
+};
+
+window.openPrivacy = function(){
+  show("privacy");
 };
 
 window.openSpectrum = function(){
