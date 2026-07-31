@@ -8,6 +8,8 @@
 
 ## 文檔索引
 
+### 對外（Play Console 引用）
+
 | 檔案 | 字數上限 | Play Console 欄位 |
 |------|---------|-------------------|
 | `app-name.txt` | 30 | 應用名稱 |
@@ -17,6 +19,27 @@
 | `changelog.md` | 500 | 「新版內容」欄 |
 | `data-safety.md` | — | Data safety form 答案 |
 | `keywords.txt` | — | 自用，Play 唔收呢欄（僅 ASO 參考） |
+
+### 對內（開發記錄 · **唔入 Play Console**）
+
+| 檔案 | 用途 |
+|------|------|
+| `PHASE-LOG.md` | Phase-by-phase 開發記錄（包括今次嘅 Play 上架 phase） |
+| `privacy-url-strategy.md` | Step 2a 嘅 Privacy URL 策略決定記錄 |
+
+### 視覺素材（Play Console 必填）
+
+| 檔案 | 規格 |
+|------|------|
+| `feature-graphic.png` | 1024×500 PNG |
+| `screenshots/01-hero.png` ~ `05-explore.png` | 1170×2300 PNG · 9:16 |
+
+### 站內對應
+
+| 站內 | Play Console |
+|------|--------------|
+| `index.html` `#privacy` section | 「應用程式內容」內部 |
+| `privacy.html` | **Privacy policy URL** 欄位 |
 
 ---
 
@@ -28,7 +51,11 @@
 4. 填 `content-rating.md` 答案
 5. 填 `data-safety.md` 答案
 6. `changelog.md` 最近版本拎一段
-7. **唔好貼 `keywords.txt`**（Play 冇呢欄）
+7. 上載 `feature-graphic.png`
+8. 上載 `screenshots/01-hero.png` ~ `05-explore.png`
+9. 填 Privacy URL = `https://fung2222.github.io/hk-mbti/privacy.html`
+10. **唔好貼 `keywords.txt`**（Play 冇呢欄）
+11. **唔好貼 `PHASE-LOG.md` / `privacy-url-strategy.md`**（純內部記錄）
 
 ---
 

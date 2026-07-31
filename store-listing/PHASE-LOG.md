@@ -1,10 +1,21 @@
-# 港式 MBTI · Google Play 上架前置準備 Changelog
+# 港式 MBTI · 開發 Phase Log（Google Play 上架前置準備）
 
 > **項目**：fung2222/hk-mbti v1.7.0
 > **日期範圍**：2026-07-30 → 2026-07-31
-> **HEAD commit**：`939f65b`
+> **HEAD commit**：`017a87b`
 > **目的**：將 PWA 升級至 Google Play Store 上架標準
 > **狀態**：✅ 所有前置準備完成（7 個 Step 全部通過）
+
+---
+
+## 🔗 對應文檔
+
+| 文檔 | 用途 |
+|------|------|
+| `store-listing/README.md` | 文檔總索引（Play Console 引用 + 開發記錄） |
+| `store-listing/changelog.md` | 對外 release notes（Play Console 引用） |
+| `docs/PROJECT-REPORT-v1.6.md` | v1.6 里程碑 freeze 紀錄 |
+| `docs/PROJECT-REPORT-v1.7.md` | v1.7 里程碑 freeze 紀錄（**待寫**） |
 
 ---
 
