@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500" width="1024" height="500">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1E2A3B"/>
+      <stop offset="1" stop-color="#0F1825"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E8C77A"/>
+      <stop offset="0.5" stop-color="#D4A95F"/>
+      <stop offset="1" stop-color="#B88A3F"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="1024" height="500" fill="url(#bg)"/>
+
+  <!-- 角落裝飾 -->
+  <circle cx="900" cy="100" r="180" fill="#D4A95F" opacity="0.05"/>
+  <circle cx="120" cy="450" r="140" fill="#D4A95F" opacity="0.04"/>
+
+  <!-- 左：金書法「港」icon（模擬 launcher icon 風格） -->
+  <g transform="translate(110, 110)">
+    <!-- 圓角深藍底（與 launcher icon 一致） -->
+    <rect x="0" y="0" width="280" height="280" rx="56" fill="#0F1825" stroke="#D4A95F" stroke-width="3" opacity="0.95"/>
+    <!-- 金書法「港」字（path-based 模擬 · cairosvg 風格） -->
+    <g transform="translate(140, 140) scale(0.56) translate(-140, -140)" fill="url(#gold)" filter="url(#glow)">
+      <!-- 簡化嘅「港」字主筆畫 -->
+      <path d="M 100 50
+               L 100 240
+               L 120 240
+               L 120 165
+               Q 140 175, 165 175
+               L 215 175
+               Q 235 175, 235 195
+               L 235 240
+               L 215 240
+               L 215 195
+               Q 215 195, 195 195
+               L 165 195
+               Q 130 195, 120 175
+               L 120 50 Z"
+            fill="url(#gold)"/>
+      <!-- 三點水 -->
+      <circle cx="55" cy="85" r="9"/>
+      <circle cx="50" cy="125" r="9"/>
+      <circle cx="55" cy="165" r="9"/>
+      <!-- 底部橫筆 -->
+      <path d="M 110 235 L 230 235 L 225 250 L 115 250 Z"/>
+    </g>
+  </g>
+
+  <!-- 右：標題 + 副標 -->
+  <g transform="translate(440, 130)">
+    <!-- 主標題 -->
+    <text x="0" y="0" font-family="'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif"
+          font-weight="900" font-size="84" fill="#D4A95F" letter-spacing="-2">港式 MBTI</text>
+    <!-- Hero question -->
+    <text x="0" y="100" font-family="'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif"
+          font-weight="900" font-size="64" fill="#FAF7F0" letter-spacing="-1">你是哪種港人？</text>
+    <!-- 金色分隔線 -->
+    <line x1="0" y1="135" x2="180" y2="135" stroke="#D4A95F" stroke-width="3"/>
+    <!-- 副標題（feature 三條） -->
+    <g font-family="'Noto Sans TC','PingFang TC',sans-serif" font-weight="700" font-size="22" fill="#C8C4B8">
+      <text x="0" y="175">✦  60 題廣東話</text>
+      <text x="0" y="210">✦  3 種香港場景</text>
+      <text x="0" y="245">✦  5 分鐘出結果</text>
+    </g>
+  </g>
+
+  <!-- 底部 strip -->
+  <rect x="0" y="475" width="1024" height="25" fill="#0A0F18"/>
+  <text x="40" y="492" font-family="'Courier New',monospace" font-weight="700" font-size="14"
+        fill="#7A766C" letter-spacing="2">v1.7 · 廣東話繁體</text>
+  <text x="984" y="492" text-anchor="end" font-family="'Courier New',monospace" font-weight="700" font-size="14"
+        fill="#7A766C" letter-spacing="2">fung2222.github.io/hk-mbti</text>
+</svg>
