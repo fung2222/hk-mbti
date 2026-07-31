@@ -1,0 +1,26 @@
+# ASO Keywords（自用參考 · Play Store 唔接受呢欄）
+
+主關鍵詞：
+- MBTI
+- 性格測試
+- 廣東話
+- 16 型人格
+- 港式
+- 香港
+
+長尾關鍵詞：
+- 廣東話 MBTI 測試
+- 香港人性格測試
+- MBTI 中文版
+- MBTI 廣東話
+- 你是哪種港人
+- 香港 MBTI 性格測試
+- 香港人 MBTI
+- 性格分析 廣東話
+- 心理測試 廣東話
+- MBTI 性格配對
+- 16personalities 中文
+- MBTI 香港
+
+> Play Store 唔提供 keywords 欄位，但喺 App 名 / 短描 / 長描 / icon 入面自然融入呢啲字。
+> ASO 工具參考：Sensor Tower、AppTweak、AppFollow。
