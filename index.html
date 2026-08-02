@@ -205,6 +205,21 @@ body.has-sticky-ad{padding-bottom:60px;}
 @media (max-width:768px){
   .ad-hero-bottom,.ad-result-top{min-height:60px;}
 }
+/* ===== No-Ad 解鎖狀態 ===== */
+body.no-ad .ad-slot{display:none!important;}
+body.no-ad{padding-bottom:0!important;}
+.ad-unlock{
+  display:inline-block;background:linear-gradient(135deg,#D4A95F,#B8A878);
+  color:#0a0a1a;border:0;padding:6px 12px;border-radius:6px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  box-shadow:0 1px 4px rgba(0,0,0,0.15);margin-left:6px;
+}
+.ad-unlock:hover{filter:brightness(1.08);}
+.ad-tag{
+  display:inline-block;background:#2a4a3a;color:#a8e6c8;
+  font-size:10px;font-weight:700;padding:3px 8px;
+  border-radius:10px;margin-left:6px;letter-spacing:0.04em;
+}
 </style>
 </head>
 <body>
@@ -839,6 +854,7 @@ body.has-sticky-ad{padding-bottom:60px;}
     <!-- 用戶測試記錄（最近 5 次）· 放喺揀版本下面 -->
     <!-- Ad Slot 1: hero bottom (主頁 · 緊接 hero/版本 picker) -->
     <div class="ad-slot ad-hero-bottom mx-auto my-3 fade-up" data-ad-placement="hero-bottom">
+      <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>💎 移除廣告 HK$18</button>
       <ins class="adsbygoogle"
            style="display:block; min-height:60px;"
            data-ad-client="ca-pub-PLACEHOLDER"
@@ -978,6 +994,7 @@ body.has-sticky-ad{padding-bottom:60px;}
     <!-- Ad Slot 3: footer sticky-bottom (主頁底部 · sticky 320×50 mobile-first) -->
     <div class="ad-slot ad-footer-sticky" data-ad-placement="footer-sticky">
       <button class="ad-close" onclick="this.parentElement.style.display='none'" aria-label="關閉廣告">✕</button>
+      <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>💎 移除廣告 HK$18</button>
       <ins class="adsbygoogle"
            style="display:block; min-height:50px;"
            data-ad-client="ca-pub-PLACEHOLDER"
@@ -1045,6 +1062,7 @@ body.has-sticky-ad{padding-bottom:60px;}
 
     <!-- Ad Slot 2: result above share (結果頁 · 性格分析上面) -->
     <div class="ad-slot ad-result-top mx-auto my-3 fade-up" data-ad-placement="result-top">
+      <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>💎 移除廣告 HK$18</button>
       <ins class="adsbygoogle"
            style="display:block; min-height:90px;"
            data-ad-client="ca-pub-PLACEHOLDER"
@@ -1105,6 +1123,49 @@ body.has-sticky-ad{padding-bottom:60px;}
 
 </div>
 
+<!-- ====================== 廣告 + IAP 解鎖邏輯 ====================== -->
+<script>
+// 永久去廣告 unlock (Demo 版 · 用 localStorage 模擬 entitlement)
+(function(){
+  const KEY = 'hkmbti_no_ad';
+  function hasNoAd(){
+    try{ return localStorage.getItem(KEY) === '1'; }catch(e){ return false; }
+  }
+  function applyNoAd(){
+    document.body.classList.add('no-ad');
+    // 同時 hide 所有 unlock button (唔再顯示)
+    document.querySelectorAll('[data-no-ad-hide]').forEach(b => b.style.display='none');
+    // footer placeholder 標記
+    const f = document.querySelector('footer .no-ad-tag');
+    if(f) f.style.display = 'inline-block';
+  }
+  function clearNoAd(){
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    document.body.classList.remove('no-ad');
+    document.querySelectorAll('[data-no-ad-hide]').forEach(b => b.style.display = '');
+    const f = document.querySelector('footer .no-ad-tag');
+    if(f) f.style.display = 'none';
+  }
+  // 公開 API
+  window.HAS_PAID_NO_AD = hasNoAd();
+  window.purchaseNoAd = function(){
+    if(hasNoAd()) return; // 已經 unlock
+    const ok = confirm('💎 永久移除所有廣告？\n\n此示範版本即時解鎖（Play Store 上架後會接 Google Play Billing HK$18）。\n\n確定解鎖？');
+    if(!ok) return;
+    try{ localStorage.setItem(KEY, '1'); }catch(e){}
+    applyNoAd();
+    // 提示
+    const tip = document.createElement('div');
+    tip.style.cssText='position:fixed;left:50%;top:30%;transform:translateX(-50%);background:#1E2A3B;color:#D4A95F;padding:16px 24px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:99;font-size:14px;font-weight:700;text-align:center;';
+    tip.innerHTML='✅ 廣告已移除<br><span style="font-size:11px;color:#a8e6c8;font-weight:400">感謝支持 · Play 上架後將接 Play Billing</span>';
+    document.body.appendChild(tip);
+    setTimeout(()=>tip.remove(), 2200);
+  };
+  window.restoreAds = clearNoAd; // 給 developer console 用嘅 reset
+  // 開頁時 apply
+  if(hasNoAd()) applyNoAd();
+})();
+</script>
 <!-- ====================== 60 題港式情境題庫 ====================== -->
 <script src="data.js"></script>
 <script src="social.js"></script>
