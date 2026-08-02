@@ -6,6 +6,8 @@
 <title>港式 MBTI · 你是哪種港人？</title>
 <meta name="description" content="港式MBTI · 60 題廣東話版 MBTI 16型人格測試｜3 種情景 茶餐廳、港鐵、7-11｜5 分鐘知道你喺邊種人。">
 <meta name="theme-color" content="#1E2A3B">
+<!-- Ads: 廣告位預留 (AdSense auto ads 將自動填充) -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-PLACEHOLDER" crossorigin="anonymous"></script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -163,6 +165,45 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
   background:#1a1a1a;color:#f5f5f5;border-radius:12px;
   padding:1rem 1.2rem;font-family:'SF Mono',Consolas,monospace;
   font-size:0.85rem;line-height:1.6;overflow-x:auto
+}
+/* ===== 廣告位樣式 (mobile-first · 不阻擋 CTA) ===== */
+.ad-slot{
+  width:100%;
+  max-width:100%;
+  background:rgba(184,168,120,0.04);
+  border:1px dashed rgba(184,168,120,0.3);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;color:#7a766c;font-size:11px;
+  position:relative;
+  overflow:hidden;
+}
+.ad-slot ins.adsbygoogle{display:block;width:100%;height:auto;}
+.ad-slot[data-ad-status="empty"]{display:none;}
+/* 主頁底部 sticky banner · mobile-first */
+.ad-footer-sticky{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  min-height:54px;
+  background:#fff;
+  box-shadow:0 -2px 10px rgba(0,0,0,0.08);
+  border-top:1px solid rgba(184,168,120,0.25);
+  border-radius:0;
+  padding:2px 36px 2px 2px;
+}
+.ad-footer-sticky ins.adsbygoogle{margin:0 auto;}
+.ad-close{
+  position:absolute;top:4px;right:6px;
+  background:transparent;border:0;color:#7a766c;
+  font-size:12px;line-height:1;padding:2px 6px;cursor:pointer;
+  z-index:2;
+}
+/* 主頁底部加 padding 防 sticky banner 遮 CTA */
+body.has-sticky-ad{padding-bottom:60px;}
+@media (min-width:769px){
+  .ad-footer-sticky{max-width:728px;left:50%;transform:translateX(-50%);border-radius:8px 8px 0 0;}
+}
+@media (max-width:768px){
+  .ad-hero-bottom,.ad-result-top{min-height:60px;}
 }
 </style>
 </head>
@@ -796,6 +837,17 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
     </div>
 
     <!-- 用戶測試記錄（最近 5 次）· 放喺揀版本下面 -->
+    <!-- Ad Slot 1: hero bottom (主頁 · 緊接 hero/版本 picker) -->
+    <div class="ad-slot ad-hero-bottom mx-auto my-3 fade-up" data-ad-placement="hero-bottom">
+      <ins class="adsbygoogle"
+           style="display:block; min-height:60px;"
+           data-ad-client="ca-pub-PLACEHOLDER"
+           data-ad-slot="PLACEHOLDER-HERO"
+           data-ad-format="horizontal"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- ===== 用戶歷史 ===== -->
     <div id="userHistory" class="hidden card p-4 mb-4" style="background:linear-gradient(135deg, #FFF5E0, #FFFAF0); border-left:4px solid #D4A95F;">
       <div class="flex items-center justify-between mb-1">
         <button id="historyToggle" type="button" onclick="toggleHistory()" class="flex items-center gap-1.5 text-xs text-gray-600 font-bold active:opacity-60">
@@ -923,6 +975,18 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
       </div>
     </div>
 
+    <!-- Ad Slot 3: footer sticky-bottom (主頁底部 · sticky 320×50 mobile-first) -->
+    <div class="ad-slot ad-footer-sticky" data-ad-placement="footer-sticky">
+      <button class="ad-close" onclick="this.parentElement.style.display='none'" aria-label="關閉廣告">✕</button>
+      <ins class="adsbygoogle"
+           style="display:block; min-height:50px;"
+           data-ad-client="ca-pub-PLACEHOLDER"
+           data-ad-slot="PLACEHOLDER-FOOTER"
+           data-ad-format="horizontal"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
     <p class="text-[11px] text-gray-400 text-center px-3 mt-4 mb-2 leading-relaxed">
       ⚠️ 本測試只係自我探索工具，唔係醫學診斷或專業心理評估。唔適合作僱傭、配對婚姻或貼標籤批評人嘅依據。
     </p>
@@ -977,6 +1041,16 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
     <div class="text-center mb-4">
       <div class="text-xs tracking-widest brand-gold font-bold mb-1">🎉 你的港式人格 <span id="versionBadge" class="text-[9px] bg-soft text-ink font-black px-2 py-0.5 rounded-full ml-1">生活版</span></div>
       <div class="text-xs text-gray-500">完成時間：<span id="finishTime">5 分鐘</span> · 用咗 <span id="finishQ">60</span> 題</div>
+    </div>
+
+    <!-- Ad Slot 2: result above share (結果頁 · 性格分析上面) -->
+    <div class="ad-slot ad-result-top mx-auto my-3 fade-up" data-ad-placement="result-top">
+      <ins class="adsbygoogle"
+           style="display:block; min-height:90px;"
+           data-ad-client="ca-pub-PLACEHOLDER"
+           data-ad-slot="PLACEHOLDER-RESULT"
+           data-ad-format="horizontal"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
     <!-- Share Card -->
