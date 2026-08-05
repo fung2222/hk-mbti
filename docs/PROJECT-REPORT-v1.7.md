@@ -202,3 +202,97 @@ Play Console 上架:       ⚠️ Roy 仍未做
 1. hard-reload 主頁 `https://fung2222.github.io/hk-mbti/`  
 2. 做測試 → 結果頁睇新嘅 share card（加大 icon + 16 型 gradient + 4 vibe tag）
 3. 點 share card 底部 T卹 hook → 開 `tee.html` 揀 type 預覽
+
+
+---
+
+# 🔒 v1.7.9 Freeze Status — 完整 Site Launch Ready
+
+> **狀態**：✅ **FROZEN · 收皮等 Play 上架**
+> **報告日期**：2026-08-05 15:04
+> **HEAD commit**：`130dd80` ("feat(ads): record.html + tee.html 各加 3 個 ad slot + IAP unlock button")
+> **VERSION 同步**：VERSION=1.7.9 · manifest.json=1.7.9 · sw.js CACHE=hk-mbti-v1.7.9 ✓
+
+## 3 個獨立 page（v1.7.9 全部 freeze）
+
+| Page | URL | Size | Ad slots | IAP |
+|---|---|---|---|---|
+| 主頁 | `/` | 170596 bytes | 3 | ✓ |
+| 記錄 | `/record.html` | 19911 bytes | 3 | ✓ |
+| T 恤 | `/tee.html` | 12026 bytes | 3 | ✓ |
+| 私隱 | `/privacy.html` | 5500 bytes | — | — |
+
+## 完整 v1.7.7 → v1.7.9 cycle 改動摘要
+
+### A. Share Card 升級（v1.7.8 · 72d0feb）
+
+- 16 型 personality palette + accent 邊線 (`data.js → window.PALETTE`)
+- Icon 64→96 × Brand 34→42 × Name 30→40（更強 branding）
+- 4 個 hashtag 加入 2 個 vibe tags (`#XXX #vibe1 #vibe2`)
+- T 卹 hook footer 細字「印你嘅性格 T 卹？👉 hk-mbti/tee.html（真實 preview）」
+
+### B. T 卹 Preview Page（v1.7.8 · 2be5aa1）
+
+- 獨立 `tee.html` 16 個真實 mockup（xAI `grok-imagine-image` 生成）
+- 4 個 filter chip（analyst / diplomat / sentinel / explorer）
+- 24MB mockup 跟主頁 brand-gold 色 align
+
+### C. 記錄 Page（v1.7.9 · cdcff83 + 多個後續 patch）
+
+- 獨立 `record.html`：總覽 + 5 條 history + 16 型訪問統計 + export JSON + 全部清除
+- Big 金色 #1-#5 badge（取代原 plan 嘅 version pill — Roy 唔想 emoji 重疊）
+- Top nav「[🏛] 港式 MBTI ←」pill 返回主頁
+- 標題純「我的測錄記錄」（v1.7.9 emoji 移除 · 更簡潔）
+- `#view=N` hash bridge — fix record → 主頁 replay history result
+
+### D. 廣告 + IAP 跨 page 部署（130dd80）
+
+- CSS: `.ad-slot` / `.ad-footer-sticky` / `.ad-unlock` / `.ad-close` 同主頁 `f8b7244` 規格
+- JS unlock: `window.purchaseNoAd` IIFE · localStorage `hkmbti_no_ad` 跨 3 page 同步
+- 3+3+3 = 9 個 slot · 全部 placeholder `ca-pub-PLACEHOLDER` 等拎 publisher ID 即時 fill
+- Close (✕) button / frequency cap manual fallback
+- Unlock 跨 page：record 買咗 → 主頁 + tee 都即時 hide ad（reload 之後）
+
+## Final Audit ✓
+
+```
+[1] Working tree:        clean
+[2] 12 commits:          HEAD = 130dd80 ✓
+[3] VERSION sync:        1.7.9 / 1.7.9 / hk-mbti-v1.7.9 ✓
+[4] index.html scripts:  10 blocks, 0 syntax error ✓
+[5] record.html scripts: 4 blocks, 0 syntax error ✓
+[6] tee.html scripts:    4 blocks, 0 syntax error ✓
+[7] All onclick handlers have window.X defined ✓
+[8] CDN size match local: 170596 / 19911 / 12026 / 5500 ✓
+[9] CDN MD5 match local: 43b2266d70ca009fc4f981a2525c4fd0 ✓
+[10] 16 tee-preview mockup: all HTTP 200 ✓
+[11] Local HEAD == remote HEAD: 130dd80 ✓
+```
+
+## 已知 frozen limitations
+
+1. **AdSense `ca-pub-PLACEHOLDER`** 仲未拎 publisher ID — 之後拎到即 replace 唔需要改 structure
+2. **T 卹** 暫只係 mockup preview page，**未 launch 真正 purchase flow**（Printful integration + print-ready SVG 留待 launch 之後）
+3. **`tee-preview` 16 個 xAI mockup** 唔可以 reprint（xAI policy）— 真正 launch 需 designer 出 production vector
+4. **跨 device localStorage 唔同步** — record.html 同主頁 share 同一個 device，但新 device 就係新嘅 record
+5. **Privacy/Terms 條文仲係 basic** — 等 Play Console 真正 review 時再深化
+
+## 同時備份
+
+- Backup: `/opt/data/backups/hk-mbti-v1.7.9-freeze-2026-08-05 15:04/`
+- tar.gz: `/opt/data/backups/hk-mbti-v1.7.9-freeze-2026-08-05 15:04.tar.gz`
+- Meta: `FREEZE-META.txt` (21 entries, 7.4 MB compressed)
+
+## Play Store 上架前置 status
+
+| Step | Status |
+|---|---|
+| 1. `store-listing/` doc | ✓ prep |
+| 2. `privacy.html` | ✓ live |
+| 3. APK (PWABuilder) | ⚠ Roy build |
+| 4. Screenshots | ✓ Honor Magic 7 Pro 真實 5 張 |
+| 5. Feature graphic | ⚠ 待 PIL mockup |
+| 6. Play Console 申請 | ⚠ Roy ($25 已付 · 等電話 verify 解鎖) |
+| 7. Upload .aab | ⚠ Roy |
+
+> **結論**：web stack 完全 launch ready；Play Store 上架需要 Roy 親自做 steps 3-7。
