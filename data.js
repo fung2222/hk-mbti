@@ -942,3 +942,28 @@ window.TYPES_FULL = {
     conflict:["直接","化解","不記仇","樂觀"]
   }
 };
+
+// ====================== Share Card Palette + Vibe Tags (v1.7.8) ======================
+// 16 型配色 + 兩個 vibe labels（share card + hashtag 用）
+window.PALETTE = {
+  INTJ:{c1:"#3A2E5C", c2:"#1A1530", accent:"#9B7EBD", vibes:["深宵腦爆","獨立思考者"]},
+  INTP:{c1:"#2A2A4E", c2:"#14142E", accent:"#7A8AC9", vibes:["深夜哲學家","理論宅"]},
+  ENTJ:{c1:"#7B1F2E", c2:"#3A0E18", accent:"#D4A95F", vibes:["天生領袖","效率控"]},
+  ENTP:{c1:"#FF4500", c2:"#7A2200", accent:"#FFD700", vibes:["點子王","唱反調"]},
+  INFJ:{c1:"#3A2E5C", c2:"#1A1530", accent:"#C779A6", vibes:["深度共鳴","心靈導師"]},
+  INFP:{c1:"#9B7EBD", c2:"#4A3A6C", accent:"#FFD9F5", vibes:["文藝青年","共情雷達"]},
+  ENFJ:{c1:"#FF7F50", c2:"#A03A28", accent:"#FFD9B5", vibes:["天生的老師","社群核心"]},
+  ENFP:{c1:"#FFB300", c2:"#A06A00", accent:"#FFFFFF", vibes:["正能量炸彈","深夜傾偈王"]},
+  ISTJ:{c1:"#1E3A5F", c2:"#0E1F33", accent:"#5B8FD9", vibes:["守時怪","細節控"]},
+  ISFJ:{c1:"#5C8374", c2:"#2D4A3F", accent:"#A8D5BA", vibes:["照顧者","默默付出"]},
+  ESTJ:{c1:"#8B0000", c2:"#4A0000", accent:"#D4A95F", vibes:["傳統硬頸","家庭責任王"]},
+  ESFJ:{c1:"#E8804A", c2:"#7A4420", accent:"#FFFFFF", vibes:["派對暖男","飯局核心"]},
+  ISTP:{c1:"#2E4A5C", c2:"#152530", accent:"#8AC9D9", vibes:["動手派","獨立解決王"]},
+  ISFP:{c1:"#C779A6", c2:"#6B3D58", accent:"#FFD9E5", vibes:["美感雷達","獨立創作"]},
+  ESTP:{c1:"#39FF14", c2:"#1A7A0A", accent:"#0A0A1A", vibes:["行動派","臨場爆seed"]},
+  ESFP:{c1:"#FF4081", c2:"#7A1F45", accent:"#FFD9E5", vibes:["氣氛王","聚會靈魂"]}
+};
+
+window.getPalette = function(code){
+  return window.PALETTE[code] || {c1:"#3B4960", c2:"#1E2A3B", accent:"#FFFFFF", vibes:["16型","香港人"]};
+};

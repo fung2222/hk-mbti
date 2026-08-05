@@ -2614,26 +2614,31 @@ window.generateCardImage = function(){
   canvas.width = 720;   // 2x 視網膜密度
   canvas.height = 1280;
   const ctx = canvas.getContext("2d");
-  // 深藍漸層背景（match 原本 dark blue card）
+  // 用 type 嘅 palette 整漸層背景（v1.7.8）
+  const code = window.lastResult.substring(0,4);
+  const pal = window.getPalette(code);
   const grad = ctx.createLinearGradient(0, 0, 0, 1280);
-  grad.addColorStop(0, "#3B4960");
-  grad.addColorStop(1, "#1E2A3B");
+  grad.addColorStop(0, pal.c1);
+  grad.addColorStop(1, pal.c2);
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 720, 1280);
+  // 加返一條 accent 邊線頂部
+  ctx.fillStyle = pal.accent;
+  ctx.fillRect(0, 0, 720, 6);
 
   // 頂部 header 一列垂直對齊：icon | 品牌 | 日期+版本
   const headerTop = 36;
-  const iconSize = 64;
+  const iconSize = 96;  // v1.7.8 加強：64 → 96
   const iconX = 40;
   const iconY = headerTop;
-  const headerMidY = iconY + iconSize / 2; // 68
+  const headerMidY = iconY + iconSize / 2; // 84
   const versionLabel = window.getTestVersionLabel(window.state.version, window.state.maxQ);
   const now = new Date();
   const dateLabel = now.getFullYear() + "." + String(now.getMonth()+1).padStart(2,"0");
 
-  // 品牌名（垂直置中跟 icon）
+  // 品牌名（垂直置中跟 icon）— v1.7.8 加大：34 → 42
   ctx.fillStyle = "white";
-  ctx.font = "bold 34px sans-serif";
+  ctx.font = "bold 42px sans-serif";
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
   ctx.fillText("港式 MBTI", iconX + iconSize + 18, headerMidY);
@@ -2695,7 +2700,7 @@ function renderCardBody(ctx, t, canvas){
   const who = [window.state.displayName, window.state.nickname].filter(Boolean).join(" · ");
   if(who){
     ctx.fillStyle = "rgba(255,255,255,0.9)";
-    ctx.font = "bold 30px sans-serif";
+    ctx.font = "bold 40px sans-serif";  // v1.7.8 加強：30 → 40
     ctx.fillText(who, 360, 230);
   }
   ctx.fillStyle = "rgba(255,255,255,0.8)";
@@ -2734,11 +2739,19 @@ function renderCardBody(ctx, t, canvas){
     ctx.textAlign = "left";
     y += 80;
   }
-  // 底部 hashtag
-  ctx.fillStyle = "rgba(255,255,255,0.5)";
-  ctx.font = "22px sans-serif";
+  // 底部 hashtag（v1.7.8 加強：3 個 → 4 個 vibe tags）
+  const code4 = window.lastResult.substring(0,4);
+  const tagPal = window.getPalette(code4);
+  const v1 = (tagPal.vibes && tagPal.vibes[0]) || "16型";
+  const v2 = (tagPal.vibes && tagPal.vibes[1]) || "香港人";
+  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  ctx.font = "bold 24px sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("#港式MBTI #16型 #香港人", 360, 1220);
+  ctx.fillText(`#港式MBTI  #${code4}  #${v1}  #${v2}`, 360, 1190);
+  // 細 T 恤 hook（v1.7.8 加）
+  ctx.fillStyle = "rgba(255,255,255,0.32)";
+  ctx.font = "16px sans-serif";
+  ctx.fillText("印你嘅性格 T 恤？👉 hkmbti.store/tee（快將推出）", 360, 1240);
   // Set 落 img tag
   const dataUrl = canvas.toDataURL("image/png");
   const img = $("shareCardImg");
