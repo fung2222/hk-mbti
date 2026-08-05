@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>港式 MBTI T卹 · 16 型性格衣服</title>
+<meta name="description" content="揀你嘅港式 MBTI 16 型性格 T 恤預覽。每款代表一種港人。">
+<meta name="theme-color" content="#1E2A3B">
+<meta property="og:title" content="港式 MBTI T卹 · 16 型性格衣服">
+<meta property="og:description" content="揀你嘅港式 MBTI 性格 T 恤。">
+<link rel="icon" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{--gold:#D4A95F;--gold-dim:#B8A878;--ink:#0a0a1a;--soft:#FAF8F3;}
+*{box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Microsoft JhengHei",sans-serif;background:var(--soft);color:var(--ink);margin:0;padding-bottom:80px;}
+.brand-gold{color:var(--gold);}
+.bg-soft{background:rgba(212,169,95,0.06);}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--ink);font-weight:700;padding:12px 20px;border-radius:10px;display:inline-block;text-align:center;}
+.btn-gold:hover{filter:brightness(1.06);transform:translateY(-1px);transition:all .15s;}
+.tee-card{background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);transition:transform .2s;}
+.tee-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.1);}
+.tee-card img{width:100%;display:block;aspect-ratio:4/5;object-fit:cover;}
+.tee-card .body{padding:12px 14px 14px;}
+.tee-card .type-code{font-size:22px;font-weight:900;letter-spacing:0.02em;}
+.tee-card .vibe{font-size:13px;color:#6b6b6b;margin-top:2px;}
+.tee-card .price{font-size:14px;color:var(--gold);font-weight:800;margin-top:8px;}
+.tee-card .pill{display:inline-block;background:rgba(212,169,95,0.12);color:var(--ink);font-size:11px;padding:3px 8px;border-radius:6px;margin-top:4px;margin-right:3px;}
+.hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:white;padding:48px 20px 36px;text-align:center;}
+.hero h1{font-size:32px;font-weight:900;margin:0 0 8px;}
+.hero p{opacity:0.8;font-size:15px;margin:0;}
+.section-title{font-size:22px;font-weight:900;margin:32px 16px 16px;display:flex;align-items:center;gap:8px;}
+.section-title:before{content:"";display:inline-block;width:4px;height:22px;background:var(--gold);border-radius:2px;}
+.notice{background:rgba(255,193,7,0.12);border:1px dashed var(--gold);border-radius:10px;padding:12px 14px;margin:20px 16px;font-size:13px;line-height:1.6;}
+.notice b{color:var(--ink);}
+.nav-home{display:inline-block;margin:14px;font-size:14px;color:rgba(255,255,255,0.7);text-decoration:none;}
+.nav-home:hover{color:white;}
+.footer-note{text-align:center;color:#888;font-size:12px;padding:24px 16px 16px;}
+.filter-bar{display:flex;gap:8px;overflow-x:auto;padding:14px 16px;background:white;position:sticky;top:0;z-index:5;box-shadow:0 1px 0 rgba(0,0,0,0.05);}
+.filter-chip{flex-shrink:0;padding:8px 14px;background:#f3f3f3;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;border:none;}
+.filter-chip.active{background:var(--gold);color:var(--ink);}
+.filter-chip:hover:not(.active){background:#e5e5e5;}
+@media (min-width:769px){
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:0 24px;}
+  .hero h1{font-size:44px;}
+}
+@media (max-width:768px){
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 12px;}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <a href="./" class="nav-home">← 返去做測試</a>
+  <h1>🧵 港式 MBTI T卹</h1>
+  <p>揀你嘅性格 · 著上街</p>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-chip active" data-filter="all">全部 16 型</button>
+  <button class="filter-chip" data-filter="analyst">分析家 🧠</button>
+  <button class="filter-chip" data-filter="diplomat">外交家 🤝</button>
+  <button class="filter-chip" data-filter="sentinel">守衛者 🛡️</button>
+  <button class="filter-chip" data-filter="explorer">探險家 🎒</button>
+</div>
+
+<div class="section-title">🧵 16 型 T 恤預覽</div>
+
+<div class="grid" id="teeGrid">
+  <!-- cards injected by JS -->
+</div>
+
+<div class="notice">
+  <b>💡 溫馨提示</b> · 呢個係預覽 page · 真實落單仲未 launch。
+  <br>想收到 launch 通知？做完個測試 share 出街，我哋見到會 update 你 👀
+</div>
+
+<div class="section-title">點解 16 型色唔同？</div>
+<div style="padding:0 16px;font-size:14px;line-height:1.7;color:#444;">
+  每個 personality 都有自己嘅 vibe，我哋用 <b>顏色語言</b> 翻譯：
+  <br><br>
+  🔵 <b>分析家 (NT)</b> — 深紫深藍，內省冷靜
+  <br>🌸 <b>外交家 (NF)</b> — 夢幻粉紫，理想主義
+  <br>🟢 <b>守衛者 (SJ)</b> — 深綠深藍，穩陣可靠
+  <br>🟠 <b>探險家 (SP)</b> — 鮮橙黃綠，行動派
+</div>
+
+<div class="footer-note">
+  港式 MBTI v1.7.8 · 性格測試 · 廣東話
+</div>
+
+<script>
+// TYPES + T恤 mockup 資料
+window.TEE_TYPES = [
+  {code:"INTJ", cn:"建築師", slogan:"東鐵企到中環", price:"HK$168", group:"analyst", emoji:"🏛️"},
+  {code:"INTP", cn:"邏輯學家", slogan:"Coffee shop 坐一日", price:"HK$168", group:"analyst", emoji:"🧪"},
+  {code:"ENTJ", cn:"指揮官", slogan:"做隊長做到悶", price:"HK$178", group:"analyst", emoji:"👔"},
+  {code:"ENTP", cn:"辯論家", slogan:"同阿 Sir 拗到收唔到科", price:"HK$178", group:"analyst", emoji:"💡"},
+  {code:"INFJ", cn:"提倡者", slogan:"深夜 IG 寫 essay", price:"HK$168", group:"diplomat", emoji:"🌙"},
+  {code:"INFP", cn:"調解員", slogan:"飲凍檸茶寫日記", price:"HK$168", group:"diplomat", emoji:"🌸"},
+  {code:"ENFJ", cn:"主人公", slogan:"成班人嘅情緒保姆", price:"HK$178", group:"diplomat", emoji:"🤗"},
+  {code:"ENFP", cn:"競選者", slogan:"識太多人 記唔到名", price:"HK$178", group:"diplomat", emoji:"🎉"},
+  {code:"ISTJ", cn:"物流師", slogan:"準時過港鐵", price:"HK$168", group:"sentinel", emoji:"📋"},
+  {code:"ISFJ", cn:"守衛者", slogan:"記住所有人 Birthday", price:"HK$168", group:"sentinel", emoji:"🎁"},
+  {code:"ESTJ", cn:"總經理", slogan:"Group Project 隊長", price:"HK$178", group:"sentinel", emoji:"📊"},
+  {code:"ESFJ", cn:"執事", slogan:"搞 party 搞到最開心", price:"HK$178", group:"sentinel", emoji:"🎈"},
+  {code:"ISTP", cn:"鑒賞家", slogan:"裝機拆機無人能敵", price:"HK$168", group:"explorer", emoji:"🔧"},
+  {code:"ISFP", cn:"探險家", slogan:"靜靜雞做自己鍾意嘅嘢", price:"HK$168", group:"explorer", emoji:"🎨"},
+  {code:"ESTP", cn:"企業家", slogan:"Last minute 變大計", price:"HK$178", group:"explorer", emoji:"🎲"},
+  {code:"ESFP", cn:"表演者", slogan:"全場最 High 嗰個", price:"HK$178", group:"explorer", emoji:"🎤"}
+];
+
+function render(filter){
+  const list = filter === "all" ? TEE_TYPES : TEE_TYPES.filter(t => t.group === filter);
+  const grid = document.getElementById("teeGrid");
+  grid.innerHTML = list.map(t => `
+    <div class="tee-card">
+      <img src="tee-preview/${t.code}.jpg" alt="${t.code} ${t.cn} 港式 MBTI T恤" loading="lazy">
+      <div class="body">
+        <div class="type-code">${t.emoji} ${t.code}</div>
+        <div class="vibe">${t.cn} · ${t.slogan}</div>
+        <div class="price">${t.price}</div>
+        <span class="pill">預留 🛒</span>
+        <span class="pill">size XS-3XL</span>
+      </div>
+    </div>
+  `).join("");
+}
+render("all");
+
+// filter chip click
+document.querySelectorAll(".filter-chip").forEach(chip => {
+  chip.addEventListener("click", () => {
+    document.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    render(chip.dataset.filter);
+  });
+});
+
+// PWAs basic: register service worker
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js").catch(() => {});
+}
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 {
   "name": "港式 MBTI",
   "short_name": "港式MBTI",
-  "description": "港式MBTI · 60 題廣東話版性格測試 v1.7｜茶餐廳、港鐵、7-11 邊種港人？",
+  "description": "港式MBTI · 60 題廣東話版性格測試 v1.7.8｜茶餐廳、港鐵、7-11 邊種港人？",
   "start_url": "/hk-mbti/",
   "scope": "/hk-mbti/",
   "display": "standalone",
@@ -9,7 +9,7 @@
   "background_color": "#1E2A3B",
   "theme_color": "#1E2A3B",
   "lang": "zh-HK",
-  "version": "1.7.0",
+  "version": "1.7.8",
   "icons": [
     {
       "src": "icon-192.png",

@@ -137,3 +137,68 @@ Play Console 申請:       ⚠️ Roy 仍未申請（$25 · 24-48h delay）
 PWABuilder .aab 生成:    ⚠️ Roy 仍未做
 Play Console 上架:       ⚠️ Roy 仍未做
 ```
+---
+
+# 🔒 v1.7.8 Addendum — Share Card 16-Type Palette + T卹 Preview Page
+
+> **狀態**：✅ 完成 + 已 push + 已 verify  
+> **報告日期**：2026-08-05  
+> **HEAD commit**：`72d0feb`（share-card palette patch）→ `bump` VERSION 1.7.0 → 1.7.8（freeze step）
+
+## v1.7.8 主要改動
+
+| # | 改動 | File | Detail |
+|---|---|---|---|
+| 1 | 16 型 personality palette + 2 vibe labels | `data.js` | `window.PALETTE` 新增，16 keys × `{c1, c2, accent, vibes[]}` |
+| 2 | Canvas 用 dynamic palette | `index.html` | `generateCardImage()` 改用 `getPalette(code).c1/c2` background + `accent` top border |
+| 3 | Logo / icon 大細加強 | `index.html` | `iconSize: 64 → 96`；品牌字 `34px → 42px` |
+| 4 | 名字 display 字大 | `index.html` | `30px → 40px` |
+| 5 | Hashtag 加 2 個 vibe | `index.html` | `#港式MBTI #XXXX #vibe1 #vibe2` (4 個) |
+| 6 | T卹 hook footer | `index.html` | 細字「印你嘅性格 T 恤？👉 hk-mbti/tee.html（真實 preview）」 |
+| 7 | T卹 preview page | `tee.html` | 16 type 真實 mockup + filter by group（analyst/diplomat/sentinel/explorer） |
+| 8 | 16 個 mockup PNG | `tee-preview/*.jpg` | xAI `grok-imagine-image` 真實生成 |
+| 9 | Freeze | VERSION + manifest.json + sw.js | 1.7.0 → 1.7.8 |
+
+## 16 Type Palette（v1.7.8 參考）
+
+| Type | 中文 | 漸層 base | Accent | Vibe labels |
+|---|---|---|---|---|
+| INTJ | 建築師 | 深紫 → 深暗紫 | #9B7EBD | 深宵腦爆 / 獨立思考者 |
+| INTP | 邏輯學家 | 深藍紫 → 暗紫 | #7A8AC9 | 深夜哲學家 / 理論宅 |
+| ENTJ | 指揮官 | 紫紅 → 暗紅 | #D4A95F (gold) | 天生領袖 / 效率控 |
+| ENTP | 辯論家 | 橙紅 → 暗橙 | #FFD700 (gold) | 點子王 / 唱反調 |
+| INFJ | 提倡者 | 深靛 → 暗紫 | #C779A6 | 深度共鳴 / 心靈導師 |
+| INFP | 調解員 | 薰衣草 → 深紫 | #FFD9F5 | 文藝青年 / 共情雷達 |
+| ENFJ | 主人公 | 珊瑚 → 暗珊瑚 | #FFD9B5 | 天生的老師 / 社群核心 |
+| ENFP | 競選者 | 黃橙 → 深橙 | #FFFFFF | 正能量炸彈 / 深夜傾偈王 |
+| ISTJ | 物流師 | 深藍 → 暗藍 | #5B8FD9 | 守時怪 / 細節控 |
+| ISFJ | 守衛者 | 霧綠 → 深綠 | #A8D5BA | 照顧者 / 默默付出 |
+| ESTJ | 總經理 | 深紅 → 暗紅 | #D4A95F (gold) | 傳統硬頸 / 家庭責任王 |
+| ESFJ | 執事 | 橙黃 → 深橙 | #FFFFFF | 派對暖男 / 飯局核心 |
+| ISTP | 鑒賞家 | 鋼藍 → 暗藍 | #8AC9D9 | 動手派 / 獨立解決王 |
+| ISFP | 探險家 | 粉紫 → 深粉 | #FFD9E5 | 美感雷達 / 獨立創作 |
+| ESTP | 企業家 | 螢光綠 → 深綠 | #0A0A1A (黑) | 行動派 / 臨場爆seed |
+| ESFP | 表演者 | 桃紅 → 深紅 | #FFD9E5 | 氣氛王 / 聚會靈魂 |
+
+## Verify chain
+
+- ✅ inline scripts 10/10 syntax OK
+- ✅ `<head>` viewport / theme-color / og:title 完整
+- ✅ PALETTE 16 keys 完整 + getPalette fallback
+- ✅ QUESTIONS audit 112 題 · 軸分佈冇變動（EI 20 · SN 20 · TF 20 · JP 32 · TA 20）
+- ✅ Live CDN size 169910 bytes / MD5 0730478253f9644489d1f26d9f09fe18
+- ✅ Grep anchor: `iconSize = 96` ×1 · `pal.accent` ×1 · `tagPal.vibes` ×2 · `hk-mbti/tee.html` ×1
+
+## T卹 preview page（tee.html）
+
+- 獨立 standalone page · 不撞 index.html
+- Tailwind CDN + brand-gold CSS tokens
+- 4 filter chips：全部 / 分析家 / 外交家 / 守衛者 / 探險家
+- 16 個真實 mockup 由 xAI `grok-imagine-image` 生成
+- 暫未有實際 purchase flow（launch 後再加）
+
+## Roy 而家就可以做嘅嘢
+
+1. hard-reload 主頁 `https://fung2222.github.io/hk-mbti/`  
+2. 做測試 → 結果頁睇新嘅 share card（加大 icon + 16 型 gradient + 4 vibe tag）
+3. 點 share card 底部 T卹 hook → 開 `tee.html` 揀 type 預覽
