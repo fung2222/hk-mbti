@@ -285,6 +285,22 @@ body.no-ad{padding-bottom:0!important;}
    if(typeof window.renderTypeStats === "function"){
      window.renderTypeStats();
    }
+   // v1.7.9: detect #view=N hash from record.html → replay history
+   try{
+     const m = (window.location.hash||"").match(/^#view=(\d+)$/);
+     if(m){
+       const idx = parseInt(m[1], 10);
+       // wait for viewHistoryResult to be defined
+       const fire = () => {
+         if(typeof window.viewHistoryResult === "function"){
+           window.viewHistoryResult(idx);
+         } else {
+           setTimeout(fire, 50);
+         }
+       };
+       setTimeout(fire, 80);
+     }
+   }catch(e){}
  });
  </script>
 

@@ -234,13 +234,10 @@ function toast(msg){
 }
 
 function viewRec(id, i){
-  // 跳返主頁 + replay history result
-  const rec = loadHistory()[i];
-  if(!rec) return;
-  // 將呢個 rec set 為 last_result，等主頁 viewHistoryResult 可用
+  // 跳返主頁 replay history result，透過 hash #view={i}
+  // 主頁 detect 到 #view=N 就自動 call viewHistoryResult(N)
   try{
-    localStorage.setItem("hkmbti_last_result", JSON.stringify(rec));
-    location.href = "./?view=" + (rec.id || i);
+    location.href = "./#view=" + i;
   }catch(e){ toast("跳轉失敗"); }
 }
 
