@@ -58,12 +58,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Microsoft Jheng
 .toast.show{opacity:1;}
 .summary-card{background:linear-gradient(135deg,rgba(212,169,95,0.1),rgba(212,169,95,0.04));border:1px dashed var(--gold);border-radius:12px;padding:16px;margin:0 16px 12px;}
 .summary-num{font-size:32px;font-weight:900;color:var(--gold);line-height:1;}
-.ver-pill{display:inline-block;font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;letter-spacing:0.04em;flex-shrink:0;align-self:flex-start;}
-.ver-pill[data-ver="life"]{background:linear-gradient(135deg,#FFF9ED,#FFEFD0);color:#8B6F3D;border:1px solid rgba(212,169,95,0.5);}
-.ver-pill[data-ver="advanced"]{background:linear-gradient(135deg,#F0F6FF,#E0ECFA);color:#2F5A96;border:1px solid rgba(91,143,217,0.5);}
-.ver-pill[data-ver="bb"]{background:linear-gradient(135deg,#FBF3FC,#F5E8F8);color:#8A4F92;border:1px solid rgba(196,139,201,0.5);}
-.ver-pill[data-ver="unknown"]{background:#f3f3f3;color:#666;border:1px solid #ddd;}
-.history-row{align-items:flex-start;}
+.rec-num{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--ink);font-weight:900;font-size:18px;flex-shrink:0;font-family:-apple-system,sans-serif;letter-spacing:-0.02em;box-shadow:0 2px 6px rgba(212,169,95,0.3);}
+.history-row{align-items:center;}
 @media (min-width:769px){
   .stat-grid{grid-template-columns:repeat(8,1fr);}
   .hero h1{font-size:42px;}
@@ -178,7 +174,7 @@ function render(){
   const visited = Object.keys(counts).filter(k => (parseInt(counts[k],10)||0) > 0);
   document.getElementById("typesVisited").innerHTML = visited.length + '<span style="font-size:18px;color:#888;"> / 16</span>';
   
-  // history list
+  // history list — 編號固定 1..5（缺嘅就顯示 —）
   const histBox = document.getElementById("historyList");
   if(list.length === 0){
     histBox.innerHTML = `
@@ -191,21 +187,18 @@ function render(){
     histBox.innerHTML = list.map((rec, i) => {
       const code = (rec.mbti||"").substring(0,4).toUpperCase();
       const meta = TYPE_META[code] || {cn:code, emoji:"❓"};
-      const verKey = (VER_PILL[rec.version] ? rec.version : "unknown");
       const verLabel = VER_PILL[rec.version] || rec.version || "—";
       const name = [rec.name, rec.nickname].filter(Boolean).join(" · ") || "匿名港人";
       const time = rec.timestamp ? timeAgo(rec.timestamp) : "";
+      const num = i + 1;
       return `
         <div class="history-item">
           <div class="history-row">
-            <div style="display:flex;flex-direction:column;gap:4px;align-items:center;min-width:32px;">
-              <div class="history-emoji">${meta.emoji}</div>
-              <span class="ver-pill" data-ver="${verKey}">${escapeHtml(verLabel)}</span>
-            </div>
+            <div class="rec-num">#${num}</div>
             <div style="flex:1;min-width:0;">
               <div class="history-name">${escapeHtml(name)}</div>
               <div class="history-mbti">${code} · ${meta.cn}</div>
-              <div class="history-meta">${time}${rec.id ? " · #" + (i+1) : ""}</div>
+              <div class="history-meta">${escapeHtml(verLabel)} · ${time}</div>
             </div>
           </div>
           <div class="history-actions">
