@@ -870,7 +870,7 @@ body.no-ad{padding-bottom:0!important;}
     <!-- 用戶測試記錄（最近 5 次）· 放喺揀版本下面 -->
     <!-- Ad Slot 1: hero bottom (主頁 · 緊接 hero/版本 picker) -->
     <div class="ad-slot ad-hero-bottom mx-auto my-3 fade-up" data-ad-placement="hero-bottom">
-      <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>✨ 解鎖完整分析 HK$18</button>
+      <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
       <ins class="adsbygoogle"
            style="display:block; min-height:60px;"
            data-ad-client="ca-pub-PLACEHOLDER"
@@ -1011,7 +1011,7 @@ body.no-ad{padding-bottom:0!important;}
     <!-- Ad Slot 3: footer sticky-bottom (主頁底部 · sticky 320×50 mobile-first) -->
     <div class="ad-slot ad-footer-sticky" data-ad-placement="footer-sticky">
       <button class="ad-close" onclick="this.parentElement.style.display='none'" aria-label="關閉廣告">✕</button>
-      <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>✨ 解鎖完整分析 HK$18</button>
+      <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
       <ins class="adsbygoogle"
            style="display:block; min-height:50px;"
            data-ad-client="ca-pub-PLACEHOLDER"
@@ -1079,7 +1079,7 @@ body.no-ad{padding-bottom:0!important;}
 
     <!-- Ad Slot 2: result above share (結果頁 · 性格分析上面) -->
     <div class="ad-slot ad-result-top mx-auto my-3 fade-up" data-ad-placement="result-top">
-      <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>✨ 解鎖完整分析 HK$18</button>
+      <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
       <ins class="adsbygoogle"
            style="display:block; min-height:90px;"
            data-ad-client="ca-pub-PLACEHOLDER"
@@ -1167,7 +1167,7 @@ body.no-ad{padding-bottom:0!important;}
   window.HAS_PAID_NO_AD = hasNoAd();
   window.purchaseNoAd = function(){
     if(hasNoAd()) return; // 已經 unlock
-    const ok = confirm('✨ 解鎖完整分析報告？\n\n包含：\n· 16 型性格完整雷達圖\n· 同類名人比較\n· PDF 證書下載\n· 永久去廣告\n\n此示範版本即時解鎖（Play Store 上架後將由 Google Play Billing 處理 HK$18 付款）。\n\n確定解鎖？');
+    const ok = confirm('你嘅 HK$18 會做兩件事：\n\n☕ 支持港式 MBTI 繼續整新測試\n🚫 幫你永久免廣告\n\n此示範版本即時解鎖（Play 上架後改用 Google Play Billing）。\n\n確定支持？');
     if(!ok) return;
     try{ localStorage.setItem(KEY, '1'); }catch(e){}
     applyNoAd();

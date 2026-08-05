@@ -102,7 +102,7 @@ body.no-ad{padding-bottom:0!important;}
        data-ad-client="ca-pub-PLACEHOLDER"
        data-ad-slot="PLACEHOLDER-HERO"
        data-ad-format="auto"></ins>
-  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>✨ 永久去廣告 HK$18</button>
+  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
 </div>
 
 <div class="summary-card">
@@ -126,7 +126,7 @@ body.no-ad{padding-bottom:0!important;}
        data-ad-client="ca-pub-PLACEHOLDER"
        data-ad-slot="PLACEHOLDER-MID"
        data-ad-format="auto"></ins>
-  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>✨ 永久去廣告 HK$18</button>
+  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
 </div>
 
 <div class="section-title">📜 最近 5 次測試</div>
@@ -155,7 +155,7 @@ body.no-ad{padding-bottom:0!important;}
        data-ad-client="ca-pub-PLACEHOLDER"
        data-ad-slot="PLACEHOLDER-FOOTER"
        data-ad-format="auto"></ins>
-  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>✨ 永久去廣告 HK$18</button>
+  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
 </div>
 <script>document.body.classList.add('has-sticky-ad');</script>
 
@@ -431,7 +431,7 @@ render();
   window.HAS_PAID_NO_AD = hasNoAd();
   window.purchaseNoAd = function(){
     if(hasNoAd()) return;
-    const ok = confirm('✨ 解鎖完整分析？\n\n永久去廣告 HK$18\n\n此示範版本即時解鎖（Play Store 上架後將由 Google Play Billing 處理付款）。\n\n確定解鎖？');
+    const ok = confirm('你嘅 HK$18 會做兩件事：\n\n☕ 支持港式 MBTI 繼續整新測試\n🚫 幫你永久免廣告\n\n此示範版本即時解鎖（Play 上架後改用 Google Play Billing）。\n\n確定支持？');
     if(!ok) return;
     try{ localStorage.setItem(KEY, '1'); }catch(e){}
     applyNoAd();
