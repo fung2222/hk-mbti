@@ -68,6 +68,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Microsoft Jheng
   .stat-grid{grid-template-columns:repeat(8,1fr);}
   .hero h1{font-size:42px;}
 }
+
+/* ===== 廣告位樣式 (跟主頁 f8b7244 一致) ===== */
+.ad-slot{width:100%;max-width:100%;background:rgba(184,168,120,0.04);border:1px dashed rgba(184,168,120,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;color:#7a766c;font-size:11px;position:relative;overflow:hidden;flex-direction:column;padding:10px;}
+.ad-slot ins.adsbygoogle{display:block;width:100%;height:auto;}
+.ad-slot[data-ad-status="empty"]{display:none;}
+.ad-footer-sticky{position:fixed;left:0;right:0;bottom:0;z-index:40;min-height:54px;background:#fff;box-shadow:0 -2px 10px rgba(0,0,0,0.08);border-top:1px solid rgba(184,168,120,0.25);padding:2px 36px 2px 2px;}
+.ad-close{position:absolute;top:4px;right:6px;background:transparent;border:0;color:#7a766c;font-size:12px;line-height:1;padding:2px 6px;cursor:pointer;z-index:2;}
+body.has-sticky-ad{padding-bottom:60px;}
+@media (min-width:769px){.ad-footer-sticky{max-width:728px;left:50%;transform:translateX(-50%);border-radius:8px 0 0;}}
+@media (max-width:768px){.ad-hero-bottom,.ad-result-top{min-height:60px;}}
+body.no-ad .ad-slot{display:none!important;}
+body.no-ad{padding-bottom:0!important;}
+.ad-unlock{display:inline-block;background:linear-gradient(135deg,#D4A95F,#B8A878);color:#0a0a1a;border:0;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.15);margin-top:6px;}
+
 </style>
 </head>
 <body>
@@ -78,6 +92,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Microsoft Jheng
   </div>
   <h1 style="margin-top:4px;font-size:26px;">我的測試記錄</h1>
   <p>過去 5 次 MBTI · 16 型訪問統計 · 匯出 / 清除</p>
+</div>
+
+<!-- Ad Slot: hero-bottom (above total summary) -->
+<div class="ad-slot ad-hero-bottom mx-auto my-3" data-ad-placement="hero-bottom">
+  <button class="ad-close" onclick="this.parentElement.style.display='none'">✕</button>
+  <ins class="adsbygoogle"
+       style="display:block; min-height:60px;"
+       data-ad-client="ca-pub-PLACEHOLDER"
+       data-ad-slot="PLACEHOLDER-HERO"
+       data-ad-format="auto"></ins>
+  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>✨ 永久去廣告 HK$18</button>
 </div>
 
 <div class="summary-card">
@@ -91,6 +116,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Microsoft Jheng
       <div style="font-size:13px;color:#666;margin-top:4px;">已探索類型</div>
     </div>
   </div>
+</div>
+
+<!-- Ad Slot: mid (after content) -->
+<div class="ad-slot ad-result-top mx-auto my-3" data-ad-placement="mid">
+  <button class="ad-close" onclick="this.parentElement.style.display='none'">✕</button>
+  <ins class="adsbygoogle"
+       style="display:block; min-height:60px;"
+       data-ad-client="ca-pub-PLACEHOLDER"
+       data-ad-slot="PLACEHOLDER-MID"
+       data-ad-format="auto"></ins>
+  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>✨ 永久去廣告 HK$18</button>
 </div>
 
 <div class="section-title">📜 最近 5 次測試</div>
@@ -110,6 +146,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Microsoft Jheng
   <button class="btn-gold" onclick="exportRecords()">📋 匯出全部（JSON）</button>
   <button class="btn-danger" onclick="clearAllRecords()">🧹 全部清除</button>
 </div>
+
+<!-- Ad Slot: footer sticky -->
+<div class="ad-slot ad-footer-sticky" data-ad-placement="footer-sticky">
+  <button class="ad-close" onclick="this.parentElement.style.display='none'">✕</button>
+  <ins class="adsbygoogle"
+       style="display:block; min-height:50px;"
+       data-ad-client="ca-pub-PLACEHOLDER"
+       data-ad-slot="PLACEHOLDER-FOOTER"
+       data-ad-format="auto"></ins>
+  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>✨ 永久去廣告 HK$18</button>
+</div>
+<script>document.body.classList.add('has-sticky-ad');</script>
 
 <div class="footer-note">
   資料 100% 喺你部機（localStorage）· 跨裝置唔同步  
@@ -368,5 +416,30 @@ if("serviceWorker" in navigator){
 
 render();
 </script>
+
+<script>
+// ====================== 永久去廣告 unlock (Demo IAP) ======================
+(function(){
+  const KEY = 'hkmbti_no_ad';
+  function hasNoAd(){
+    try{ return localStorage.getItem(KEY) === '1'; }catch(e){ return false; }
+  }
+  function applyNoAd(){
+    document.body.classList.add('no-ad');
+    document.querySelectorAll('[data-no-ad-hide]').forEach(b => b.style.display='none');
+  }
+  window.HAS_PAID_NO_AD = hasNoAd();
+  window.purchaseNoAd = function(){
+    if(hasNoAd()) return;
+    const ok = confirm('✨ 解鎖完整分析？\n\n永久去廣告 HK$18\n\n此示範版本即時解鎖（Play Store 上架後將由 Google Play Billing 處理付款）。\n\n確定解鎖？');
+    if(!ok) return;
+    try{ localStorage.setItem(KEY, '1'); }catch(e){}
+    applyNoAd();
+  };
+  window.restoreAds = function(){ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); };
+  if(hasNoAd()) applyNoAd();
+})();
+</script>
+
 </body>
 </html>
