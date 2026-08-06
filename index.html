@@ -2744,10 +2744,6 @@ function renderCardBody(ctx, t, canvas){
   ctx.font = "bold 24px sans-serif";
   ctx.textAlign = "center";
   ctx.fillText(`#港式MBTI  #${code4}  #${v1}  #${v2}`, 360, 1190);
-  // 細 T 恤 hook（v1.7.8 加）— 跳去 /tee.html 嘅真實 mockup preview
-  ctx.fillStyle = "rgba(255,255,255,0.32)";
-  ctx.font = "16px sans-serif";
-  ctx.fillText("印你嘅性格 T 恤？👉 hk-mbti/tee.html（真實 preview）", 360, 1240);
   // Set 落 img tag
   const dataUrl = canvas.toDataURL("image/png");
   const img = $("shareCardImg");
