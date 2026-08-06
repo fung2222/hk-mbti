@@ -89,7 +89,7 @@ body.no-ad{padding-bottom:0!important;}
        data-ad-client="ca-pub-PLACEHOLDER"
        data-ad-slot="PLACEHOLDER-HERO"
        data-ad-format="auto"></ins>
-  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
+  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>HK$18 支持 · 永久免廣告</button>
 </div>
 
 <div class="section-title">🧵 16 型 T 恤預覽</div>
@@ -103,15 +103,9 @@ body.no-ad{padding-bottom:0!important;}
   <br>想收到 launch 通知？做完個測試 share 出街，我哋見到會 update 你 👀
 </div>
 
-<!-- Ad Slot: mid (after content) -->
-<div class="ad-slot ad-result-top mx-auto my-3" data-ad-placement="mid">
-  <button class="ad-close" onclick="this.parentElement.style.display='none'">✕</button>
-  <ins class="adsbygoogle"
-       style="display:block; min-height:60px;"
-       data-ad-client="ca-pub-PLACEHOLDER"
-       data-ad-slot="PLACEHOLDER-MID"
-       data-ad-format="auto"></ins>
-  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
+<!-- Unlock CTA: permanent ad removal -->
+<div class="unlock-banner" style="text-align:center;margin:18px 0 8px;">
+  <button class="ad-unlock" onclick="purchaseNoAd()" style="font-size:13px;padding:8px 16px;">HK$18 支持 · 永久免廣告</button>
 </div>
 
 <div class="section-title">點解 16 型色唔同？</div>
@@ -123,18 +117,6 @@ body.no-ad{padding-bottom:0!important;}
   <br>🟢 <b>守衛者 (SJ)</b> — 深綠深藍，穩陣可靠
   <br>🟠 <b>探險家 (SP)</b> — 鮮橙黃綠，行動派
 </div>
-
-<!-- Ad Slot: footer sticky -->
-<div class="ad-slot ad-footer-sticky" data-ad-placement="footer-sticky">
-  <button class="ad-close" onclick="this.parentElement.style.display='none'">✕</button>
-  <ins class="adsbygoogle"
-       style="display:block; min-height:50px;"
-       data-ad-client="ca-pub-PLACEHOLDER"
-       data-ad-slot="PLACEHOLDER-FOOTER"
-       data-ad-format="auto"></ins>
-  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
-</div>
-<script>document.body.classList.add('has-sticky-ad');</script>
 
 <div class="footer-note">
   港式 MBTI v1.7.8 · 性格測試 · 廣東話
@@ -208,7 +190,7 @@ if ("serviceWorker" in navigator) {
   window.HAS_PAID_NO_AD = hasNoAd();
   window.purchaseNoAd = function(){
     if(hasNoAd()) return;
-    const ok = confirm('你嘅 HK$18 會做兩件事：\n\n☕ 支持港式 MBTI 繼續整新測試\n🚫 幫你永久免廣告\n\n此示範版本即時解鎖（Play 上架後改用 Google Play Billing）。\n\n確定支持？');
+    const ok = confirm('你嘅 HK$18 會做兩件事：\n\n支援港式 MBTI 繼續整新測試\n幫你永久免廣告\n\n此示範版本即時解鎖（Play 上架後改用 Google Play Billing）。\n\n確定支持？');
     if(!ok) return;
     try{ localStorage.setItem(KEY, '1'); }catch(e){}
     applyNoAd();

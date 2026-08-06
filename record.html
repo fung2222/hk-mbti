@@ -94,15 +94,9 @@ body.no-ad{padding-bottom:0!important;}
   <p>過去 5 次 MBTI · 16 型訪問統計 · 匯出 / 清除</p>
 </div>
 
-<!-- Ad Slot: hero-bottom (above total summary) -->
-<div class="ad-slot ad-hero-bottom mx-auto my-3" data-ad-placement="hero-bottom">
-  <button class="ad-close" onclick="this.parentElement.style.display='none'">✕</button>
-  <ins class="adsbygoogle"
-       style="display:block; min-height:60px;"
-       data-ad-client="ca-pub-PLACEHOLDER"
-       data-ad-slot="PLACEHOLDER-HERO"
-       data-ad-format="auto"></ins>
-  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
+<!-- Unlock CTA: permanent ad removal -->
+<div class="unlock-banner" style="text-align:center;margin:18px 0 8px;">
+  <button class="ad-unlock" onclick="purchaseNoAd()" style="font-size:13px;padding:8px 16px;">HK$18 支持 · 永久免廣告</button>
 </div>
 
 <div class="summary-card">
@@ -126,7 +120,7 @@ body.no-ad{padding-bottom:0!important;}
        data-ad-client="ca-pub-PLACEHOLDER"
        data-ad-slot="PLACEHOLDER-MID"
        data-ad-format="auto"></ins>
-  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
+  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>HK$18 支持 · 永久免廣告</button>
 </div>
 
 <div class="section-title">📜 最近 5 次測試</div>
@@ -146,18 +140,6 @@ body.no-ad{padding-bottom:0!important;}
   <button class="btn-gold" onclick="exportRecords()">📋 匯出全部（JSON）</button>
   <button class="btn-danger" onclick="clearAllRecords()">🧹 全部清除</button>
 </div>
-
-<!-- Ad Slot: footer sticky -->
-<div class="ad-slot ad-footer-sticky" data-ad-placement="footer-sticky">
-  <button class="ad-close" onclick="this.parentElement.style.display='none'">✕</button>
-  <ins class="adsbygoogle"
-       style="display:block; min-height:50px;"
-       data-ad-client="ca-pub-PLACEHOLDER"
-       data-ad-slot="PLACEHOLDER-FOOTER"
-       data-ad-format="auto"></ins>
-  <button class="ad-unlock" onclick="purchaseNoAd()" data-no-ad-hide>☕ HK$18 支持 · 永久免廣告</button>
-</div>
-<script>document.body.classList.add('has-sticky-ad');</script>
 
 <div class="footer-note">
   資料 100% 喺你部機（localStorage）· 跨裝置唔同步  
@@ -431,7 +413,7 @@ render();
   window.HAS_PAID_NO_AD = hasNoAd();
   window.purchaseNoAd = function(){
     if(hasNoAd()) return;
-    const ok = confirm('你嘅 HK$18 會做兩件事：\n\n☕ 支持港式 MBTI 繼續整新測試\n🚫 幫你永久免廣告\n\n此示範版本即時解鎖（Play 上架後改用 Google Play Billing）。\n\n確定支持？');
+    const ok = confirm('你嘅 HK$18 會做兩件事：\n\n支援港式 MBTI 繼續整新測試\n幫你永久免廣告\n\n此示範版本即時解鎖（Play 上架後改用 Google Play Billing）。\n\n確定支持？');
     if(!ok) return;
     try{ localStorage.setItem(KEY, '1'); }catch(e){}
     applyNoAd();
