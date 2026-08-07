@@ -3,5 +3,7 @@
 _preview-*.png
 _sharecard_preview.js
 _tee_mockup_ESTP.jpg
+_palette_*.js
+_palette_*.png
 node_modules/
 package-lock.json
