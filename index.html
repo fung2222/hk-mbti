@@ -1036,7 +1036,10 @@ body.no-ad{padding-bottom:0!important;}
   <section id="test" class="hidden">
     <div class="flex items-center justify-between mb-4">
       <div class="text-xs text-gray-500"><span id="qIdx">1</span> / 60</div>
-      <button onclick="confirmExit()" class="text-xs text-gray-400">✕ 退出</button>
+      <div class="flex items-center gap-3">
+        <button type="button" id="voiceBtn" onclick="toggleVoice()" class="text-xs text-gray-400" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">朗讀開</button>
+        <button onclick="confirmExit()" class="text-xs text-gray-400">✕ 退出</button>
+      </div>
     </div>
     <div class="progress-bar mb-6">
       <div id="progressFill" class="progress-fill" style="width:1.66%"></div>
@@ -1044,7 +1047,7 @@ body.no-ad{padding-bottom:0!important;}
 
     <div class="card p-5 mb-4 fade-up" id="qCard">
       <div class="text-[10px] tracking-widest brand-gold font-bold mb-2" id="qDimension">載入中...</div>
-      <h2 id="qText" class="text-lg font-bold leading-snug mb-5">載入中...</h2>
+      <h2 id="qText" class="text-lg font-bold leading-snug mb-5" onclick="replayQuestionVoice()" style="cursor:pointer;">載入中...</h2>
       <div id="qOptions" class="space-y-2.5"></div>
     </div>
 
@@ -2418,6 +2421,83 @@ window.startTestWithVersion = function(version){
   renderQ();
 };
 
+(function(){
+  const KEY = "hkmbti_voice";
+  function loadOn(){
+    try{
+      const v = localStorage.getItem(KEY);
+      if(v === "0") return false;
+      if(v === "1") return true;
+    }catch(e){}
+    return true;
+  }
+  window.VOICE_ON = loadOn();
+  function pickYueVoice(){
+    if(!window.speechSynthesis) return null;
+    const vs = speechSynthesis.getVoices() || [];
+    if(!vs.length) return null;
+    const score = v => {
+      const n = ((v.name || "") + " " + (v.lang || "")).toLowerCase();
+      const lang = (v.lang || "").toLowerCase();
+      let s = 0;
+      if(/yue|zh-hk|zh_hk|hong kong|cantonese|粵/.test(n)) s += 20;
+      if(/zh-hk|zh_hk/.test(lang)) s += 12;
+      if(/sinji|sin-ji|hiu gaai|hiu-gaai|google.*yue|google.*hk/.test(n)) s += 8;
+      if(/female|woman/.test(n)) s += 3;
+      if(/^zh/.test(lang)) s += 1;
+      if(/male|man|danny/.test(n) && !/female/.test(n)) s -= 4;
+      return s;
+    };
+    return vs.slice().sort((a,b) => score(b) - score(a))[0];
+  }
+  window.stopQuestionVoice = function(){
+    try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+  };
+  window.speakQuestion = function(text){
+    if(!window.VOICE_ON) return;
+    if(!window.speechSynthesis) return;
+    const t = String(text || "").trim();
+    if(!t) return;
+    stopQuestionVoice();
+    const u = new SpeechSynthesisUtterance(t);
+    u.lang = "zh-HK";
+    u.rate = 1.0;
+    u.pitch = 1.05;
+    const voice = pickYueVoice();
+    if(voice) u.voice = voice;
+    try{ speechSynthesis.speak(u); }catch(e){}
+  };
+  window.replayQuestionVoice = function(){
+    const el = $("qText");
+    if(el) speakQuestion(el.innerText);
+  };
+  window.syncVoiceBtn = function(){
+    const b = $("voiceBtn");
+    if(!b) return;
+    if(!window.speechSynthesis){
+      b.style.display = "none";
+      return;
+    }
+    b.style.display = "";
+    b.textContent = window.VOICE_ON ? "朗讀開" : "朗讀關";
+    b.style.color = window.VOICE_ON ? "#C4922E" : "#9ca3af";
+  };
+  window.toggleVoice = function(){
+    window.VOICE_ON = !window.VOICE_ON;
+    try{ localStorage.setItem(KEY, window.VOICE_ON ? "1" : "0"); }catch(e){}
+    syncVoiceBtn();
+    if(window.VOICE_ON) replayQuestionVoice();
+    else stopQuestionVoice();
+  };
+  if(window.speechSynthesis){
+    try{ speechSynthesis.getVoices(); }catch(e){}
+    if(speechSynthesis.onvoiceschanged !== undefined){
+      speechSynthesis.onvoiceschanged = function(){ pickYueVoice(); };
+    }
+  }
+  try{ syncVoiceBtn(); }catch(e){}
+})();
+
 window.renderQ = function(){
   const deck = state.deck || window.QUESTIONS;
   const q = deck[state.idx];
@@ -2444,6 +2524,8 @@ window.renderQ = function(){
   });
   $("prevBtn").style.opacity = state.idx === 0 ? "0.3" : "1";
   $("prevBtn").disabled = state.idx === 0;
+  try{ syncVoiceBtn(); }catch(e){}
+  try{ speakQuestion(q.t); }catch(e){}
 };
 
 window.selectOpt = function(i){
@@ -2927,6 +3009,9 @@ window.show = function(id){
   _origShow(id);
   if(id === "result"){
     try{ setShareHint(); }catch(e){}
+  }
+  if(id !== "test"){
+    try{ stopQuestionVoice(); }catch(e){}
   }
 };
 
