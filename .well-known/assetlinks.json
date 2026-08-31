@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.fung2222.hkmbti",
+      "sha256_cert_fingerprints": [
+        "CC:3B:1C:BE:D2:41:8B:20:FC:B7:D0:2C:15:A7:97:AA:9F:85:31:81:36:7B:E4:43:24:09:28:AC:F8:02:7F:EA",
+        "78:51:73:12:4E:8D:BD:59:05:6B:2D:39:E3:DA:B6:32:ED:F4:87:D5:E5:9B:85:FA:22:F9:0C:7E:62:07:18:91"
+      ]
+    }
+  }
+]
