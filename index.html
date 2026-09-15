@@ -825,15 +825,15 @@ body.no-ad{padding-bottom:0!important;}
       <div class="flex gap-2 text-xs text-gray-500 mb-5">
         <span class="scenario-badge bg-soft">✦ 廣東話</span>
         <span class="scenario-badge bg-soft">✦ 免費</span>
-        <span class="scenario-badge bg-soft">✦ 3 個版本</span>
+        <span class="scenario-badge bg-soft">✦ 多個版本</span>
       </div>
     </div>
 
 
-    <!-- 3 個版本選擇（一按著燈，再按進入） -->
-    <div class="card p-5 mb-4">
+    <!-- 版本選擇（一按著燈，再按進入） -->
+    <div class="card p-5 mb-6">
       <div class="text-xs tracking-widest brand-gold font-bold mb-2">🎯 開始前揀你嘅版本</div>
-      <div class="text-sm font-bold mb-1">3 種長度揀最適合嘅</div>
+      <div class="text-sm font-bold mb-1">多個版本揀最適合嘅</div>
       <div class="text-xs text-gray-600 mb-3">先撳一次著燈確認 → 再撳一次開始測試</div>
       <div class="space-y-2.5" id="versionList">
         <button type="button" data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full p-4 rounded-xl text-left">
@@ -866,17 +866,21 @@ body.no-ad{padding-bottom:0!important;}
             <div class="ver-arrow text-2xl transition">→</div>
           </div>
         </button>
-        <a href="./record.html" data-ver="record" class="ver-btn w-full p-4 rounded-xl text-left block no-underline" style="text-decoration:none;color:inherit;">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-base font-black text-ink">我的記錄</div>
-              <div class="text-xs text-gray-600 mt-0.5">睇返測試結果 · 冇紀錄都可以入</div>
-            </div>
-            <div class="ver-arrow text-2xl transition">→</div>
-          </div>
-        </a>
       </div>
-      <div class="text-xs text-gray-500 mt-3 text-center">題目每次打亂 · 3 個版本結果互通</div>
+      <div class="text-xs text-gray-500 mt-3 text-center">題目每次打亂 · 多個版本結果互通</div>
+    </div>
+
+    <div class="card p-5 mb-4">
+      <div class="text-xs tracking-widest brand-gold font-bold mb-3">紀錄</div>
+      <a href="./record.html" data-ver="record" class="ver-btn w-full p-4 rounded-xl text-left block no-underline" style="text-decoration:none;color:inherit;">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-base font-black text-ink">我的記錄</div>
+            <div class="text-xs text-gray-600 mt-0.5">睇返測試結果 · 冇紀錄都可以入</div>
+          </div>
+          <div class="ver-arrow text-2xl transition">→</div>
+        </div>
+      </a>
     </div>
 
     <!-- Ad Slot: hero bottom (主頁 · 緊接 hero/版本 picker) -->
@@ -889,10 +893,39 @@ body.no-ad{padding-bottom:0!important;}
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <div class="card p-4 mb-4 bg-soft">
+    <div class="card p-5 mb-4">
       <div class="text-xs tracking-widest brand-gold font-bold mb-2">📋 多種港式日常情景</div>
-      <div class="text-sm font-bold mb-1">題目唔止茶餐廳、港鐵、便利店</div>
-      <div class="text-xs text-gray-600">返工、相處、排隊、屋企、朋友圈都有，用港式日常測你喺邊種人。</div>
+      <div class="text-sm font-bold mb-3">題目散落喺香港人一日會遇到嘅位</div>
+      <div class="space-y-2">
+        <div class="flex items-start gap-2 bg-soft rounded-xl p-3">
+          <div class="text-lg flex-shrink-0 w-6 text-center">食</div>
+          <div class="flex-1 min-w-0">
+            <div class="text-xs font-bold mb-1">食同買</div>
+            <div class="text-[11px] text-gray-600 leading-relaxed">茶餐廳 · 便利店 · 街市 · 公司 lunch · 排隊買嘢</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-2 bg-soft rounded-xl p-3">
+          <div class="text-lg flex-shrink-0 w-6 text-center">行</div>
+          <div class="flex-1 min-w-0">
+            <div class="text-xs font-bold mb-1">出街同車廂</div>
+            <div class="text-[11px] text-gray-600 leading-relaxed">港鐵 · 巴士 · 問路 · 迫車 · 颱風假</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-2 bg-soft rounded-xl p-3">
+          <div class="text-lg flex-shrink-0 w-6 text-center">工</div>
+          <div class="flex-1 min-w-0">
+            <div class="text-xs font-bold mb-1">返工返學</div>
+            <div class="text-[11px] text-gray-600 leading-relaxed">開會 · deadline · 考試 · 出差 · 同事</div>
+          </div>
+        </div>
+        <div class="flex items-start gap-2 bg-soft rounded-xl p-3">
+          <div class="text-lg flex-shrink-0 w-6 text-center">人</div>
+          <div class="flex-1 min-w-0">
+            <div class="text-xs font-bold mb-1">朋友同屋企</div>
+            <div class="text-[11px] text-gray-600 leading-relaxed">WhatsApp · 唱 K · 搬屋 · 相處 · 道歉</div>
+          </div>
+        </div>
+      </div>
     </div>
 
 
