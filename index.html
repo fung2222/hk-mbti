@@ -7,7 +7,7 @@
   <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>港式 MBTI · 你是哪種港人？</title>
-<meta name="description" content="港式MBTI · 60 題廣東話版 MBTI 16型人格測試｜3 種情景 茶餐廳、港鐵、7-11｜5 分鐘知道你喺邊種人。">
+<meta name="description" content="港式MBTI · 60 題廣東話版 MBTI 16型人格測試｜多種情景 · 港式日常｜5 分鐘知道你喺邊種人。">
 <meta name="theme-color" content="#1E2A3B">
 <!-- Ads: 廣告位預留 (AdSense auto ads 將自動填充) -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-PLACEHOLDER" crossorigin="anonymous"></script>
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="港式MBTI">
 <meta property="og:title" content="港式 MBTI · 你是哪種港人？">
-<meta property="og:description" content="60 題廣東話版 MBTI 16型人格測試｜3 種情景 茶餐廳、港鐵、7-11｜5 分鐘知道你喺邊種人。">
+<meta property="og:description" content="60 題廣東話版 MBTI 16型人格測試｜多種情景 · 港式日常｜5 分鐘知道你喺邊種人。">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -76,6 +76,11 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
   transform:translateY(-2px) scale(1.02);
   background:linear-gradient(135deg,#F8EBFA,#EFD9F2);
 }
+/* 我的記錄 · 墨金（一撳即入，唔使雙撳） */
+.ver-btn[data-ver="record"]{
+  border-color:#1E2A3B;background:linear-gradient(135deg,#F4F1EA,#E8E2D6);
+}
+.ver-btn[data-ver="record"] .ver-arrow{color:#1E2A3B}
 .ver-btn .ver-hint{display:none;margin-top:.4rem;font-weight:800}
 .ver-btn.ver-lit .ver-hint{display:block;animation:fadeUp .3s ease-out}
 .ver-btn.ver-lit .ver-arrow{transform:translateX(4px)}
@@ -342,7 +347,7 @@ body.no-ad{padding-bottom:0!important;}
             <div class="rounded-xl p-3 border-2 border-gold bg-gradient-to-b from-yellow-50 to-white">
               <div class="font-bold mb-1 brand-gold">本站廣東話版</div>
               <ul class="list-disc pl-4 text-gray-700 space-y-0.5">
-                <li><b>情境題</b>：茶餐廳、港鐵、7-11 等日常</li>
+                <li><b>情境題</b>：多種港式日常（茶餐廳、港鐵、便利店、返工、相處…）</li>
                 <li><b>廣東話</b>提問同解讀，唔使先譯英文</li>
                 <li>測完有 <b>港式 slogan</b>、場景配對、「點同人相處 / 拍拖」攻略</li>
                 <li>3 個長度（BB / 進階 / 生活）+ 可寫姓名稱呼、存最近 5 次</li>
@@ -807,7 +812,7 @@ body.no-ad{padding-bottom:0!important;}
         <img src="icon-192.png" class="w-9 h-9 rounded-lg flex-shrink-0" alt="港MBTI">
         <div class="font-black text-lg tracking-tight">港式 MBTI</div>
       </div>
-      <div class="text-xs text-gray-500">廣東話版 v1.7</div>
+      <div class="text-xs text-gray-500">版本 v1.7</div>
     </div>
 
     <div class="card p-6 mb-4">
@@ -816,7 +821,7 @@ body.no-ad{padding-bottom:0!important;}
         <div class="text-[10px] bg-gold text-ink font-black px-2 py-0.5 rounded-full">🇭🇰 廣東話改版</div>
       </div>
       <h1 class="text-3xl font-black leading-tight mb-3">你是哪種<br><span class="brand-gold">香港人</span>？</h1>
-      <p class="text-sm text-gray-600 leading-relaxed mb-4">60 題廣東話版 MBTI 16型人格測試<br>3 種情景 茶餐廳、港鐵、7-11<br>5 分鐘知道你喺邊種人</p>
+      <p class="text-sm text-gray-600 leading-relaxed mb-4">60 題廣東話版 MBTI 16型人格測試<br>多種情景 · 港式日常<br>5 分鐘知道你喺邊種人</p>
       <div class="flex gap-2 text-xs text-gray-500 mb-5">
         <span class="scenario-badge bg-soft">✦ 廣東話</span>
         <span class="scenario-badge bg-soft">✦ 免費</span>
@@ -861,11 +866,19 @@ body.no-ad{padding-bottom:0!important;}
             <div class="ver-arrow text-2xl transition">→</div>
           </div>
         </button>
+        <a href="./record.html" data-ver="record" class="ver-btn w-full p-4 rounded-xl text-left block no-underline" style="text-decoration:none;color:inherit;">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-base font-black text-ink">我的記錄</div>
+              <div class="text-xs text-gray-600 mt-0.5">睇返測試結果 · 冇紀錄都可以入</div>
+            </div>
+            <div class="ver-arrow text-2xl transition">→</div>
+          </div>
+        </a>
       </div>
       <div class="text-xs text-gray-500 mt-3 text-center">題目每次打亂 · 3 個版本結果互通</div>
     </div>
 
-    <!-- 用戶測試記錄（最近 5 次）· 放喺揀版本下面 -->
     <!-- Ad Slot: hero bottom (主頁 · 緊接 hero/版本 picker) -->
     <div class="ad-slot ad-hero-bottom mx-auto my-3 fade-up" data-ad-placement="hero-bottom">
       <ins class="adsbygoogle"
@@ -876,46 +889,10 @@ body.no-ad{padding-bottom:0!important;}
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <!-- ===== 用戶歷史 ===== -->
-    <div id="userHistory" class="hidden card p-4 mb-4" style="background:linear-gradient(135deg, #FFF5E0, #FFFAF0); border-left:4px solid #D4A95F;">
-      <div class="flex items-center justify-between mb-1">
-        <button id="historyToggle" type="button" onclick="toggleHistory()" class="flex items-center gap-1.5 text-xs text-gray-600 font-bold active:opacity-60">
-          <span id="historyChevron" class="inline-block transition-transform duration-200">▶</span>
-          <span>📌 最近測試紀錄</span>
-          <span id="historyCount" class="text-gray-400 font-normal"></span>
-        </button>
-        <button type="button" onclick="clearHistory()" class="text-xs text-gray-400 underline">全部清除</button>
-      </div>
-      <div id="historyList" class="hidden"></div>
-      <div class="text-right mt-2"><a href="./record.html" class="text-xs brand-gold underline">📂 查看完整紀錄 page →</a></div>
-    </div>
-
     <div class="card p-4 mb-4 bg-soft">
-      <div class="text-xs tracking-widest brand-gold font-bold mb-2">📋 60 題涵蓋 3 個港式場景</div>
-      <div class="text-sm font-bold mb-3">點解揀呢 3 個？全部香港人每日都會遇到嘅情境</div>
-      <div class="space-y-2">
-        <div class="flex items-start gap-2 bg-white rounded p-2">
-          <div class="text-xl flex-shrink-0">🍳</div>
-          <div class="flex-1 min-w-0">
-            <div class="text-xs font-bold">茶餐廳（6 種情境）</div>
-            <div class="text-[10px] text-gray-600">測你揀嘢食 + 同人搭枱 + 埋單嘅習慣</div>
-          </div>
-        </div>
-        <div class="flex items-start gap-2 bg-white rounded p-2">
-          <div class="text-xl flex-shrink-0">🚇</div>
-          <div class="flex-1 min-w-0">
-            <div class="text-xs font-bold">港鐵（6 種情境）</div>
-            <div class="text-[10px] text-gray-600">測你公眾場合 + 迫車 + 讓座 + 問路嘅反應</div>
-          </div>
-        </div>
-        <div class="flex items-start gap-2 bg-white rounded p-2">
-          <div class="text-xl flex-shrink-0">🏪</div>
-          <div class="flex-1 min-w-0">
-            <div class="text-xs font-bold">7-11（4 種情境）</div>
-            <div class="text-[10px] text-gray-600">測你日常消費 + 撞到熟人 + 排隊嘅選擇</div>
-          </div>
-        </div>
-      </div>
+      <div class="text-xs tracking-widest brand-gold font-bold mb-2">📋 多種港式日常情景</div>
+      <div class="text-sm font-bold mb-1">題目唔止茶餐廳、港鐵、便利店</div>
+      <div class="text-xs text-gray-600">返工、相處、排隊、屋企、朋友圈都有，用港式日常測你喺邊種人。</div>
     </div>
 
 
@@ -978,6 +955,17 @@ body.no-ad{padding-bottom:0!important;}
             <button type="button" class="home-acc-go" onclick="event.stopPropagation();openRomance()">進入拍拖攻略 →</button>
           </div>
         </div>
+        <div class="home-acc-item" data-acc="stats">
+          <button type="button" class="home-acc-head" onclick="toggleHomeAcc('stats')">
+            <span class="home-acc-ico">📊</span>
+            <span class="home-acc-title">香港 16 型統計</span>
+            <span class="home-acc-chev">▼</span>
+          </button>
+          <div class="home-acc-body">
+            <p class="home-acc-desc">16 型公開分佈估算 + 本機完成次數，唔佔主頁位。</p>
+            <a href="./stats.html" class="home-acc-go" style="display:inline-block;text-decoration:none;">查看統計 →</a>
+          </div>
+        </div>
         <div class="home-acc-item" data-acc="privacy">
           <button type="button" class="home-acc-head" onclick="toggleHomeAcc('privacy')">
             <span class="home-acc-ico">🔒</span>
@@ -989,19 +977,6 @@ body.no-ad{padding-bottom:0!important;}
             <button type="button" class="home-acc-go" onclick="event.stopPropagation();openPrivacy()">查看私隱聲明 →</button>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="card p-5">
-      <h3 class="font-bold mb-1 text-base">📊 香港 16 型人性結果統計</h3>
-      <p class="text-xs text-gray-600 mb-3">參考基線（公開分佈估算）+ 本機完成次數。每完成一次測試會更新。</p>
-      <div class="flex justify-between text-xs text-gray-600 mb-2">
-        <span>累積樣本 <b id="statTotal" class="brand-gold">—</b> 人</span>
-        <span>香港人口約 <b>750 萬</b></span>
-      </div>
-      <div id="typeStats" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
-      <div class="text-xs text-gray-500 mt-3 pt-2 border-t border-gray-100">
-        * 基線參考 16Personalities 常見分佈 × 143,021 香港樣本量級；本機每次完成 +1。唔係全港實時普查。
       </div>
     </div>
 
@@ -3358,7 +3333,8 @@ window.clearHistory = function(){
   if(confirm("確定要清除全部測試記錄？")){
     localStorage.removeItem("hkmbti_last_result");
     localStorage.removeItem("hkmbti_history");
-    $("userHistory").classList.add("hidden");
+    const wrap = $("userHistory");
+    if(wrap) wrap.classList.add("hidden");
     if($("historyList")) $("historyList").innerHTML = "";
   }
 };
