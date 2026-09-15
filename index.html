@@ -619,7 +619,7 @@ body.no-ad{padding-bottom:0!important;}
   <!-- ========== LETTER DETAIL ========== -->
   <section id="letter" class="hidden">
     <div class="flex items-center justify-between mb-6">
-      <button onclick="openHub()" class="text-sm text-gray-500">← 返回百科</button>
+      <button onclick="openHub()" class="text-sm text-gray-500">← 返回</button>
       <div class="text-xs text-gray-400" id="letterBreadcrumb">維度 / 字母</div>
       <div class="w-12"></div>
     </div>
@@ -679,7 +679,7 @@ body.no-ad{padding-bottom:0!important;}
   <!-- ========== SOCIAL ARTICLE ========== -->
   <section id="socialArticle" class="hidden">
     <div class="flex items-center justify-between mb-6">
-      <button onclick="openSocial()" class="text-sm text-gray-500">← 返回攻略</button>
+      <button onclick="openSocial()" class="text-sm text-gray-500">← 返回</button>
       <div class="text-xs text-gray-400" id="socialArticleBreadcrumb">攻略 / 場景 / 類型</div>
       <div class="w-12"></div>
     </div>
@@ -725,7 +725,7 @@ body.no-ad{padding-bottom:0!important;}
   <!-- ========== ROMANCE ARTICLE ========== -->
   <section id="romanceArticle" class="hidden">
     <div class="flex items-center justify-between mb-6">
-      <button onclick="openRomance()" class="text-sm text-gray-500">← 返回攻略</button>
+      <button onclick="openRomance()" class="text-sm text-gray-500">← 返回</button>
       <div class="text-xs text-gray-400" id="romanceArticleBreadcrumb">戀愛 / 場景 / 類型</div>
       <div class="w-12"></div>
     </div>
@@ -751,7 +751,7 @@ body.no-ad{padding-bottom:0!important;}
   <!-- ========== TYPE DETAIL ========== -->
   <section id="type" class="hidden">
     <div class="flex items-center justify-between mb-6">
-      <button onclick="openHub()" class="text-sm text-gray-500">← 返回百科</button>
+      <button onclick="openHub()" class="text-sm text-gray-500">← 返回</button>
       <div class="text-xs text-gray-400" id="typeBreadcrumb">性格 / INTJ</div>
       <div class="w-12"></div>
     </div>
@@ -1121,7 +1121,7 @@ body.no-ad{padding-bottom:0!important;}
       <button onclick="startTest()" class="bg-soft w-full py-2.5 rounded-lg text-sm font-bold">再測一次</button>
     </div>
 
-    <button onclick="goHome()" class="text-xs text-gray-400 w-full text-center block mt-2">返回主頁</button>
+    <button onclick="goHome()" class="text-sm text-gray-500 w-full text-center block mt-2">← 返回</button>
 
     <p class="text-[11px] text-gray-400 text-center px-3 mt-4 leading-relaxed">
       ⚠️ 本測試只係自我探索工具，唔係醫學診斷或專業心理評估。唔適合作僱傭、配對婚姻或貼標籤批評人嘅依據。
@@ -3433,7 +3433,7 @@ window.openSocialScenario = function(scenarioKey){
   const container = $("socialScenarios");
   if(!container) return;
   const html = `
-    <button onclick="openSocial()" class="text-sm text-gray-500 mb-4 block">← 返回場景</button>
+    <button onclick="openSocial()" class="text-sm text-gray-500 mb-4 block">← 返回</button>
     <div class="card p-5 mb-4">
       <div class="text-4xl mb-2">${s.emoji}</div>
       <h3 class="text-xl font-black mb-2">${s.name}</h3>
@@ -3508,7 +3508,7 @@ window.openRomanceScenario = function(scenarioKey){
   const container = $("romanceScenarios");
   if(!container) return;
   const html = `
-    <button onclick="openRomance()" class="text-sm text-gray-500 mb-4 block">← 返回場景</button>
+    <button onclick="openRomance()" class="text-sm text-gray-500 mb-4 block">← 返回</button>
     <div class="card p-5 mb-4">
       <div class="text-4xl mb-2">${s.emoji}</div>
       <h3 class="text-xl font-black mb-2">${s.name}</h3>
