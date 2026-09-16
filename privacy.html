@@ -26,18 +26,19 @@
   --soft:#F2EDE0;
 }
 *{font-family:'Noto Sans TC',sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
+body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px;margin:0}
 .brand-gold{color:var(--gold)}
 .bg-soft{background:var(--soft)}
 .text-ink{color:var(--ink)}
 .text-accent{color:var(--accent)}
 main{max-width:680px;margin:0 auto;padding:1rem 1rem 4rem}
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
-.back{font-size:.875rem;color:#6b7280;text-decoration:none}
-.back:hover{color:var(--ink)}
-.title-row{display:flex;align-items:center;gap:.5rem;font-weight:900;letter-spacing:-.01em}
-.icon{width:1.75rem;height:1.75rem;border-radius:.375rem;flex-shrink:0}
-.spacer{width:2.5rem}
+.header{display:none}
+.hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:white;padding:14px 16px 16px;margin:0 0 1rem}
+.hero-row{position:relative;display:flex;align-items:center;min-height:44px}
+.hero-row h1{position:absolute;left:0;right:0;margin:0;padding:0 4.5rem;font-size:18px;font-weight:900;text-align:center;pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:44px;color:#fff}
+.back-nav{position:relative;z-index:2;font-size:14px;line-height:1.25;color:rgba(255,255,255,.75);text-decoration:none;font-weight:400;background:none;border:0;padding:0}
+.back-nav:hover{color:#fff}
+.hero-sub{margin:6px 0 0;font-size:12px;opacity:.75;text-align:center}
 .card{background:#fff;border-radius:1.2rem;box-shadow:0 4px 24px rgba(0,0,0,.06);padding:1.25rem;margin-bottom:1rem}
 .eyebrow{font-size:.75rem;letter-spacing:.15em;font-weight:900;color:var(--gold);margin-bottom:.5rem}
 h1{font-size:1.25rem;font-weight:900;margin-bottom:.75rem;line-height:1.3}
@@ -57,15 +58,14 @@ a{color:var(--accent)}
 </style>
 </head>
 <body>
-<main>
-  <div class="header">
-    <a href="./" class="back">← 返回</a>
-    <div class="title-row">
-      <img src="icon-192.png" class="icon" alt="港">
-      <span>私隱聲明</span>
-    </div>
-    <div class="spacer"></div>
+<div class="hero">
+  <div class="hero-row">
+    <a href="./" class="back-nav">← 返回</a>
+    <h1>私隱聲明</h1>
   </div>
+  <p class="hero-sub">本 App 點處理你嘅資料</p>
+</div>
+<main>
 
   <div class="card">
     <div class="eyebrow">🔒 私隱聲明</div>

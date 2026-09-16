@@ -86,6 +86,12 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 .ver-btn.ver-lit .ver-arrow{transform:translateX(4px)}
 .stat-bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
 .stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
+.page-hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:#fff;padding:14px 16px 16px;margin:-24px -16px 16px}
+.page-hero-row{position:relative;display:flex;align-items:center;min-height:44px}
+.page-hero-row h1{position:absolute;left:0;right:0;margin:0;padding:0 4.5rem;font-size:18px;font-weight:900;text-align:center;pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:44px;color:#fff}
+.page-back{position:relative;z-index:2;font-size:14px;line-height:1.25;color:rgba(255,255,255,.75);text-decoration:none;font-weight:400;background:none;border:0;padding:0;cursor:pointer;font-family:inherit;-webkit-appearance:none;appearance:none}
+.page-back:hover{color:#fff}
+.page-hero-sub{margin:6px 0 0;font-size:12px;opacity:.75;text-align:center}
 #nickGrid button{transition:all .15s}
 #nickGrid button:active{transform:scale(.96)}
 #profileName:focus{box-shadow:0 0 0 3px rgba(212,169,95,.25)}
@@ -318,13 +324,12 @@ body.no-ad{padding-bottom:0!important;}
 
     <!-- ========== ABOUT MBTI ========== -->
   <section id="about" class="hidden fade-up">
-    <div class="flex items-center justify-between mb-6">
-      <button onclick="goHome()" class="text-sm text-gray-500">← 返回</button>
-      <div class="flex items-center gap-2">
-        <img src="icon-192.png" class="w-7 h-7 rounded-md flex-shrink-0" alt="港">
-        <div class="font-black tracking-tight">MBTI 簡介</div>
+    <div class="page-hero">
+      <div class="page-hero-row">
+        <button type="button" class="page-back" onclick="goHome()">← 返回</button>
+        <h1>關於港式 MBTI</h1>
       </div>
-      <div class="w-10"></div>
+      <p class="page-hero-sub">點解咁樣做、同普通版有咩分別</p>
     </div>
 
     <div class="card p-5 mb-4">
@@ -393,13 +398,12 @@ body.no-ad{padding-bottom:0!important;}
 
   <!-- ========== SPECTRUM ========== -->
   <section id="spectrum" class="hidden fade-up">
-    <div class="flex items-center justify-between mb-6">
-      <button onclick="goHome()" class="text-sm text-gray-500">← 返回</button>
-      <div class="flex items-center gap-2">
-        <img src="icon-192.png" class="w-7 h-7 rounded-md flex-shrink-0" alt="港">
-        <div class="font-black tracking-tight">性格光譜</div>
+    <div class="page-hero">
+      <div class="page-hero-row">
+        <button type="button" class="page-back" onclick="goHome()">← 返回</button>
+        <h1>MBTI 性格光譜</h1>
       </div>
-      <div class="w-10"></div>
+      <p class="page-hero-sub">E/I · S/N · T/F · J/P 四個維度</p>
     </div>
 
     <div class="card p-5 mb-4">
@@ -458,13 +462,12 @@ body.no-ad{padding-bottom:0!important;}
 
   <!-- ========== KNOWLEDGE HUB ========== -->
   <section id="hub" class="hidden">
-    <div class="flex items-center justify-between mb-6">
-      <button onclick="goHome()" class="text-sm text-gray-500">← 返回</button>
-      <div class="flex items-center gap-2">
-        <img src="icon-192.png" class="w-7 h-7 rounded-md flex-shrink-0" alt="港">
-        <div class="font-black tracking-tight">性格百科</div>
+    <div class="page-hero">
+      <div class="page-hero-row">
+        <button type="button" class="page-back" onclick="goHome()">← 返回</button>
+        <h1>性格百科</h1>
       </div>
-      <div class="w-12"></div>
+      <p class="page-hero-sub">4 個維度、16 種性格完整介紹</p>
     </div>
 
     <div class="card p-5 mb-4 bg-soft">
@@ -559,13 +562,12 @@ body.no-ad{padding-bottom:0!important;}
 
   <!-- ========== PRIVACY（私隱聲明 · Play Store 強制） ========== -->
   <section id="privacy" class="hidden fade-up">
-    <div class="flex items-center justify-between mb-6">
-      <button onclick="goHome()" class="text-sm text-gray-500">← 返回</button>
-      <div class="flex items-center gap-2">
-        <img src="icon-192.png" class="w-7 h-7 rounded-md flex-shrink-0" alt="港">
-        <div class="font-black tracking-tight">私隱聲明</div>
+    <div class="page-hero">
+      <div class="page-hero-row">
+        <button type="button" class="page-back" onclick="goHome()">← 返回</button>
+        <h1>私隱聲明</h1>
       </div>
-      <div class="w-10"></div>
+      <p class="page-hero-sub">本 App 點處理你嘅資料</p>
     </div>
 
     <div class="card p-5 mb-4">
@@ -627,10 +629,11 @@ body.no-ad{padding-bottom:0!important;}
 
   <!-- ========== LETTER DETAIL ========== -->
   <section id="letter" class="hidden">
-    <div class="flex items-center justify-between mb-6">
-      <button onclick="openHub()" class="text-sm text-gray-500">← 返回</button>
-      <div class="text-xs text-gray-400" id="letterBreadcrumb">維度 / 字母</div>
-      <div class="w-12"></div>
+    <div class="page-hero">
+      <div class="page-hero-row">
+        <button type="button" class="page-back" onclick="openHub()">← 返回</button>
+        <h1 id="letterBreadcrumb">維度 / 字母</h1>
+      </div>
     </div>
 
     <div id="letterHero" class="card p-6 mb-4 text-center">
@@ -667,13 +670,12 @@ body.no-ad{padding-bottom:0!important;}
 
   <!-- ========== SOCIAL HUB ========== -->
   <section id="social" class="hidden">
-    <div class="flex items-center justify-between mb-6">
-      <button onclick="goHome()" class="text-sm text-gray-500">← 返回</button>
-      <div class="flex items-center gap-2">
-        <img src="icon-192.png" class="w-7 h-7 rounded-md flex-shrink-0" alt="港">
-        <div class="font-black tracking-tight">社交攻略</div>
+    <div class="page-hero">
+      <div class="page-hero-row">
+        <button type="button" class="page-back" onclick="goHome()">← 返回</button>
+        <h1>個人相處</h1>
       </div>
-      <div class="w-12"></div>
+      <p class="page-hero-sub">點同每種人傾偈、共事、做朋友</p>
     </div>
 
     <div class="card p-5 mb-4 bg-soft">
@@ -687,10 +689,11 @@ body.no-ad{padding-bottom:0!important;}
 
   <!-- ========== SOCIAL ARTICLE ========== -->
   <section id="socialArticle" class="hidden">
-    <div class="flex items-center justify-between mb-6">
-      <button onclick="openSocial()" class="text-sm text-gray-500">← 返回</button>
-      <div class="text-xs text-gray-400" id="socialArticleBreadcrumb">攻略 / 場景 / 類型</div>
-      <div class="w-12"></div>
+    <div class="page-hero">
+      <div class="page-hero-row">
+        <button type="button" class="page-back" onclick="openSocial()">← 返回</button>
+        <h1 id="socialArticleBreadcrumb">攻略 / 場景 / 類型</h1>
+      </div>
     </div>
 
     <div id="socialArticleHero" class="card p-6 mb-4 text-center" style="background:linear-gradient(135deg, #5B4B8A, #2D2A4A); color:white">
@@ -713,13 +716,12 @@ body.no-ad{padding-bottom:0!important;}
 
   <!-- ========== ROMANCE HUB ========== -->
   <section id="romance" class="hidden">
-    <div class="flex items-center justify-between mb-6">
-      <button onclick="goHome()" class="text-sm text-gray-500">← 返回</button>
-      <div class="flex items-center gap-2">
-        <img src="icon-192.png" class="w-7 h-7 rounded-md flex-shrink-0" alt="港">
-        <div class="font-black tracking-tight">戀愛攻略</div>
+    <div class="page-hero">
+      <div class="page-hero-row">
+        <button type="button" class="page-back" onclick="goHome()">← 返回</button>
+        <h1>個人拍拖</h1>
       </div>
-      <div class="w-12"></div>
+      <p class="page-hero-sub">點同每種人拍拖、吵架、復合</p>
     </div>
 
     <div class="card p-5 mb-4 bg-soft">
@@ -733,10 +735,11 @@ body.no-ad{padding-bottom:0!important;}
 
   <!-- ========== ROMANCE ARTICLE ========== -->
   <section id="romanceArticle" class="hidden">
-    <div class="flex items-center justify-between mb-6">
-      <button onclick="openRomance()" class="text-sm text-gray-500">← 返回</button>
-      <div class="text-xs text-gray-400" id="romanceArticleBreadcrumb">戀愛 / 場景 / 類型</div>
-      <div class="w-12"></div>
+    <div class="page-hero">
+      <div class="page-hero-row">
+        <button type="button" class="page-back" onclick="openRomance()">← 返回</button>
+        <h1 id="romanceArticleBreadcrumb">戀愛 / 場景 / 類型</h1>
+      </div>
     </div>
 
     <div id="romanceArticleHero" class="card p-6 mb-4 text-center" style="background:linear-gradient(135deg, #C8786B, #6B3A35); color:white">
@@ -759,10 +762,11 @@ body.no-ad{padding-bottom:0!important;}
 
   <!-- ========== TYPE DETAIL ========== -->
   <section id="type" class="hidden">
-    <div class="flex items-center justify-between mb-6">
-      <button onclick="openHub()" class="text-sm text-gray-500">← 返回</button>
-      <div class="text-xs text-gray-400" id="typeBreadcrumb">性格 / INTJ</div>
-      <div class="w-12"></div>
+    <div class="page-hero">
+      <div class="page-hero-row">
+        <button type="button" class="page-back" onclick="openHub()">← 返回</button>
+        <h1 id="typeBreadcrumb">性格 / INTJ</h1>
+      </div>
     </div>
 
     <div id="typeHero" class="card p-6 mb-4 text-center">
@@ -1000,7 +1004,7 @@ body.no-ad{padding-bottom:0!important;}
         <div class="home-acc-item" data-acc="stats">
           <button type="button" class="home-acc-head" onclick="toggleHomeAcc('stats')">
             <span class="home-acc-ico">📊</span>
-            <span class="home-acc-title">香港 16 型統計</span>
+            <span class="home-acc-title">香港16型人格統計</span>
             <span class="home-acc-chev">▼</span>
           </button>
           <div class="home-acc-body">
