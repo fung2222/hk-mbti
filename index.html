@@ -97,12 +97,12 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 #profileName:focus{box-shadow:0 0 0 3px rgba(212,169,95,.25)}
 /* 主頁探索風琴 */
 .home-acc{background:#fff;border-radius:1.2rem;box-shadow:0 4px 24px rgba(0,0,0,.06);overflow:hidden}
-.home-acc-label{padding:1.15rem 1.15rem .25rem}
+.home-acc-label{padding:1.25rem 1.25rem 0.5rem}
 .home-acc-item{border-bottom:1px solid #f0ebe3}
 .home-acc-item:last-child{border-bottom:none}
 .home-acc-head{
   width:100%;display:flex;align-items:center;gap:.75rem;
-  padding:1rem 1.15rem;text-align:left;background:transparent;border:0;cursor:pointer;
+  padding:1rem 1.25rem;text-align:left;background:transparent;border:0;cursor:pointer;
   transition:background .15s
 }
 .home-acc-head:hover{background:#fffaf0}
@@ -119,9 +119,9 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 .home-acc-body{
   max-height:0;overflow:hidden;opacity:0;
   transition:max-height .28s ease,opacity .2s ease,padding .2s ease;
-  padding:0 1.15rem
+  padding:0 1.25rem
 }
-.home-acc-item.open .home-acc-body{max-height:160px;opacity:1;padding:0 1.15rem .95rem}
+.home-acc-item.open .home-acc-body{max-height:160px;opacity:1;padding:0 1.25rem .95rem}
 .home-acc-desc{font-size:.9rem;color:#6b6560;line-height:1.45;margin-bottom:.65rem}
 .home-acc-go{
   display:inline-flex;align-items:center;gap:.35rem;
@@ -810,7 +810,7 @@ body.no-ad{padding-bottom:0!important;}
     </div>
 
     <div class="card p-5 mb-4">
-      <div class="flex items-center justify-between mb-3">
+      <div class="flex items-center justify-between mb-2">
         <div class="text-xs tracking-widest brand-gold font-bold">🎭 港式性格測試</div>
         <div class="text-[10px] bg-gold text-ink font-black px-2 py-0.5 rounded-full">🇭🇰 廣東話改版</div>
       </div>
