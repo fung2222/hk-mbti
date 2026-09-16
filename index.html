@@ -869,7 +869,7 @@ body.no-ad{padding-bottom:0!important;}
       <a href="./record.html" data-ver="record" class="ver-btn w-full p-4 rounded-xl text-left block no-underline" style="text-decoration:none;color:inherit;">
         <div class="flex items-center justify-between">
           <div>
-            <div class="text-base font-black text-ink">📋 我的記錄</div>
+            <div class="text-base font-black text-ink">📋 我的記錄 <span id="homeRecordCount" class="text-gray-500 font-bold">（0/5）</span></div>
           </div>
           <div class="ver-arrow text-2xl transition">→</div>
         </div>
@@ -3218,6 +3218,8 @@ window.openHistoryRow = function(idx){
 window.loadHistory = function(){
   try{
     const list = getHistoryList();
+    const homeCount = $("homeRecordCount");
+    if(homeCount) homeCount.innerText = "（" + Math.min(list.length, 5) + "/5）";
     const box = $("historyList");
     const wrap = $("userHistory");
     if(!wrap || !box) return;
