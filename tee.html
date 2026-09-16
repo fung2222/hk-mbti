@@ -31,9 +31,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Microsoft Jheng
 .tee-card .vibe{font-size:13px;color:#6b6b6b;margin-top:2px;}
 .tee-card .price{font-size:14px;color:var(--gold);font-weight:800;margin-top:8px;}
 .tee-card .pill{display:inline-block;background:rgba(212,169,95,0.12);color:var(--ink);font-size:11px;padding:3px 8px;border-radius:6px;margin-top:4px;margin-right:3px;}
-.hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:white;padding:48px 20px 36px;text-align:center;}
-.hero h1{font-size:32px;font-weight:900;margin:0 0 8px;}
-.hero p{opacity:0.8;font-size:15px;margin:0;}
+.hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:white;padding:14px 16px 16px;text-align:left;}
+.hero-row{position:relative;display:flex;align-items:center;min-height:44px;}
+.hero-row h1{position:absolute;left:0;right:0;margin:0;padding:0 4.5rem;font-size:18px;font-weight:900;text-align:center;pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:44px;color:#fff;}
+.back-nav{position:relative;z-index:2;font-size:14px;line-height:1.25;color:rgba(255,255,255,.75);text-decoration:none;font-weight:400;background:none;border:0;padding:0;}
+.back-nav:hover{color:#fff;}
+.hero-sub{margin:6px 0 0;font-size:12px;opacity:.75;text-align:center;}
 .section-title{font-size:22px;font-weight:900;margin:32px 16px 16px;display:flex;align-items:center;gap:8px;}
 .section-title:before{content:"";display:inline-block;width:4px;height:22px;background:var(--gold);border-radius:2px;}
 .notice{background:rgba(255,193,7,0.12);border:1px dashed var(--gold);border-radius:10px;padding:12px 14px;margin:20px 16px;font-size:13px;line-height:1.6;}
@@ -47,7 +50,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Microsoft Jheng
 .filter-chip:hover:not(.active){background:#e5e5e5;}
 @media (min-width:769px){
   .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:0 24px;}
-  .hero h1{font-size:44px;}
+  .hero-row h1{font-size:18px;}
 }
 @media (max-width:768px){
   .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 12px;}
@@ -71,9 +74,11 @@ body.no-ad{padding-bottom:0!important;}
 <body>
 
 <div class="hero">
-  <a href="./" class="nav-home">← 返回</a>
-  <h1>🧵 港式 MBTI T卹</h1>
-  <p>揀你嘅性格 · 著上街</p>
+  <div class="hero-row">
+    <a href="./" class="back-nav">← 返回</a>
+    <h1>港式 MBTI T卹</h1>
+  </div>
+  <p class="hero-sub">揀你嘅性格 · 著上街</p>
 </div>
 
 <div class="filter-bar">
