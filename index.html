@@ -1117,7 +1117,6 @@ body.no-ad{padding-bottom:0!important;}
       <button onclick="confirmProfileAndStart()" class="btn-gold w-full py-3.5 rounded-xl text-base font-black">開始測試 →</button>
       <button onclick="confirmProfileAndStart(true)" class="w-full mt-2 py-2.5 rounded-xl text-sm text-gray-500 underline">匿名港人 · 直接開始</button>
     </div>
-    <div class="text-xs text-center text-gray-400">版本：<span id="profileVersionLabel">生活版</span></div>
   </section>
 
   <!-- ========== TEST ========== -->
@@ -2446,7 +2445,6 @@ window.NICKNAMES = [
 window.openProfile = function(version){
   state.pendingVersion = version;
   const verName = version === "bb" ? "BB版" : version === "advanced" ? "進階版" : "生活版";
-  if($("profileVersionLabel")) $("profileVersionLabel").innerText = verName;
   if($("profileTitle")) $("profileTitle").innerText = verName;
   // restore last used name/nick
   try{
