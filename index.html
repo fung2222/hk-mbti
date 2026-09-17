@@ -1101,7 +1101,7 @@ body.no-ad{padding-bottom:0!important;}
     <div class="page-hero">
       <div class="page-hero-row">
         <button type="button" class="page-back" onclick="goHome()">← 返回</button>
-        <h1>測前資料</h1>
+        <h1 id="profileTitle">測前資料</h1>
       </div>
       <p class="page-hero-sub">姓名 + 稱呼會印喺分享卡</p>
     </div>
@@ -2447,6 +2447,7 @@ window.openProfile = function(version){
   state.pendingVersion = version;
   const verName = version === "bb" ? "BB版" : version === "advanced" ? "進階版" : "生活版";
   if($("profileVersionLabel")) $("profileVersionLabel").innerText = verName;
+  if($("profileTitle")) $("profileTitle").innerText = verName;
   // restore last used name/nick
   try{
     const last = JSON.parse(localStorage.getItem("hkmbti_profile")||"null");
