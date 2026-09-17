@@ -30,8 +30,8 @@
   --accent:#E85D5D;
   --soft:#F2EDE0;
 }
-*{font-family:"PingFang HK","PingFang TC","Noto Sans HK",sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
+*{font-family:"PingFang HK","PingFang TC","Noto Sans HK",sans-serif;-webkit-tap-highlight-color:transparent;overscroll-behavior:contain}
+body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px;overscroll-behavior-y:contain;touch-action:pan-y}
 /* 全局字體加大：text-xs / 10px 太細 → 抬一檔 */
 #app .text-\[10px\]{font-size:0.8rem!important;line-height:1.4}
 #app .text-xs{font-size:0.95rem!important;line-height:1.45}
@@ -346,6 +346,25 @@ body.no-ad{padding-bottom:0!important;}
    if("serviceWorker" in navigator){
      navigator.serviceWorker.register("sw.js").catch(() => {});
    }
+   // 1) 還原上次離開時嘅 section（reload 留喺原位）
+   try{
+     const last = sessionStorage.getItem("hkmbti_last_section");
+     if(last && last !== "home"){
+       const fn = ({
+         about:"openAbout", spectrum:"openSpectrum", hub:"openHub",
+         social:"openSocial", romance:"openRomance", privacy:"openPrivacy",
+         letter:"openLetter", type:"openType"
+       })[last];
+       if(fn && typeof window[fn] === "function"){
+         if(last === "letter" || last === "type"){
+           // 需要參數；呢類唔還原，避免錯誤狀態
+         } else {
+           window[fn]();
+         }
+       }
+     }
+     setTimeout(() => { try{ sessionStorage.removeItem("hkmbti_last_section"); }catch(e){} }, 300);
+   }catch(e){}
    if(typeof window.loadHistory === "function"){
      window.loadHistory();
    }
@@ -1879,6 +1898,7 @@ window.show = function(id){
     try{ renderTypeStats(); }catch(e){}
     try{ clearVersionUI(); }catch(e){}
   }
+  try{ sessionStorage.setItem("hkmbti_last_section", id); }catch(e){}
 };
 
 // ===== 版本雙擊確認（著燈 → 再撳進入）=====
