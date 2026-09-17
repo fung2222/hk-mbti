@@ -159,11 +159,19 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 .home-hero-copy{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;}
 .home-hero-poster{position:relative;display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:auto auto auto;row-gap:14px;column-gap:18px;align-items:center;justify-items:center;padding:8px 4px;}
 .home-hero-poster .word{font-weight:900;line-height:1;color:var(--ink);}
-.home-hero-poster .w-you{grid-column:2/3;grid-row:1/2;font-size:3rem;letter-spacing:-.03em;}
-.home-hero-poster .w-are{grid-column:1/2;grid-row:2/3;font-size:.95rem;color:#9b9389;font-weight:600;justify-self:end;}
-.home-hero-poster .w-which{grid-column:3/4;grid-row:2/3;font-size:1.4rem;color:var(--ink);justify-self:start;}
-.home-hero-poster .w-hk{grid-column:1/4;grid-row:3/4;font-size:3.7rem;color:var(--gold);justify-self:center;letter-spacing:-.01em;}
-.home-hero-poster .w-person{grid-column:2/3;grid-row:4/5;font-size:3rem;color:var(--ink);justify-self:center;letter-spacing:-.02em;}
+.home-hero-poster .w-you{grid-column:2/3;grid-row:1/2;font-size:3rem;letter-spacing:-.03em;animation:slideFromLeft 1s cubic-bezier(.22,1,.36,1) both;}
+.home-hero-poster .w-which{grid-column:3/4;grid-row:2/3;font-size:1.4rem;color:var(--ink);justify-self:start;animation:slideFromRight 1s cubic-bezier(.22,1,.36,1) .15s both;}
+.home-hero-poster .w-hk{grid-column:1/4;grid-row:3/4;font-size:3.7rem;color:var(--gold);justify-self:center;letter-spacing:-.01em;animation:dropIn 1s cubic-bezier(.34,1.56,.64,1) .35s both;transform-origin:center;}
+.home-hero-poster .w-person{grid-column:2/3;grid-row:4/5;font-size:3rem;color:var(--ink);justify-self:center;letter-spacing:-.02em;animation:popIn .6s cubic-bezier(.34,1.56,.64,1) .85s both;}
+.home-hero-poster .codes{animation:fadeUp .8s ease 1.15s both;}
+@keyframes slideFromLeft{0%{transform:translateX(-120%);opacity:0}100%{transform:translateX(0);opacity:1}}
+@keyframes slideFromRight{0%{transform:translateX(120%);opacity:0}100%{transform:translateX(0);opacity:1}}
+@keyframes dropIn{0%{transform:translateY(-80px) scale(.6);opacity:0}70%{transform:translateY(6px) scale(1.05);opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
+@keyframes popIn{0%{transform:scale(0);opacity:0}60%{transform:scale(1.18);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes fadeUp{0%{transform:translateY(14px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@media (prefers-reduced-motion:reduce){
+  .home-hero-poster .w-you,.home-hero-poster .w-which,.home-hero-poster .w-hk,.home-hero-poster .w-person,.home-hero-poster .codes{animation:none}
+}
 .home-hero-poster .codes{grid-column:1/4;grid-row:5/6;margin-top:22px;display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;color:rgba(30,42,59,.3);font-weight:900;font-size:.95rem;letter-spacing:.02em;}
 .home-hero-poster .codes .sep{color:rgba(30,42,59,.25);font-weight:400;}
 .home-hero-poster .codes .ask{color:var(--gold);font-weight:900;}
