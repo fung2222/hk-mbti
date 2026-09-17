@@ -211,6 +211,18 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
 }
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .fade-up{animation:fadeUp 0.4s ease-out}
+.q-enter{opacity:0;transform:translateY(14px);animation:qEnter .7s cubic-bezier(.22,1,.36,1) forwards}
+.q-enter.q-dim{animation-delay:.05s}
+.q-enter.q-text{animation-delay:.15s}
+#qOptions .option{opacity:0;transform:translateY(10px);animation:qEnter .55s cubic-bezier(.22,1,.36,1) forwards}
+#qOptions .option:nth-child(1){animation-delay:.3s}
+#qOptions .option:nth-child(2){animation-delay:.42s}
+#qOptions .option:nth-child(3){animation-delay:.54s}
+#qOptions .option:nth-child(4){animation-delay:.66s}
+@keyframes qEnter{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){
+  .q-enter,#qOptions .option{animation:none;opacity:1;transform:none}
+}
 @keyframes pop{0%{transform:scale(0.5);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 .pop{animation:pop 0.6s cubic-bezier(0.34,1.56,0.64,1)}
 .mbti-letter-big{
@@ -1097,8 +1109,8 @@ body.no-ad{padding-bottom:0!important;}
     </div>
 
     <div class="card p-5 mb-4 fade-up" id="qCard">
-      <div class="text-[10px] tracking-widest brand-gold font-bold mb-2" id="qDimension">載入中...</div>
-      <h2 id="qText" class="text-lg font-bold leading-snug mb-5" onclick="replayQuestionVoice()" style="cursor:pointer;">載入中...</h2>
+      <div class="text-[10px] tracking-widest brand-gold font-bold mb-2 q-enter q-dim" id="qDimension">載入中...</div>
+      <h2 id="qText" class="text-lg font-bold leading-snug mb-5 q-enter q-text" onclick="replayQuestionVoice()" style="cursor:pointer;">載入中...</h2>
       <div id="qOptions" class="space-y-2.5"></div>
     </div>
 
@@ -2477,12 +2489,11 @@ window.startTestWithVersion = function(version){
   function loadOn(){
     try{
       const v = localStorage.getItem(KEY);
-      if(v === "0") return false;
       if(v === "1") return true;
     }catch(e){}
-    return true;
+    return false;
   }
-  window.VOICE_ON = loadOn();
+  window.VOICE_ON = false;
   function pickYueVoice(){
     if(!window.speechSynthesis) return null;
     const vs = speechSynthesis.getVoices() || [];
@@ -2559,9 +2570,15 @@ window.renderQ = function(){
   $("progressFill").style.width = ((state.idx + 1) / max * 100) + "%";
   $("qDimension").innerText = q.d;
   $("qText").innerText = q.t;
-  $("qCard").classList.remove("fade-up");
-  void $("qCard").offsetWidth;
-  $("qCard").classList.add("fade-up");
+  const card = $("qCard");
+  card.classList.remove("fade-up");
+  void card.offsetWidth;
+  card.classList.add("fade-up");
+  const dEl = card.querySelector("#qDimension");
+  const tEl = card.querySelector("#qText");
+  dEl.classList.remove("q-enter"); tEl.classList.remove("q-enter");
+  void dEl.offsetWidth;
+  dEl.classList.add("q-enter"); tEl.classList.add("q-enter");
 
   const opts = $("qOptions");
   opts.innerHTML = "";
