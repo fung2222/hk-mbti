@@ -39,11 +39,11 @@ body.js-boot #app.js-ready{opacity:1;transition:opacity .12s}
 body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavior:contain}
 /* 港式日常情景 · 滿板設計（無卡片） */
 .scenes-bleed{margin:0 -16px 16px;padding:28px 20px 24px;background:linear-gradient(180deg,#fff,var(--paper));}
-.scenes-head{max-width:26rem;margin:0 auto;}
-.scenes-grid{max-width:26rem;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:22px 18px;}
-.scene-cell{display:flex;flex-direction:column;gap:6px;}
-.scene-emoji{font-size:2rem;line-height:1;}
-.scene-name{font-size:1rem;font-weight:800;color:var(--ink);}
+.scenes-head{max-width:26rem;margin:0 auto;text-align:center;}
+.scenes-grid{max-width:26rem;margin:0 auto;display:flex;flex-direction:column;gap:18px;}
+.scene-cell{display:flex;align-items:center;justify-content:center;gap:12px;text-align:left;}
+.scene-emoji{font-size:1.9rem;line-height:1;flex-shrink:0;}
+.scene-name{font-size:1rem;font-weight:800;color:var(--ink);white-space:nowrap;}
 .scene-sub{font-size:.8rem;color:#6b6560;line-height:1.45;}
 /* 全局字體加大：text-xs / 10px 太細 → 抬一檔 */
 #app .text-\[10px\]{font-size:0.8rem!important;line-height:1.4}
