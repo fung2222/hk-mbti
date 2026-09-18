@@ -30,8 +30,10 @@
   --accent:#E85D5D;
   --soft:#F2EDE0;
 }
-*{font-family:"PingFang HK","PingFang TC","Noto Sans HK",sans-serif;-webkit-tap-highlight-color:transparent;overscroll-behavior:contain}
-body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px;overscroll-behavior-y:contain;touch-action:pan-y}
+*{font-family:"PingFang HK","PingFang TC","Noto Sans HK",sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
+/* 淨係測試頁擋下拉刷新（做緊 60 題唔想誤觸 reload 彈走） */
+body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavior:contain}
 /* 全局字體加大：text-xs / 10px 太細 → 抬一檔 */
 #app .text-\[10px\]{font-size:0.8rem!important;line-height:1.4}
 #app .text-xs{font-size:0.95rem!important;line-height:1.45}
@@ -1897,6 +1899,8 @@ window.show = function(id){
     try{ renderTypeStats(); }catch(e){}
     try{ clearVersionUI(); }catch(e){}
   }
+  // 淨係測試頁鎖下拉（防誤觸 reload 清走進度）
+  document.body.classList.toggle("in-test", id === "test");
   try{ sessionStorage.setItem("hkmbti_last_section", id); }catch(e){}
 };
 
