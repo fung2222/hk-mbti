@@ -32,6 +32,9 @@
 }
 *{font-family:"PingFang HK","PingFang TC","Noto Sans HK",sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
+/* reload 還原時隱藏 #app，避免主頁閃一閃 */
+body.js-boot #app{opacity:0}
+body.js-boot #app.js-ready{opacity:1;transition:opacity .12s}
 /* 淨係測試頁擋下拉刷新（做緊 60 題唔想誤觸 reload 彈走） */
 body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavior:contain}
 /* 全局字體加大：text-xs / 10px 太細 → 抬一檔 */
@@ -291,7 +294,7 @@ body.no-ad{padding-bottom:0!important;}
 }
 </style>
 </head>
-<body>
+<body class="js-boot">
 
 <!-- App container -->
 <div id="app" class="max-w-md mx-auto px-4 py-6 pb-24">
@@ -345,6 +348,12 @@ body.no-ad{padding-bottom:0!important;}
  });
  // Service worker + 首次主頁 load history
  window.addEventListener("load", () => {
+   // 安全網：萬一還原邏輯卡住，500ms 後強制顯示
+   setTimeout(() => {
+     document.body.classList.remove("js-boot");
+     const app = document.getElementById("app");
+     if(app) app.classList.add("js-ready");
+   }, 500);
    if("serviceWorker" in navigator){
      navigator.serviceWorker.register("sw.js").catch(() => {});
    }
@@ -382,8 +391,15 @@ body.no-ad{padding-bottom:0!important;}
          }
        }
      }
-     setTimeout(() => { try{ sessionStorage.removeItem("hkmbti_last_section"); }catch(e){} }, 300);
-   }catch(e){}
+     // 還原完成 → 顯示（移除 js-boot，避免主頁閃一閃）
+     document.body.classList.remove("js-boot");
+     const app = document.getElementById("app");
+     if(app) app.classList.add("js-ready");
+     }catch(e){
+     document.body.classList.remove("js-boot");
+     const app = document.getElementById("app");
+     if(app) app.classList.add("js-ready");
+     }
    if(typeof window.loadHistory === "function"){
      window.loadHistory();
    }
