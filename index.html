@@ -3562,10 +3562,10 @@ window.refreshResumeBanner = function(){
   el.innerHTML = `
     <div class="card p-4 mb-4 flex items-center justify-between gap-3" style="border:1px solid var(--gold);background:linear-gradient(135deg,rgba(212,169,95,.08),rgba(212,169,95,.02));">
       <div class="flex-1 min-w-0">
-        <div class="text-xs brand-gold font-bold tracking-widest mb-1">↻ 上次未完</div>
-        <div class="text-sm font-bold text-ink">${verName} · 第 ${next} / ${total} 題</div>
+        <div class="text-xs brand-gold font-bold tracking-widest mb-1">↻ 上次未完成</div>
+        <div class="text-ink"><span class="text-xs text-gray-500 font-bold">${verName}</span> <span class="text-sm font-bold">第 ${next} / ${total} 題</span></div>
       </div>
-      <button type="button" id="resumeGo" class="btn-gold px-4 py-2.5 rounded-xl text-sm font-bold flex-shrink-0">續做 →</button>
+      <button type="button" id="resumeGo" class="btn-gold px-4 py-2.5 rounded-xl text-sm font-bold flex-shrink-0">開始</button>
       <button type="button" id="resumeDrop" aria-label="放棄進度" style="-webkit-appearance:none;appearance:none;background:none;border:0;color:#9ca3af;font-size:18px;cursor:pointer;padding:0 4px;line-height:1;">✕</button>
     </div>`;
   const go = $("resumeGo");
