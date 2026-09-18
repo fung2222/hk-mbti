@@ -90,11 +90,15 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   transform:translateY(-2px) scale(1.02);
   background:linear-gradient(135deg,#F8EBFA,#EFD9F2);
 }
-/* 我的記錄 · 墨金（一撳即入，唔使雙撳） */
+/* 我的記錄 · 墨金（雙撳：一撳著燈，再撳入 record.html） */
 .ver-btn[data-ver="record"]{
   border-color:#1E2A3B;background:linear-gradient(135deg,#F4F1EA,#E8E2D6);
 }
 .ver-btn[data-ver="record"] .ver-arrow{color:#1E2A3B}
+.ver-btn[data-ver="record"].ver-lit{
+  box-shadow:0 8px 24px rgba(30,42,59,.28),0 0 0 3px rgba(30,42,59,.16);
+  transform:translateY(-2px) scale(1.01);
+}
 .ver-btn .ver-hint{display:none;margin-top:.4rem;font-weight:800}
 .ver-btn.ver-lit .ver-hint{display:block;animation:fadeUp .3s ease-out}
 .ver-btn.ver-lit .ver-arrow{transform:translateX(4px)}
@@ -994,21 +998,17 @@ body.no-ad{padding-bottom:0!important;}
             <div class="ver-arrow text-2xl transition">→</div>
           </div>
         </button>
+        <button type="button" data-ver="record" onclick="selectRecord()" class="ver-btn w-full p-4 rounded-xl text-left">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-base font-black text-ink">📋 我的記錄 <span id="homeRecordCount" class="text-gray-500 font-bold">（0/5）</span></div>
+              <div class="ver-hint text-xs">睇下最近5次記錄、分享、下載</div>
+            </div>
+            <div class="ver-arrow text-2xl transition">→</div>
+          </div>
+        </button>
       </div>
 
-    </div>
-
-    <div class="card p-5 mb-4">
-      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🧾 測試結果</div>
-      <div class="text-xs text-gray-600 mb-3">睇下最近5次記錄、分享、下載</div>
-      <a href="./record.html" data-ver="record" class="ver-btn w-full p-4 rounded-xl text-left block no-underline" style="text-decoration:none;color:inherit;">
-        <div class="flex items-center justify-between">
-          <div>
-            <div class="text-base font-black text-ink">📋 我的記錄 <span id="homeRecordCount" class="text-gray-500 font-bold">（0/5）</span></div>
-          </div>
-          <div class="ver-arrow text-2xl transition">→</div>
-        </div>
-      </a>
     </div>
 
     <!-- Ad Slot: hero bottom (主頁 · 緊接 hero/版本 picker) -->
@@ -1953,6 +1953,19 @@ window.selectVersion = function(version){
   state.selectedVersion = version;
   document.querySelectorAll(".ver-btn").forEach(b => {
     b.classList.toggle("ver-lit", b.getAttribute("data-ver") === version);
+  });
+};
+
+// 我的記錄 · 雙撳（一撳著燈，再撳入 record.html）
+window.selectRecord = function(){
+  if(state.selectedVersion === "record"){
+    clearVersionUI();
+    location.href = "./record.html";
+    return;
+  }
+  state.selectedVersion = "record";
+  document.querySelectorAll(".ver-btn").forEach(b => {
+    b.classList.toggle("ver-lit", b.getAttribute("data-ver") === "record");
   });
 };
 
