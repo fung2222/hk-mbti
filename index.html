@@ -376,6 +376,13 @@ body.no-ad{padding-bottom:0!important;}
              }
            }
          }catch(e){}
+       } else if(last === "result"){
+         // 結果頁 reload：由最近一次紀錄還原
+         try{
+           if(typeof window.viewHistoryResult === "function"){
+             window.viewHistoryResult(0);
+           }
+         }catch(e){}
        } else {
          const fn = ({
            about:"openAbout", spectrum:"openSpectrum", hub:"openHub",
