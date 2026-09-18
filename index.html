@@ -37,6 +37,14 @@ body.js-boot #app{opacity:0}
 body.js-boot #app.js-ready{opacity:1;transition:opacity .12s}
 /* 淨係測試頁擋下拉刷新（做緊 60 題唔想誤觸 reload 彈走） */
 body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavior:contain}
+/* 港式日常情景 · 滿板設計（無卡片） */
+.scenes-bleed{margin:0 -16px 16px;padding:28px 20px 24px;background:linear-gradient(180deg,#fff,var(--paper));}
+.scenes-head{max-width:26rem;margin:0 auto;}
+.scenes-grid{max-width:26rem;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:22px 18px;}
+.scene-cell{display:flex;flex-direction:column;gap:6px;}
+.scene-emoji{font-size:2rem;line-height:1;}
+.scene-name{font-size:1rem;font-weight:800;color:var(--ink);}
+.scene-sub{font-size:.8rem;color:#6b6560;line-height:1.45;}
 /* 全局字體加大：text-xs / 10px 太細 → 抬一檔 */
 #app .text-\[10px\]{font-size:0.8rem!important;line-height:1.4}
 #app .text-xs{font-size:0.95rem!important;line-height:1.45}
@@ -1012,37 +1020,31 @@ body.no-ad{padding-bottom:0!important;}
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <div class="card p-5 mb-4">
-      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🏙️ 多種港式日常情景</div>
-      <div class="text-sm font-bold mb-3">題目散落喺香港人嘅每一日</div>
-      <div class="space-y-2">
-        <div class="flex items-start gap-2 bg-white rounded p-2">
-          <div class="text-xl flex-shrink-0">🍳</div>
-          <div class="flex-1 min-w-0">
-            <div class="text-xs font-bold">食同買</div>
-            <div class="text-[10px] text-gray-600">茶餐廳 · 便利店 · 街市 · 公司 lunch · 排隊買嘢</div>
-          </div>
+    <div class="scenes-bleed">
+      <div class="scenes-head">
+        <div class="text-xs tracking-widest brand-gold font-bold mb-2">🏙️ 多種港式日常情景</div>
+        <div class="text-sm font-bold mb-4">題目散落喺香港人嘅每一日</div>
+      </div>
+      <div class="scenes-grid">
+        <div class="scene-cell">
+          <div class="scene-emoji">🍳</div>
+          <div class="scene-name">食同買</div>
+          <div class="scene-sub">茶餐廳 · 便利店 · 街市 · 公司 lunch · 排隊買嘢</div>
         </div>
-        <div class="flex items-start gap-2 bg-white rounded p-2">
-          <div class="text-xl flex-shrink-0">🚇</div>
-          <div class="flex-1 min-w-0">
-            <div class="text-xs font-bold">出街同車廂</div>
-            <div class="text-[10px] text-gray-600">港鐵 · 巴士 · 問路 · 迫車 · 颱風假</div>
-          </div>
+        <div class="scene-cell">
+          <div class="scene-emoji">🚇</div>
+          <div class="scene-name">出街同車廂</div>
+          <div class="scene-sub">港鐵 · 巴士 · 問路 · 迫車 · 颱風假</div>
         </div>
-        <div class="flex items-start gap-2 bg-white rounded p-2">
-          <div class="text-xl flex-shrink-0">💼</div>
-          <div class="flex-1 min-w-0">
-            <div class="text-xs font-bold">返工返學</div>
-            <div class="text-[10px] text-gray-600">開會 · deadline · 考試 · 出差 · 同事</div>
-          </div>
+        <div class="scene-cell">
+          <div class="scene-emoji">💼</div>
+          <div class="scene-name">返工返學</div>
+          <div class="scene-sub">開會 · deadline · 考試 · 出差 · 同事</div>
         </div>
-        <div class="flex items-start gap-2 bg-white rounded p-2">
-          <div class="text-xl flex-shrink-0">💬</div>
-          <div class="flex-1 min-w-0">
-            <div class="text-xs font-bold">朋友同屋企</div>
-            <div class="text-[10px] text-gray-600">WhatsApp · 唱 K · 搬屋 · 相處 · 道歉</div>
-          </div>
+        <div class="scene-cell">
+          <div class="scene-emoji">💬</div>
+          <div class="scene-name">朋友同屋企</div>
+          <div class="scene-sub">WhatsApp · 唱 K · 搬屋 · 相處 · 道歉</div>
         </div>
       </div>
     </div>
