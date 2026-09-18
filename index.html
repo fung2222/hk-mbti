@@ -130,10 +130,6 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px;ov
 }
 .home-acc-go:active{transform:scale(.97)}
 
-/* 探索更多 scroll fix：解除 body overscroll-behavior:contain 對 button 嘅 scroll chain 鎖死 */
-#homeAccordion *{overscroll-behavior-y:auto}
-.home-acc-head,.home-acc-body,.home-acc-go{touch-action:pan-y}
-
 .brand-gold{color:var(--gold)}
 .hero-shimmer{
   background:linear-gradient(90deg,#C4922E 0%,var(--gold) 35%,#fff3c4 50%,var(--gold) 65%,#C4922E 100%);
