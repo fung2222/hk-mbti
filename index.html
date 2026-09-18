@@ -352,16 +352,33 @@ body.no-ad{padding-bottom:0!important;}
    try{
      const last = sessionStorage.getItem("hkmbti_last_section");
      if(last && last !== "home"){
-       const fn = ({
-         about:"openAbout", spectrum:"openSpectrum", hub:"openHub",
-         social:"openSocial", romance:"openRomance", privacy:"openPrivacy",
-         letter:"openLetter", type:"openType"
-       })[last];
-       if(fn && typeof window[fn] === "function"){
-         if(last === "letter" || last === "type"){
-           // 需要參數；呢類唔還原，避免錯誤狀態
-         } else {
-           window[fn]();
+       if(last === "test"){
+         // 測試中 reload：直接由進度還原，唔彈主頁
+         try{
+           if(typeof window.loadProgress === "function" && typeof window.startTestWithVersion === "function"){
+             const p = window.loadProgress();
+             if(p){
+               try{
+                 const prof = JSON.parse(localStorage.getItem("hkmbti_profile")||"null");
+                 if(prof && prof.name) state.displayName = prof.name;
+                 if(prof && prof.nickname) state.nickname = prof.nickname;
+               }catch(e){}
+               window.startTestWithVersion(p.version, { idx:p.idx, answers:p.answers, startedAt:p.startedAt });
+             }
+           }
+         }catch(e){}
+       } else {
+         const fn = ({
+           about:"openAbout", spectrum:"openSpectrum", hub:"openHub",
+           social:"openSocial", romance:"openRomance", privacy:"openPrivacy",
+           letter:"openLetter", type:"openType"
+         })[last];
+         if(fn && typeof window[fn] === "function"){
+           if(last === "letter" || last === "type"){
+             // 需要參數；呢類唔還原，避免錯誤狀態
+           } else {
+             window[fn]();
+           }
          }
        }
      }
