@@ -181,6 +181,10 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .home-hero-poster .w-which{grid-column:3/4;grid-row:2/3;font-size:1.4rem;color:var(--ink);justify-self:start;animation:slideFromRight 1s cubic-bezier(.22,1,.36,1) .15s both;}
 .home-hero-poster .w-hk{grid-column:1/4;grid-row:3/4;font-size:3.7rem;color:var(--gold);justify-self:center;letter-spacing:-.01em;animation:dropIn 1s cubic-bezier(.34,1.56,.64,1) .35s both;transform-origin:center;}
 .home-hero-poster .w-person{grid-column:2/3;grid-row:4/5;font-size:3rem;color:var(--ink);justify-self:center;letter-spacing:-.02em;animation:popIn .6s cubic-bezier(.34,1.56,.64,1) .85s both;}
+.home-hero-poster .tag{font-weight:700;color:rgba(30,42,59,.28);letter-spacing:.12em;font-size:.8rem;animation:fadeUp .8s ease .5s both;}
+.home-hero-poster .tag.tl{grid-column:1/2;grid-row:1/2;justify-self:end;align-self:start;}
+.home-hero-poster .tag.tr{grid-column:3/4;grid-row:1/2;justify-self:start;align-self:start;}
+.home-hero-poster .tag.ml{grid-column:1/2;grid-row:2/3;justify-self:end;align-self:center;color:var(--gold);}
 .home-hero-poster .codes{animation:fadeUp .8s ease 1.15s both;}
 @keyframes slideFromLeft{0%{transform:translateX(-120%);opacity:0}100%{transform:translateX(0);opacity:1}}
 @keyframes slideFromRight{0%{transform:translateX(120%);opacity:0}100%{transform:translateX(0);opacity:1}}
@@ -950,6 +954,9 @@ body.no-ad{padding-bottom:0!important;}
         <div class="word w-which">哪種</div>
         <div class="word w-hk">香港</div>
         <div class="word w-person">人？</div>
+        <div class="tag tl">16型</div>
+        <div class="tag tr">人格測試</div>
+        <div class="tag ml">港式</div>
         <div class="codes">
           <span>INTJ</span><span class="sep">/</span><span>ENFP</span><span class="sep">/</span><span>ISTP</span><span class="sep">/</span><span>ESFJ</span><span class="sep">/</span><span class="ask">你係邊個人格？</span>
         </div>
