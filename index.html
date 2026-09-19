@@ -68,36 +68,37 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   transform:translateY(-2px) scale(1.02);
   background:linear-gradient(135deg,#fff8e8,#ffe8c8);
 }
-/* 進階版 · 藍青 */
+/* 進階版 · 銀 */
 .ver-btn[data-ver="advanced"]{
-  border-color:#5B8FD9;background:linear-gradient(135deg,#F0F6FF,#E4EFFC);
+  border-color:#B8BEC6;background:linear-gradient(135deg,#F6F7F9,#E9ECEF);
 }
-.ver-btn[data-ver="advanced"] .ver-arrow{color:#3B6FB8}
-.ver-btn[data-ver="advanced"] .ver-hint{color:#2F5A96}
+.ver-btn[data-ver="advanced"] .ver-arrow{color:#8A9099}
+.ver-btn[data-ver="advanced"] .ver-hint{color:#6E747D}
 .ver-btn[data-ver="advanced"].ver-lit{
-  box-shadow:0 8px 24px rgba(91,143,217,.32),0 0 0 3px rgba(91,143,217,.22);
+  box-shadow:0 8px 24px rgba(160,167,176,.32),0 0 0 3px rgba(160,167,176,.22);
   transform:translateY(-2px) scale(1.02);
-  background:linear-gradient(135deg,#EAF3FF,#D6E8FC);
+  background:linear-gradient(135deg,#EEF1F4,#DFE3E8);
 }
-/* BB 版 · 粉紫 */
+/* BB 版 · 銅 */
 .ver-btn[data-ver="bb"]{
-  border-color:#C48BC9;background:linear-gradient(135deg,#FBF3FC,#F5E8F8);
+  border-color:#CD7F32;background:linear-gradient(135deg,#FBF1E7,#F3E0C8);
 }
-.ver-btn[data-ver="bb"] .ver-arrow{color:#A66BAD}
-.ver-btn[data-ver="bb"] .ver-hint{color:#8A4F92}
+.ver-btn[data-ver="bb"] .ver-arrow{color:#A96A2B}
+.ver-btn[data-ver="bb"] .ver-hint{color:#8A5A26}
 .ver-btn[data-ver="bb"].ver-lit{
-  box-shadow:0 8px 24px rgba(196,139,201,.32),0 0 0 3px rgba(196,139,201,.22);
+  box-shadow:0 8px 24px rgba(205,127,50,.32),0 0 0 3px rgba(205,127,50,.22);
   transform:translateY(-2px) scale(1.02);
-  background:linear-gradient(135deg,#F8EBFA,#EFD9F2);
+  background:linear-gradient(135deg,#F8EBDD,#F0D9BE);
 }
-/* 我的記錄 · 墨金（雙撳：一撳著燈，再撳入 record.html） */
+/* 我的記錄 · 柔和暖米（配合主頁） */
 .ver-btn[data-ver="record"]{
-  border-color:#1E2A3B;background:linear-gradient(135deg,#F4F1EA,#E8E2D6);
+  border-color:#E3D5B8;background:linear-gradient(135deg,#FBF7EE,#F3ECDC);
 }
-.ver-btn[data-ver="record"] .ver-arrow{color:#1E2A3B}
+.ver-btn[data-ver="record"] .ver-arrow{color:#B39B6B}
 .ver-btn[data-ver="record"].ver-lit{
-  box-shadow:0 8px 24px rgba(30,42,59,.28),0 0 0 3px rgba(30,42,59,.16);
+  box-shadow:0 8px 24px rgba(212,169,95,.28),0 0 0 3px rgba(212,169,95,.18);
   transform:translateY(-2px) scale(1.01);
+  background:linear-gradient(135deg,#FDF8EC,#F5EBD3);
 }
 .ver-btn .ver-hint{display:none;margin-top:.4rem;font-weight:800}
 .ver-btn.ver-lit .ver-hint{display:block;animation:fadeUp .3s ease-out}
@@ -210,6 +211,18 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .home-hero-poster .codes{grid-column:1/4;grid-row:7/8;margin-top:14px;display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;color:rgba(30,42,59,.3);font-weight:900;font-size:.95rem;letter-spacing:.02em;}
 .home-hero-poster .codes .sep{color:rgba(30,42,59,.25);font-weight:400;}
 .home-hero-poster .codes .ask{color:var(--gold);font-weight:900;}
+/* E人 / I人 · 分享卡 serif 字體 */
+.home-hero-poster .ei-word{font-family:Georgia,'Times New Roman','Noto Serif SC','Songti SC',serif;font-weight:700;font-size:1.7rem;letter-spacing:.01em;animation:fadeUp .8s ease .6s both;}
+.home-hero-poster .ei-e{grid-column:1/2;grid-row:3/4;justify-self:start;color:var(--gold);}
+.home-hero-poster .ei-i{grid-column:3/4;grid-row:3/4;justify-self:end;color:var(--ink);}
+/* 主頁右上選單 */
+.home-menu-wrap{position:relative;}
+.home-menu-btn{width:36px;height:36px;border-radius:50%;background:rgba(30,42,59,.06);border:1px solid rgba(30,42,59,.12);color:var(--ink);font-size:18px;line-height:1;cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:inherit;}
+.home-menu{display:none;position:absolute;top:44px;right:0;background:#fff;border:1px solid rgba(30,42,59,.1);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.14);min-width:200px;padding:8px;z-index:60;}
+.home-menu.open{display:block;}
+.home-menu a,.home-menu button{display:block;width:100%;text-align:left;background:transparent;border:0;color:var(--ink);padding:10px 12px;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit;text-decoration:none;}
+.home-menu a:hover,.home-menu button:hover{background:rgba(212,169,95,.12);}
+.home-menu-foot{padding:10px 12px 6px;font-size:11px;color:#9ca3af;text-align:center;border-top:1px solid rgba(30,42,59,.06);margin-top:4px;}
 .home-hero h1{font-size:2.35rem;line-height:1.15;letter-spacing:-.02em}
 .bg-gold{background:var(--gold)}
 .bg-paper{background:var(--paper)}
@@ -958,7 +971,21 @@ body.no-ad{padding-bottom:0!important;}
         <img src="icon-192.png" class="w-9 h-9 rounded-lg flex-shrink-0" alt="港MBTI">
         <div class="font-black text-lg tracking-tight">港式 MBTI</div>
       </a>
-      <div class="text-xs text-gray-500">版本 v1.7</div>
+      <div class="home-menu-wrap">
+        <button type="button" class="home-menu-btn" onclick="toggleHomeMenu(event)" aria-label="選單">⋯</button>
+        <div class="home-menu" id="homeMenu">
+          <a href="./" onclick="closeHomeMenu()">🏠 主頁</a>
+          <a href="./record.html" onclick="closeHomeMenu()">📋 我的紀錄</a>
+          <button type="button" onclick="openAbout();closeHomeMenu();">📖 關於港式 MBTI</button>
+          <button type="button" onclick="openSpectrum();closeHomeMenu();">🔤 MBTI 性格光譜</button>
+          <button type="button" onclick="openHub();closeHomeMenu();">📚 性格百科</button>
+          <button type="button" onclick="openSocial();closeHomeMenu();">🤝 個人相處</button>
+          <button type="button" onclick="openRomance();closeHomeMenu();">💕 個人拍拖</button>
+          <a href="./stats.html" onclick="closeHomeMenu()">📊 香港16型統計</a>
+          <button type="button" onclick="openPrivacy();closeHomeMenu();">🔒 私隱聲明</button>
+          <div class="home-menu-foot">版本 v1.7</div>
+        </div>
+      </div>
     </div>
 
       <div class="home-hero-copy">
@@ -967,18 +994,8 @@ body.no-ad{padding-bottom:0!important;}
         <div class="word w-which">哪種</div>
         <div class="word w-hk">香港</div>
         <div class="word w-person">人？</div>
-        <div class="tag r1c1 sm">16型</div>
-        <div class="tag r1c2 gold lg">港式</div>
-        <div class="tag r1c3 sm">人格測試</div>
-        <div class="tag r3c1 sm">茶餐廳</div>
-        <div class="tag r3c3 sm">港鐵</div>
-        <div class="tag r4c1 sm">便利店</div>
-        <div class="tag r4c3 gold sm">廣東話</div>
-        <div class="tag r5c1 sm">多版本</div>
-        <div class="tag r5c2 gold">免費</div>
-        <div class="tag r5c3">60 題</div>
-        <div class="tag r6c1 sm">5 分鐘</div>
-        <div class="tag r6c2 gold lg">分享卡</div>
+        <div class="ei-word ei-e">E人</div>
+        <div class="ei-word ei-i">I人</div>
         <div class="codes">
           <span>INTJ</span><span class="sep">/</span><span>ENFP</span><span class="sep">/</span><span>ISTP</span><span class="sep">/</span><span>ESFJ</span><span class="sep">/</span><span class="ask">你係邊個人格？</span>
         </div>
@@ -993,7 +1010,7 @@ body.no-ad{padding-bottom:0!important;}
 
     <!-- 版本選擇（一按著燈，再按進入） -->
     <div class="card p-5 mb-4">
-      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🎯 多個版本選擇</div>
+      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🎯 選擇 MBTI 測試版本</div>
       <div class="text-xs text-gray-600 mb-3">題目每次打亂 · 多個版本結果互通</div>
       <div class="text-xs text-gray-600 mb-3">完成測試後，你會得到一張人格分享卡</div>
       <div class="space-y-2.5" id="versionList">
@@ -1997,6 +2014,20 @@ window.selectRecord = function(){
     b.classList.toggle("ver-lit", b.getAttribute("data-ver") === "record");
   });
 };
+
+// 主頁右上選單
+window.toggleHomeMenu = function(e){
+  if(e) e.stopPropagation();
+  const m = document.getElementById("homeMenu");
+  if(m) m.classList.toggle("open");
+};
+window.closeHomeMenu = function(){
+  const m = document.getElementById("homeMenu");
+  if(m) m.classList.remove("open");
+};
+document.addEventListener("click", function(e){
+  if(!e.target.closest(".home-menu-wrap")) closeHomeMenu();
+});
 
 // ===== Fisher-Yates =====
 window.shuffleArr = function(arr){
