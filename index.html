@@ -55,7 +55,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .option{font-size:1.05rem}
 .option .flex-1{font-size:1.05rem;line-height:1.45}
 /* 版本雙擊確認 · 三色預設 */
-.ver-btn{transition:all .2s cubic-bezier(.34,1.56,.64,1);transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,.06);border-width:2px;border-style:solid}
+.ver-btn{transition:all .2s cubic-bezier(.34,1.56,.64,1);transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,.06);border-width:2px;border-style:solid;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
 .ver-btn:active{transform:scale(.98)}
 /* 生活版 · 金 */
 .ver-btn[data-ver="life"]{
@@ -97,8 +97,8 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   transform:translateY(-2px) scale(1.01);
   background:linear-gradient(135deg,#FDF8EC,#F5EBD3);
 }
-.ver-btn .ver-hint{display:none;margin-top:.4rem;font-weight:800}
-.ver-btn.ver-lit .ver-hint{display:inline-flex;margin-top:.55rem;background:rgba(212,169,95,.12);color:#7C6B45;padding:7px 16px;border-radius:999px;font-size:13px;font-weight:600;border:1px solid rgba(212,169,95,.35);animation:fadeUp .3s ease-out}
+.ver-btn .ver-hint{display:none;margin-top:.4rem;font-weight:800;font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;line-height:1.3;text-align:left}
+.ver-btn.ver-lit .ver-hint{display:inline-flex;margin-top:.55rem;background:rgba(212,169,95,.12);color:#7C6B45;padding:7px 16px;border-radius:999px;font-size:13px;font-weight:600;border:1px solid rgba(212,169,95,.35);animation:popIn .35s cubic-bezier(.34,1.56,.64,1)}
 .ver-btn.ver-lit .ver-arrow{transform:translateX(4px)}
 .stat-bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
 .stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
@@ -1021,36 +1021,36 @@ body.no-ad{padding-bottom:0!important;}
       <div class="text-xs text-gray-600 mb-3">題目每次打亂 · 多個版本結果互通</div>
       <div class="text-xs text-gray-600 mb-3">完成測試後，你會得到一張人格分享卡</div>
       <div class="space-y-2.5" id="versionList">
-        <button type="button" data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full p-4 rounded-xl text-left">
+        <div data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full p-4 rounded-xl text-left" role="button" tabindex="0">
           <div class="flex items-center justify-between">
             <div>
               <div class="text-base font-black text-ink">🌟 生活版（完整測試）</div>
               <div class="text-xs text-gray-600 mt-0.5">60 題 · 5 分鐘 · 最準確</div>
-              <div class="ver-hint text-xs">立即進行</div>
+              <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('life')">立即進行</button>
             </div>
             <div class="ver-arrow text-2xl transition">→</div>
           </div>
-        </button>
-        <button type="button" data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full p-4 rounded-xl text-left">
+        </div>
+        <div data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full p-4 rounded-xl text-left" role="button" tabindex="0">
           <div class="flex items-center justify-between">
             <div>
               <div class="text-base font-black text-ink">🎯 進階版（快速版）</div>
               <div class="text-xs text-gray-600 mt-0.5">30 題 · 3 分鐘 · 平衡選擇</div>
-              <div class="ver-hint text-xs">立即進行</div>
+              <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('advanced')">立即進行</button>
             </div>
             <div class="ver-arrow text-2xl transition">→</div>
           </div>
-        </button>
-        <button type="button" data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full p-4 rounded-xl text-left">
+        </div>
+        <div data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full p-4 rounded-xl text-left" role="button" tabindex="0">
           <div class="flex items-center justify-between">
             <div>
               <div class="text-base font-black text-ink">🍼 BB 版（極簡版）</div>
               <div class="text-xs text-gray-600 mt-0.5">10 題 · 1 分鐘 · 純粹試下</div>
-              <div class="ver-hint text-xs">立即進行</div>
+              <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('bb')">立即進行</button>
             </div>
             <div class="ver-arrow text-2xl transition">→</div>
           </div>
-        </button>
+        </div>
         <button type="button" data-ver="record" onclick="selectRecord()" class="ver-btn w-full p-4 rounded-xl text-left">
           <div class="flex items-center justify-between">
             <div>
@@ -2005,15 +2005,20 @@ window.clearVersionUI = function(){
 };
 
 window.selectVersion = function(version){
+  // 撳一下展開，再撳一下關閉（唔會直接入去）
   if(state.selectedVersion === version){
     clearVersionUI();
-    openProfile(version);
     return;
   }
   state.selectedVersion = version;
   document.querySelectorAll(".ver-btn").forEach(b => {
     b.classList.toggle("ver-lit", b.getAttribute("data-ver") === version);
   });
+};
+
+window.goVersion = function(version){
+  clearVersionUI();
+  openProfile(version);
 };
 
 // 我的記錄 · 雙撳（一撳著燈，再撳入 record.html）
