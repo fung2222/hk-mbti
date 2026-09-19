@@ -946,22 +946,22 @@ window.TYPES_FULL = {
 // ====================== Share Card Palette + Vibe Tags (v1.7.8) ======================
 // 16 型配色 + 兩個 vibe labels（share card + hashtag 用）
 window.PALETTE = {
-  INTJ:{c1:"#3A2E5C", c2:"#1A1530", accent:"#9B7EBD", vibes:["深宵腦爆","獨立思考者"]},
-  INTP:{c1:"#2A2A4E", c2:"#14142E", accent:"#7A8AC9", vibes:["深夜哲學家","理論宅"]},
-  ENTJ:{c1:"#8B5A6B", c2:"#4A2E3A", accent:"#D4A95F", vibes:["天生領袖","效率控"]},
-  ENTP:{c1:"#D9633D", c2:"#7A2E18", accent:"#E5B873", vibes:["點子王","唱反調"]},
-  INFJ:{c1:"#3A2E5C", c2:"#1A1530", accent:"#C779A6", vibes:["深度共鳴","心靈導師"]},
-  INFP:{c1:"#9B7EBD", c2:"#4A3A6C", accent:"#FFD9F5", vibes:["文藝青年","共情雷達"]},
-  ENFJ:{c1:"#C9876B", c2:"#6B4035", accent:"#F5D9C5", vibes:["天生的老師","社群核心"]},
-  ENFP:{c1:"#D9A85B", c2:"#8B6939", accent:"#FFFFFF", vibes:["正能量炸彈","深夜傾偈王"]},
-  ISTJ:{c1:"#1E3A5F", c2:"#0E1F33", accent:"#5B8FD9", vibes:["守時怪","細節控"]},
-  ISFJ:{c1:"#5C8374", c2:"#2D4A3F", accent:"#A8D5BA", vibes:["照顧者","默默付出"]},
-  ESTJ:{c1:"#A65D4A", c2:"#4A2818", accent:"#D4A95F", vibes:["傳統硬頸","家庭責任王"]},
-  ESFJ:{c1:"#D9A089", c2:"#7A4A38", accent:"#FFFFFF", vibes:["派對暖男","飯局核心"]},
-  ISTP:{c1:"#2E4A5C", c2:"#152530", accent:"#8AC9D9", vibes:["動手派","獨立解決王"]},
-  ISFP:{c1:"#C779A6", c2:"#6B3D58", accent:"#FFD9E5", vibes:["美感雷達","獨立創作"]},
-  ESTP:{c1:"#7A9B7E", c2:"#3D5C42", accent:"#D9E5C5", vibes:["行動派","臨場爆seed"]},
-  ESFP:{c1:"#D97A9B", c2:"#7A3D52", accent:"#FFE5EC", vibes:["氣氛王","聚會靈魂"]}
+  INTJ:{c1:"#6B4E9E", c2:"#33244E", accent:"#C9B2E8", vibes:["深宵腦爆","獨立思考者"]},
+  INTP:{c1:"#3E5F9E", c2:"#1E2E52", accent:"#9CB8E8", vibes:["深夜哲學家","理論宅"]},
+  ENTJ:{c1:"#1E8A8A", c2:"#0E4545", accent:"#8AD8D8", vibes:["天生領袖","效率控"]},
+  ENTP:{c1:"#E07B35", c2:"#703D1A", accent:"#F0C090", vibes:["點子王","唱反調"]},
+  INFJ:{c1:"#8A3E9E", c2:"#451E52", accent:"#D8A8E8", vibes:["深度共鳴","心靈導師"]},
+  INFP:{c1:"#B085C4", c2:"#5A4573", accent:"#E8D8F0", vibes:["文藝青年","共情雷達"]},
+  ENFJ:{c1:"#E05A4A", c2:"#702D25", accent:"#F0A898", vibes:["天生的老師","社群核心"]},
+  ENFP:{c1:"#D9A028", c2:"#6B5014", accent:"#F0D888", vibes:["正能量炸彈","深夜傾偈王"]},
+  ISTJ:{c1:"#4A6E9E", c2:"#253750", accent:"#A0C0E8", vibes:["守時怪","細節控"]},
+  ISFJ:{c1:"#5C8A5C", c2:"#2E452E", accent:"#A8D0A8", vibes:["照顧者","默默付出"]},
+  ESTJ:{c1:"#A85240", c2:"#542920", accent:"#D8A898", vibes:["傳統硬頸","家庭責任王"]},
+  ESFJ:{c1:"#E08058", c2:"#70402C", accent:"#F0C0A0", vibes:["派對暖男","飯局核心"]},
+  ISTP:{c1:"#3E8A7A", c2:"#1E453D", accent:"#90D0C0", vibes:["動手派","獨立解決王"]},
+  ISFP:{c1:"#C0709E", c2:"#60384E", accent:"#F0B8D0", vibes:["美感雷達","獨立創作"]},
+  ESTP:{c1:"#6B8A3E", c2:"#35451F", accent:"#C0D888", vibes:["行動派","臨場爆seed"]},
+  ESFP:{c1:"#C04070", c2:"#602038", accent:"#F098C0", vibes:["氣氛王","聚會靈魂"]}
 };
 
 window.getPalette = function(code){
