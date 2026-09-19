@@ -234,6 +234,8 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .result-bleed{margin:0 -16px 16px;padding:28px 20px 24px;background:linear-gradient(180deg,#fff,var(--paper));}
 .result-bleed-inner{max-width:26rem;margin:0 auto;}
 .result-divider{height:1px;background:rgba(30,42,59,.08);margin:22px 0;}
+.hub-bleed{margin:0 -16px 16px;padding:24px 14px 20px;background:linear-gradient(180deg,#fff,var(--paper));}
+.hub-bleed-inner{max-width:26rem;margin:0 auto;}
 .home-hero h1{font-size:2.35rem;line-height:1.15;letter-spacing:-.02em}
 .bg-gold{background:var(--gold)}
 .bg-paper{background:var(--paper)}
@@ -679,11 +681,13 @@ body.no-ad{padding-bottom:0!important;}
       </div>
     </div>
 
-    <!-- 16 種性格入口 -->
-    <div class="card p-5 mb-4">
-      <h3 class="font-bold mb-3 text-sm">🧠 16 種性格完整百科</h3>
-      <p class="text-xs text-gray-600 mb-3">每種性格 1500 字：核心、戀愛、工作、衝突</p>
-      <div class="grid grid-cols-4 gap-2" id="hubTypeGrid"></div>
+    <!-- 16 種性格入口 · 滿版 -->
+    <div class="hub-bleed">
+      <div class="hub-bleed-inner">
+        <h3 class="text-xs tracking-widest brand-gold font-bold mb-3">🧠 16 種性格完整百科</h3>
+        <p class="text-xs text-gray-600 mb-3">每種性格 1500 字：核心、戀愛、工作、衝突</p>
+        <div class="grid grid-cols-4 gap-1" id="hubTypeGrid"></div>
+      </div>
     </div>
 
     <!-- 性格比較工具 -->
@@ -4039,9 +4043,9 @@ window.renderHubTypes = function(){
     const T = window.TYPES[code];
     const P = window.getPalette(code);
     if(!T) return "";
-    return `<button type="button" onclick="openType('${code}')" class="rounded-xl p-2 text-center" style="background:linear-gradient(135deg,${P.c1},${P.c2});color:#fff;border:0;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);-webkit-appearance:none;appearance:none;">
-      <div class="text-xl leading-none">${T.emoji}</div>
-      <div class="text-xs font-bold mt-1">${code}</div>
+    return `<button type="button" onclick="openType('${code}')" class="rounded-xl text-center" style="background:linear-gradient(135deg,${P.c1},${P.c2});color:#fff;border:0;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);-webkit-appearance:none;appearance:none;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px;">
+      <div class="text-2xl leading-none">${T.emoji}</div>
+      <div class="text-xs font-bold">${code}</div>
       <div class="text-[10px] leading-tight opacity-85">${T.cn}</div>
     </button>`;
   }).join("");
