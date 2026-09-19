@@ -1244,7 +1244,7 @@ body.no-ad{padding-bottom:0!important;}
         <button type="button" class="page-back" onclick="goHome()">← 返回</button>
         <h1>你的港式人格</h1>
       </div>
-      <p class="page-hero-sub"><span id="versionBadge" class="inline-block bg-white/15 border border-white/25 font-bold px-2.5 py-0.5 rounded-full">生活版</span></p>
+      <p class="page-hero-sub">你得到一張 16 型人格分享卡</p>
     </div>
 
     <!-- Share Card -->
@@ -2925,7 +2925,8 @@ window.finishTest = function(){
   const mins = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
   $("finishTime").innerText = mins + " 分鐘";
   const verName = r.version === "bb" ? "BB版" : r.version === "advanced" ? "進階版" : "生活版";
-  $("versionBadge").innerText = verName;
+  const vb = $("versionBadge");
+  if(vb) vb.innerText = verName;
   show("result");
   // 背景生成 card + 縮圖，補入最新記錄
   generateCardImage().then(() => {
