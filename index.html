@@ -1239,7 +1239,7 @@ body.no-ad{padding-bottom:0!important;}
       <div class="result-menu-wrap">
         <button type="button" class="home-menu-btn" onclick="toggleResultMenu(event)" aria-label="選單">⋯</button>
         <div class="home-menu" id="resultMenu">
-          <a href="./" onclick="closeResultMenu()">🏠 主頁</a>
+          <button type="button" onclick="goHome();closeResultMenu();">🏠 主頁</button>
           <a href="./record.html" onclick="closeResultMenu()">📋 我的紀錄</a>
           <button type="button" onclick="openAbout();closeResultMenu();">📖 關於港式 MBTI</button>
           <button type="button" onclick="openSpectrum();closeResultMenu();">🔤 MBTI 性格光譜</button>
