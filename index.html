@@ -443,7 +443,9 @@ body.no-ad{padding-bottom:0!important;}
          if(isReload){
            try{
              if(typeof window.viewHistoryResult === "function"){
-               window.viewHistoryResult(0);
+               let idx = 0;
+               try{ idx = parseInt(sessionStorage.getItem("hkmbti_last_record_idx"), 10) || 0; }catch(e){}
+               window.viewHistoryResult(idx);
              }
            }catch(e){}
          }
@@ -2940,6 +2942,7 @@ window.finishTest = function(){
   window._cardMeta = { version: r.version || "life", totalQ: r.totalQ || 60 };
   renderResult(r);
   saveResult();  // 自動儲存（先存，card 縮圖生成後再補）
+  try{ sessionStorage.setItem("hkmbti_last_record_idx", 0); }catch(e){}  // 新結果一定喺最頂（index 0）
   clearProgress(); // 測完清 progress，避免下次彈續做
   const mins = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
   $("finishTime").innerText = mins + " 分鐘";
@@ -3760,8 +3763,10 @@ function formatTimeAgo(ts){
 
 window.viewHistoryResult = function(idx){
   try{
+    const realIdx = idx || 0;
+    try{ sessionStorage.setItem("hkmbti_last_record_idx", realIdx); }catch(e){}
     const list = getHistoryList();
-    const rec = list[idx||0];
+    const rec = list[realIdx];
     if(!rec) return;
     window.lastResult = rec.mbti;
     window.state.displayName = rec.name || "";
