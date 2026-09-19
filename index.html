@@ -1254,7 +1254,7 @@ body.no-ad{padding-bottom:0!important;}
       <img id="shareCardImg" class="w-full rounded-2xl shadow-lg" alt="分享卡" style="display:block;">
     </div>
     <div class="text-center mb-4">
-      <div class="text-xs text-gray-500">完成時間：<span id="finishTime">5 分鐘</span> · 用咗 <span id="finishQ">60</span> 題</div>
+      <div class="text-xs text-gray-500">完成時間：<span id="finishTime">5 分鐘</span></div>
     </div>
     <div class="mb-2 px-1">
       <div class="grid grid-cols-3 gap-2 max-w-sm mx-auto">
@@ -2865,7 +2865,6 @@ window.finishTest = function(){
   $("finishTime").innerText = mins + " 分鐘";
   const verName = r.version === "bb" ? "BB版" : r.version === "advanced" ? "進階版" : "生活版";
   $("versionBadge").innerText = verName;
-  $("finishQ").innerText = r.totalQ;
   show("result");
   // 背景生成 card + 縮圖，補入最新記錄
   generateCardImage().then(() => {
