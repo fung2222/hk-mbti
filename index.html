@@ -1028,7 +1028,6 @@ body.no-ad{padding-bottom:0!important;}
               <div class="text-xs text-gray-600 mt-0.5">60 題 · 5 分鐘 · 最準確</div>
               <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('life')">立即進行</button>
             </div>
-            <div class="ver-arrow text-2xl transition">→</div>
           </div>
         </div>
         <div data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full p-4 rounded-xl text-left" role="button" tabindex="0">
@@ -1038,7 +1037,6 @@ body.no-ad{padding-bottom:0!important;}
               <div class="text-xs text-gray-600 mt-0.5">30 題 · 3 分鐘 · 平衡選擇</div>
               <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('advanced')">立即進行</button>
             </div>
-            <div class="ver-arrow text-2xl transition">→</div>
           </div>
         </div>
         <div data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full p-4 rounded-xl text-left" role="button" tabindex="0">
@@ -1048,18 +1046,16 @@ body.no-ad{padding-bottom:0!important;}
               <div class="text-xs text-gray-600 mt-0.5">10 題 · 1 分鐘 · 純粹試下</div>
               <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('bb')">立即進行</button>
             </div>
-            <div class="ver-arrow text-2xl transition">→</div>
           </div>
         </div>
-        <button type="button" data-ver="record" onclick="selectRecord()" class="ver-btn w-full p-4 rounded-xl text-left">
+        <div data-ver="record" onclick="selectRecord()" class="ver-btn w-full p-4 rounded-xl text-left" role="button" tabindex="0">
           <div class="flex items-center justify-between">
             <div>
               <div class="text-base font-black text-ink">📋 我的記錄 <span id="homeRecordCount" class="text-gray-500 font-bold">（0/5）</span></div>
-              <div class="ver-hint text-xs">打開最近五次測試紀錄</div>
+              <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goRecord()">打開最近五次測試紀錄</button>
             </div>
-            <div class="ver-arrow text-2xl transition">→</div>
           </div>
-        </button>
+        </div>
       </div>
 
     </div>
@@ -2023,15 +2019,20 @@ window.goVersion = function(version){
 
 // 我的記錄 · 雙撳（一撳著燈，再撳入 record.html）
 window.selectRecord = function(){
+  // 撳一下展開，再撳一下關閉
   if(state.selectedVersion === "record"){
     clearVersionUI();
-    location.href = "./record.html";
     return;
   }
   state.selectedVersion = "record";
   document.querySelectorAll(".ver-btn").forEach(b => {
     b.classList.toggle("ver-lit", b.getAttribute("data-ver") === "record");
   });
+};
+
+window.goRecord = function(){
+  clearVersionUI();
+  location.href = "./record.html";
 };
 
 // 主頁右上選單
