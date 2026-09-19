@@ -226,6 +226,8 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .home-menu a,.home-menu button{display:block;width:100%;text-align:left;background:transparent;border:0;color:var(--ink);padding:10px 12px;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit;text-decoration:none;}
 .home-menu a:hover,.home-menu button:hover{background:rgba(212,169,95,.12);}
 .home-menu-foot{padding:10px 12px 6px;font-size:11px;color:#9ca3af;text-align:center;border-top:1px solid rgba(30,42,59,.06);margin-top:4px;}
+.result-topbar{display:flex;justify-content:flex-end;padding:0 0 8px;}
+.result-menu-wrap{position:relative;}
 .home-hero h1{font-size:2.35rem;line-height:1.15;letter-spacing:-.02em}
 .bg-gold{background:var(--gold)}
 .bg-paper{background:var(--paper)}
@@ -1229,6 +1231,22 @@ body.no-ad{padding-bottom:0!important;}
 
   <!-- ========== RESULT ========== -->
   <section id="result" class="hidden">
+    <div class="result-topbar">
+      <div class="result-menu-wrap">
+        <button type="button" class="home-menu-btn" onclick="toggleResultMenu(event)" aria-label="選單">⋯</button>
+        <div class="home-menu" id="resultMenu">
+          <a href="./" onclick="closeResultMenu()">🏠 主頁</a>
+          <a href="./record.html" onclick="closeResultMenu()">📋 我的紀錄</a>
+          <button type="button" onclick="openAbout();closeResultMenu();">📖 關於港式 MBTI</button>
+          <button type="button" onclick="openSpectrum();closeResultMenu();">🔤 MBTI 性格光譜</button>
+          <button type="button" onclick="openHub();closeResultMenu();">📚 性格百科</button>
+          <button type="button" onclick="openSocial();closeResultMenu();">🤝 個人相處</button>
+          <button type="button" onclick="openRomance();closeResultMenu();">💕 個人拍拖</button>
+          <a href="./stats.html" onclick="closeResultMenu()">📊 香港16型統計</a>
+          <button type="button" onclick="openPrivacy();closeResultMenu();">🔒 私隱聲明</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Share Card -->
     <div class="mx-auto mb-4 fade-up" style="width:360px; max-width:100%;">
@@ -2026,8 +2044,19 @@ window.closeHomeMenu = function(){
   const m = document.getElementById("homeMenu");
   if(m) m.classList.remove("open");
 };
+// 結果頁右上選單
+window.toggleResultMenu = function(e){
+  if(e) e.stopPropagation();
+  const m = document.getElementById("resultMenu");
+  if(m) m.classList.toggle("open");
+};
+window.closeResultMenu = function(){
+  const m = document.getElementById("resultMenu");
+  if(m) m.classList.remove("open");
+};
 document.addEventListener("click", function(e){
   if(!e.target.closest(".home-menu-wrap")) closeHomeMenu();
+  if(!e.target.closest(".result-menu-wrap")) closeResultMenu();
 });
 
 // ===== Fisher-Yates =====
