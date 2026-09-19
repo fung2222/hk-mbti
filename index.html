@@ -2827,6 +2827,8 @@ window.calcScore = function(){
 window.finishTest = function(){
   const r = calcScore();
   window.lastResult = r.mbti;
+  // 鎖定版本 + 題數，分享卡照呢個畫（避免 state 被重設成預設 life）
+  window._cardMeta = { version: r.version || "life", totalQ: r.totalQ || 60 };
   renderResult(r);
   saveResult();  // 自動儲存（先存，card 縮圖生成後再補）
   clearProgress(); // 測完清 progress，避免下次彈續做
@@ -2972,7 +2974,10 @@ window.generateCardImage = function(){
   const iconX = 40;
   const iconY = headerTop;
   const headerMidY = iconY + iconSize / 2; // 84
-  const versionLabel = window.getTestVersionLabel(window.state.version, window.state.maxQ);
+  const versionLabel = window.getTestVersionLabel(
+    (window._cardMeta && window._cardMeta.version) || window.state.version,
+    (window._cardMeta && window._cardMeta.totalQ) || window.state.maxQ
+  );
   const now = new Date();
   const dateLabel = now.getFullYear() + "." + String(now.getMonth()+1).padStart(2,"0");
 
@@ -3613,7 +3618,10 @@ window.viewHistoryResult = function(idx){
     window.lastResult = rec.mbti;
     window.state.displayName = rec.name || "";
     window.state.nickname = rec.nickname || "";
-    const r = {mbti: rec.mbti, score:{}, version: rec.version || "life", totalQ: 60};
+    const ver = rec.version || "life";
+    const totalQ = ver === "bb" ? 10 : ver === "advanced" ? 30 : 60;
+    window._cardMeta = { version: ver, totalQ: totalQ };
+    const r = {mbti: rec.mbti, score:{}, version: ver, totalQ: totalQ};
     renderResult(r);
     generateCardImage();
     $("finishTime").innerText = formatTimeAgo(rec.timestamp);
