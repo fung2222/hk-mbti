@@ -33,11 +33,17 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px;ma
 .text-accent{color:var(--accent)}
 main{max-width:680px;margin:0 auto;padding:1rem 1rem 4rem}
 .header{display:none}
-.hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:white;padding:14px 16px 16px;margin:0 0 1rem}
+.hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:white;padding:14px 16px 16px;margin:0 0 1rem;position:relative}
 .hero-row{position:relative;display:flex;align-items:center;min-height:44px}
 .hero-row h1{position:absolute;left:0;right:0;margin:0;padding:0 4.5rem;font-size:18px;font-weight:900;text-align:center;pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:44px;color:#fff}
 .back-nav{position:relative;z-index:2;font-size:14px;line-height:1.25;color:rgba(255,255,255,.75);text-decoration:none;font-weight:400;background:none;border:0;padding:0}
 .back-nav:hover{color:#fff}
+.hero-menu{position:absolute;right:0;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;flex-shrink:0;line-height:1;padding:0;z-index:2}
+.hero-menu:hover{background:rgba(212,169,95,0.25);border-color:var(--gold)}
+.hero-popover{position:absolute;top:54px;right:16px;background:#1E2A3B;border:1px solid rgba(255,255,255,0.18);border-radius:10px;padding:6px;min-width:180px;box-shadow:0 6px 24px rgba(0,0,0,0.25);z-index:30;display:none}
+.hero-popover.open{display:block}
+.hero-popover a,.hero-popover button{display:block;width:100%;text-align:left;background:transparent;border:0;color:white;padding:8px 12px;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit;text-decoration:none}
+.hero-popover a:hover,.hero-popover button:hover{background:rgba(212,169,95,0.18)}
 .hero-sub{margin:6px 0 0;font-size:12px;opacity:.75;text-align:center}
 .card{background:#fff;border-radius:1.2rem;box-shadow:0 4px 24px rgba(0,0,0,.06);padding:1.25rem;margin-bottom:1rem}
 .eyebrow{font-size:.75rem;letter-spacing:.15em;font-weight:900;color:var(--gold);margin-bottom:.5rem}
@@ -62,8 +68,20 @@ a{color:var(--accent)}
   <div class="hero-row">
     <a href="./" class="back-nav">← 返回</a>
     <h1>私隱聲明</h1>
+    <button class="hero-menu" onclick="toggleHeroMenu(event)" aria-label="更多">⋯</button>
   </div>
   <p class="hero-sub">本 App 點處理你嘅資料</p>
+  <div class="hero-popover" id="heroPopover" onclick="event.stopPropagation()">
+    <a href="./">🏠 主頁</a>
+    <a href="./record.html">📋 我的紀錄</a>
+    <a href="./#about">📖 關於港式 MBTI</a>
+    <a href="./#spectrum">🔤 MBTI 性格光譜</a>
+    <a href="./#hub">📚 性格百科</a>
+    <a href="./#social">🤝 個人相處</a>
+    <a href="./#romance">💕 個人拍拖</a>
+    <a href="./stats.html">📊 香港16型統計</a>
+    <a href="./#privacy">🔒 私隱聲明</a>
+  </div>
 </div>
 <main>
 
@@ -129,5 +147,19 @@ a{color:var(--accent)}
     廣東話繁體
   </p>
 </main>
+<script>
+function toggleHeroMenu(e){
+  if(e) e.stopPropagation();
+  const p = document.getElementById('heroPopover');
+  if(p) p.classList.toggle('open');
+}
+function closeHeroMenu(){
+  const p = document.getElementById('heroPopover');
+  if(p) p.classList.remove('open');
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.hero-popover') && !e.target.closest('.hero-menu')) closeHeroMenu();
+});
+</script>
 </body>
 </html>
