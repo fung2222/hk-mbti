@@ -175,7 +175,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   background:radial-gradient(ellipse 95% 65% at 50% 42%, rgba(212,169,95,.45) 0%, rgba(212,169,95,.12) 38%, rgba(250,247,240,0) 72%);
 }
 .home-hero-copy{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center;}
-.home-hero-poster{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto auto auto auto auto auto auto;row-gap:16px;column-gap:14px;align-items:center;justify-items:center;padding:8px 4px;}
+.home-hero-poster{position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:auto auto auto auto auto auto;row-gap:8px;column-gap:14px;align-items:center;justify-items:center;padding:8px 4px;}
 .home-hero-poster .word{font-weight:900;line-height:1;color:var(--ink);}
 .home-hero-poster .tag{font-weight:700;color:rgba(30,42,59,.28);letter-spacing:.12em;font-size:.8rem;white-space:nowrap;animation:fadeUp .8s ease .5s both;}
 .home-hero-poster .tag.gold{color:var(--gold);}
@@ -186,21 +186,21 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .home-hero-poster .w-you{grid-column:1/3;grid-row:2/3;font-size:3.2rem;letter-spacing:-.03em;justify-self:start;animation:slideFromLeft 1s cubic-bezier(.22,1,.36,1) both;}
 .home-hero-poster .w-which{grid-column:3/4;grid-row:2/3;font-size:1.5rem;color:var(--ink);justify-self:end;animation:slideFromRight 1s cubic-bezier(.22,1,.36,1) .15s both;}
 .home-hero-poster .w-hk{grid-column:1/4;grid-row:3/4;font-size:4rem;color:var(--gold);justify-self:center;letter-spacing:-.01em;animation:dropIn 1s cubic-bezier(.34,1.56,.64,1) .35s both;transform-origin:center;}
-.home-hero-poster .w-person{grid-column:1/4;grid-row:4/5;font-size:3.2rem;color:var(--ink);justify-self:end;letter-spacing:-.02em;animation:popIn .6s cubic-bezier(.34,1.56,.64,1) .85s both;}
+.home-hero-poster .w-person{grid-column:1/4;grid-row:4/5;font-size:3.2rem;color:var(--ink);justify-self:center;letter-spacing:-.02em;animation:popIn .6s cubic-bezier(.34,1.56,.64,1) .85s both;}
 .home-hero-poster .codes{animation:fadeUp .8s ease 1.15s both;}
-/* 細字 strip：每行三粒，獨立格唔重疊 */
+/* 細字貼住大字兩側 */
 .home-hero-poster .tag.r1c1{grid-column:1/2;grid-row:1/2;justify-self:start;}
 .home-hero-poster .tag.r1c2{grid-column:2/3;grid-row:1/2;justify-self:center;}
 .home-hero-poster .tag.r1c3{grid-column:3/4;grid-row:1/2;justify-self:end;}
+.home-hero-poster .tag.r3c1{grid-column:1/2;grid-row:3/4;justify-self:start;}
+.home-hero-poster .tag.r3c3{grid-column:3/4;grid-row:3/4;justify-self:end;}
+.home-hero-poster .tag.r4c1{grid-column:1/2;grid-row:4/5;justify-self:start;}
+.home-hero-poster .tag.r4c3{grid-column:3/4;grid-row:4/5;justify-self:end;}
 .home-hero-poster .tag.r5c1{grid-column:1/2;grid-row:5/6;justify-self:start;}
 .home-hero-poster .tag.r5c2{grid-column:2/3;grid-row:5/6;justify-self:center;}
 .home-hero-poster .tag.r5c3{grid-column:3/4;grid-row:5/6;justify-self:end;}
 .home-hero-poster .tag.r6c1{grid-column:1/2;grid-row:6/7;justify-self:start;}
 .home-hero-poster .tag.r6c2{grid-column:2/3;grid-row:6/7;justify-self:center;}
-.home-hero-poster .tag.r6c3{grid-column:3/4;grid-row:6/7;justify-self:end;}
-.home-hero-poster .tag.r7c1{grid-column:1/2;grid-row:7/8;justify-self:start;}
-.home-hero-poster .tag.r7c2{grid-column:2/3;grid-row:7/8;justify-self:center;}
-.home-hero-poster .tag.r7c3{grid-column:3/4;grid-row:7/8;justify-self:end;}
 @keyframes slideFromLeft{0%{transform:translateX(-120%);opacity:0}100%{transform:translateX(0);opacity:1}}
 @keyframes slideFromRight{0%{transform:translateX(120%);opacity:0}100%{transform:translateX(0);opacity:1}}
 @keyframes dropIn{0%{transform:translateY(-80px) scale(.6);opacity:0}70%{transform:translateY(6px) scale(1.05);opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
@@ -209,7 +209,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 @media (prefers-reduced-motion:reduce){
   .home-hero-poster .w-you,.home-hero-poster .w-which,.home-hero-poster .w-hk,.home-hero-poster .w-person,.home-hero-poster .codes{animation:none}
 }
-.home-hero-poster .codes{grid-column:1/4;grid-row:8/9;margin-top:20px;display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;color:rgba(30,42,59,.3);font-weight:900;font-size:.95rem;letter-spacing:.02em;}
+.home-hero-poster .codes{grid-column:1/4;grid-row:7/8;margin-top:14px;display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;color:rgba(30,42,59,.3);font-weight:900;font-size:.95rem;letter-spacing:.02em;}
 .home-hero-poster .codes .sep{color:rgba(30,42,59,.25);font-weight:400;}
 .home-hero-poster .codes .ask{color:var(--gold);font-weight:900;}
 .home-hero h1{font-size:2.35rem;line-height:1.15;letter-spacing:-.02em}
@@ -972,15 +972,15 @@ body.no-ad{padding-bottom:0!important;}
         <div class="tag r1c1 sm">16型</div>
         <div class="tag r1c2 gold lg">港式</div>
         <div class="tag r1c3 sm tiltR">人格測試</div>
-        <div class="tag r5c1 sm tiltL">茶餐廳</div>
-        <div class="tag r5c2 lg">港鐵</div>
-        <div class="tag r5c3 gold sm">便利店</div>
-        <div class="tag r6c1">廣東話</div>
-        <div class="tag r6c2 sm tiltL">60 題</div>
-        <div class="tag r6c3 gold">免費</div>
-        <div class="tag r7c1 sm tiltR">多版本</div>
-        <div class="tag r7c2 lg">5 分鐘</div>
-        <div class="tag r7c3 gold sm tiltL">分享卡</div>
+        <div class="tag r3c1 sm tiltL">茶餐廳</div>
+        <div class="tag r3c3 sm">港鐵</div>
+        <div class="tag r4c1 sm">便利店</div>
+        <div class="tag r4c3 gold sm">廣東話</div>
+        <div class="tag r5c1">60 題</div>
+        <div class="tag r5c2 gold">免費</div>
+        <div class="tag r5c3 sm tiltL">多版本</div>
+        <div class="tag r6c1 sm tiltR">5 分鐘</div>
+        <div class="tag r6c2 gold lg">分享卡</div>
         <div class="codes">
           <span>INTJ</span><span class="sep">/</span><span>ENFP</span><span class="sep">/</span><span>ISTP</span><span class="sep">/</span><span>ESFJ</span><span class="sep">/</span><span class="ask">你係邊個人格？</span>
         </div>
