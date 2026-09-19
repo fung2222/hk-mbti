@@ -226,6 +226,11 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .home-menu a,.home-menu button{display:block;width:100%;text-align:left;background:transparent;border:0;color:var(--ink);padding:10px 12px;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit;text-decoration:none;}
 .home-menu a:hover,.home-menu button:hover{background:rgba(212,169,95,.12);}
 .home-menu-foot{padding:10px 12px 6px;font-size:11px;color:#9ca3af;text-align:center;border-top:1px solid rgba(30,42,59,.06);margin-top:4px;}
+/* 分頁頂欄右邊選單浮波 */
+.page-menu-wrap{position:relative;margin-left:auto;z-index:3;flex-shrink:0;}
+.page-menu-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;font-size:18px;line-height:1;cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:inherit;-webkit-appearance:none;appearance:none;}
+.page-menu-btn:active{transform:scale(.94);}
+.page-menu{top:44px;}
 .result-topbar{display:flex;justify-content:space-between;align-items:center;padding:0 0 8px;}
 .result-menu-wrap{position:relative;}
 .result-bleed{margin:0 -16px 16px;padding:28px 20px 24px;background:linear-gradient(180deg,#fff,var(--paper));}
@@ -2062,6 +2067,68 @@ document.addEventListener("click", function(e){
   if(!e.target.closest(".home-menu-wrap")) closeHomeMenu();
   if(!e.target.closest(".result-menu-wrap")) closeResultMenu();
 });
+
+// 每個分頁頂欄右邊自動加 ⋯ 選單浮波（萬用選單）
+(function(){
+  const LINKS = [
+    ["home", "🏠 主頁"],
+    ["record", "📋 我的紀錄", "./record.html"],
+    ["about", "📖 關於港式 MBTI"],
+    ["spectrum", "🔤 MBTI 性格光譜"],
+    ["hub", "📚 性格百科"],
+    ["social", "🤝 個人相處"],
+    ["romance", "💕 個人拍拖"],
+    ["stats", "📊 香港16型統計", "./stats.html"],
+    ["privacy", "🔒 私隱聲明"]
+  ];
+  const NAV = {
+    home: function(){ window.goHome(); },
+    about: function(){ window.openAbout(); },
+    spectrum: function(){ window.openSpectrum(); },
+    hub: function(){ window.openHub(); },
+    social: function(){ window.openSocial(); },
+    romance: function(){ window.openRomance(); },
+    privacy: function(){ window.openPrivacy(); }
+  };
+  function buildMenu(){
+    return LINKS.map(function(l){
+      const key = l[0], label = l[1], href = l[2];
+      if(href){ return '<a href="'+href+'">'+label+'</a>'; }
+      return '<button type="button" data-go="'+key+'">'+label+'</button>';
+    }).join("");
+  }
+  function mount(){
+    document.querySelectorAll(".page-hero-row").forEach(function(row){
+      if(row.querySelector(".page-menu-wrap")) return;
+      const wrap = document.createElement("div");
+      wrap.className = "page-menu-wrap";
+      wrap.innerHTML = '<button type="button" class="page-menu-btn" aria-label="選單">⋯</button><div class="home-menu page-menu">'+buildMenu()+'</div>';
+      row.appendChild(wrap);
+    });
+  }
+  if(document.readyState === "loading"){ document.addEventListener("DOMContentLoaded", mount); }
+  else { mount(); }
+  document.addEventListener("click", function(e){
+    const go = e.target.closest("[data-go]");
+    if(go){
+      const t = go.getAttribute("data-go");
+      if(NAV[t]) NAV[t]();
+      const menu = go.closest(".page-menu");
+      if(menu) menu.classList.remove("open");
+      return;
+    }
+    const btn = e.target.closest(".page-menu-btn");
+    if(btn){
+      e.stopPropagation();
+      const menu = btn.parentElement.querySelector(".page-menu");
+      if(menu) menu.classList.toggle("open");
+      return;
+    }
+    if(!e.target.closest(".page-menu-wrap")){
+      document.querySelectorAll(".page-menu.open").forEach(function(m){ m.classList.remove("open"); });
+    }
+  });
+})();
 
 // ===== Fisher-Yates =====
 window.shuffleArr = function(arr){
