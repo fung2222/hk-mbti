@@ -2121,19 +2121,8 @@ window.closeHomeMenu = function(){
   const m = document.getElementById("homeMenu");
   if(m) m.classList.remove("open");
 };
-// 結果頁右上選單
-window.toggleResultMenu = function(e){
-  if(e) e.stopPropagation();
-  const m = document.getElementById("resultMenu");
-  if(m) m.classList.toggle("open");
-};
-window.closeResultMenu = function(){
-  const m = document.getElementById("resultMenu");
-  if(m) m.classList.remove("open");
-};
 document.addEventListener("click", function(e){
   if(!e.target.closest(".home-menu-wrap")) closeHomeMenu();
-  if(!e.target.closest(".result-menu-wrap")) closeResultMenu();
 });
 
 // 每個分頁頂欄右邊自動加 ⋯ 選單浮波（萬用選單）
@@ -3926,7 +3915,6 @@ window.viewHistoryResult = function(idx){
     generateCardImage();
     $("finishTime").innerText = formatTimeAgo(rec.timestamp);
     if($("versionBadge")) $("versionBadge").innerText = ver === "bb" ? "BB版" : ver === "advanced" ? "進階版" : "生活版";
-    if($("finishQ")) $("finishQ").innerText = "—";
     show("result");
   } catch(e){
     alert("載入失敗");
