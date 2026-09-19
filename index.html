@@ -226,7 +226,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .home-menu a,.home-menu button{display:block;width:100%;text-align:left;background:transparent;border:0;color:var(--ink);padding:10px 12px;border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit;text-decoration:none;}
 .home-menu a:hover,.home-menu button:hover{background:rgba(212,169,95,.12);}
 .home-menu-foot{padding:10px 12px 6px;font-size:11px;color:#9ca3af;text-align:center;border-top:1px solid rgba(30,42,59,.06);margin-top:4px;}
-.result-topbar{display:flex;justify-content:flex-end;padding:0 0 8px;}
+.result-topbar{display:flex;justify-content:space-between;align-items:center;padding:0 0 8px;}
 .result-menu-wrap{position:relative;}
 .home-hero h1{font-size:2.35rem;line-height:1.15;letter-spacing:-.02em}
 .bg-gold{background:var(--gold)}
@@ -1232,6 +1232,7 @@ body.no-ad{padding-bottom:0!important;}
   <!-- ========== RESULT ========== -->
   <section id="result" class="hidden">
     <div class="result-topbar">
+      <div class="text-xs tracking-widest brand-gold font-bold">🎉 你的港式人格 <span id="versionBadge" class="text-[9px] bg-soft text-ink font-black px-2 py-0.5 rounded-full ml-1">生活版</span></div>
       <div class="result-menu-wrap">
         <button type="button" class="home-menu-btn" onclick="toggleResultMenu(event)" aria-label="選單">⋯</button>
         <div class="home-menu" id="resultMenu">
@@ -1253,7 +1254,6 @@ body.no-ad{padding-bottom:0!important;}
       <img id="shareCardImg" class="w-full rounded-2xl shadow-lg" alt="分享卡" style="display:block;">
     </div>
     <div class="text-center mb-4">
-      <div class="text-xs tracking-widest brand-gold font-bold mb-1">🎉 你的港式人格 <span id="versionBadge" class="text-[9px] bg-soft text-ink font-black px-2 py-0.5 rounded-full ml-1">生活版</span></div>
       <div class="text-xs text-gray-500">完成時間：<span id="finishTime">5 分鐘</span> · 用咗 <span id="finishQ">60</span> 題</div>
     </div>
     <div class="mb-2 px-1">
