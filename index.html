@@ -1242,7 +1242,7 @@ body.no-ad{padding-bottom:0!important;}
     <div class="page-hero">
       <div class="page-hero-row">
         <button type="button" class="page-back" onclick="goHome()">← 返回</button>
-        <h1>🎉 你的港式人格</h1>
+        <h1>你的港式人格</h1>
       </div>
       <p class="page-hero-sub"><span id="versionBadge" class="inline-block bg-white/15 border border-white/25 font-bold px-2.5 py-0.5 rounded-full">生活版</span></p>
     </div>
@@ -3748,7 +3748,7 @@ window.viewHistoryResult = function(idx){
     renderResult(r);
     generateCardImage();
     $("finishTime").innerText = formatTimeAgo(rec.timestamp);
-    if($("versionBadge")) $("versionBadge").innerText = "紀錄";
+    if($("versionBadge")) $("versionBadge").innerText = ver === "bb" ? "BB版" : ver === "advanced" ? "進階版" : "生活版";
     if($("finishQ")) $("finishQ").innerText = "—";
     show("result");
   } catch(e){
