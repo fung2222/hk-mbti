@@ -111,6 +111,17 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 #nickGrid button{transition:all .15s}
 #nickGrid button:active{transform:scale(.96)}
 #profileName:focus{box-shadow:0 0 0 3px rgba(212,169,95,.25)}
+/* 測前資料 wizard */
+.wiz-dots{display:flex;justify-content:center;gap:8px;}
+.wiz-dot{width:8px;height:8px;border-radius:50%;background:rgba(30,42,59,.15);transition:all .3s;}
+.wiz-dot.on{background:var(--gold);width:22px;border-radius:4px;}
+.wiz-step{animation:fadeUp .35s ease-out;}
+.gender-btn{border:2px solid #e5e0d5;background:#fff;border-radius:16px;padding:18px 12px;font-size:18px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--ink);transition:all .15s;-webkit-appearance:none;appearance:none;}
+.gender-btn.on{border-color:var(--gold);background:rgba(212,169,95,.1);}
+.cd-overlay{position:fixed;inset:0;background:rgba(30,42,59,.96);z-index:200;display:flex;align-items:center;justify-content:center;}
+.cd-number{font-size:130px;font-weight:900;color:#fff;font-family:Georgia,'Times New Roman',serif;line-height:1;}
+@keyframes cdPop{0%{transform:scale(.4);opacity:0}40%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+.cd-pop{animation:cdPop .8s cubic-bezier(.34,1.56,.64,1);}
 /* 主頁探索風琴 */
 .home-acc{background:#fff;border-radius:1.2rem;box-shadow:0 4px 24px rgba(0,0,0,.06);overflow:hidden}
 .home-acc-label{padding:1.25rem 1.25rem 0.5rem}
@@ -1209,21 +1220,67 @@ body.no-ad{padding-bottom:0!important;}
         <button type="button" class="page-back" onclick="goHome()">← 返回</button>
         <h1 id="profileTitle">測前資料</h1>
       </div>
-      <p class="page-hero-sub">姓名 + 稱呼會印喺分享卡</p>
+      <p class="page-hero-sub" id="profileStep">第 1 步 · 共 4 步</p>
     </div>
-    <div class="card p-5 mb-4">
-      <div class="text-xs tracking-widest brand-gold font-bold mb-2">🪪 你係邊位？</div>
-      <h2 class="text-xl font-black mb-1">輸入姓名 + 揀個稱呼</h2>
-      <p class="text-xs text-gray-600 mb-4">姓名稱呼會印喺結果分享卡同紀錄入面</p>
-      <label class="text-xs font-bold text-gray-600">姓名 / 花名</label>
-      <input id="profileName" type="text" maxlength="12" placeholder="例如：阿明、KaKa" class="w-full mt-1 mb-4 px-3 py-3 rounded-xl border-2 border-gray-200 focus:border-gold outline-none text-base bg-white">
-      <div class="text-xs font-bold text-gray-600 mb-2">稱呼（港式有趣款）</div>
+
+    <div class="wiz-dots mb-5">
+      <span class="wiz-dot on" data-dot="1"></span>
+      <span class="wiz-dot" data-dot="2"></span>
+      <span class="wiz-dot" data-dot="3"></span>
+      <span class="wiz-dot" data-dot="4"></span>
+    </div>
+
+    <!-- 第 1 步：姓名 -->
+    <div class="wiz-step" id="wizStep1">
+      <div class="text-4xl mb-3">👋</div>
+      <h2 class="text-xl font-black mb-1">你叫咩名？</h2>
+      <p class="text-xs text-gray-500 mb-4">姓名會印喺分享卡同紀錄入面</p>
+      <input id="profileName" type="text" maxlength="12" placeholder="例如：阿明、KaKa" class="w-full mb-4 px-3 py-3 rounded-xl border-2 border-gray-200 focus:border-gold outline-none text-base bg-white">
+      <button onclick="wizNext(1)" class="btn-gold w-full py-3.5 rounded-xl text-base font-black">下一頁 →</button>
+      <button onclick="wizSkip()" class="w-full mt-2 py-2.5 rounded-xl text-sm text-gray-400 underline" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">匿名港人 · 跳過</button>
+    </div>
+
+    <!-- 第 2 步：港式稱呼 -->
+    <div class="wiz-step hidden" id="wizStep2">
+      <div class="text-4xl mb-3">🎭</div>
+      <h2 class="text-xl font-black mb-1">揀個港式稱呼</h2>
+      <p class="text-xs text-gray-500 mb-4">揀一個啱你嘅稱呼（會印喺分享卡）</p>
       <div id="nickGrid" class="flex flex-wrap gap-2 mb-4"></div>
-      <div class="text-xs text-gray-500 mb-4">已揀：<span id="nickPreview" class="font-black brand-gold">未揀</span></div>
-      <button onclick="confirmProfileAndStart()" class="btn-gold w-full py-3.5 rounded-xl text-base font-black">開始測試 →</button>
-      <button onclick="confirmProfileAndStart(true)" class="w-full mt-2 py-2.5 rounded-xl text-sm text-gray-500 underline">匿名港人 · 直接開始</button>
+      <button onclick="wizNext(2)" class="btn-gold w-full py-3.5 rounded-xl text-base font-black">下一頁 →</button>
+      <button onclick="wizPrev(2)" class="w-full mt-2 py-2.5 rounded-xl text-sm text-gray-500" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">← 上一步</button>
+    </div>
+
+    <!-- 第 3 步：性別 -->
+    <div class="wiz-step hidden" id="wizStep3">
+      <div class="text-4xl mb-3">🚻</div>
+      <h2 class="text-xl font-black mb-1">你係男定女？</h2>
+      <p class="text-xs text-gray-500 mb-4">用嚟調整分享卡嘅語氣</p>
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <button type="button" onclick="pickGender('男')" id="genderM" class="gender-btn">👦 男</button>
+        <button type="button" onclick="pickGender('女')" id="genderF" class="gender-btn">👧 女</button>
+      </div>
+      <button onclick="wizNext(3)" class="btn-gold w-full py-3.5 rounded-xl text-base font-black">下一頁 →</button>
+      <button onclick="wizPrev(3)" class="w-full mt-2 py-2.5 rounded-xl text-sm text-gray-500" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">← 上一步</button>
+    </div>
+
+    <!-- 第 4 步：說明 + 開始 -->
+    <div class="wiz-step hidden" id="wizStep4">
+      <div class="text-4xl mb-3">🚀</div>
+      <h2 class="text-xl font-black mb-3">準備好未？</h2>
+      <div class="space-y-2.5 mb-5" style="list-style:none;padding:0;">
+        <div class="flex items-start gap-2 text-sm text-gray-600"><span class="text-base">🎯</span><span>題目會打亂，跟直覺揀就啱</span></div>
+        <div class="flex items-start gap-2 text-sm text-gray-600"><span class="text-base">🔁</span><span>多個版本結果互通</span></div>
+        <div class="flex items-start gap-2 text-sm text-gray-600"><span class="text-base">🖼️</span><span>測完會得到一張人格分享卡</span></div>
+      </div>
+      <button onclick="wizStart()" class="btn-gold w-full py-3.5 rounded-xl text-base font-black">正式開始</button>
+      <button onclick="wizPrev(4)" class="w-full mt-2 py-2.5 rounded-xl text-sm text-gray-500" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">← 上一步</button>
     </div>
   </section>
+
+  <!-- 倒數 overlay -->
+  <div id="countdownOverlay" class="cd-overlay hidden">
+    <div id="cdNumber" class="cd-number">3</div>
+  </div>
 
   <!-- ========== TEST ========== -->
   <section id="test" class="hidden">
@@ -2669,15 +2726,18 @@ window.openProfile = function(version){
   state.pendingVersion = version;
   const verName = version === "bb" ? "BB版" : version === "advanced" ? "進階版" : "生活版";
   if($("profileTitle")) $("profileTitle").innerText = verName;
-  // restore last used name/nick
+  // restore last used name/nick/gender
   try{
     const last = JSON.parse(localStorage.getItem("hkmbti_profile")||"null");
     if(last){
       if($("profileName") && last.name) $("profileName").value = last.name;
       if(last.nickname) state.nickname = last.nickname;
+      if(last.gender) state.gender = last.gender;
     }
   }catch(e){}
   renderNickGrid();
+  renderGender();
+  wizGo(1);  // 重置到第 1 步
   show("profile");
 };
 
@@ -2695,6 +2755,93 @@ window.renderNickGrid = function(){
 window.pickNickname = function(n){
   state.nickname = n;
   renderNickGrid();
+};
+
+// ===== 測前資料 wizard =====
+window.wizGo = function(n){
+  for(let i=1;i<=4;i++){
+    const el = $("wizStep"+i);
+    if(el) el.classList.toggle("hidden", i !== n);
+  }
+  document.querySelectorAll(".wiz-dot").forEach(d => {
+    d.classList.toggle("on", parseInt(d.getAttribute("data-dot"),10) === n);
+  });
+  const sub = $("profileStep");
+  if(sub) sub.innerText = "第 " + n + " 步 · 共 4 步";
+};
+
+window.wizNext = function(n){
+  if(n === 1){
+    const name = ($("profileName") && $("profileName").value || "").trim();
+    if(!name){ alert("請輸入姓名，或者撳「匿名港人 · 跳過」"); return; }
+  }
+  if(n === 2){
+    if(!state.nickname){ alert("請揀一個稱呼"); return; }
+  }
+  if(n === 3){
+    if(!state.gender){ alert("請揀男或女"); return; }
+  }
+  wizGo(n + 1);
+};
+
+window.wizPrev = function(n){
+  wizGo(n - 1);
+};
+
+window.wizSkip = function(){
+  if($("profileName")) $("profileName").value = "匿名港人";
+  wizGo(4);
+};
+
+window.pickGender = function(g){
+  state.gender = g;
+  renderGender();
+};
+
+window.renderGender = function(){
+  const g = state.gender || "";
+  const m = $("genderM"), f = $("genderF");
+  if(m) m.classList.toggle("on", g === "男");
+  if(f) f.classList.toggle("on", g === "女");
+};
+
+window.wizStart = function(){
+  const name = ($("profileName") && $("profileName").value || "").trim() || "匿名港人";
+  const nick = state.nickname || "神秘人";
+  const gender = state.gender || "";
+  state.displayName = name;
+  state.nickname = nick;
+  try{ localStorage.setItem("hkmbti_profile", JSON.stringify({name, nickname: nick, gender})); }catch(e){}
+  startCountdown();
+};
+
+window.startCountdown = function(){
+  const overlay = $("countdownOverlay");
+  const numEl = $("cdNumber");
+  if(!overlay || !numEl){ finishWizard(); return; }
+  overlay.classList.remove("hidden");
+  let n = 3;
+  const tick = () => {
+    if(n <= 0){
+      overlay.classList.add("hidden");
+      finishWizard();
+      return;
+    }
+    numEl.textContent = n;
+    numEl.classList.remove("cd-pop");
+    void numEl.offsetWidth;
+    numEl.classList.add("cd-pop");
+    n--;
+    setTimeout(tick, 850);
+  };
+  tick();
+};
+
+window.finishWizard = function(){
+  const v = state.pendingVersion || "life";
+  const resume = state.resumeData;
+  state.resumeData = null;
+  startTestWithVersion(v, resume);
 };
 
 window.confirmProfileAndStart = function(anon){
@@ -3819,9 +3966,16 @@ window.refreshResumeBanner = function(){
   if(go) go.onclick = () => {
     const r = loadProgress();
     if(!r) return;
-    openProfile(r.version);
+    // 直接續做，唔使再行 wizard
+    try{
+      const prof = JSON.parse(localStorage.getItem("hkmbti_profile")||"null");
+      if(prof){
+        if(prof.name) state.displayName = prof.name;
+        if(prof.nickname) state.nickname = prof.nickname;
+      }
+    }catch(e){}
     state.pendingVersion = r.version;
-    state.resumeData = { idx: r.idx, answers: r.answers, startedAt: r.startedAt };
+    startTestWithVersion(r.version, { idx: r.idx, answers: r.answers, startedAt: r.startedAt });
   };
   if(drop) drop.onclick = () => {
     if(confirm("放棄上次進度？")){
