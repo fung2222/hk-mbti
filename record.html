@@ -36,7 +36,7 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .back-nav:hover{color:#fff;}
 .hero-menu{position:absolute;right:0;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;flex-shrink:0;line-height:1;padding:0;}
 .hero-menu:hover{background:rgba(212,169,95,0.25);border-color:var(--gold);}
-.hero-popover{position:absolute;top:54px;right:16px;background:#1E2A3B;border:1px solid rgba(255,255,255,0.18);border-radius:10px;padding:6px;min-width:140px;box-shadow:0 6px 24px rgba(0,0,0,0.25);z-index:30;display:none;}
+.hero-popover{position:absolute;top:54px;right:16px;background:#1E2A3B;border:1px solid rgba(255,255,255,0.18);border-radius:10px;padding:6px;min-width:180px;box-shadow:0 6px 24px rgba(0,0,0,0.25);z-index:30;display:none;}
 .hero-popover.open{display:block;}
 .hero-popover a,.hero-popover button{display:block;width:100%;text-align:left;background:transparent;border:0;color:white;padding:8px 12px;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit;text-decoration:none;}
 .hero-popover a:hover,.hero-popover button:hover{background:rgba(212,169,95,0.18);}
@@ -110,10 +110,17 @@ body.no-ad{padding-bottom:0!important;}
   </div>
   <p style="margin:6px 0 0;font-size:12px;opacity:0.75;text-align:center;">分享卡、記錄及16型人格訪問統計</p>
   <div class="hero-popover" id="heroPopover" onclick="event.stopPropagation()">
-    <button onclick="clearAllRecords();closeHeroMenu();" style="color:#ff8a8a;">全部清除紀錄</button>
+    <a href="./" onclick="closeHeroMenu();">🏠 主頁</a>
+    <a href="./record.html" onclick="closeHeroMenu();">📋 我的紀錄</a>
+    <a href="./#about" onclick="closeHeroMenu();">📖 關於港式 MBTI</a>
+    <a href="./#spectrum" onclick="closeHeroMenu();">🔤 MBTI 性格光譜</a>
+    <a href="./#hub" onclick="closeHeroMenu();">📚 性格百科</a>
+    <a href="./#social" onclick="closeHeroMenu();">🤝 個人相處</a>
+    <a href="./#romance" onclick="closeHeroMenu();">💕 個人拍拖</a>
+    <a href="./stats.html" onclick="closeHeroMenu();">📊 香港16型統計</a>
+    <a href="./#privacy" onclick="closeHeroMenu();">🔒 私隱聲明</a>
     <div class="sep"></div>
-    <a href="./" onclick="closeHeroMenu();">← 返回</a>
-    <a href="./#home" onclick="closeHeroMenu();">再做一次測試</a>
+    <button onclick="clearAllRecords();closeHeroMenu();" style="color:#ff8a8a;">🗑 全部清除紀錄</button>
   </div>
 </div>
 <!-- Ad Slot: mid (after content) -->

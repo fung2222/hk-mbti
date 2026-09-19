@@ -486,17 +486,25 @@ body.no-ad{padding-bottom:0!important;}
          }
        };
        setTimeout(fire, 80);
-     } else if(hash === "#hub"){
-       const fire = () => {
-         if(typeof window.openHub === "function"){
-           window.openHub();
-         } else {
-           setTimeout(fire, 50);
-         }
+     } else {
+       const MAP = {
+         "#about": "openAbout",
+         "#spectrum": "openSpectrum",
+         "#hub": "openHub",
+         "#social": "openSocial",
+         "#romance": "openRomance",
+         "#privacy": "openPrivacy"
        };
-       setTimeout(fire, 80);
+       const fn = MAP[hash];
+       if(fn){
+         const fire = () => {
+           if(typeof window[fn] === "function"){ window[fn](); }
+           else { setTimeout(fire, 50); }
+         };
+         setTimeout(fire, 80);
+       }
      }
-   }catch(e){}
+     }catch(e){}
  });
  </script>
 
