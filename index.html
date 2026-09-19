@@ -2827,8 +2827,7 @@ window.finishTest = function(){
   const r = calcScore();
   window.lastResult = r.mbti;
   renderResult(r);
-  generateCardImage();  // 即時生成真實 PNG img
-  saveResult();  // 自動儲存
+  saveResult();  // 自動儲存（先存，card 縮圖生成後再補）
   clearProgress(); // 測完清 progress，避免下次彈續做
   const mins = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
   $("finishTime").innerText = mins + " 分鐘";
@@ -2836,6 +2835,24 @@ window.finishTest = function(){
   $("versionBadge").innerText = verName;
   $("finishQ").innerText = r.totalQ;
   show("result");
+  // 背景生成 card + 縮圖，補入最新記錄
+  generateCardImage().then(() => {
+    if(window._pendingCardThumb){
+      persistCardThumb(window._pendingCardThumb);
+      window._pendingCardThumb = null;
+    }
+  }).catch(() => {});
+};
+
+// 將分享卡縮圖寫入最新一條紀錄（record.html 顯示用）
+window.persistCardThumb = function(thumbUrl){
+  try{
+    let list = JSON.parse(localStorage.getItem("hkmbti_history")||"[]") || [];
+    if(!Array.isArray(list) || !list.length) return;
+    list[0].card = thumbUrl;
+    localStorage.setItem("hkmbti_history", JSON.stringify(list));
+    try{ loadHistory(); }catch(e){}
+  }catch(e){}
 };
 
 window.renderResult = function(r){
@@ -3077,6 +3094,13 @@ function renderCardBody(ctx, t, canvas){
     img.src = dataUrl;
     img.dataset.downloadName = `港式MBTI-${window.lastResult}.png`;
   }
+  // 縮圖（供紀錄頁顯示，~15-25KB JPEG）
+  try{
+    const tc = document.createElement("canvas");
+    tc.width = 180; tc.height = 320;
+    tc.getContext("2d").drawImage(canvas, 0, 0, 180, 320);
+    window._pendingCardThumb = tc.toDataURL("image/jpeg", 0.72);
+  }catch(e){}
   return dataUrl;
 }
 

@@ -79,6 +79,7 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .summary-num{font-size:32px;font-weight:900;color:var(--gold);line-height:1;}
 .rec-num{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:var(--ink);font-weight:900;font-size:18px;flex-shrink:0;font-family:-apple-system,sans-serif;letter-spacing:-0.02em;box-shadow:0 2px 6px rgba(212,169,95,0.3);}
 .history-row{align-items:center;}
+.rec-card{width:54px;height:96px;object-fit:cover;border-radius:8px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.16);}
 @media (min-width:769px){
   .stat-grid{grid-template-columns:repeat(8,1fr);}
   .hero h1{font-size:42px;}
@@ -267,6 +268,7 @@ function render(){
               <div class="history-mbti">${code} · ${meta.cn}</div>
               <div class="history-meta">${escapeHtml(verLabel)} · ${time}</div>
             </div>
+            ${rec.card ? `<img src="${rec.card}" class="rec-card" alt="分享卡">` : ""}
           </div>
           <div class="history-actions">
             <button class="act-view" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})">👁 睇結果</button>
