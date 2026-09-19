@@ -2891,12 +2891,46 @@ window.renderResult = function(r){
   // hero 嗰個 "🎉 你的港式人格" 已經喺 HTML
   // 詳細報告（desc + tags）繼續 render
   const t = window.TYPES[r.mbti.substring(0,4)];
+  const F = window.TYPES_FULL && window.TYPES_FULL[r.mbti.substring(0,4)];
+
+  const scoreBars = (t.score || []).map(s => {
+    const num = (s.match(/\d+/) || ["0"])[0];
+    const label = s.replace(/\d+/, "");
+    return `<div class="mb-2.5">
+      <div class="flex justify-between text-xs mb-1"><span class="text-gray-600 font-medium">${label}</span><span class="font-bold text-ink">${num}/10</span></div>
+      <div class="stat-bar"><div class="stat-fill" style="width:${parseInt(num,10)*10}%"></div></div>
+    </div>`;
+  }).join("");
+
+  const strengths = (F && F.strength) || [];
+  const weaknesses = (F && F.weakness) || [];
+  const prosCons = (strengths.length || weaknesses.length) ? `
+    <div class="mt-4 grid grid-cols-2 gap-3">
+      <div class="rounded-xl p-3" style="background:rgba(212,169,95,.08)">
+        <div class="text-xs font-bold mb-2">💪 強項</div>
+        ${strengths.slice(0,4).map(s => `<div class="text-xs text-gray-700 leading-relaxed">＋ ${s}</div>`).join("")}
+      </div>
+      <div class="rounded-xl p-3" style="background:rgba(30,42,59,.04)">
+        <div class="text-xs font-bold mb-2">⚠️ 弱項</div>
+        ${weaknesses.slice(0,4).map(s => `<div class="text-xs text-gray-700 leading-relaxed">－ ${s}</div>`).join("")}
+      </div>
+    </div>` : "";
+
+  const compatLine = (t.compat && t.compat.length)
+    ? `<div class="mt-3 text-xs text-gray-600">💞 最夾類型：<span class="font-bold text-ink">${t.compat.join("、")}</span></div>`
+    : "";
 
   let detailHtml = `
-    <p>${t.desc}</p>
+    <p class="text-sm text-gray-700 leading-relaxed">${t.desc}</p>
     <div class="flex gap-2 flex-wrap mt-3">
       ${t.tags.map(tag => `<span class="scenario-badge bg-soft text-ink">${tag}</span>`).join("")}
     </div>
+    <div class="mt-4 pt-4 border-t border-gray-100">
+      <div class="text-xs font-bold text-gray-500 mb-3">性格刻度</div>
+      ${scoreBars}
+    </div>
+    ${prosCons}
+    ${compatLine}
   `;
   $("personalityDetail").innerHTML = detailHtml;
 
