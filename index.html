@@ -515,6 +515,10 @@ body.no-ad{padding-bottom:0!important;}
          setTimeout(fire, 80);
        }
      }
+     // 清走 hash，避免 reload 重複觸發同一分頁
+     if(hash){
+       try{ history.replaceState(null, "", window.location.pathname + window.location.search); }catch(e){}
+     }
      }catch(e){}
  });
  </script>
@@ -3563,6 +3567,11 @@ function fallbackCopy(text){
 };
 
 window.goHome = function(){
+  try{
+    if(window.location.hash){
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+  }catch(e){}
   show("home");
   loadHistory();
 };
