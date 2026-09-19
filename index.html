@@ -1239,22 +1239,12 @@ body.no-ad{padding-bottom:0!important;}
 
   <!-- ========== RESULT ========== -->
   <section id="result" class="hidden">
-    <div class="result-topbar">
-      <div class="text-xs tracking-widest brand-gold font-bold">🎉 你的港式人格 <span id="versionBadge" class="text-[9px] bg-soft text-ink font-black px-2 py-0.5 rounded-full ml-1">生活版</span></div>
-      <div class="result-menu-wrap">
-        <button type="button" class="home-menu-btn" onclick="toggleResultMenu(event)" aria-label="選單">⋯</button>
-        <div class="home-menu" id="resultMenu">
-          <button type="button" onclick="goHome();closeResultMenu();">🏠 主頁</button>
-          <a href="./record.html" onclick="closeResultMenu()">📋 我的紀錄</a>
-          <button type="button" onclick="openAbout();closeResultMenu();">📖 關於港式 MBTI</button>
-          <button type="button" onclick="openSpectrum();closeResultMenu();">🔤 MBTI 性格光譜</button>
-          <button type="button" onclick="openHub();closeResultMenu();">📚 性格百科</button>
-          <button type="button" onclick="openSocial();closeResultMenu();">🤝 個人相處</button>
-          <button type="button" onclick="openRomance();closeResultMenu();">💕 個人拍拖</button>
-          <a href="./stats.html" onclick="closeResultMenu()">📊 香港16型統計</a>
-          <button type="button" onclick="openPrivacy();closeResultMenu();">🔒 私隱聲明</button>
-        </div>
+    <div class="page-hero">
+      <div class="page-hero-row">
+        <button type="button" class="page-back" onclick="goHome()">← 返回</button>
+        <h1>🎉 你的港式人格</h1>
       </div>
+      <p class="page-hero-sub"><span id="versionBadge" class="inline-block bg-white/15 border border-white/25 font-bold px-2.5 py-0.5 rounded-full">生活版</span></p>
     </div>
 
     <!-- Share Card -->
