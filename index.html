@@ -416,6 +416,12 @@ body.no-ad{padding-bottom:0!important;}
    // 1) 還原上次離開時嘅 section（reload 留喺原位）
    try{
      const last = sessionStorage.getItem("hkmbti_last_section");
+     let navType = "navigate";
+     try{
+       const en = performance.getEntriesByType && performance.getEntriesByType("navigation");
+       if(en && en.length) navType = en[0].type || "navigate";
+     }catch(e){}
+     const isReload = navType === "reload";
      if(last && last !== "home"){
        if(last === "test"){
          // 測試中 reload：直接由進度還原，唔彈主頁
@@ -433,12 +439,14 @@ body.no-ad{padding-bottom:0!important;}
            }
          }catch(e){}
        } else if(last === "result"){
-         // 結果頁 reload：由最近一次紀錄還原
-         try{
-           if(typeof window.viewHistoryResult === "function"){
-             window.viewHistoryResult(0);
-           }
-         }catch(e){}
+         // 結果頁：淨係真 reload 先還原；由其他頁導航返嚟應該去主頁
+         if(isReload){
+           try{
+             if(typeof window.viewHistoryResult === "function"){
+               window.viewHistoryResult(0);
+             }
+           }catch(e){}
+         }
        } else {
          const fn = ({
            about:"openAbout", spectrum:"openSpectrum", hub:"openHub",
@@ -976,14 +984,14 @@ body.no-ad{padding-bottom:0!important;}
   <section id="home" class="fade-up">
     <div class="home-hero">
     <div class="flex items-center justify-between mb-8">
-      <a href="./" id="homeLogoLink" class="flex items-center gap-2 cursor-pointer" style="-webkit-tap-highlight-color:transparent;text-decoration:none;color:inherit;">
+      <a href="./" id="homeLogoLink" onclick="goHome();return false;" class="flex items-center gap-2 cursor-pointer" style="-webkit-tap-highlight-color:transparent;text-decoration:none;color:inherit;">
         <img src="icon-192.png" class="w-9 h-9 rounded-lg flex-shrink-0" alt="港MBTI">
         <div class="font-black text-lg tracking-tight">港式 MBTI</div>
       </a>
       <div class="home-menu-wrap">
         <button type="button" class="home-menu-btn" onclick="toggleHomeMenu(event)" aria-label="選單">⋯</button>
         <div class="home-menu" id="homeMenu">
-          <a href="./" onclick="closeHomeMenu()">🏠 主頁</a>
+          <button type="button" onclick="goHome();closeHomeMenu();">🏠 主頁</button>
           <a href="./record.html" onclick="closeHomeMenu()">📋 我的紀錄</a>
           <button type="button" onclick="openAbout();closeHomeMenu();">📖 關於港式 MBTI</button>
           <button type="button" onclick="openSpectrum();closeHomeMenu();">🔤 MBTI 性格光譜</button>
