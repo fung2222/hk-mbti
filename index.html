@@ -487,6 +487,7 @@ body.no-ad{padding-bottom:0!important;}
    try{
      const hash = window.location.hash||"";
      const m = hash.match(/^#view=(\d+)$/);
+     const tm = hash.match(/^#type=([A-Z]{4})$/);
      if(m){
        const idx = parseInt(m[1], 10);
        const fire = () => {
@@ -495,6 +496,13 @@ body.no-ad{padding-bottom:0!important;}
          } else {
            setTimeout(fire, 50);
          }
+       };
+       setTimeout(fire, 80);
+     } else if(tm){
+       const code = tm[1];
+       const fire = () => {
+         if(typeof window.openType === "function"){ window.openType(code); }
+         else { setTimeout(fire, 50); }
        };
        setTimeout(fire, 80);
      } else {

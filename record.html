@@ -64,7 +64,7 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .act-del{background:#fee;color:#900;}
 .act-del:hover{background:#fdd;}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px;}
-.stat-pill{background:#fff;border-radius:10px;padding:10px 6px;text-align:center;font-size:11px;border:2px solid transparent;line-height:1.3;}
+.stat-pill{background:#fff;border-radius:10px;padding:10px 6px;text-align:center;font-size:11px;border:2px solid transparent;line-height:1.3;cursor:pointer;font-family:inherit;-webkit-appearance:none;appearance:none;}
 .stat-pill.visited{border-color:var(--gold);background:rgba(212,169,95,0.08);}
 .stat-pill .code{font-weight:900;font-size:14px;display:block;margin-bottom:2px;}
 .stat-pill.visited .code{color:var(--gold);}
@@ -209,14 +209,14 @@ function loadCounts(){
 
 // 16 type meta
 const TYPE_META = {
-  INTJ:{cn:"建築師",emoji:"🏛️"}, INTP:{cn:"邏輯學家",emoji:"🧪"},
-  ENTJ:{cn:"指揮官",emoji:"👔"}, ENTP:{cn:"辯論家",emoji:"💡"},
-  INFJ:{cn:"提倡者",emoji:"🌙"}, INFP:{cn:"調解員",emoji:"🌸"},
-  ENFJ:{cn:"主人公",emoji:"🤗"}, ENFP:{cn:"競選者",emoji:"🎉"},
-  ISTJ:{cn:"物流師",emoji:"📋"}, ISFJ:{cn:"守衛者",emoji:"🎁"},
-  ESTJ:{cn:"總經理",emoji:"📊"}, ESFJ:{cn:"執事",emoji:"🎈"},
-  ISTP:{cn:"鑒賞家",emoji:"🔧"}, ISFP:{cn:"探險家",emoji:"🎨"},
-  ESTP:{cn:"企業家",emoji:"🎲"}, ESFP:{cn:"表演者",emoji:"🎤"}
+  INTJ:{cn:"建築師",emoji:"🏛️",color:"#6B4E9E"}, INTP:{cn:"邏輯學家",emoji:"🧪",color:"#3E5F9E"},
+  ENTJ:{cn:"指揮官",emoji:"👔",color:"#1E8A8A"}, ENTP:{cn:"辯論家",emoji:"💡",color:"#E07B35"},
+  INFJ:{cn:"提倡者",emoji:"🌙",color:"#8A3E9E"}, INFP:{cn:"調解員",emoji:"🌸",color:"#B085C4"},
+  ENFJ:{cn:"主人公",emoji:"🤗",color:"#E05A4A"}, ENFP:{cn:"競選者",emoji:"🎉",color:"#D9A028"},
+  ISTJ:{cn:"物流師",emoji:"📋",color:"#4A6E9E"}, ISFJ:{cn:"守衛者",emoji:"🎁",color:"#5C8A5C"},
+  ESTJ:{cn:"總經理",emoji:"📊",color:"#A85240"}, ESFJ:{cn:"執事",emoji:"🎈",color:"#E08058"},
+  ISTP:{cn:"鑒賞家",emoji:"🔧",color:"#3E8A7A"}, ISFP:{cn:"探險家",emoji:"🎨",color:"#C0709E"},
+  ESTP:{cn:"企業家",emoji:"🎲",color:"#6B8A3E"}, ESFP:{cn:"表演者",emoji:"🎤",color:"#C04070"}
 };
 const VER_LABEL = {life:"生活版", advanced:"進階版", bb:"BB版"};
 
@@ -291,13 +291,14 @@ function render(){
   grid.innerHTML = Object.keys(TYPE_META).map(code => {
     const c = parseInt(counts[code]||0, 10) || 0;
     const meta = TYPE_META[code];
-    const visited = c > 0 ? "visited" : "";
+    const visited = c > 0;
+    const color = meta.color || "#999";
     return `
-      <div class="stat-pill ${visited}">
-        <span class="code">${code}</span>
+      <button type="button" class="stat-pill ${visited ? "visited" : ""}" style="border-color:${color}" onclick="goType('${code}')">
+        <span class="code" style="color:${visited ? "var(--gold)" : color}">${code}</span>
         <span style="display:block;font-size:10px;opacity:0.7;">${meta.cn}</span>
         <span class="count">${c > 0 ? c + "次" : "—"}</span>
-      </div>`;
+      </button>`;
   }).join("");
 }
 
@@ -319,6 +320,13 @@ function viewRec(id, i){
   // 主頁 detect 到 #view=N 就自動 call viewHistoryResult(N)
   try{
     location.href = "./#view=" + i;
+  }catch(e){ toast("跳轉失敗"); }
+}
+
+function goType(code){
+  // 跳去主頁睇該類型嘅完整百科（#type=XXXX）
+  try{
+    location.href = "./#type=" + code;
   }catch(e){ toast("跳轉失敗"); }
 }
 
