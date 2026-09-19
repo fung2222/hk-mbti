@@ -62,7 +62,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   border-color:#D4A95F;background:linear-gradient(135deg,#FFF9ED,#FFF1D6);
 }
 .ver-btn[data-ver="life"] .ver-arrow{color:#C4922E}
-.ver-btn[data-ver="life"] .ver-hint{color:#8B6F3D}
+.ver-btn[data-ver="life"] .ver-hint{color:#fff}
 .ver-btn[data-ver="life"].ver-lit{
   box-shadow:0 8px 24px rgba(212,169,95,.35),0 0 0 3px rgba(212,169,95,.22);
   transform:translateY(-2px) scale(1.02);
@@ -73,7 +73,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   border-color:#B8BEC6;background:linear-gradient(135deg,#F6F7F9,#E9ECEF);
 }
 .ver-btn[data-ver="advanced"] .ver-arrow{color:#8A9099}
-.ver-btn[data-ver="advanced"] .ver-hint{color:#6E747D}
+.ver-btn[data-ver="advanced"] .ver-hint{color:#fff}
 .ver-btn[data-ver="advanced"].ver-lit{
   box-shadow:0 8px 24px rgba(160,167,176,.32),0 0 0 3px rgba(160,167,176,.22);
   transform:translateY(-2px) scale(1.02);
@@ -84,7 +84,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   border-color:#CD7F32;background:linear-gradient(135deg,#FBF1E7,#F3E0C8);
 }
 .ver-btn[data-ver="bb"] .ver-arrow{color:#A96A2B}
-.ver-btn[data-ver="bb"] .ver-hint{color:#8A5A26}
+.ver-btn[data-ver="bb"] .ver-hint{color:#fff}
 .ver-btn[data-ver="bb"].ver-lit{
   box-shadow:0 8px 24px rgba(205,127,50,.32),0 0 0 3px rgba(205,127,50,.22);
   transform:translateY(-2px) scale(1.02);
@@ -101,7 +101,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   background:linear-gradient(135deg,#FDF8EC,#F5EBD3);
 }
 .ver-btn .ver-hint{display:none;margin-top:.4rem;font-weight:800}
-.ver-btn.ver-lit .ver-hint{display:block;animation:fadeUp .3s ease-out}
+.ver-btn.ver-lit .ver-hint{display:inline-flex;margin-top:.55rem;background:var(--gold);color:#fff;padding:7px 16px;border-radius:999px;font-size:13px;animation:fadeUp .3s ease-out;box-shadow:0 2px 8px rgba(196,146,46,.35)}
 .ver-btn.ver-lit .ver-arrow{transform:translateX(4px)}
 .stat-bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
 .stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
@@ -1038,7 +1038,7 @@ body.no-ad{padding-bottom:0!important;}
             <div>
               <div class="text-base font-black text-ink">🌟 生活版（完整測試）</div>
               <div class="text-xs text-gray-600 mt-0.5">60 題 · 5 分鐘 · 最準確</div>
-              <div class="ver-hint text-xs">✨ 進入</div>
+              <div class="ver-hint text-xs">✨ 立即進行</div>
             </div>
             <div class="ver-arrow text-2xl transition">→</div>
           </div>
@@ -1048,7 +1048,7 @@ body.no-ad{padding-bottom:0!important;}
             <div>
               <div class="text-base font-black text-ink">🎯 進階版（快速版）</div>
               <div class="text-xs text-gray-600 mt-0.5">30 題 · 3 分鐘 · 平衡選擇</div>
-              <div class="ver-hint text-xs">✨ 進入</div>
+              <div class="ver-hint text-xs">✨ 立即進行</div>
             </div>
             <div class="ver-arrow text-2xl transition">→</div>
           </div>
@@ -1058,7 +1058,7 @@ body.no-ad{padding-bottom:0!important;}
             <div>
               <div class="text-base font-black text-ink">🍼 BB 版（極簡版）</div>
               <div class="text-xs text-gray-600 mt-0.5">10 題 · 1 分鐘 · 純粹試下</div>
-              <div class="ver-hint text-xs">✨ 進入</div>
+              <div class="ver-hint text-xs">✨ 立即進行</div>
             </div>
             <div class="ver-arrow text-2xl transition">→</div>
           </div>
