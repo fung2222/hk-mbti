@@ -41,7 +41,7 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 <body>
 <div class="hero">
   <div class="hero-row">
-    <a href="./" class="back-nav">← 返回</a>
+    <a href="./" class="back-nav" onclick="siteBack();return false;">返回</a>
     <h1>香港16型人格統計</h1>
     <button class="hero-menu" onclick="toggleHeroMenu(event)" aria-label="更多">⋯</button>
   </div>
@@ -67,6 +67,16 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
   <p class="text-xs text-gray-500 mt-4 pt-3" style="border-top:1px solid #eee;">基線參考常見 16 型分佈 × 143,021 樣本量級；你喺呢部手機完成測試會 +1。唔係全港實時普查。</p>
 </div>
 <script>
+function siteBack(){
+  try{
+    if(document.referrer){
+      var u = new URL(document.referrer, location.href);
+      if(u.origin === location.origin){ history.back(); return; }
+    }
+  }catch(e){}
+  location.href = './';
+}
+
 function toggleHeroMenu(e){
   if(e) e.stopPropagation();
   const p = document.getElementById('heroPopover');

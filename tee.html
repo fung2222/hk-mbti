@@ -82,7 +82,7 @@ body.no-ad{padding-bottom:0!important;}
 
 <div class="hero">
   <div class="hero-row">
-    <a href="./" class="back-nav">← 返回</a>
+    <a href="./" class="back-nav" onclick="siteBack();return false;">返回</a>
     <h1>港式 MBTI T卹</h1>
     <button class="hero-menu" onclick="toggleHeroMenu(event)" aria-label="更多">⋯</button>
   </div>
@@ -150,6 +150,16 @@ body.no-ad{padding-bottom:0!important;}
 </div>
 
 <script>
+function siteBack(){
+  try{
+    if(document.referrer){
+      var u = new URL(document.referrer, location.href);
+      if(u.origin === location.origin){ history.back(); return; }
+    }
+  }catch(e){}
+  location.href = './';
+}
+
 function toggleHeroMenu(e){
   if(e) e.stopPropagation();
   const p = document.getElementById('heroPopover');
