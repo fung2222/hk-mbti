@@ -41,8 +41,9 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .hero-popover a,.hero-popover button{display:block;width:100%;text-align:left;background:transparent;border:0;color:white;padding:8px 12px;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit;text-decoration:none;}
 .hero-popover a:hover,.hero-popover button:hover{background:rgba(212,169,95,0.18);}
 .hero-popover .sep{height:1px;background:rgba(255,255,255,0.12);margin:4px 0;}
-.section-title{font-size:18px;font-weight:900;margin:28px 16px 12px;display:flex;align-items:center;gap:8px;}
+.section-title{font-size:18px;font-weight:900;margin:28px 16px 8px;display:flex;align-items:center;gap:8px;}
 .section-title:before{content:"";display:inline-block;width:4px;height:20px;background:var(--gold);border-radius:2px;}
+.section-note{margin:0 16px 12px;font-size:13px;color:#888;line-height:1.6;}
 .nav-home{display:inline-flex;align-items:center;gap:8px;margin:18px auto 12px;padding:8px 16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);border-radius:24px;font-size:14px;color:white;text-decoration:none;font-weight:700;transition:all 0.15s;}
 .nav-home:hover{background:rgba(212,169,95,0.2);border-color:var(--gold);transform:translateY(-1px);}
 .nav-home:active{transform:translateY(0);}
@@ -124,7 +125,8 @@ body.no-ad{padding-bottom:0!important;}
   </div>
 </div>
 
-<div class="section-title">📜 最近 5 次測試</div>
+<div class="section-title">最近 5 次測試</div>
+<p class="section-note">只保留最近五次紀錄，新記錄會覆寫最舊的紀錄</p>
 <div id="historyList">
   <div class="empty">
     <div class="ico">📭</div>
@@ -325,20 +327,50 @@ function goType(code){
   }catch(e){ toast("跳轉失敗"); }
 }
 
-function shareRec(i){
+async function shareRec(i){
   const rec = loadHistory()[i];
   if(!rec) return;
+  const src = rec.cardShare || rec.card;
   const code = (rec.mbti||"").substring(0,4);
-  const meta = TYPE_META[code] || {cn:code, emoji:"❓"};
-  const ver = VER_LABEL[rec.version] || "";
-  const text = `我嘅港式 MBTI：${code} ${meta.cn}\n${ver} · ${rec.timestamp ? timeAgo(rec.timestamp) : ""}\n\n做完一次又一次 😂\n${location.origin}${location.pathname.replace("record.html","")}`;
-  
-  if(navigator.share){
-    navigator.share({title:"港式 MBTI · "+code, text}).catch(()=>{});
-  } else if(navigator.clipboard){
-    navigator.clipboard.writeText(text).then(()=>toast("✅ 已複製到剪貼簿"));
-  } else {
-    prompt("複製呢段：", text);
+  if(!src){
+    toast("呢筆未有分享卡圖片");
+    return;
+  }
+  let file = null;
+  try{
+    const blob = await (await fetch(src)).blob();
+    const isPng = (blob.type||"").indexOf("png") >= 0 || src.indexOf("image/png") >= 0;
+    file = new File([blob], "港式MBTI-" + code + (isPng ? ".png" : ".jpg"), { type: blob.type || (isPng ? "image/png" : "image/jpeg") });
+  }catch(e){ file = null; }
+  if(file && navigator.share && navigator.canShare){
+    let canFile = false;
+    try{ canFile = navigator.canShare({ files: [file] }); }catch(e){ canFile = false; }
+    if(canFile){
+      const attempts = [
+        { files: [file] },
+        { files: [file], text: "我嘅港式 MBTI：" + code }
+      ];
+      for(const payload of attempts){
+        try{
+          await navigator.share(payload);
+          toast("✅ 已叫起分享");
+          return;
+        }catch(e){
+          if(e && e.name === "AbortError") return;
+        }
+      }
+    }
+  }
+  try{
+    const a = document.createElement("a");
+    a.href = src;
+    a.download = "港式MBTI-" + code + ".jpg";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    toast("✅ 已嘗試儲存分享卡");
+  }catch(e2){
+    toast("分享失敗，請長按縮圖儲存");
   }
 }
 
