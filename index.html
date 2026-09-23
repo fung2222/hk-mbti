@@ -124,18 +124,18 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .cd-pop{animation:cdPop .8s cubic-bezier(.34,1.56,.64,1);}
 /* 主頁探索風琴 */
 .home-acc{background:#fff;border-radius:1.2rem;box-shadow:0 4px 24px rgba(0,0,0,.06);overflow:hidden}
-.home-acc-label{padding:1.25rem 1.25rem 0.5rem}
+.home-acc-label{padding:1.4rem 1.35rem 0.75rem}
 .home-acc-item{border-bottom:1px solid #f0ebe3}
 .home-acc-item:last-child{border-bottom:none}
 .home-acc-head{
-  width:100%;display:flex;align-items:center;gap:.75rem;
-  padding:1rem 1.25rem;text-align:left;background:transparent;border:0;cursor:pointer;
+  width:100%;display:flex;align-items:center;gap:.85rem;
+  padding:1.2rem 1.35rem;text-align:left;background:transparent;border:0;cursor:pointer;
   transition:background .15s
 }
 .home-acc-head:hover{background:#fffaf0}
 .home-acc-head:active{background:#fff5e0}
 .home-acc-ico{font-size:1.35rem;flex-shrink:0;line-height:1}
-.home-acc-title{flex:1;font-weight:800;font-size:1rem;color:var(--ink)}
+.home-acc-title{flex:1;font-weight:800;font-size:1rem;color:var(--ink);line-height:1.35;letter-spacing:.01em}
 .home-acc-chev{
   flex-shrink:0;width:28px;height:28px;border-radius:999px;
   background:var(--soft);display:flex;align-items:center;justify-content:center;
@@ -147,10 +147,10 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .home-acc-body{
   max-height:0;overflow:hidden;opacity:0;
   transition:max-height .56s cubic-bezier(.22,1,.36,1),opacity .4s ease,padding .4s ease;
-  padding:0 1.25rem
+  padding:0 1.35rem
 }
-.home-acc-item.open .home-acc-body{max-height:160px;opacity:1;padding:0 1.25rem .95rem}
-.home-acc-desc{font-size:.9rem;color:#6b6560;line-height:1.45;margin-bottom:.65rem;
+.home-acc-item.open .home-acc-body{max-height:240px;opacity:1;padding:.15rem 1.35rem 1.4rem}
+.home-acc-desc{font-size:.9rem;color:#6b6560;line-height:1.75;margin-bottom:1rem;letter-spacing:.01em;
   transform:translateY(-8px);opacity:0;
   transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .45s ease
 }
