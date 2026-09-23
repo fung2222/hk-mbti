@@ -53,7 +53,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .option{font-size:1.05rem}
 .option .flex-1{font-size:1.05rem;line-height:1.45}
 /* 版本雙擊確認 · 三色預設 */
-.ver-btn{transition:all .2s cubic-bezier(.34,1.56,.64,1);transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,.06);border-width:2px;border-style:solid;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.ver-btn{transition:all .45s cubic-bezier(.22,1,.36,1);transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,.06);border-width:2px;border-style:solid;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
 .ver-btn:active{transform:scale(.98)}
 /* 生活版 · 金 */
 .ver-btn[data-ver="life"]{
@@ -95,8 +95,17 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   transform:translateY(-2px) scale(1.01);
   background:linear-gradient(135deg,#FDF8EC,#F5EBD3);
 }
-.ver-btn .ver-hint{display:none;margin-top:.4rem;font-weight:800;font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;line-height:1.3;text-align:left}
-.ver-btn.ver-lit .ver-hint{display:inline-flex;margin-top:.55rem;background:rgba(212,169,95,.12);color:#7C6B45;padding:7px 16px;border-radius:999px;font-size:13px;font-weight:600;border:1px solid rgba(212,169,95,.35);animation:popIn .35s cubic-bezier(.34,1.56,.64,1)}
+.ver-btn .ver-hint{
+  display:inline-flex;max-height:0;overflow:hidden;opacity:0;margin-top:0;padding:0 16px;
+  font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;line-height:1.3;text-align:left;
+  background:rgba(212,169,95,.12);color:#7C6B45;border-radius:999px;font-size:13px;font-weight:600;
+  border:1px solid transparent;pointer-events:none;
+  transition:max-height .7s cubic-bezier(.22,1,.36,1),opacity .5s ease,margin .5s ease,padding .5s ease,border-color .4s ease
+}
+.ver-btn.ver-lit .ver-hint{
+  max-height:48px;opacity:1;margin-top:.55rem;padding:7px 16px;pointer-events:auto;
+  border-color:rgba(212,169,95,.35)
+}
 .ver-btn.ver-lit .ver-arrow{transform:translateX(4px)}
 .stat-bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
 .stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
