@@ -460,6 +460,11 @@ body.no-ad{padding-bottom:0!important;}
    // v1.7.9: detect #view=N hash from record.html → replay history
    try{
      const hash = window.location.hash||"";
+     if(hash) window._openViaHash = true;
+     try{
+       history.replaceState({hk:1,id:"home"}, "", window.location.pathname + window.location.search);
+       window._histSeeded = true;
+     }catch(e){}
      const m = hash.match(/^#view=(\d+)$/);
      const tm = hash.match(/^#type=([A-Z]{4})$/);
      if(m){
@@ -496,10 +501,6 @@ body.no-ad{padding-bottom:0!important;}
          };
          setTimeout(fire, 80);
        }
-     }
-     // 清走 hash，避免 reload 重複觸發同一分頁
-     if(hash){
-       try{ history.replaceState(null, "", window.location.pathname + window.location.search); }catch(e){}
      }
      }catch(e){}
  });
@@ -1994,7 +1995,23 @@ window.$ = function(id){return document.getElementById(id)};
 
 window._navStack = [];
 window._navSilent = false;
+window._fromPop = false;
+window._histSeeded = false;
+window._histDepth = 0;
+window._openViaHash = false;
 window._showing = "home";
+window._histWrite = function(mode){
+  try{
+    const snap = window._navSnap();
+    snap.hk = 1;
+    const url = window.location.pathname + window.location.search;
+    if(mode === "replace") history.replaceState(snap, "", url);
+    else {
+      history.pushState(snap, "", url);
+      window._histDepth = (window._histDepth || 0) + 1;
+    }
+  }catch(e){}
+};
 window._lastSocialScenario = null;
 window._lastRomanceScenario = null;
 window._lastType = null;
@@ -2021,6 +2038,7 @@ window._navSnap = function(){
 };
 
 window.show = function(id){
+  const prevId = window._showing;
   if(!window._navSilent && window._showing && window._showing !== id){
     const eph = {profile:1, test:1};
     if(!eph[window._showing] && !eph[id]){
@@ -2040,6 +2058,22 @@ window.show = function(id){
   // 淨係測試頁鎖下拉（防誤觸 reload 清走進度）
   document.body.classList.toggle("in-test", id === "test");
   try{ sessionStorage.setItem("hkmbti_last_section", id); }catch(e){}
+  // Android / 瀏覽器返回掣：用 history 先唔會直接關 app
+  if(!window._fromPop){
+    if(!window._histSeeded){
+      window._histSeeded = true;
+      window._histWrite("replace");
+    } else if(!window._navSilent && id !== prevId){
+      if(window._openViaHash){
+        window._openViaHash = false;
+        window._histWrite("replace");
+      } else if(id === "result" && prevId === "test"){
+        window._histWrite("replace");
+      } else {
+        window._histWrite("push");
+      }
+    }
+  }
 };
 
 // ===== 版本雙擊確認（著燈 → 再撳進入）=====
@@ -3688,18 +3722,22 @@ function fallbackCopy(text){
 window.goHome = function(){
   window._navStack = [];
   window._navSilent = true;
-  try{
-    if(window.location.hash){
-      history.replaceState(null, "", window.location.pathname + window.location.search);
-    }
-  }catch(e){}
   show("home");
   try{ loadHistory(); }catch(e){}
   window._navSilent = false;
+  try{
+    const snap = window._navSnap();
+    snap.hk = 1;
+    history.replaceState(snap, "", window.location.pathname + window.location.search);
+    window._histSeeded = true;
+  }catch(e){}
 };
 
 window.restoreNav = function(prev){
   const id = prev && prev.id;
+  if(id === "home"){ show("home"); return; }
+  if(id === "profile"){ show("profile"); return; }
+  if(id === "test"){ show("test"); return; }
   if(id === "socialArticle" && prev.sKey && prev.articleType){
     openSocialArticle(prev.sKey, prev.articleType); return;
   }
@@ -3738,6 +3776,13 @@ window.restoreNav = function(prev){
 };
 
 window.goBack = function(){
+  if((window._histDepth || 0) > 0){
+    try{ history.back(); return; }catch(e){}
+  }
+  const st = history.state;
+  if(st && st.hk && st.id && st.id !== "home" && st.id !== window._showing){
+    try{ history.back(); return; }catch(e){}
+  }
   const onlyHome = !window._navStack.length || (window._navStack.length === 1 && window._navStack[0].id === "home");
   if(window._cameFromOtherPage && onlyHome){
     try{ history.back(); return; }catch(e){}
@@ -3752,6 +3797,22 @@ window.goBack = function(){
   catch(e){ goHome(); }
   window._navSilent = false;
 };
+
+window.addEventListener("popstate", function(e){
+  const st = e.state;
+  if(!st || !st.hk) return;
+  if(window._histDepth > 0) window._histDepth--;
+  window._fromPop = true;
+  window._navSilent = true;
+  try{
+    if(st.id === "home") show("home");
+    else window.restoreNav(st);
+  }catch(err){
+    try{ show("home"); }catch(e2){}
+  }
+  window._navSilent = false;
+  window._fromPop = false;
+});
 
 // ====================== History Functions ======================
 window.getHistoryList = function(){
