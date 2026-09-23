@@ -137,15 +137,17 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .home-acc-chev{
   flex-shrink:0;width:28px;height:28px;border-radius:999px;
   background:var(--soft);display:flex;align-items:center;justify-content:center;
-  font-size:.85rem;color:#8a7a5a
+  font-size:.85rem;color:#8a7a5a;
+  transition:transform .45s ease,background .35s ease,color .35s ease
 }
 .home-acc-item.open .home-acc-head{background:linear-gradient(90deg,#fff8ec,#fff)}
 .home-acc-item.open .home-acc-chev{transform:rotate(180deg);background:var(--gold);color:var(--ink)}
 .home-acc-body{
-  display:none;
-  padding:.15rem 1.35rem 1.4rem
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .7s cubic-bezier(.22,1,.36,1),opacity .5s ease,padding .5s ease;
+  padding:0 1.35rem
 }
-.home-acc-item.open .home-acc-body{display:block}
+.home-acc-item.open .home-acc-body{max-height:240px;opacity:1;padding:.15rem 1.35rem 1.4rem}
 .home-acc-desc{font-size:.9rem;color:#6b6560;line-height:1.75;margin-bottom:1rem;letter-spacing:.01em}
 .home-acc-go{
   display:inline-flex;align-items:center;gap:.35rem;
@@ -1023,7 +1025,7 @@ body.no-ad{padding-bottom:0!important;}
           <div class="flex items-center justify-between">
             <div>
               <div class="text-base font-black text-ink">📋 我的記錄 <span id="homeRecordCount" class="text-gray-500 font-bold">（0/5）</span></div>
-              <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goRecord()">打開最近五次測試紀錄</button>
+              <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goRecord()">最近5次記錄</button>
             </div>
           </div>
         </div>
