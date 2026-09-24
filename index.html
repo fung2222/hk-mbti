@@ -214,6 +214,24 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
 .hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
 .hub-type-hint{font-size:11px;line-height:1.35;color:#8a8174;text-align:left;margin:0 0 8px;font-weight:400;}
+.article-type-stage{display:flex;justify-content:center;margin:4px 0 22px;}
+.article-type-card{
+  width:7.4rem;aspect-ratio:9/16;border-radius:0;color:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;box-shadow:0 8px 22px rgba(0,0,0,.22);pointer-events:none;
+}
+.article-guide{margin:0 4px 20px;}
+.article-guide-h{
+  font-size:.72rem;letter-spacing:.16em;font-weight:700;color:var(--gold);
+  margin:0 0 14px;text-align:left;
+}
+.article-guide-body p{
+  margin:0 0 14px;line-height:1.8;font-size:1.05rem;color:#3a3632;
+}
+.article-guide-kicker{
+  font-size:.7rem;letter-spacing:.14em;font-weight:700;color:var(--gold);
+  margin:18px 0 8px;
+}
 .hub-type-card{
   aspect-ratio:9/16;border-radius:0;color:#fff;border:0;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.16);
@@ -933,19 +951,23 @@ body.no-ad{padding-bottom:0!important;}
     <div class="page-hero">
       <div class="page-hero-row">
         <button type="button" class="page-back" onclick="goBack()">返回</button>
-        <h1 id="socialArticleBreadcrumb">攻略 / 場景 / 類型</h1>
+        <h1 id="socialArticleTitle">WhatsApp 群組</h1>
+      </div>
+      <p class="page-hero-sub" id="socialArticleBreadcrumb">社交 / WhatsApp 群組 / INTJ</p>
+    </div>
+    <span id="socialArticleScenario" class="hidden"></span>
+    <span id="socialArticleEmoji" class="hidden"></span>
+
+    <div class="article-type-stage">
+      <div id="socialArticleHero" class="article-type-card">
+        <div class="hub-type-code" id="socialArticleType">INTJ</div>
+        <div class="hub-type-cn" id="socialArticleCn"></div>
       </div>
     </div>
 
-    <div id="socialArticleHero" class="card p-6 mb-4 text-center" style="background:linear-gradient(135deg, #5B4B8A, #2D2A4A); color:white">
-      <div class="text-5xl font-black mb-2" id="socialArticleType">INTJ</div>
-      <h2 class="text-lg font-bold mb-1" id="socialArticleScenario">WhatsApp 群組</h2>
-      <p class="text-sm opacity-90 italic" id="socialArticleEmoji">🎓</p>
-    </div>
-
-    <div class="card p-5 mb-4">
-      <h3 class="font-bold mb-3 text-sm">📖 完整攻略</h3>
-      <div id="socialArticleBody" class="text-sm text-gray-700 leading-relaxed"></div>
+    <div class="article-guide">
+      <h3 class="article-guide-h">完整攻略</h3>
+      <div id="socialArticleBody" class="article-guide-body"></div>
     </div>
 
     <div class="card p-5 mb-4 text-center">
@@ -973,19 +995,23 @@ body.no-ad{padding-bottom:0!important;}
     <div class="page-hero">
       <div class="page-hero-row">
         <button type="button" class="page-back" onclick="goBack()">返回</button>
-        <h1 id="romanceArticleBreadcrumb">戀愛 / 場景 / 類型</h1>
+        <h1 id="romanceArticleTitle">點同佢拍拖</h1>
+      </div>
+      <p class="page-hero-sub" id="romanceArticleBreadcrumb">拍拖 / 場景 / INTJ</p>
+    </div>
+    <span id="romanceArticleScenario" class="hidden"></span>
+    <span id="romanceArticleEmoji" class="hidden"></span>
+
+    <div class="article-type-stage">
+      <div id="romanceArticleHero" class="article-type-card">
+        <div class="hub-type-code" id="romanceArticleType">INTJ</div>
+        <div class="hub-type-cn" id="romanceArticleCn"></div>
       </div>
     </div>
 
-    <div id="romanceArticleHero" class="card p-6 mb-4 text-center" style="background:linear-gradient(135deg, #C8786B, #6B3A35); color:white">
-      <div class="text-5xl font-black mb-2" id="romanceArticleType">INTJ</div>
-      <h2 class="text-lg font-bold mb-1" id="romanceArticleScenario">點同佢拍拖</h2>
-      <p class="text-sm opacity-90 italic" id="romanceArticleEmoji">💕</p>
-    </div>
-
-    <div class="card p-5 mb-4">
-      <h3 class="font-bold mb-3 text-sm">📖 完整攻略</h3>
-      <div id="romanceArticleBody" class="text-sm text-gray-700 leading-relaxed"></div>
+    <div class="article-guide">
+      <h3 class="article-guide-h">完整攻略</h3>
+      <div id="romanceArticleBody" class="article-guide-body"></div>
     </div>
 
     <div class="card p-5 mb-4 text-center">
@@ -4281,18 +4307,39 @@ window.openSocialScenario = function(scenarioKey){
   window.scrollTo(0,0);
 };
 
+window.formatGuideHtml = function(raw){
+  if(!raw) return "";
+  const esc = function(s){
+    return String(s).replace(/[&<>]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; });
+  };
+  const paras = function(s){
+    return s.split(/。/).map(function(x){ return x.trim(); }).filter(Boolean)
+      .map(function(x){ return "<p>" + esc(x) + "。</p>"; }).join("");
+  };
+  const chunks = String(raw).split(/\*\*([^*]+)\*\*[：:]/);
+  let html = "";
+  if(chunks[0] && chunks[0].trim()) html += paras(chunks[0].trim());
+  for(let i = 1; i < chunks.length; i += 2){
+    html += "<div class=\"article-guide-kicker\">" + esc(chunks[i]) + "</div>";
+    html += paras((chunks[i + 1] || "").trim());
+  }
+  return html;
+};
 window.openSocialArticle = function(scenarioKey, type){
   const article = window.SOCIAL[scenarioKey].articles[type];
   const T = window.TYPES[type];
   if(!article || !T) return;
+  const s = window.SOCIAL[scenarioKey];
   window._lastSocialScenario = scenarioKey;
   window._lastArticleType = type;
+  $("socialArticleTitle").innerText = s.name;
+  $("socialArticleBreadcrumb").innerText = "社交 / " + s.name + " / " + type;
   $("socialArticleType").innerText = type;
-  $("socialArticleScenario").innerText = window.SOCIAL[scenarioKey].name;
-  $("socialArticleEmoji").innerText = window.SOCIAL[scenarioKey].emoji;
-  $("socialArticleBreadcrumb").innerText = `社交 / ${window.SOCIAL[scenarioKey].name} / ${type}`;
-  $("socialArticleHero").style.background = `linear-gradient(135deg, ${T.color[0]}, ${T.color[1]})`;
-  $("socialArticleBody").innerText = article;
+  $("socialArticleCn").innerText = T.cn;
+  $("socialArticleScenario").innerText = s.name;
+  $("socialArticleEmoji").innerText = s.emoji;
+  $("socialArticleHero").style.background = "linear-gradient(135deg, " + T.color[0] + ", " + T.color[1] + ")";
+  $("socialArticleBody").innerHTML = window.formatGuideHtml(article);
   show("socialArticle");
   window.scrollTo(0,0);
 };
@@ -4359,14 +4406,17 @@ window.openRomanceArticle = function(scenarioKey, type){
   const article = window.ROMANCE[scenarioKey].articles[type];
   const T = window.TYPES[type];
   if(!article || !T) return;
+  const s = window.ROMANCE[scenarioKey];
   window._lastRomanceScenario = scenarioKey;
   window._lastArticleType = type;
+  $("romanceArticleTitle").innerText = s.name;
+  $("romanceArticleBreadcrumb").innerText = "拍拖 / " + s.name + " / " + type;
   $("romanceArticleType").innerText = type;
-  $("romanceArticleScenario").innerText = window.ROMANCE[scenarioKey].name;
-  $("romanceArticleEmoji").innerText = window.ROMANCE[scenarioKey].emoji;
-  $("romanceArticleBreadcrumb").innerText = `戀愛 / ${window.ROMANCE[scenarioKey].name} / ${type}`;
-  $("romanceArticleHero").style.background = `linear-gradient(135deg, ${T.color[0]}, ${T.color[1]})`;
-  $("romanceArticleBody").innerText = article;
+  $("romanceArticleCn").innerText = T.cn;
+  $("romanceArticleScenario").innerText = s.name;
+  $("romanceArticleEmoji").innerText = s.emoji;
+  $("romanceArticleHero").style.background = "linear-gradient(135deg, " + T.color[0] + ", " + T.color[1] + ")";
+  $("romanceArticleBody").innerHTML = window.formatGuideHtml(article);
   show("romanceArticle");
   window.scrollTo(0,0);
 };
