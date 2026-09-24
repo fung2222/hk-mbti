@@ -230,18 +230,20 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 }
 .home-type-reel{
   display:flex;gap:8px;
-  overflow-x:auto;overflow-y:hidden;
+  overflow-x:auto;overflow-y:visible;
   scroll-snap-type:x proximity;
   scroll-behavior:auto;
   -webkit-overflow-scrolling:touch;
   overscroll-behavior-x:contain;
-  touch-action:pan-x;
+  overscroll-behavior-y:auto;
+  touch-action:auto;
   scrollbar-width:none;
-  padding:6px calc(50% - 3.5rem) 8px;
+  padding:6px calc(50% - 3rem) 8px;
 }
 .home-type-reel::-webkit-scrollbar{display:none;}
 .home-type-reel .hub-type-card{
-  flex:0 0 7rem;width:7rem;scroll-snap-align:center;scroll-snap-stop:normal;
+  flex:0 0 6rem;width:6rem;scroll-snap-align:center;scroll-snap-stop:normal;
+  touch-action:auto;
 }
 .home-type-nav{
   position:absolute;top:50%;z-index:2;
@@ -4419,6 +4421,24 @@ window.bindHomeTypeReel = function(){
   reel.addEventListener("pointerdown", show);
   reel.addEventListener("pointerup", hideSoon);
   reel.addEventListener("pointercancel", hideSoon);
+  let axis = null, sx = 0, sy = 0;
+  const unlockY = () => { axis = null; reel.style.overflowX = "auto"; };
+  reel.addEventListener("touchstart", ev => {
+    const t = ev.touches[0];
+    if(!t) return;
+    sx = t.clientX; sy = t.clientY; axis = null;
+    reel.style.overflowX = "auto";
+  }, {passive:true});
+  reel.addEventListener("touchmove", ev => {
+    if(axis || !ev.touches[0]) return;
+    const dx = Math.abs(ev.touches[0].clientX - sx);
+    const dy = Math.abs(ev.touches[0].clientY - sy);
+    if(dx < 10 && dy < 10) return;
+    axis = dy > dx ? "y" : "x";
+    if(axis === "y") reel.style.overflowX = "hidden";
+  }, {passive:true});
+  reel.addEventListener("touchend", unlockY, {passive:true});
+  reel.addEventListener("touchcancel", unlockY, {passive:true});
   wrap.querySelectorAll(".home-type-nav").forEach(btn => {
     btn.addEventListener("pointerdown", ev => { ev.preventDefault(); ev.stopPropagation(); show(); });
     btn.addEventListener("click", ev => {
