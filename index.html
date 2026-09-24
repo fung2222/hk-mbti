@@ -3937,12 +3937,37 @@ window.restoreNav = function(prev){
 };
 
 window.goBack = function(){
-  if(window._showing === "social" && window._lastSocialScenario){
-    openSocial();
+  const here = window._showing;
+  const stay = function(fn){
+    window._navSilent = true;
+    try{ fn(); }catch(e){}
+    window._navSilent = false;
+    try{ window._histWrite("replace"); }catch(e){}
+  };
+  if(here === "socialArticle"){
+    const k = window._lastSocialScenario;
+    stay(function(){ if(k) openSocialScenario(k); else openSocial(); });
     return;
   }
-  if(window._showing === "romance" && window._lastRomanceScenario){
-    openRomance();
+  if(here === "romanceArticle"){
+    const k = window._lastRomanceScenario;
+    stay(function(){ if(k) openRomanceScenario(k); else openRomance(); });
+    return;
+  }
+  if(here === "type"){
+    stay(function(){ openHub(); });
+    return;
+  }
+  if(here === "letter"){
+    stay(function(){ openSpectrum(); });
+    return;
+  }
+  if(here === "social" && window._lastSocialScenario){
+    stay(function(){ openSocial(); });
+    return;
+  }
+  if(here === "romance" && window._lastRomanceScenario){
+    stay(function(){ openRomance(); });
     return;
   }
   if((window._histDepth || 0) > 0){
