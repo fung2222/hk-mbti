@@ -248,17 +248,12 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   position:relative;flex-shrink:0;margin:0 -20px 6px;
 }
 .home-more-down{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  margin:0 auto 2px;padding:4px 16px;gap:0;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 2px;padding:6px 16px;
   background:none;border:0;cursor:pointer;color:#8a7a5a;
-  -webkit-appearance:none;appearance:none;font-family:inherit;line-height:1;
+  -webkit-appearance:none;appearance:none;font-family:inherit;
+  font-size:.7rem;line-height:1;font-weight:700;opacity:.7;
 }
-.home-more-down span{
-  display:block;font-size:.85rem;line-height:.72;font-weight:700;
-}
-.home-more-down span:nth-child(1){opacity:.35;}
-.home-more-down span:nth-child(2){opacity:.6;}
-.home-more-down span:nth-child(3){opacity:.9;}
 .home-type-reel{
   display:flex;gap:8px;
   overflow-x:auto;overflow-y:visible;
@@ -1091,9 +1086,7 @@ body.no-ad{padding-bottom:0!important;}
         <button type="button" class="home-type-nav is-r" data-dir="1" aria-label="下一張"></button>
         <div class="home-type-reel" id="homeTypeReel" aria-label="16型性格色牌"></div>
       </div>
-      <button type="button" class="home-more-down" onclick="scrollHomeBelow()" aria-label="睇下面內容">
-        <span>▼</span><span>▼</span><span>▼</span>
-      </button>
+      <button type="button" class="home-more-down" onclick="scrollHomeBelow()" aria-label="睇下面內容">▼</button>
     </div>
 
 
