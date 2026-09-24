@@ -1,5 +1,5 @@
 // 社交指南：點同每個類型相處
-// 5 個場景 × 16 個類型 = 80 篇
+// 7 個場景 × 16 個類型 = 112 篇
 window.SOCIAL = {
   "WhatsAppGroup": {
     name:"WhatsApp 群組",
@@ -106,8 +106,8 @@ window.SOCIAL = {
       "INFP":"房入面有 mood lighting + 牆上 poster。會聽住 sad music 寫日記。**最忌**：未問就碰佢嘅嘢。**最有效**：join 佢嘅 chill 活動（睇戲、聽歌），佢會視你為摯友。佢需要 personal space 但又想被在乎。",
       "ENFJ":"會主動關心你瞓夠未、食咗未。會煮飯 share。**最忌**：當佢太煩。**最有效**：都關心返佢，佢哋最驚付出冇回報。佢係最佳室友人選之一，keep 佢。",
       "ENFP":"屋企成日有活動，會 invite 朋友嚟打邊爐。**最忌**：嫌佢嘈。**最有效**：join 佢嘅活動，佢會超開心。佢可能會短期有啲 wild idea 影響你，但要 embrace。",
-      "ISTJ":"規矩作息。可能投訴你 11 點後嘈。**最忌**：長期踩界。**最有效**：respect 佢嘅 schedule。佢係 best roommate for 啲需要 routine 嘅人。",
-      "ISFJ":"會幫你洗衫、幫你收快遞、幫你訂外賣。**最忌**：當佢乜都肯做。**最有效**：分擔家務，主動做。佢係 best roommate but needs recognition。",
+      "ISTJ":"規矩作息。可能投訴你 11 點後嘈。**最忌**：長期踩界。**最有效**：respect 佢嘅 schedule。佢係需要規律作息嘅人嘅最佳室友。",
+      "ISFJ":"會幫你洗衫、幫你收快遞、幫你訂外賣。**最忌**：當佢乜都肯做。**最有效**：分擔家務，主動做。佢係最佳室友，但需要人哋嘅認同。",
       "ESTJ":"會有 cleaning schedule，會 enforce 規則。**最忌**：當佢管太多。**最有效**：agree 喺 rules，佢會幫你 enforce。佢嘅整潔係 blessing，唔係煩。",
       "ESFJ":"會主動 host 朋友，會搞 roommate dinner。**最忌**：cancel 佢搞嘅活動。**最有效**：join 佢。佢最鍾意你 support 佢搞嘅嘢，佢會 keep 你 as favourite roommate。",
       "ISTP":"Cool 嘅室友。會自己搞掂自己嘢。**最忌**：emotionally needy。**最有效**：let 佢有自己的時間，佢會 spontaneously 幫你。佢會記得你嘅 practical 細節（你部電腦壞咗佢會幫你整）。",

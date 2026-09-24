@@ -760,7 +760,7 @@ body.no-ad{padding-bottom:0!important;}
           <p class="text-xs">所有資料<b>只儲存喺你部機嘅瀏覽器</b>（localStorage），由系統管理。</p>
           <ul class="list-disc pl-5 mt-2 space-y-1 text-xs">
             <li>開發者 <b>無法存取</b>你嘅資料</li>
-            <li>資料 <b>唔會上傳</b>到任何伺服器</li>
+            <li>資料 <b>唔會上載</b>到任何伺服器</li>
             <li>清除瀏覽器資料 = 永久刪除所有紀錄</li>
           </ul>
         </div>
@@ -846,7 +846,7 @@ body.no-ad{padding-bottom:0!important;}
         <button type="button" class="page-back" onclick="goBack()">返回</button>
         <h1>個人相處</h1>
       </div>
-      <p class="page-hero-sub">點同每種人傾偈、共事、做朋友 · 5 場景 × 16 型</p>
+      <p class="page-hero-sub">點同每種人傾偈、共事、做朋友 · 7 場景 × 16 型</p>
     </div>
 
     <div id="socialScenarios"></div>
@@ -886,7 +886,7 @@ body.no-ad{padding-bottom:0!important;}
         <button type="button" class="page-back" onclick="goBack()">返回</button>
         <h1>個人拍拖</h1>
       </div>
-      <p class="page-hero-sub">點同每種人拍拖、吵架、復合 · 3 場景 × 16 型</p>
+      <p class="page-hero-sub">點同每種人拍拖、吵架、分手 · 3 場景 × 16 型</p>
     </div>
 
     <div id="romanceScenarios"></div>
@@ -931,7 +931,7 @@ body.no-ad{padding-bottom:0!important;}
     <div id="typeHero" class="card p-6 mb-4 text-center">
       <div class="text-5xl font-black mb-1" id="typeBig">INTJ</div>
       <h2 class="text-xl font-black mb-1" id="typeName">建築師 / Architect</h2>
-      <p class="text-sm italic text-gray-500" id="typeSlogan">「東鐵企到中環」</p>
+      <p class="text-sm italic text-gray-500" id="typeSlogan">「東鐵企到金鐘」</p>
     </div>
 
     <div class="card p-5 mb-4">
@@ -1128,7 +1128,7 @@ body.no-ad{padding-bottom:0!important;}
             <span class="home-acc-chev">▼</span>
           </button>
           <div class="home-acc-body">
-            <p class="home-acc-desc">點同每種人傾偈、共事、做朋友。5 個場景 × 16 型攻略。</p>
+            <p class="home-acc-desc">點同每種人傾偈、共事、做朋友。7 個場景 × 16 型攻略。</p>
             <button type="button" class="home-acc-go" onclick="event.stopPropagation();openSocial()">進入相處攻略</button>
           </div>
         </div>
@@ -1139,7 +1139,7 @@ body.no-ad{padding-bottom:0!important;}
             <span class="home-acc-chev">▼</span>
           </button>
           <div class="home-acc-body">
-            <p class="home-acc-desc">點同每種人拍拖、吵架、復合。3 個場景 × 16 型攻略。</p>
+            <p class="home-acc-desc">點同每種人拍拖、吵架、分手。3 個場景 × 16 型攻略。</p>
             <button type="button" class="home-acc-go" onclick="event.stopPropagation();openRomance()">進入拍拖攻略</button>
           </div>
         </div>
@@ -1960,7 +1960,7 @@ window.QUESTIONS = [
 
 // 16 種性格完整報告
 window.TYPES = {
-  "INTJ": {name:"建築師", cn:"建築師", slogan:"東鐵企到中環", color:["#6B4E9E","#33244E"], emoji:"🏛️", desc:"你係嗰種成日喺個腦入面 plan 晒成件事嘅人。別人覺得你 cool，但其實你只係唔想解釋太多。你嘅房間企理但偏 stiff，三餐可以食同一樣 365 日。", tags:["計劃王","獨立","高冷","完美主義"], score:["企硬力9/10","社交力4/10","食力7/10"], compat:["ENFP","ENTP"]},
+  "INTJ": {name:"建築師", cn:"建築師", slogan:"東鐵企到金鐘", color:["#6B4E9E","#33244E"], emoji:"🏛️", desc:"你係嗰種成日喺個腦入面 plan 晒成件事嘅人。別人覺得你 cool，但其實你只係唔想解釋太多。你嘅房間企理但偏 stiff，三餐可以食同一樣 365 日。", tags:["計劃王","獨立","高冷","完美主義"], score:["企硬力9/10","社交力4/10","食力7/10"], compat:["ENFP","ENTP"]},
   "INTP": {name:"邏輯學家", cn:"邏輯學家", slogan:"Coffee shop 坐一日", color:["#3E5F9E","#1E2E52"], emoji:"🧪", desc:"你腦入面有 100 個 idea 但唔知點 execute。朋友覺得你神神哋，但其實你只係諗得比人深。", tags:["理論家","天馬行空","遲到","Slack 訊息長"], score:["企硬力5/10","社交力3/10","食力8/10"], compat:["ENTJ","ENFJ"]},
   "ENTJ": {name:"指揮官", cn:"指揮官", slogan:"做隊長做到悶", color:["#1E8A8A","#0E4545"], emoji:"👔", desc:"天生領袖。你行入 party 已經喺度分工。帶隊、開會、做 group project 嗰個非你莫屬。", tags:["大佬","效率","有 Plan","Crossover King"], score:["企硬力9/10","社交力9/10","食力6/10"], compat:["INFP","INTP"]},
   "ENTP": {name:"辯論家", cn:"辯論家", slogan:"同阿 Sir 拗到收唔到科", color:["#E07B35","#703D1A"], emoji:"💡", desc:"你係課室入面最麻煩嗰個。成日 challenge 教科書，但又會令人覺得你講幾有道理。", tags:["講過","Devil's Advocate","3 AM 傾偈王","搞事"], score:["企硬力6/10","社交力9/10","食力5/10"], compat:["INFJ","INTJ"]},
