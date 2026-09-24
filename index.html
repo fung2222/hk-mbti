@@ -225,6 +225,21 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   font-size:2rem;letter-spacing:.04em;line-height:1;white-space:nowrap;
 }
 .hub-type-cn{font-size:12px;line-height:1.25;opacity:.9;white-space:nowrap;}
+.home-type-reel{
+  display:flex;gap:4px;
+  overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+  touch-action:pan-x;
+  scrollbar-width:none;
+  margin:18px -20px 0;
+  padding:4px calc(50% - 2.75rem) 10px;
+}
+.home-type-reel::-webkit-scrollbar{display:none;}
+.home-type-reel .hub-type-card{
+  flex:0 0 5.5rem;width:5.5rem;scroll-snap-align:center;
+}
 #typeBig{font-family:Georgia,'Times New Roman',serif;letter-spacing:.04em;}
 .home-hero h1{font-size:2.35rem;line-height:1.15;letter-spacing:-.02em}
 .bg-gold{background:var(--gold)}
@@ -1004,6 +1019,7 @@ body.no-ad{padding-bottom:0!important;}
       <div class="home-hero-copy">
       <div class="home-hero-mbti">MBTI</div>
       <p class="text-sm text-gray-600 leading-relaxed mt-5">60 題廣東話版 16 型人格測試<br>多種生活情景 · 港人嘅日常<br>5–10 分鐘完成測試</p>
+      <div class="home-type-reel" id="homeTypeReel" aria-label="16型性格色牌"></div>
       </div>
     </div>
 
@@ -4338,10 +4354,8 @@ window.openType = function(type){
 };
 
 window.renderHubTypes = function(){
-  const grid = $("hubTypeGrid");
-  if(!grid) return;
   const order = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
-  grid.innerHTML = order.map(code => {
+  const html = order.map(code => {
     const T = window.TYPES[code];
     const P = window.getPalette(code);
     if(!T) return "";
@@ -4350,6 +4364,10 @@ window.renderHubTypes = function(){
       <div class="hub-type-cn">${T.cn}</div>
     </button>`;
   }).join("");
+  const grid = $("hubTypeGrid");
+  if(grid) grid.innerHTML = html;
+  const reel = $("homeTypeReel");
+  if(reel) reel.innerHTML = html;
 };
 
 window.compareTypes = function(){
