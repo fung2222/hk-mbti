@@ -53,7 +53,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .option{font-size:1.05rem}
 .option .flex-1{font-size:1.05rem;line-height:1.45}
 /* 版本雙擊確認 · 三色預設 */
-.ver-btn{transition:all .45s cubic-bezier(.22,1,.36,1);transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,.06);border-width:2px;border-style:solid;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.ver-btn{transition:all .45s cubic-bezier(.22,1,.36,1);transform:translateY(0);box-shadow:0 2px 8px rgba(0,0,0,.06);border-width:2px;border-style:solid;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;min-height:5.35rem;padding:1.15rem 1.2rem;box-sizing:border-box}
 .ver-btn:active{transform:scale(.98)}
 /* 生活版 · 金 */
 .ver-btn[data-ver="life"]{
@@ -109,7 +109,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .ver-chev{
   flex-shrink:0;width:28px;height:28px;border-radius:999px;
   background:var(--soft);display:flex;align-items:center;justify-content:center;
-  font-size:.85rem;color:#8a7a5a;align-self:flex-start;margin-top:2px;
+  font-size:.85rem;color:#8a7a5a;align-self:center;margin-top:0;
   transition:transform .45s ease,background .35s ease,color .35s ease
 }
 .ver-btn.ver-lit .ver-chev{transform:rotate(180deg);background:var(--gold);color:var(--ink)}
@@ -1015,8 +1015,8 @@ body.no-ad{padding-bottom:0!important;}
     <div class="card p-5 mb-4">
       <div class="text-xs tracking-widest brand-gold font-bold mb-2">選擇 MBTI 測試版本</div>
       <div class="space-y-2.5" id="versionList">
-        <div data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full p-4 rounded-xl text-left" role="button" tabindex="0">
-          <div class="flex items-start justify-between gap-3">
+        <div data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+          <div class="flex items-center justify-between gap-3 w-full">
             <div class="min-w-0 flex-1">
               <div class="text-base font-black text-ink">生活版（完整測試）</div>
               <div class="text-xs text-gray-600 mt-0.5">60 題 · 5 分鐘 · 最準確</div>
@@ -1025,8 +1025,8 @@ body.no-ad{padding-bottom:0!important;}
             <span class="ver-chev" aria-hidden="true">▼</span>
           </div>
         </div>
-        <div data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full p-4 rounded-xl text-left" role="button" tabindex="0">
-          <div class="flex items-start justify-between gap-3">
+        <div data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+          <div class="flex items-center justify-between gap-3 w-full">
             <div class="min-w-0 flex-1">
               <div class="text-base font-black text-ink">進階版（快速版）</div>
               <div class="text-xs text-gray-600 mt-0.5">30 題 · 3 分鐘 · 平衡選擇</div>
@@ -1035,8 +1035,8 @@ body.no-ad{padding-bottom:0!important;}
             <span class="ver-chev" aria-hidden="true">▼</span>
           </div>
         </div>
-        <div data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full p-4 rounded-xl text-left" role="button" tabindex="0">
-          <div class="flex items-start justify-between gap-3">
+        <div data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+          <div class="flex items-center justify-between gap-3 w-full">
             <div class="min-w-0 flex-1">
               <div class="text-base font-black text-ink">BB 版（極簡版）</div>
               <div class="text-xs text-gray-600 mt-0.5">10 題 · 1 分鐘 · 純粹試下</div>
@@ -1045,10 +1045,11 @@ body.no-ad{padding-bottom:0!important;}
             <span class="ver-chev" aria-hidden="true">▼</span>
           </div>
         </div>
-        <div data-ver="record" onclick="selectRecord()" class="ver-btn w-full p-4 rounded-xl text-left" role="button" tabindex="0">
-          <div class="flex items-start justify-between gap-3">
+        <div data-ver="record" onclick="selectRecord()" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+          <div class="flex items-center justify-between gap-3 w-full">
             <div class="min-w-0 flex-1">
               <div class="text-base font-black text-ink">我的記錄 <span id="homeRecordCount" class="text-gray-500 font-bold">（0/5）</span></div>
+              <div class="text-xs text-gray-600 mt-0.5">本機保存，最多 5 次</div>
               <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goRecord()">最近5次記錄</button>
             </div>
             <span class="ver-chev" aria-hidden="true">▼</span>
