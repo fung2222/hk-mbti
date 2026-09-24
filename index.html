@@ -440,18 +440,19 @@ body.no-ad{padding-bottom:0!important;}
            }catch(e){}
          }
        } else {
-         const fn = ({
-           about:"openAbout", spectrum:"openSpectrum", hub:"openHub",
-           social:"openSocial", romance:"openRomance", privacy:"openPrivacy",
-           letter:"openLetter", type:"openType"
-         })[last];
-         if(fn && typeof window[fn] === "function"){
-           if(last === "letter" || last === "type"){
-             // 需要參數；呢類唔還原，避免錯誤狀態
-           } else {
-             window[fn]();
-           }
-         }
+         const snap = (function(){
+           try{ return JSON.parse(sessionStorage.getItem("hkmbti_last_nav")||"{}") || {}; }
+           catch(e){ return {}; }
+         })();
+         if(!snap.id) snap.id = last;
+         const fire = () => {
+           if(typeof window.restoreNav === "function"){
+             window._navSilent = true;
+             try{ window.restoreNav(snap); }catch(e){}
+             window._navSilent = false;
+           } else { setTimeout(fire, 50); }
+         };
+         fire();
        }
      }
      // 還原完成 → 顯示（移除 js-boot，避免主頁閃一閃）
@@ -479,10 +480,6 @@ body.no-ad{padding-bottom:0!important;}
    try{
      const hash = window.location.hash||"";
      if(hash) window._openViaHash = true;
-     try{
-       history.replaceState({hk:1,id:"home"}, "", window.location.pathname + window.location.search);
-       window._histSeeded = true;
-     }catch(e){}
      const m = hash.match(/^#view=(\d+)$/);
      const tm = hash.match(/^#type=([A-Z]{4})$/);
      if(m){
@@ -2049,7 +2046,8 @@ window._navSnap = function(){
     rKey: window._lastRomanceScenario,
     type: window._lastType,
     letter: window._lastLetter,
-    articleType: window._lastArticleType
+    articleType: window._lastArticleType,
+    pendingVersion: (window.state && window.state.pendingVersion) || null
   };
 };
 
@@ -2074,6 +2072,7 @@ window.show = function(id){
   // 淨係測試頁鎖下拉（防誤觸 reload 清走進度）
   document.body.classList.toggle("in-test", id === "test");
   try{ sessionStorage.setItem("hkmbti_last_section", id); }catch(e){}
+  try{ sessionStorage.setItem("hkmbti_last_nav", JSON.stringify(window._navSnap())); }catch(e){}
   // Android / 瀏覽器返回掣：用 history 先唔會直接關 app
   if(!window._fromPop){
     if(!window._histSeeded){
@@ -3754,7 +3753,11 @@ window.goHome = function(){
 window.restoreNav = function(prev){
   const id = prev && prev.id;
   if(id === "home"){ show("home"); return; }
-  if(id === "profile"){ show("profile"); return; }
+  if(id === "profile"){
+    const v = (prev && prev.pendingVersion) || "life";
+    if(typeof window.openProfile === "function"){ openProfile(v); return; }
+    show("profile"); return;
+  }
   if(id === "test"){ show("test"); return; }
   if(id === "socialArticle" && prev.sKey && prev.articleType){
     openSocialArticle(prev.sKey, prev.articleType); return;
@@ -3772,8 +3775,14 @@ window.restoreNav = function(prev){
     else openRomance();
     return;
   }
-  if(id === "type" && prev.type){ openType(prev.type); return; }
-  if(id === "letter" && prev.letter){ openLetter(prev.letter); return; }
+  if(id === "type"){
+    if(prev && prev.type){ openType(prev.type); return; }
+    if(typeof window.openHub === "function"){ openHub(); return; }
+  }
+  if(id === "letter"){
+    if(prev && prev.letter){ openLetter(prev.letter); return; }
+    if(typeof window.openHub === "function"){ openHub(); return; }
+  }
   if(id === "about"){ openAbout(); return; }
   if(id === "privacy"){ openPrivacy(); return; }
   if(id === "spectrum"){ openSpectrum(); return; }
