@@ -248,19 +248,17 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   position:relative;flex-shrink:0;margin:0 -20px 6px;
 }
 .home-more-down{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  margin:0 auto 2px;padding:6px 18px;
-  background:none;border:0;cursor:pointer;
-  -webkit-appearance:none;appearance:none;font-family:inherit;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin:0 auto 2px;padding:4px 16px;gap:0;
+  background:none;border:0;cursor:pointer;color:#8a7a5a;
+  -webkit-appearance:none;appearance:none;font-family:inherit;line-height:1;
 }
-.home-more-down i{
-  display:block;width:0;height:0;
-  border-left:7px solid transparent;border-right:7px solid transparent;
-  border-top:8px solid #8a8174;
+.home-more-down span{
+  display:block;font-size:.85rem;line-height:.72;font-weight:700;
 }
-.home-more-down i:nth-child(1){opacity:.28;}
-.home-more-down i:nth-child(2){opacity:.5;}
-.home-more-down i:nth-child(3){opacity:.78;}
+.home-more-down span:nth-child(1){opacity:.35;}
+.home-more-down span:nth-child(2){opacity:.6;}
+.home-more-down span:nth-child(3){opacity:.9;}
 .home-type-reel{
   display:flex;gap:8px;
   overflow-x:auto;overflow-y:visible;
@@ -1094,13 +1092,10 @@ body.no-ad{padding-bottom:0!important;}
         <div class="home-type-reel" id="homeTypeReel" aria-label="16型性格色牌"></div>
       </div>
       <button type="button" class="home-more-down" onclick="scrollHomeBelow()" aria-label="睇下面內容">
-        <i></i><i></i><i></i>
+        <span>▼</span><span>▼</span><span>▼</span>
       </button>
     </div>
 
-
-    <!-- 上次未完 · 續做提示 -->
-    <div id="resumeBanner" class="hidden"></div>
 
     <!-- 版本選擇（一按著燈，再按進入） -->
     <div class="card p-5 mb-4" id="homeBelow">
@@ -1149,6 +1144,10 @@ body.no-ad{padding-bottom:0!important;}
       </div>
 
     </div>
+
+
+    <!-- 上次未完 · 續做提示（喺我的記錄下面） -->
+    <div id="resumeBanner" class="hidden"></div>
 
     <div class="scenes-bleed">
       <div class="scenes-head">
