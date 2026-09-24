@@ -237,18 +237,23 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   font-size:.7rem;letter-spacing:.14em;font-weight:700;color:var(--gold);
   margin:18px 0 8px;
 }
-.article-more{margin:4px 0 20px;}
+.article-more{margin:8px 0 20px;}
 .article-more-h{
   font-size:.72rem;letter-spacing:.16em;font-weight:700;color:var(--gold);
-  margin:0 0 8px;text-align:left;
+  margin:0 0 12px;text-align:left;
 }
 .article-more button{
-  display:block;width:100%;text-align:left;background:none;border:0;
-  border-bottom:1px solid rgba(30,42,59,.08);padding:14px 2px;
-  font-family:inherit;font-size:1.05rem;font-weight:800;color:var(--ink);
+  display:flex;align-items:center;justify-content:space-between;width:100%;
+  text-align:left;background:var(--soft);border:0;border-radius:12px;
+  padding:14px 14px;margin:0 0 8px;
+  font-family:inherit;font-size:1.02rem;font-weight:800;color:var(--ink);
   cursor:pointer;-webkit-appearance:none;appearance:none;
 }
-.article-more button:last-child{border-bottom:0;}
+.article-more button:last-child{margin-bottom:0;}
+.article-more button::after{
+  content:"▼";font-size:.7rem;color:#8a7a5a;transform:rotate(-90deg);
+  display:inline-block;line-height:1;
+}
 .hub-type-card{
   aspect-ratio:9/16;border-radius:0;color:#fff;border:0;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.16);
@@ -987,7 +992,7 @@ body.no-ad{padding-bottom:0!important;}
       <div id="socialArticleBody" class="article-guide-body"></div>
     </div>
 
-    <div class="article-more">
+    <div class="card p-5 mb-4 article-more">
       <div class="article-more-h">立即睇睇其他攻略</div>
       <button type="button" onclick="openHub()">性格百科</button>
       <button type="button" onclick="openSocial()">個人相處</button>
@@ -1032,7 +1037,7 @@ body.no-ad{padding-bottom:0!important;}
       <div id="romanceArticleBody" class="article-guide-body"></div>
     </div>
 
-    <div class="article-more">
+    <div class="card p-5 mb-4 article-more">
       <div class="article-more-h">立即睇睇其他攻略</div>
       <button type="button" onclick="openHub()">性格百科</button>
       <button type="button" onclick="openSocial()">個人相處</button>
