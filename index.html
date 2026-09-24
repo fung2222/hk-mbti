@@ -212,6 +212,20 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .result-divider{height:1px;background:rgba(30,42,59,.08);margin:22px 0;}
 .hub-bleed{margin:0 -16px 16px;padding:24px 14px 20px;background:linear-gradient(180deg,#fff,var(--paper));}
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
+.hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.hub-type-card{
+  aspect-ratio:9/16;border-radius:12px;color:#fff;border:0;cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.16);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;padding:10px 4px;
+  -webkit-appearance:none;appearance:none;text-align:center;
+}
+.hub-type-code{
+  font-family:Georgia,'Times New Roman',serif;font-weight:700;
+  font-size:.92rem;letter-spacing:.04em;line-height:1;
+}
+.hub-type-cn{font-size:10px;line-height:1.2;opacity:.88;}
+#typeBig{font-family:Georgia,'Times New Roman',serif;letter-spacing:.04em;}
 .home-hero h1{font-size:2.35rem;line-height:1.15;letter-spacing:-.02em}
 .bg-gold{background:var(--gold)}
 .bg-paper{background:var(--paper)}
@@ -685,7 +699,7 @@ body.no-ad{padding-bottom:0!important;}
       <div class="hub-bleed-inner">
         <h3 class="text-xs tracking-widest brand-gold font-bold mb-3">🧠 16 種性格完整百科</h3>
         <p class="text-xs text-gray-600 mb-3">每種性格 1500 字：核心、戀愛、工作、衝突</p>
-        <div class="grid grid-cols-4 gap-1" id="hubTypeGrid"></div>
+        <div class="hub-type-grid" id="hubTypeGrid"></div>
       </div>
     </div>
 
@@ -4321,9 +4335,9 @@ window.renderHubTypes = function(){
     const T = window.TYPES[code];
     const P = window.getPalette(code);
     if(!T) return "";
-    return `<button type="button" onclick="openType('${code}')" class="rounded-xl text-center" style="background:linear-gradient(135deg,${P.c1},${P.c2});color:#fff;border:0;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);-webkit-appearance:none;appearance:none;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px;">
-      <div class="text-sm font-black tracking-wide">${code}</div>
-      <div class="text-[10px] leading-tight opacity-85">${T.cn}</div>
+    return `<button type="button" onclick="openType('${code}')" class="hub-type-card" style="background:linear-gradient(135deg,${P.c1},${P.c2});">
+      <div class="hub-type-code">${code}</div>
+      <div class="hub-type-cn">${T.cn}</div>
     </button>`;
   }).join("");
 };
