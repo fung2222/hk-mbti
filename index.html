@@ -3876,6 +3876,14 @@ window.restoreNav = function(prev){
 };
 
 window.goBack = function(){
+  if(window._showing === "social" && window._lastSocialScenario){
+    openSocial();
+    return;
+  }
+  if(window._showing === "romance" && window._lastRomanceScenario){
+    openRomance();
+    return;
+  }
   if((window._histDepth || 0) > 0){
     try{ history.back(); return; }catch(e){}
   }
@@ -4239,7 +4247,6 @@ window.openSocialScenario = function(scenarioKey){
   const container = $("socialScenarios");
   if(!container) return;
   const html = `
-    <button onclick="openSocial()" class="text-sm text-gray-500 mb-4 block">返回</button>
     <div class="card p-5 mb-4">
       <div class="text-4xl mb-2">${s.emoji}</div>
       <h3 class="text-xl font-black mb-2">${s.name}</h3>
@@ -4314,7 +4321,6 @@ window.openRomanceScenario = function(scenarioKey){
   const container = $("romanceScenarios");
   if(!container) return;
   const html = `
-    <button onclick="openRomance()" class="text-sm text-gray-500 mb-4 block">返回</button>
     <div class="card p-5 mb-4">
       <div class="text-4xl mb-2">${s.emoji}</div>
       <h3 class="text-xl font-black mb-2">${s.name}</h3>
