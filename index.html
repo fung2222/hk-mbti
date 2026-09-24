@@ -224,7 +224,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 }
 .hub-type-grid.is-picking .hub-type-card,
 .home-type-reel.is-picking .hub-type-card{
-  opacity:.4;filter:brightness(.72) saturate(.75);transform:scale(.96);
+  opacity:.6;filter:brightness(.86) saturate(.88);transform:scale(.98);
 }
 .hub-type-grid.is-picking .hub-type-card.is-on,
 .home-type-reel.is-picking .hub-type-card.is-on,
@@ -4430,7 +4430,13 @@ window.pickTypeTile = function(ev){
   if(!btn) return;
   const root = btn.closest(".hub-type-grid") || btn.closest(".home-type-reel") || btn.parentElement;
   if(!root) return;
-  root.querySelectorAll(".hub-type-card.is-on").forEach(el => { if(el !== btn) el.classList.remove("is-on"); });
+  if(btn.classList.contains("is-on")){
+    btn.classList.remove("is-on");
+    root.classList.remove("is-picking");
+    if(root.classList.contains("home-type-reel")) window._homeReelHold = false;
+    return;
+  }
+  root.querySelectorAll(".hub-type-card.is-on").forEach(el => el.classList.remove("is-on"));
   btn.classList.add("is-on");
   if(root.classList.contains("hub-type-grid") || root.classList.contains("home-type-reel")) root.classList.add("is-picking");
   if(root.classList.contains("home-type-reel")) window._homeReelHold = true;
