@@ -241,6 +241,7 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   padding:6px calc(50% - 3rem) 8px;
 }
 .home-type-reel::-webkit-scrollbar{display:none;}
+.home-type-reel.is-auto{scroll-snap-type:none;}
 .home-type-reel .hub-type-card{
   flex:0 0 6rem;width:6rem;scroll-snap-align:center;scroll-snap-stop:normal;
   touch-action:auto;
@@ -4404,7 +4405,7 @@ window.renderHubTypes = function(){
   const grid = $("hubTypeGrid");
   if(grid) grid.innerHTML = html;
   const reel = $("homeTypeReel");
-  if(reel) reel.innerHTML = html;
+  if(reel) reel.innerHTML = html + html;
   if(typeof window.bindHomeTypeReel === "function") window.bindHomeTypeReel();
 };
 window.bindHomeTypeReel = function(){
@@ -4412,22 +4413,52 @@ window.bindHomeTypeReel = function(){
   const reel = $("homeTypeReel");
   if(!wrap || !reel || wrap.dataset.bound === "1") return;
   wrap.dataset.bound = "1";
-  let hideT;
+  let hideT, resumeT, paused = false;
   const show = () => { clearTimeout(hideT); wrap.classList.add("is-press"); };
   const hideSoon = () => {
     clearTimeout(hideT);
     hideT = setTimeout(() => wrap.classList.remove("is-press"), 1400);
   };
-  reel.addEventListener("pointerdown", show);
-  reel.addEventListener("pointerup", hideSoon);
-  reel.addEventListener("pointercancel", hideSoon);
+  const pauseAuto = () => {
+    paused = true;
+    reel.classList.remove("is-auto");
+    clearTimeout(resumeT);
+  };
+  const resumeAuto = () => {
+    clearTimeout(resumeT);
+    resumeT = setTimeout(() => {
+      paused = false;
+      reel.classList.add("is-auto");
+    }, 1800);
+  };
+  const loopW = () => {
+    const cards = reel.querySelectorAll(".hub-type-card");
+    const mid = cards.length / 2;
+    if(mid < 1 || !cards[0] || !cards[mid]) return 0;
+    return cards[mid].offsetLeft - cards[0].offsetLeft;
+  };
+  const wrapLoop = () => {
+    const w = loopW();
+    if(w > 0 && reel.scrollLeft >= w) reel.scrollLeft -= w;
+  };
+  const tick = () => {
+    if(!paused){
+      reel.scrollLeft += 0.42;
+      wrapLoop();
+    }
+    requestAnimationFrame(tick);
+  };
+  reel.addEventListener("pointerdown", () => { show(); pauseAuto(); });
+  reel.addEventListener("pointerup", () => { hideSoon(); resumeAuto(); });
+  reel.addEventListener("pointercancel", () => { hideSoon(); resumeAuto(); });
   let axis = null, sx = 0, sy = 0;
-  const unlockY = () => { axis = null; reel.style.overflowX = "auto"; };
+  const unlockY = () => { axis = null; reel.style.overflowX = "auto"; resumeAuto(); };
   reel.addEventListener("touchstart", ev => {
     const t = ev.touches[0];
     if(!t) return;
     sx = t.clientX; sy = t.clientY; axis = null;
     reel.style.overflowX = "auto";
+    pauseAuto();
   }, {passive:true});
   reel.addEventListener("touchmove", ev => {
     if(axis || !ev.touches[0]) return;
@@ -4440,17 +4471,24 @@ window.bindHomeTypeReel = function(){
   reel.addEventListener("touchend", unlockY, {passive:true});
   reel.addEventListener("touchcancel", unlockY, {passive:true});
   wrap.querySelectorAll(".home-type-nav").forEach(btn => {
-    btn.addEventListener("pointerdown", ev => { ev.preventDefault(); ev.stopPropagation(); show(); });
+    btn.addEventListener("pointerdown", ev => { ev.preventDefault(); ev.stopPropagation(); show(); pauseAuto(); });
     btn.addEventListener("click", ev => {
       ev.preventDefault();
       ev.stopPropagation();
       const card = reel.querySelector(".hub-type-card");
-      const step = (card ? card.getBoundingClientRect().width : 112) + 8;
+      const step = (card ? card.getBoundingClientRect().width : 96) + 8;
       const dir = parseInt(btn.getAttribute("data-dir"), 10) || 1;
       reel.scrollBy({ left: dir * step, behavior: "smooth" });
       hideSoon();
+      resumeAuto();
     });
   });
+  document.addEventListener("visibilitychange", () => {
+    if(document.hidden) pauseAuto();
+    else resumeAuto();
+  });
+  reel.classList.add("is-auto");
+  requestAnimationFrame(tick);
 };
 
 window.compareTypes = function(){
