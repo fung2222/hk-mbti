@@ -213,13 +213,25 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .hub-bleed{margin:0 -16px 16px;padding:24px 14px 20px;background:linear-gradient(180deg,#fff,var(--paper));}
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
 .hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
+.hub-type-hint{font-size:11px;line-height:1.35;color:#8a8174;text-align:left;margin:0 0 8px;font-weight:400;}
 .hub-type-card{
   aspect-ratio:9/16;border-radius:0;color:#fff;border:0;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.16);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:6px;padding:10px 4px;
+  gap:6px;padding:10px 4px;position:relative;
   -webkit-appearance:none;appearance:none;text-align:center;
+  transition:box-shadow .25s ease,transform .25s ease;
 }
+.hub-type-card.is-on{
+  box-shadow:0 0 0 2px #fff,0 0 0 4px var(--gold),0 6px 16px rgba(0,0,0,.2);
+  transform:translateY(-2px);z-index:1;
+}
+.hub-type-go{
+  opacity:0;pointer-events:none;
+  margin-top:1px;font-size:11px;font-weight:700;font-family:inherit;line-height:1.2;
+  color:var(--ink);background:rgba(255,255,255,.92);border-radius:999px;padding:3px 8px;
+}
+.hub-type-card.is-on .hub-type-go{opacity:1;pointer-events:auto;}
 .hub-type-code{
   font-family:"Amatic SC",cursive;font-weight:700;font-style:normal;
   font-size:2rem;letter-spacing:.04em;line-height:1;white-space:nowrap;
@@ -745,6 +757,7 @@ body.no-ad{padding-bottom:0!important;}
       <div class="hub-bleed-inner">
         <h3 class="text-xs tracking-widest brand-gold font-bold mb-3">🧠 16 種性格完整百科</h3>
         <p class="text-xs text-gray-600 mb-3">按入去可以睇核心、戀愛、工作、衝突</p>
+        <p class="hub-type-hint">請選擇其中一種人格</p>
         <div class="hub-type-grid" id="hubTypeGrid"></div>
       </div>
     </div>
@@ -4227,15 +4240,11 @@ window.openSocialScenario = function(scenarioKey){
       <h3 class="text-xl font-black mb-2">${s.name}</h3>
       <p class="text-sm text-gray-600">${s.desc}</p>
     </div>
+    <p class="hub-type-hint">請選擇其中一種人格</p>
     <div class="hub-type-grid">
       ${["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"].map(type => {
-        const T = window.TYPES[type];
-        const P = window.getPalette(type);
-        if(!T || !s.articles[type]) return "";
-        return `<button type="button" onclick="openSocialArticle('${scenarioKey}','${type}')" class="hub-type-card" style="background:linear-gradient(135deg,${P.c1},${P.c2});">
-          <div class="hub-type-code">${type}</div>
-          <div class="hub-type-cn">${T.cn}</div>
-        </button>`;
+        if(!s.articles[type]) return "";
+        return window.hubTypeCardHtml(type, `openSocialArticle('${scenarioKey}','${type}')`);
       }).join("")}
     </div>
   `;
@@ -4306,15 +4315,11 @@ window.openRomanceScenario = function(scenarioKey){
       <h3 class="text-xl font-black mb-2">${s.name}</h3>
       <p class="text-sm text-gray-600">${s.desc}</p>
     </div>
+    <p class="hub-type-hint">請選擇其中一種人格</p>
     <div class="hub-type-grid">
       ${["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"].map(type => {
-        const T = window.TYPES[type];
-        const P = window.getPalette(type);
-        if(!T || !s.articles[type]) return "";
-        return `<button type="button" onclick="openRomanceArticle('${scenarioKey}','${type}')" class="hub-type-card" style="background:linear-gradient(135deg,${P.c1},${P.c2});">
-          <div class="hub-type-code">${type}</div>
-          <div class="hub-type-cn">${T.cn}</div>
-        </button>`;
+        if(!s.articles[type]) return "";
+        return window.hubTypeCardHtml(type, `openRomanceArticle('${scenarioKey}','${type}')`);
       }).join("")}
     </div>
   `;
@@ -4391,9 +4396,28 @@ window.openType = function(type){
   window.scrollTo(0,0);
 };
 
+window.hubTypeCardHtml = function(code, goCall){
+  const T = window.TYPES[code];
+  const P = window.getPalette(code);
+  if(!T) return "";
+  return `<button type="button" class="hub-type-card" style="background:linear-gradient(135deg,${P.c1},${P.c2});" onclick="pickTypeTile(event)">
+    <div class="hub-type-code">${code}</div>
+    <div class="hub-type-cn">${T.cn}</div>
+    <span class="hub-type-go" onclick="event.stopPropagation();${goCall}">進入</span>
+  </button>`;
+};
+window.pickTypeTile = function(ev){
+  const btn = ev.currentTarget;
+  if(!btn) return;
+  const root = btn.closest(".hub-type-grid") || btn.parentElement;
+  if(!root) return;
+  root.querySelectorAll(".hub-type-card.is-on").forEach(el => { if(el !== btn) el.classList.remove("is-on"); });
+  btn.classList.add("is-on");
+};
 window.renderHubTypes = function(){
   const order = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
-  const html = order.map(code => {
+  const gridHtml = order.map(code => window.hubTypeCardHtml(code, `openType('${code}')`)).join("");
+  const reelHtml = order.map(code => {
     const T = window.TYPES[code];
     const P = window.getPalette(code);
     if(!T) return "";
@@ -4403,9 +4427,9 @@ window.renderHubTypes = function(){
     </button>`;
   }).join("");
   const grid = $("hubTypeGrid");
-  if(grid) grid.innerHTML = html;
+  if(grid) grid.innerHTML = gridHtml;
   const reel = $("homeTypeReel");
-  if(reel) reel.innerHTML = html + html;
+  if(reel) reel.innerHTML = reelHtml + reelHtml;
   if(typeof window.bindHomeTypeReel === "function") window.bindHomeTypeReel();
 };
 window.bindHomeTypeReel = function(){
