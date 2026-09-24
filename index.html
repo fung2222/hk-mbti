@@ -233,6 +233,14 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .article-guide-body p{
   margin:0 0 14px;line-height:1.8;font-size:1.05rem;color:#3a3632;
 }
+.article-guide-body ul{
+  margin:0 0 18px;padding:0 0 0 1.15rem;
+}
+.article-guide-body li{
+  margin:0 0 8px;line-height:1.7;font-size:1.02rem;color:#3a3632;
+}
+#typeSlogan{color:rgba(255,255,255,.9);font-style:normal;}
+#typeName{color:#fff;}
 .article-guide-kicker{
   font-size:.7rem;letter-spacing:.14em;font-weight:700;color:var(--gold);
   margin:18px 0 8px;
@@ -1060,13 +1068,13 @@ body.no-ad{padding-bottom:0!important;}
 
     <div id="typeHero" class="card p-6 mb-4 text-center">
       <div class="text-5xl font-black mb-1" id="typeBig">INTJ</div>
-      <h2 class="text-xl font-black mb-1" id="typeName">建築師 / Architect</h2>
-      <p class="text-sm italic text-gray-500" id="typeSlogan">「東鐵企到金鐘」</p>
+      <h2 class="text-xl font-black mb-1" id="typeName">建築師</h2>
+      <p class="text-sm" id="typeSlogan">「東鐵企到金鐘」</p>
     </div>
 
-    <div class="card p-5 mb-4">
-      <h3 class="font-bold mb-3 text-sm">📖 完整性格分析</h3>
-      <div id="typeFull" class="text-sm text-gray-700 leading-relaxed"></div>
+    <div class="article-guide">
+      <h3 class="article-guide-h">完整性格分析</h3>
+      <div id="typeFull" class="article-guide-body"></div>
     </div>
 
     <div class="card p-5 mb-4">
@@ -4417,6 +4425,36 @@ window.formatGuideHtml = function(raw){
   }
   return html;
 };
+window.formatTypeFullHtml = function(raw){
+  if(!raw) return "";
+  const esc = function(s){
+    return String(s).replace(/[&<>]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; });
+  };
+  let t = String(raw).replace(/^[A-Z]{4}（[^）]+）/, "").trim();
+  const lines = t.split(/\n/);
+  let html = "";
+  let inList = false;
+  const closeList = function(){ if(inList){ html += "</ul>"; inList = false; } };
+  for(let i = 0; i < lines.length; i++){
+    const s = lines[i].trim();
+    if(!s){ closeList(); continue; }
+    const h = s.match(/^\*\*([^*]+)\*\*$/);
+    if(h){
+      closeList();
+      html += "<div class=\"article-guide-kicker\">" + esc(h[1]) + "</div>";
+      continue;
+    }
+    if(/^[-•]\s+/.test(s)){
+      if(!inList){ html += "<ul>"; inList = true; }
+      html += "<li>" + esc(s.replace(/^[-•]\s+/, "")) + "</li>";
+      continue;
+    }
+    closeList();
+    html += "<p>" + esc(s) + "</p>";
+  }
+  closeList();
+  return html;
+};
 window.openSocialArticle = function(scenarioKey, type){
   const article = window.SOCIAL[scenarioKey].articles[type];
   const T = window.TYPES[type];
@@ -4554,12 +4592,12 @@ window.openType = function(type){
   }
   window._lastType = type;
   $("typeBig").innerText = type;
-  $("typeName").innerText = T.name + " / " + T.cn;
+  $("typeName").innerText = T.cn || T.name;
   $("typeSlogan").innerText = "「" + T.slogan + "」";
   $("typeBreadcrumb").innerText = "性格 / " + type;
   $("typeHero").style.background = "linear-gradient(135deg, " + T.color[0] + ", " + T.color[1] + ")";
   $("typeHero").style.color = "white";
-  $("typeFull").innerText = F.full;
+  $("typeFull").innerHTML = window.formatTypeFullHtml(F && F.full);
   $("typeStrength").innerHTML = F.strength.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
   $("typeWeakness").innerHTML = F.weakness.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
   $("typeLove").innerText = F.love.join("、");
