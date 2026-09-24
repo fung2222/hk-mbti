@@ -294,6 +294,10 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   -webkit-appearance:none;appearance:none;font-family:inherit;
   font-size:.7rem;line-height:1;font-weight:700;opacity:.7;
 }
+.home-more-up-wrap{
+  display:flex;align-items:center;justify-content:center;
+  padding:28px 0 40px;
+}
 .home-type-reel{
   display:flex;gap:8px;
   overflow-x:auto;overflow-y:visible;
@@ -1299,6 +1303,9 @@ body.no-ad{padding-bottom:0!important;}
           </div>
         </div>
       </div>
+    </div>
+    <div class="home-more-up-wrap">
+      <button type="button" class="home-more-down" onclick="scrollHomeTop()" aria-label="返回頂部">▲</button>
     </div>
   </section>
 
@@ -3874,6 +3881,11 @@ window.scrollHomeBelow = function(){
   const el = $("homeBelow");
   if(!el) return;
   el.scrollIntoView({behavior:"smooth", block:"start"});
+};
+window.scrollHomeTop = function(){
+  const hero = document.querySelector("#home .home-hero");
+  if(hero){ hero.scrollIntoView({behavior:"smooth", block:"start"}); return; }
+  window.scrollTo({top:0, behavior:"smooth"});
 };
 window.goHome = function(){
   window._navStack = [];
