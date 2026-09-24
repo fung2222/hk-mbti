@@ -237,6 +237,18 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   font-size:.7rem;letter-spacing:.14em;font-weight:700;color:var(--gold);
   margin:18px 0 8px;
 }
+.article-more{margin:4px 0 20px;}
+.article-more-h{
+  font-size:.72rem;letter-spacing:.16em;font-weight:700;color:var(--gold);
+  margin:0 0 8px;text-align:left;
+}
+.article-more button{
+  display:block;width:100%;text-align:left;background:none;border:0;
+  border-bottom:1px solid rgba(30,42,59,.08);padding:14px 2px;
+  font-family:inherit;font-size:1.05rem;font-weight:800;color:var(--ink);
+  cursor:pointer;-webkit-appearance:none;appearance:none;
+}
+.article-more button:last-child{border-bottom:0;}
 .hub-type-card{
   aspect-ratio:9/16;border-radius:0;color:#fff;border:0;cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.16);
@@ -975,10 +987,11 @@ body.no-ad{padding-bottom:0!important;}
       <div id="socialArticleBody" class="article-guide-body"></div>
     </div>
 
-    <div class="card p-5 mb-4 text-center">
-      <h3 class="font-bold mb-2 text-sm">💕 仲想睇佢嘅戀愛攻略？</h3>
-      <p class="text-xs text-gray-600 mb-3">「點同 XX 拍拖」、「同 XX 吵架點收科」</p>
-      <button onclick="goRomanceFromSocial()" class="btn-gold px-5 py-2.5 rounded-xl text-sm">去睇戀愛攻略</button>
+    <div class="article-more">
+      <div class="article-more-h">立即睇睇其他攻略</div>
+      <button type="button" onclick="openHub()">性格百科</button>
+      <button type="button" onclick="openSocial()">個人相處</button>
+      <button type="button" onclick="openRomance()">個人拍拖</button>
     </div>
   </section>
 
@@ -1019,10 +1032,11 @@ body.no-ad{padding-bottom:0!important;}
       <div id="romanceArticleBody" class="article-guide-body"></div>
     </div>
 
-    <div class="card p-5 mb-4 text-center">
-      <h3 class="font-bold mb-2 text-sm">🤝 仲想睇社交攻略？</h3>
-      <p class="text-xs text-gray-600 mb-3">「同 XX 喺 WhatsApp 群組點相處」、「同 XX 失戀時陪佢」</p>
-      <button onclick="goSocialFromRomance()" class="btn-gold px-5 py-2.5 rounded-xl text-sm">去睇社交攻略</button>
+    <div class="article-more">
+      <div class="article-more-h">立即睇睇其他攻略</div>
+      <button type="button" onclick="openHub()">性格百科</button>
+      <button type="button" onclick="openSocial()">個人相處</button>
+      <button type="button" onclick="openRomance()">個人拍拖</button>
     </div>
   </section>
 
