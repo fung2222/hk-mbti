@@ -222,10 +222,12 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   -webkit-appearance:none;appearance:none;text-align:center;
   transition:box-shadow .25s ease,transform .25s ease,opacity .25s ease,filter .25s ease;
 }
-.hub-type-grid.is-picking .hub-type-card{
+.hub-type-grid.is-picking .hub-type-card,
+.home-type-reel.is-picking .hub-type-card{
   opacity:.4;filter:brightness(.72) saturate(.75);transform:scale(.96);
 }
 .hub-type-grid.is-picking .hub-type-card.is-on,
+.home-type-reel.is-picking .hub-type-card.is-on,
 .hub-type-card.is-on{
   opacity:1;filter:brightness(1.18) saturate(1.18);
   transform:scale(1.07);z-index:1;
@@ -4388,6 +4390,12 @@ window.openType = function(type){
   const T = window.TYPES[type];
   const F = window.TYPES_FULL[type];
   if(!T) return;
+  window._homeReelHold = false;
+  const reel = $("homeTypeReel");
+  if(reel){
+    reel.classList.remove("is-picking");
+    reel.querySelectorAll(".hub-type-card.is-on").forEach(el => el.classList.remove("is-on"));
+  }
   window._lastType = type;
   $("typeBig").innerText = type;
   $("typeName").innerText = T.name + " / " + T.cn;
@@ -4420,24 +4428,17 @@ window.hubTypeCardHtml = function(code, goCall){
 window.pickTypeTile = function(ev){
   const btn = ev.currentTarget;
   if(!btn) return;
-  const root = btn.closest(".hub-type-grid") || btn.parentElement;
+  const root = btn.closest(".hub-type-grid") || btn.closest(".home-type-reel") || btn.parentElement;
   if(!root) return;
   root.querySelectorAll(".hub-type-card.is-on").forEach(el => { if(el !== btn) el.classList.remove("is-on"); });
   btn.classList.add("is-on");
-  if(root.classList.contains("hub-type-grid")) root.classList.add("is-picking");
+  if(root.classList.contains("hub-type-grid") || root.classList.contains("home-type-reel")) root.classList.add("is-picking");
+  if(root.classList.contains("home-type-reel")) window._homeReelHold = true;
 };
 window.renderHubTypes = function(){
   const order = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
   const gridHtml = order.map(code => window.hubTypeCardHtml(code, `openType('${code}')`)).join("");
-  const reelHtml = order.map(code => {
-    const T = window.TYPES[code];
-    const P = window.getPalette(code);
-    if(!T) return "";
-    return `<button type="button" onclick="openType('${code}')" class="hub-type-card" style="background:linear-gradient(135deg,${P.c1},${P.c2});">
-      <div class="hub-type-code">${code}</div>
-      <div class="hub-type-cn">${T.cn}</div>
-    </button>`;
-  }).join("");
+  const reelHtml = gridHtml;
   const grid = $("hubTypeGrid");
   if(grid) grid.innerHTML = gridHtml;
   const reel = $("homeTypeReel");
@@ -4478,7 +4479,7 @@ window.bindHomeTypeReel = function(){
     if(w > 0 && reel.scrollLeft >= w) reel.scrollLeft -= w;
   };
   const tick = () => {
-    if(!paused){
+    if(!paused && !window._homeReelHold){
       reel.scrollLeft += 0.42;
       wrapLoop();
     }
