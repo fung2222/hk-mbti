@@ -4226,15 +4226,15 @@ window.openSocialScenario = function(scenarioKey){
       <h3 class="text-xl font-black mb-2">${s.name}</h3>
       <p class="text-sm text-gray-600">${s.desc}</p>
     </div>
-    <div class="grid grid-cols-4 gap-2">
-      ${Object.keys(s.articles).map(type => {
+    <div class="hub-type-grid">
+      ${["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"].map(type => {
         const T = window.TYPES[type];
-        return `
-          <button onclick="openSocialArticle('${scenarioKey}','${type}')" class="card p-2 text-center hover:bg-soft">
-            <div class="text-xl">${T ? T.emoji : '?'}</div>
-            <div class="text-[10px] font-bold mt-1">${type}</div>
-          </button>
-        `;
+        const P = window.getPalette(type);
+        if(!T || !s.articles[type]) return "";
+        return `<button type="button" onclick="openSocialArticle('${scenarioKey}','${type}')" class="hub-type-card" style="background:linear-gradient(135deg,${P.c1},${P.c2});">
+          <div class="hub-type-code">${type}</div>
+          <div class="hub-type-cn">${T.cn}</div>
+        </button>`;
       }).join("")}
     </div>
   `;
@@ -4305,15 +4305,15 @@ window.openRomanceScenario = function(scenarioKey){
       <h3 class="text-xl font-black mb-2">${s.name}</h3>
       <p class="text-sm text-gray-600">${s.desc}</p>
     </div>
-    <div class="grid grid-cols-4 gap-2">
-      ${Object.keys(s.articles).map(type => {
+    <div class="hub-type-grid">
+      ${["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"].map(type => {
         const T = window.TYPES[type];
-        return `
-          <button onclick="openRomanceArticle('${scenarioKey}','${type}')" class="card p-2 text-center hover:bg-soft">
-            <div class="text-xl">${T ? T.emoji : '?'}</div>
-            <div class="text-[10px] font-bold mt-1">${type}</div>
-          </button>
-        `;
+        const P = window.getPalette(type);
+        if(!T || !s.articles[type]) return "";
+        return `<button type="button" onclick="openRomanceArticle('${scenarioKey}','${type}')" class="hub-type-card" style="background:linear-gradient(135deg,${P.c1},${P.c2});">
+          <div class="hub-type-code">${type}</div>
+          <div class="hub-type-cn">${T.cn}</div>
+        </button>`;
       }).join("")}
     </div>
   `;
