@@ -918,7 +918,6 @@ body.no-ad{padding-bottom:0!important;}
     </div>
 
     <div id="typeHero" class="card p-6 mb-4 text-center">
-      <div class="text-5xl mb-2" id="typeEmoji">🏛️</div>
       <div class="text-5xl font-black mb-1" id="typeBig">INTJ</div>
       <h2 class="text-xl font-black mb-1" id="typeName">建築師 / Architect</h2>
       <p class="text-sm italic text-gray-500" id="typeSlogan">「東鐵企到中環」</p>
@@ -4296,7 +4295,6 @@ window.openType = function(type){
   const F = window.TYPES_FULL[type];
   if(!T) return;
   window._lastType = type;
-  $("typeEmoji").innerText = T.emoji;
   $("typeBig").innerText = type;
   $("typeName").innerText = T.name + " / " + T.cn;
   $("typeSlogan").innerText = "「" + T.slogan + "」";
@@ -4324,8 +4322,7 @@ window.renderHubTypes = function(){
     const P = window.getPalette(code);
     if(!T) return "";
     return `<button type="button" onclick="openType('${code}')" class="rounded-xl text-center" style="background:linear-gradient(135deg,${P.c1},${P.c2});color:#fff;border:0;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);-webkit-appearance:none;appearance:none;aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px;">
-      <div class="text-2xl leading-none">${T.emoji}</div>
-      <div class="text-xs font-bold">${code}</div>
+      <div class="text-sm font-black tracking-wide">${code}</div>
       <div class="text-[10px] leading-tight opacity-85">${T.cn}</div>
     </button>`;
   }).join("");
@@ -4394,7 +4391,7 @@ window.compareTypes = function(){
   let html = `
     <div class="card p-4" style="background:linear-gradient(135deg, ${Ta.color[0]}33, ${Tb.color[0]}33)">
       <div class="text-center mb-3">
-        <div class="text-2xl">${Ta.emoji} ${a} + ${b} ${Tb.emoji}</div>
+        <div class="text-2xl font-black tracking-wide">${a} + ${b}</div>
         <div class="text-3xl font-black text-accent mt-2">${compatScore}% 相似</div>
         <div class="text-xs text-gray-500 mt-1">${same.length}/4 個維度相同</div>
       </div>
