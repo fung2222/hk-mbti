@@ -1095,7 +1095,7 @@ body.no-ad{padding-bottom:0!important;}
             <span class="home-acc-chev">▼</span>
           </button>
           <div class="home-acc-body">
-            <p class="home-acc-desc">港式 MBTI 點解咁樣做、同普通版有咩分別，以及測完可以得到咩資訊。</p>
+            <p class="home-acc-desc">港式 MBTI 點解咁樣做、同普通版有咩分別，測完會見到咩。</p>
             <button type="button" class="home-acc-go" onclick="event.stopPropagation();openAbout()">了解港式 MBTI</button>
           </div>
         </div>
@@ -1106,7 +1106,7 @@ body.no-ad{padding-bottom:0!important;}
             <span class="home-acc-chev">▼</span>
           </button>
           <div class="home-acc-body">
-            <p class="home-acc-desc">E/I · S/N · T/F · J/P 四個維度正規解釋，幫你讀明 4 個字母。</p>
+            <p class="home-acc-desc">E/I、S/N、T/F、J/P 四個維度，幫你讀明 4 個字母。</p>
             <button type="button" class="home-acc-go" onclick="event.stopPropagation();openSpectrum()">進入光譜</button>
           </div>
         </div>
@@ -1146,11 +1146,11 @@ body.no-ad{padding-bottom:0!important;}
         <div class="home-acc-item" data-acc="stats">
           <button type="button" class="home-acc-head" onclick="toggleHomeAcc('stats')">
             <span class="home-acc-ico">📊</span>
-            <span class="home-acc-title">香港16型人格統計</span>
+            <span class="home-acc-title">香港 16 型統計</span>
             <span class="home-acc-chev">▼</span>
           </button>
           <div class="home-acc-body">
-            <p class="home-acc-desc">16 型公開分佈估算 + 本機完成次數，唔佔主頁位。</p>
+            <p class="home-acc-desc">睇 16 型公開分佈，同你部機做過幾多次。</p>
             <a href="./stats.html" class="home-acc-go" style="display:inline-block;text-decoration:none;">查看統計</a>
           </div>
         </div>
@@ -1962,20 +1962,20 @@ window.QUESTIONS = [
 window.TYPES = {
   "INTJ": {name:"建築師", cn:"建築師", slogan:"東鐵企到金鐘", color:["#6B4E9E","#33244E"], emoji:"🏛️", desc:"你係嗰種成日喺個腦入面 plan 晒成件事嘅人。別人覺得你 cool，但其實你只係唔想解釋太多。你嘅房間企理但偏 stiff，三餐可以食同一樣 365 日。", tags:["計劃王","獨立","高冷","完美主義"], score:["企硬力9/10","社交力4/10","食力7/10"], compat:["ENFP","ENTP"]},
   "INTP": {name:"邏輯學家", cn:"邏輯學家", slogan:"Coffee shop 坐一日", color:["#3E5F9E","#1E2E52"], emoji:"🧪", desc:"你腦入面有 100 個 idea 但唔知點 execute。朋友覺得你神神哋，但其實你只係諗得比人深。", tags:["理論家","天馬行空","遲到","Slack 訊息長"], score:["企硬力5/10","社交力3/10","食力8/10"], compat:["ENTJ","ENFJ"]},
-  "ENTJ": {name:"指揮官", cn:"指揮官", slogan:"做隊長做到悶", color:["#1E8A8A","#0E4545"], emoji:"👔", desc:"天生領袖。你行入 party 已經喺度分工。帶隊、開會、做 group project 嗰個非你莫屬。", tags:["大佬","效率","有 Plan","Crossover King"], score:["企硬力9/10","社交力9/10","食力6/10"], compat:["INFP","INTP"]},
-  "ENTP": {name:"辯論家", cn:"辯論家", slogan:"同阿 Sir 拗到收唔到科", color:["#E07B35","#703D1A"], emoji:"💡", desc:"你係課室入面最麻煩嗰個。成日 challenge 教科書，但又會令人覺得你講幾有道理。", tags:["講過","Devil's Advocate","3 AM 傾偈王","搞事"], score:["企硬力6/10","社交力9/10","食力5/10"], compat:["INFJ","INTJ"]},
-  "INFJ": {name:"提倡者", cn:"提倡者", slogan:"深夜 IG 寫 essay", color:["#8A3E9E","#451E52"], emoji:"🌙", desc:"全世界最罕見嘅香港人之一。T 恤背後寫住 vintage 哲學，朋友話你 chill，但你好少講真心話。", tags:["Quiet","聆聽者","深夜思想家","筆友多"], score:["企硬力8/10","社交力5/10","食力6/10"], compat:["ENFP","ENTP"]},
-  "INFP": {name:"調解員", cn:"調解員", slogan:"飲凍檸茶寫日記", color:["#B085C4","#5A4573"], emoji:"🌸", desc:"香港最多人嘅類型。表面 chill 內心澎湃。IG story 一定是歌詞 + 風景。最多朋友話你 fake，但其實你只係 mood 唔同。", tags:["文青","Sensitive","Dreamer","Meme 收藏家"], score:["企硬力6/10","社交力5/10","食力8/10"], compat:["ENFJ","ENTJ"]},
+  "ENTJ": {name:"指揮官", cn:"指揮官", slogan:"做隊長做到悶", color:["#1E8A8A","#0E4545"], emoji:"👔", desc:"天生領袖。你行入 party 已經喺度分工。帶隊、開會、做 group project 嗰個非你莫屬。", tags:["大佬","效率","有計劃","跨界王"], score:["企硬力9/10","社交力9/10","食力6/10"], compat:["INFP","INTP"]},
+  "ENTP": {name:"辯論家", cn:"辯論家", slogan:"同阿 Sir 拗到收唔到科", color:["#E07B35","#703D1A"], emoji:"💡", desc:"你係課室入面最麻煩嗰個。成日 challenge 教科書，但又會令人覺得你講幾有道理。", tags:["講過","唱反調","凌晨傾偈王","搞事"], score:["企硬力6/10","社交力9/10","食力5/10"], compat:["INFJ","INTJ"]},
+  "INFJ": {name:"提倡者", cn:"提倡者", slogan:"深夜 IG 寫 essay", color:["#8A3E9E","#451E52"], emoji:"🌙", desc:"全世界最罕見嘅香港人之一。T 恤背後寫住 vintage 哲學，朋友話你 chill，但你好少講真心話。", tags:["靜","聆聽者","深夜思想家","筆友多"], score:["企硬力8/10","社交力5/10","食力6/10"], compat:["ENFP","ENTP"]},
+  "INFP": {name:"調解員", cn:"調解員", slogan:"飲凍檸茶寫日記", color:["#B085C4","#5A4573"], emoji:"🌸", desc:"香港最多人嘅類型。表面 chill 內心澎湃。IG story 一定是歌詞 + 風景。最多朋友話你 fake，但其實你只係 mood 唔同。", tags:["文青","敏感","發夢人","Meme 收藏家"], score:["企硬力6/10","社交力5/10","食力8/10"], compat:["ENFJ","ENTJ"]},
   "ENFJ": {name:"主人公", cn:"主人公", slogan:"成班人嘅情緒保姆", color:["#E05A4A","#702D25"], emoji:"🤗", desc:"每個人嘅好朋友。朋友 call 你傾偈，接電話嗰個實係你。", tags:["暖男暖女","聆聽","搞氣氛","做義工"], score:["企硬力7/10","社交力9/10","食力7/10"], compat:["INFP","INTP"]},
-  "ENFP": {name:"競選者", cn:"競選者", slogan:"識太多人 記唔到名", color:["#D9A028","#6B5014"], emoji:"🎉", desc:"你嘅 WhatsApp 未讀 1000+。成日話「OK 啦到時見」但最先到嗰個又係你。", tags:["話癆","Energy","點子王","Last minute change"], score:["企硬力4/10","社交力10/10","食力8/10"], compat:["INFJ","INTJ"]},
+  "ENFP": {name:"競選者", cn:"競選者", slogan:"識太多人 記唔到名", color:["#D9A028","#6B5014"], emoji:"🎉", desc:"你嘅 WhatsApp 未讀 1000+。成日話「OK 啦到時見」但最先到嗰個又係你。", tags:["話癆","精力旺","點子王","臨時改計劃"], score:["企硬力4/10","社交力10/10","食力8/10"], compat:["INFJ","INTJ"]},
   "ISTJ": {name:"物流師", cn:"物流師", slogan:"準時過港鐵", color:["#4A6E9E","#253750"], emoji:"📋", desc:"佢係咩都記得晒嗰個。Book 枱、送禮、安排長輩飯局你話晒事。", tags:["穩陣","貼心","老實","Excel 王"], score:["企硬力10/10","社交力6/10","食力7/10"], compat:["ESFP","ESTP"]},
-  "ISFJ": {name:"守衛者", cn:"守衛者", slogan:"記住所有人 Birthday", color:["#5C8A5C","#2E452E"], emoji:"🎁", desc:"朋友話你係最細心嗰個。WhatsApp 生日提醒 110%。", tags:["細心","Secret Keeper","照顧人","貼身暖"], score:["企硬力8/10","社交力6/10","食力8/10"], compat:["ESFP","ESTP"]},
-  "ESTJ": {name:"總經理", cn:"總經理", slogan:"Group Project 隊長", color:["#A85240","#542920"], emoji:"📊", desc:"Group Project 做隊長嘅實係你。朋友話你 mean 但又依靠你。", tags:["管理","決策","SOP 王","Family Driver"], score:["企硬力10/10","社交力7/10","食力6/10"], compat:["ISFP","INFP"]},
-  "ESFJ": {name:"執事", cn:"執事", slogan:"搞 party 搞到最開心", color:["#E08058","#70402C"], emoji:"🎈", desc:"成班人嘅膠水。搞咩活動都係你嚟。", tags:["社交高手","搞氣氛","Family-oriented","卡啦 OK 點唱"], score:["企硬力7/10","社交力10/10","食力9/10"], compat:["ISFP","ISTP"]},
-  "ISTP": {name:"鑒賞家", cn:"鑒賞家", slogan:"裝機拆機無人能敵", color:["#3E8A7A","#1E453D"], emoji:"🔧", desc:"你係電腦 / 電子用品嘅醫生。朋友電話壞咗一定搵你。", tags:["實幹","Cool","Problem Solver","獨立"], score:["企硬力9/10","社交力4/10","食力6/10"], compat:["ESFJ","ENFJ"]},
-  "ISFP": {name:"探險家", cn:"探險家", slogan:"靜靜雞做自己鍾意嘅嘢", color:["#C0709E","#60384E"], emoji:"🎨", desc:"當 ISTJ 嘅 chill 兄弟。外表 J 但內心 P。", tags:["藝術","低調","Live in the moment","溫和"], score:["企硬力6/10","社交力4/10","食力7/10"], compat:["ESFJ","ESTJ"]},
-  "ESTP": {name:"企業家", cn:"企業家", slogan:"Last minute 變大計", color:["#6B8A3E","#35451F"], emoji:"🎲", desc:"做 Sales / Stock Trader 必贏。去旅行變咗搞生意嘅又係你。", tags:["Risk-taker","談判","即興","夜鬼"], score:["企硬力7/10","社交力9/10","食力7/10"], compat:["ISFJ","ISTJ"]},
-  "ESFP": {name:"表演者", cn:"表演者", slogan:"全場最 High 嗰個", color:["#C04070","#602038"], emoji:"🎤", desc:"Party 一定搵你。Sing K 霸住 Mic 唔放嗰個又係你。", tags:["Activity","娛樂","Living for the moment","鏡頭王"], score:["企硬力5/10","社交力10/10","食力9/10"], compat:["ISFJ","ISTJ"]}
+  "ISFJ": {name:"守衛者", cn:"守衛者", slogan:"記住所有人 Birthday", color:["#5C8A5C","#2E452E"], emoji:"🎁", desc:"朋友話你係最細心嗰個。WhatsApp 生日提醒 110%。", tags:["細心","守秘","照顧人","貼身暖"], score:["企硬力8/10","社交力6/10","食力8/10"], compat:["ESFP","ESTP"]},
+  "ESTJ": {name:"總經理", cn:"總經理", slogan:"Group Project 隊長", color:["#A85240","#542920"], emoji:"📊", desc:"Group Project 做隊長嘅實係你。朋友話你 mean 但又依靠你。", tags:["管理","決策","SOP 王","接送王"], score:["企硬力10/10","社交力7/10","食力6/10"], compat:["ISFP","INFP"]},
+  "ESFJ": {name:"執事", cn:"執事", slogan:"搞 party 搞到最開心", color:["#E08058","#70402C"], emoji:"🎈", desc:"成班人嘅膠水。搞咩活動都係你嚟。", tags:["社交高手","搞氣氛","顧家","卡啦 OK 點唱"], score:["企硬力7/10","社交力10/10","食力9/10"], compat:["ISFP","ISTP"]},
+  "ISTP": {name:"鑒賞家", cn:"鑒賞家", slogan:"裝機拆機無人能敵", color:["#3E8A7A","#1E453D"], emoji:"🔧", desc:"你係電腦 / 電子用品嘅醫生。朋友電話壞咗一定搵你。", tags:["實幹","淡定","解決問題","獨立"], score:["企硬力9/10","社交力4/10","食力6/10"], compat:["ESFJ","ENFJ"]},
+  "ISFP": {name:"探險家", cn:"探險家", slogan:"靜靜雞做自己鍾意嘅嘢", color:["#C0709E","#60384E"], emoji:"🎨", desc:"當 ISTJ 嘅 chill 兄弟。外表 J 但內心 P。", tags:["藝術","低調","活在當下","溫和"], score:["企硬力6/10","社交力4/10","食力7/10"], compat:["ESFJ","ESTJ"]},
+  "ESTP": {name:"企業家", cn:"企業家", slogan:"臨時變大計", color:["#6B8A3E","#35451F"], emoji:"🎲", desc:"做 Sales / Stock Trader 必贏。去旅行變咗搞生意嘅又係你。", tags:["敢博","談判","即興","夜鬼"], score:["企硬力7/10","社交力9/10","食力7/10"], compat:["ISFJ","ISTJ"]},
+  "ESFP": {name:"表演者", cn:"表演者", slogan:"全場最 High 嗰個", color:["#C04070","#602038"], emoji:"🎤", desc:"Party 一定搵你。Sing K 霸住 Mic 唔放嗰個又係你。", tags:["活動","娛樂","活在當下","鏡頭王"], score:["企硬力5/10","社交力10/10","食力9/10"], compat:["ISFJ","ISTJ"]}
 };
 
 // 港式場景配對

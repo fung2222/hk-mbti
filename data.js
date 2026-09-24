@@ -2,7 +2,7 @@
 window.LETTERS = {
   E: {
     letter:"E", title:"外向 Extraverted", color:"#E89A6B", light:"#FFF0E5",
-    short:"由外在世界獲得能量",
+    short:"由外面世界攞能量",
     desc:`E 人（外向型）嘅能量來源係「外面嘅人」。佢哋透過同其他人互動、傾偈、表達自己嚟充電。獨處時間耐咗會覺得悶、冇電、想搵人傾偈。
 
 港式 E 人日常：
@@ -28,7 +28,7 @@ E 人香港名人參考：
   },
   I: {
     letter:"I", title:"內向 Introverted", color:"#7A6CA0", light:"#F0EDF7",
-    short:"由內在世界獲得能量",
+    short:"由自己入面攞能量",
     desc:`I 人（內向型）嘅能量來源係「自己入面」。佢哋透過獨處、反思、深度思考嚟充電。人群聚集時間耐咗會覺得累，想返屋企自己 chill。
 
 港式 I 人日常：
@@ -181,7 +181,7 @@ J 人香港名人參考：
     desc:`P 人（感知型）喜歡「彈性」、「即興」。佢哋做嘢靈活，最後一秒先衝刺。房間可能亂，但「自己先至唔亂」。朋友覺得佢哋「chill」、「free」。
 
 港式 P 人日常：
-- 旅行 last minute book
+- 旅行臨時先 book
 - To-do list 唔存在
 - 死線期 最後 1 小時衝刺
 - 房間「有自己嘅秩序」
@@ -344,7 +344,7 @@ window.TYPES_FULL = {
     conflict:["直接對質","要贏","唔讓步","進取"]
   },
   "ENTP": {
-    full:`ENTP（辯論家 / Debater）佔全球人口約 3%，係 16 種中最愛辯論嘅人。佢哋外向、直覺、思考、感知，成日 challenge status quo。
+    full:`ENTP（辯論家 / Debater）佔全球人口約 3%，係 16 種中最愛辯論嘅人。佢哋外向、直覺、思考、感知，成日挑戰現狀。
 
 **核心特質**
 - 講嘢叻，反應快
@@ -769,7 +769,7 @@ window.TYPES_FULL = {
 **強項**
 - 分析
 - 實幹
-- Calm under pressure
+- 壓力底下都定
 - 獨立
 
 **弱項**
