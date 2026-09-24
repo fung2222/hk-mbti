@@ -176,8 +176,8 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .brand-gold{color:var(--gold)}
 .home-hero{
   margin:-24px -16px 12px;
-  padding:24px 20px 20px;
-  min-height:calc(100dvh - 10.5rem);
+  padding:24px 20px max(20px, env(safe-area-inset-bottom));
+  min-height:100dvh;
   box-sizing:border-box;
   display:flex;
   flex-direction:column;
@@ -225,20 +225,51 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   font-size:2rem;letter-spacing:.04em;line-height:1;white-space:nowrap;
 }
 .hub-type-cn{font-size:12px;line-height:1.25;opacity:.9;white-space:nowrap;}
+.home-type-reel-wrap{
+  position:relative;flex-shrink:0;margin:0 -20px;
+}
 .home-type-reel{
-  display:flex;gap:4px;
+  display:flex;gap:8px;
   overflow-x:auto;overflow-y:hidden;
-  scroll-snap-type:x mandatory;
+  scroll-snap-type:x proximity;
+  scroll-behavior:auto;
   -webkit-overflow-scrolling:touch;
   overscroll-behavior-x:contain;
   touch-action:pan-x;
   scrollbar-width:none;
-  margin:18px -20px 0;
-  padding:4px calc(50% - 2.75rem) 10px;
+  padding:6px calc(50% - 3.5rem) 8px;
 }
 .home-type-reel::-webkit-scrollbar{display:none;}
 .home-type-reel .hub-type-card{
-  flex:0 0 5.5rem;width:5.5rem;scroll-snap-align:center;
+  flex:0 0 7rem;width:7rem;scroll-snap-align:center;scroll-snap-stop:normal;
+}
+.home-type-nav{
+  position:absolute;top:50%;z-index:2;
+  width:36px;height:36px;border:0;padding:0;margin:0;
+  background:rgba(26,26,26,.42);
+  border-radius:50%;
+  opacity:0;pointer-events:none;
+  transition:opacity .18s ease;
+  -webkit-appearance:none;appearance:none;
+  transform:translateY(-50%);
+  cursor:pointer;
+}
+.home-type-reel-wrap.is-press .home-type-nav{opacity:1;pointer-events:auto;}
+.home-type-nav.is-l{left:10px;}
+.home-type-nav.is-r{right:10px;}
+.home-type-nav::after{
+  content:"";display:block;width:0;height:0;margin:0 auto;
+  border-style:solid;
+}
+.home-type-nav.is-l::after{
+  border-width:7px 11px 7px 0;
+  border-color:transparent #fff transparent transparent;
+  margin-left:11px;
+}
+.home-type-nav.is-r::after{
+  border-width:7px 0 7px 11px;
+  border-color:transparent transparent transparent #fff;
+  margin-right:11px;
 }
 #typeBig{font-family:Georgia,'Times New Roman',serif;letter-spacing:.04em;}
 .home-hero h1{font-size:2.35rem;line-height:1.15;letter-spacing:-.02em}
@@ -1019,7 +1050,11 @@ body.no-ad{padding-bottom:0!important;}
       <div class="home-hero-copy">
       <div class="home-hero-mbti">MBTI</div>
       <p class="text-sm text-gray-600 leading-relaxed mt-5">60 題廣東話版 16 型人格測試<br>多種生活情景 · 港人嘅日常<br>5–10 分鐘完成測試</p>
-      <div class="home-type-reel" id="homeTypeReel" aria-label="16型性格色牌"></div>
+      </div>
+      <div class="home-type-reel-wrap" id="homeTypeReelWrap">
+        <button type="button" class="home-type-nav is-l" data-dir="-1" aria-label="上一張"></button>
+        <button type="button" class="home-type-nav is-r" data-dir="1" aria-label="下一張"></button>
+        <div class="home-type-reel" id="homeTypeReel" aria-label="16型性格色牌"></div>
       </div>
     </div>
 
@@ -4368,6 +4403,34 @@ window.renderHubTypes = function(){
   if(grid) grid.innerHTML = html;
   const reel = $("homeTypeReel");
   if(reel) reel.innerHTML = html;
+  if(typeof window.bindHomeTypeReel === "function") window.bindHomeTypeReel();
+};
+window.bindHomeTypeReel = function(){
+  const wrap = $("homeTypeReelWrap");
+  const reel = $("homeTypeReel");
+  if(!wrap || !reel || wrap.dataset.bound === "1") return;
+  wrap.dataset.bound = "1";
+  let hideT;
+  const show = () => { clearTimeout(hideT); wrap.classList.add("is-press"); };
+  const hideSoon = () => {
+    clearTimeout(hideT);
+    hideT = setTimeout(() => wrap.classList.remove("is-press"), 1400);
+  };
+  reel.addEventListener("pointerdown", show);
+  reel.addEventListener("pointerup", hideSoon);
+  reel.addEventListener("pointercancel", hideSoon);
+  wrap.querySelectorAll(".home-type-nav").forEach(btn => {
+    btn.addEventListener("pointerdown", ev => { ev.preventDefault(); ev.stopPropagation(); show(); });
+    btn.addEventListener("click", ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const card = reel.querySelector(".hub-type-card");
+      const step = (card ? card.getBoundingClientRect().width : 112) + 8;
+      const dir = parseInt(btn.getAttribute("data-dir"), 10) || 1;
+      reel.scrollBy({ left: dir * step, behavior: "smooth" });
+      hideSoon();
+    });
+  });
 };
 
 window.compareTypes = function(){
