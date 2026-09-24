@@ -220,11 +220,16 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:6px;padding:10px 4px;position:relative;
   -webkit-appearance:none;appearance:none;text-align:center;
-  transition:box-shadow .25s ease,transform .25s ease;
+  transition:box-shadow .25s ease,transform .25s ease,opacity .25s ease,filter .25s ease;
 }
+.hub-type-grid.is-picking .hub-type-card{
+  opacity:.4;filter:brightness(.72) saturate(.75);transform:scale(.96);
+}
+.hub-type-grid.is-picking .hub-type-card.is-on,
 .hub-type-card.is-on{
-  box-shadow:0 0 0 2px #fff,0 0 0 4px var(--gold),0 6px 16px rgba(0,0,0,.2);
-  transform:translateY(-2px);z-index:1;
+  opacity:1;filter:brightness(1.18) saturate(1.18);
+  transform:scale(1.07);z-index:1;
+  box-shadow:0 10px 26px rgba(0,0,0,.32);
 }
 .hub-type-go{
   opacity:0;pointer-events:none;
@@ -4413,6 +4418,7 @@ window.pickTypeTile = function(ev){
   if(!root) return;
   root.querySelectorAll(".hub-type-card.is-on").forEach(el => { if(el !== btn) el.classList.remove("is-on"); });
   btn.classList.add("is-on");
+  if(root.classList.contains("hub-type-grid")) root.classList.add("is-picking");
 };
 window.renderHubTypes = function(){
   const order = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
