@@ -309,7 +309,7 @@ display:flex;align-items:center;justify-content:center;
 padding:28px 0 40px;
 }
 .home-type-reel{
-display:flex;gap:8px;
+display:flex;gap:4px;
 overflow-x:auto;overflow-y:visible;
 scroll-snap-type:x proximity;
 scroll-behavior:auto;
@@ -4661,7 +4661,7 @@ btn.addEventListener("click", ev => {
 ev.preventDefault();
 ev.stopPropagation();
 const card = reel.querySelector(".hub-type-card");
-const step = (card ? card.getBoundingClientRect().width : 96) + 8;
+const step = (card ? card.getBoundingClientRect().width : 96) + 4;
 const dir = parseInt(btn.getAttribute("data-dir"), 10) || 1;
 reel.scrollBy({ left: dir * step, behavior: "smooth" });
 hideSoon();
