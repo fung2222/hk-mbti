@@ -253,23 +253,22 @@ font-size:2.8rem;letter-spacing:.04em;
 }
 .article-type-card .hub-type-cn{font-size:14px;}
 .article-guide{margin:0 4px 20px;}
-.article-guide-h{
-font-size:.72rem;letter-spacing:.16em;font-weight:700;color:var(--gold);
-margin:0 0 14px;text-align:left;
-}
+/* 人格分頁內容 grid：同結果頁一致（x=20 / 350px、行高 1.5、#374151） */
+.persona-sect{margin:0 4px 20px;}
+.persona-sect .scenario-badge{background:#fff;border:1px solid #E7DCC4;font-size:.85rem;}
 .article-guide-body p{
-margin:0 0 14px;line-height:1.8;font-size:1.05rem;color:#3a3632;
+margin:0 0 12px;line-height:1.5;font-size:1.05rem;color:#374151;
 }
 .article-guide-body ul{
-margin:0 0 18px;padding:0 0 0 1.15rem;
+margin:0 0 14px;padding:0 0 0 1.35rem;list-style:disc;
 }
 .article-guide-body li{
-margin:0 0 8px;line-height:1.7;font-size:1.02rem;color:#3a3632;
+margin:0 0 6px;line-height:1.5;font-size:1.05rem;color:#374151;
 }
 #typeSlogan{color:rgba(255,255,255,.9);font-style:normal;}
 #typeName{color:#fff;}
 .article-guide-kicker{
-font-size:.7rem;letter-spacing:.14em;font-weight:700;color:var(--gold);
+font-size:.85rem;letter-spacing:.06em;font-weight:800;color:var(--gold);
 margin:18px 0 8px;
 }
 .article-more-list{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:18px}
@@ -1008,7 +1007,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="article-guide">
- <h3 class="article-guide-h">完整攻略</h3>
+ <h3 class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.6 6.4l1.6 1.6 2.8-3.2"/><path d="M4.6 12l1.6 1.6 2.8-3.2"/><path d="M4.6 17.6l1.6 1.6 2.8-3.2"/><path d="M12.4 6.4h7"/><path d="M12.4 12h7"/><path d="M12.4 17.6h4.6"/></svg>完整攻略</h3>
  <div id="socialArticleBody" class="article-guide-body"></div>
  </div>
 
@@ -1058,7 +1057,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="article-guide">
- <h3 class="article-guide-h">完整攻略</h3>
+ <h3 class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.6 6.4l1.6 1.6 2.8-3.2"/><path d="M4.6 12l1.6 1.6 2.8-3.2"/><path d="M4.6 17.6l1.6 1.6 2.8-3.2"/><path d="M12.4 6.4h7"/><path d="M12.4 12h7"/><path d="M12.4 17.6h4.6"/></svg>完整攻略</h3>
  <div id="romanceArticleBody" class="article-guide-body"></div>
  </div>
 
@@ -1088,37 +1087,37 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="article-guide">
- <h3 class="article-guide-h">完整性格分析</h3>
+ <h3 class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.6h7l4 4v12.8H7z"/><path d="M14 3.6v4h4"/><path d="M9.8 12.4h5"/><path d="M9.8 15.8h5"/></svg>完整性格分析</h3>
  <div id="typeFull" class="article-guide-body"></div>
  </div>
 
- <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">強項</h3>
+ <div class="persona-sect">
+ <h3 class="sub-label">強項</h3>
  <div id="typeStrength" class="flex flex-wrap gap-2"></div>
  </div>
 
- <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">弱項</h3>
+ <div class="persona-sect">
+ <h3 class="sub-label">弱項</h3>
  <div id="typeWeakness" class="flex flex-wrap gap-2"></div>
  </div>
 
- <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">戀愛</h3>
+ <div class="persona-sect">
+ <h3 class="sub-label">戀愛</h3>
  <div id="typeLove" class="text-sm text-gray-700 leading-relaxed"></div>
  </div>
 
- <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">工作</h3>
+ <div class="persona-sect">
+ <h3 class="sub-label">工作</h3>
  <div id="typeWork" class="text-sm text-gray-700 leading-relaxed"></div>
  </div>
 
- <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">友情</h3>
+ <div class="persona-sect">
+ <h3 class="sub-label">友情</h3>
  <div id="typeFriend" class="text-sm text-gray-700 leading-relaxed"></div>
  </div>
 
- <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">衝突處理</h3>
+ <div class="persona-sect">
+ <h3 class="sub-label">衝突處理</h3>
  <div id="typeConflict" class="text-sm text-gray-700 leading-relaxed"></div>
  </div>
 
