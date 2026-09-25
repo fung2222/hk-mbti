@@ -3643,13 +3643,14 @@ if(img){
 img.src = dataUrl;
 img.dataset.downloadName = `港式MBTI-${window.lastResult}.png`;
  }
- // 縮圖（供紀錄頁顯示，~15-25KB JPEG）
+ // 紀錄用圖：一張 480×854 JPEG（~25-35KB）—— 列表縮圖同「分享舊紀錄」共用同一張，
+ // 唔再儲 720×1280 大圖（每條多 67KB）。要高清分享卡就返結果頁重新生成。
 try{
 const tc = document.createElement("canvas");
-tc.width = 180; tc.height = 320;
-tc.getContext("2d").drawImage(canvas, 0, 0, 180, 320);
-window._pendingCardThumb = tc.toDataURL("image/jpeg", 0.72);
-window._pendingCardShare = canvas.toDataURL("image/jpeg", 0.82);
+tc.width = 480; tc.height = 854;
+tc.getContext("2d").drawImage(canvas, 0, 0, 480, 854);
+window._pendingCardThumb = tc.toDataURL("image/jpeg", 0.74);
+window._pendingCardShare = null;
  }catch(e){}
 return dataUrl;
 }
@@ -4127,8 +4128,9 @@ localStorage.setItem("hkmbti_history", JSON.stringify(list));
 // 去重：同一段測試重複寫入（同 mbti / 名 / 版本，3 分鐘內）→ 只留最早嗰條
 const seen = new Set();
 const clean = [];
+let dirty = false;
 list.forEach(rec => {
-if(!rec || !rec.mbti) return;
+if(!rec || !rec.mbti){ dirty = true; return; }
 const ts = Number(rec.timestamp) || 0;
 const k = [rec.mbti, rec.name||"", rec.nickname||"", rec.version||""].join("|");
 let dup = false;
@@ -4136,11 +4138,12 @@ for(const c of clean){
 if(c._k !== k) continue;
 if(Math.abs((Number(c.timestamp)||0) - ts) <= 180000){ dup = true; break; }
  }
-if(dup) return;
+if(dup){ dirty = true; return; }
 const item = Object.assign({}, rec, {_k:k});
+if("cardShare" in item){ delete item.cardShare; dirty = true; }   // 舊版欄位：唔再儲大圖
 clean.push(item);
  });
-if(clean.length !== list.length){
+if(dirty || clean.length !== list.length){
 try{ localStorage.setItem("hkmbti_history", JSON.stringify(clean.map(c => { const o = Object.assign({}, c); delete o._k; return o; }))); }catch(e){}
  }
 return clean.map(c => { const o = Object.assign({}, c); delete o._k; return o; }).slice(0, 5);
