@@ -3439,11 +3439,14 @@ ctx.fillStyle = pal.accent;
 ctx.fillRect(0, 0, 720, 6);
 
  // 頂部 header 一列垂直對齊：icon | 品牌 | 日期+版本
-const headerTop = 36;
-const iconSize = 96; // v1.7.8 加強：64 → 96
-const iconX = 40;
+// 版面 grid：同內文一致（左 60 / 右 660，中心 360）
+const MARGIN = 60;
+const RIGHT = 720 - MARGIN; // 660
+const headerTop = 44;
+const iconSize = 92;
+const iconX = MARGIN;
 const iconY = headerTop;
-const headerMidY = iconY + iconSize / 2; // 84
+const headerMidY = iconY + iconSize / 2; // 90
 const versionLabel = window.getTestVersionLabel(
  (window._cardMeta && window._cardMeta.version) || window.state.version,
  (window._cardMeta && window._cardMeta.totalQ) || window.state.maxQ
@@ -3451,21 +3454,24 @@ const versionLabel = window.getTestVersionLabel(
 const now = new Date();
 const dateLabel = now.getFullYear() + "." + String(now.getMonth()+1).padStart(2,"0");
 
- // 品牌名（垂直置中跟 icon）— v1.7.8 加大：34 → 42
+ // 品牌名：同 icon 同一水平中線，字級收細（42 → 34）
 ctx.fillStyle = "white";
-ctx.font = "bold 42px sans-serif";
+ctx.font = "bold 34px sans-serif";
 ctx.textAlign = "left";
 ctx.textBaseline = "middle";
-ctx.fillText("港式 MBTI", iconX + iconSize + 18, headerMidY);
+ctx.fillText("港式 MBTI", iconX + iconSize + 20, headerMidY + 1);
 
- // 右側：日期 + 版本兩行，整體垂直置中
+ // 右側：日期 + 版本，右對齊同一條邊（660），上下對稱 icon 中線
 ctx.textAlign = "right";
-ctx.fillStyle = "rgba(255,255,255,0.92)";
-ctx.font = "bold 24px sans-serif";
-ctx.fillText(dateLabel, 680, headerMidY - 14);
-ctx.fillStyle = "rgba(255,255,255,0.72)";
+ctx.fillStyle = "rgba(255,255,255,0.95)";
+ctx.font = "bold 23px sans-serif";
+ctx.fillText(dateLabel, RIGHT, headerMidY - 15);
+ctx.fillStyle = "rgba(255,255,255,0.68)";
 ctx.font = "bold 20px sans-serif";
-ctx.fillText(versionLabel, 680, headerMidY + 16);
+ctx.fillText(versionLabel, RIGHT, headerMidY + 17);
+ // header 底下幼分隔線（同 grid 同寬）
+ctx.fillStyle = "rgba(255,255,255,0.16)";
+ctx.fillRect(MARGIN, iconY + iconSize + 30, RIGHT - MARGIN, 2);
 ctx.textBaseline = "alphabetic";
 
  // Icon logo（用真實 PNG）
@@ -3474,7 +3480,7 @@ const iconImg = new Image();
 iconImg.crossOrigin = "anonymous";
 iconImg.onload = function(){
 ctx.save();
-const r = 16;
+const r = 18;
 const x = iconX, y = iconY, w = iconSize, h = iconSize;
 ctx.beginPath();
 ctx.moveTo(x + r, y);
@@ -3508,6 +3514,19 @@ return drawIcon.then(() => {
 renderCardBody(ctx, t, canvas);
  });
 };
+
+function cardRoundRect(ctx, x, y, w, h, r){
+if(w <= 0 || h <= 0) return;
+const rr = Math.min(r, h / 2, w / 2);
+ctx.beginPath();
+ctx.moveTo(x + rr, y);
+ctx.arcTo(x + w, y, x + w, y + h, rr);
+ctx.arcTo(x + w, y + h, x, y + h, rr);
+ctx.arcTo(x, y + h, x, y, rr);
+ctx.arcTo(x, y, x + w, y, rr);
+ctx.closePath();
+ctx.fill();
+}
 
 function renderCardBody(ctx, t, canvas){
  // 中間
@@ -3548,9 +3567,9 @@ ctx.textAlign = "right";
 ctx.fillStyle = "white";
 ctx.fillText(value, 660, y);
 ctx.fillStyle = "rgba(255,255,255,0.2)";
-ctx.fillRect(60, y + 12, 600, 12);
+cardRoundRect(ctx, 60, y + 12, 600, 12, 6);
 ctx.fillStyle = "white";
-ctx.fillRect(60, y + 12, 600 * (parseInt(value)/10), 12);
+cardRoundRect(ctx, 60, y + 12, 600 * (parseInt(value)/10), 12, 6);
 ctx.textAlign = "left";
 y += 80;
  }
