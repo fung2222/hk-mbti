@@ -546,7 +546,7 @@ body.no-ad{padding-bottom:0!important;}
          window.viewHistoryResult(parseInt(m[1], 10));
          openedHash = true;
        } else if(tm && typeof window.openType === "function"){
-         window.openType(tm[1]);
+         window.openType(tm[1], "ext");
          openedHash = true;
        } else {
          const MAP = {
@@ -3996,6 +3996,22 @@ window.goBack = function(){
   }
   if(here === "type"){
     const t = window._lastType;
+    const from = window._typeFrom;
+    if(from === "home"){
+      stay(function(){ goHome(); });
+      return;
+    }
+    if(from === "result"){
+      stay(function(){
+        let idx = 0;
+        try{ idx = parseInt(sessionStorage.getItem("hkmbti_last_record_idx"), 10) || 0; }catch(e){}
+        if(typeof window.viewHistoryResult === "function") window.viewHistoryResult(idx);
+      });
+      return;
+    }
+    if(from === "ext"){
+      try{ history.back(); return; }catch(e){}
+    }
     stay(function(){ openHub(); window.scrollToTypeCards("hub", t); });
     return;
   }
@@ -4544,7 +4560,7 @@ window.goSocialFromRomance = function(){
 
 window.goTypeFromResult = function(){
   const r = window.lastResult || "INTJ";
-  openType(r.substring(0,4));
+  openType(r.substring(0,4), "result");
 };
 
 window.openLetter = function(letter){
@@ -4565,10 +4581,11 @@ window.openLetter = function(letter){
   window.scrollTo(0,0);
 };
 
-window.openType = function(type){
+window.openType = function(type, from){
   const T = window.TYPES[type];
   const F = window.TYPES_FULL[type];
   if(!T) return;
+  if(from) window._typeFrom = from;
   window._homeReelHold = false;
   const reel = $("homeTypeReel");
   if(reel){
@@ -4622,8 +4639,8 @@ window.pickTypeTile = function(ev){
 };
 window.renderHubTypes = function(){
   const order = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
-  const gridHtml = order.map(code => window.hubTypeCardHtml(code, `openType('${code}')`)).join("");
-  const reelHtml = gridHtml;
+  const gridHtml = order.map(code => window.hubTypeCardHtml(code, `openType('${code}','hub')`)).join("");
+  const reelHtml = order.map(code => window.hubTypeCardHtml(code, `openType('${code}','home')`)).join("");
   const grid = $("hubTypeGrid");
   if(grid) grid.innerHTML = gridHtml;
   const reel = $("homeTypeReel");
