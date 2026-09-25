@@ -2,9 +2,9 @@
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
+ <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+ <meta http-equiv="Pragma" content="no-cache">
+ <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>我的紀錄 · 港式 MBTI</title>
 <meta name="description" content="查看你嘅港式 MBTI 分享卡、測試記錄、16 型訪問統計。">
@@ -59,9 +59,9 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .history-meta{font-size:12px;color:#888;margin-top:4px;}
 .history-actions{display:flex;gap:8px;margin-top:10px;justify-content:flex-start;}
 .history-actions button{
-  width:36px;height:36px;padding:0;border-radius:10px;border:0;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  -webkit-appearance:none;appearance:none;background:var(--soft);color:var(--ink);
+width:36px;height:36px;padding:0;border-radius:10px;border:0;cursor:pointer;
+display:flex;align-items:center;justify-content:center;
+ -webkit-appearance:none;appearance:none;background:var(--soft);color:var(--ink);
 }
 .history-actions svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;}
 .act-view:hover,.act-share:hover{background:rgba(212,169,95,.22);}
@@ -84,8 +84,8 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .rec-num{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:rgba(212,169,95,.12);color:#7C6B45;font-weight:700;font-size:16px;flex-shrink:0;font-family:-apple-system,sans-serif;letter-spacing:-0.02em;border:1px solid rgba(212,169,95,.35);}
 .rec-card{width:54px;height:96px;object-fit:cover;border-radius:8px;flex-shrink:0;margin-left:auto;box-shadow:0 2px 8px rgba(0,0,0,.16);cursor:pointer;}
 @media (min-width:769px){
-  .stat-grid{grid-template-columns:repeat(8,1fr);}
-  .hero h1{font-size:42px;}
+ .stat-grid{grid-template-columns:repeat(8,1fr);}
+ .hero h1{font-size:42px;}
 }
 
 /* ===== 廣告位樣式 (跟主頁 f8b7244 一致) ===== */
@@ -106,369 +106,369 @@ body.no-ad{padding-bottom:0!important;}
 <body>
 
 <div class="hero" style="position:relative;">
-  <div class="hero-row">
-    <a href="./" class="back-nav" onclick="siteBack();return false;">返回</a>
-    <h1>我的紀錄</h1>
-    <button class="hero-menu" onclick="toggleHeroMenu(event)" aria-label="更多">⋯</button>
-  </div>
-  <p style="margin:6px 0 0;font-size:12px;opacity:0.75;text-align:center;">分享卡、記錄及16型人格訪問統計</p>
-  <div class="hero-popover" id="heroPopover" onclick="event.stopPropagation()">
-    <a href="./" onclick="closeHeroMenu();">主頁</a>
-    <a href="./record.html" onclick="closeHeroMenu();">我的紀錄</a>
-    <a href="./#about" onclick="closeHeroMenu();">關於港式 MBTI</a>
-    <a href="./#spectrum" onclick="closeHeroMenu();">MBTI 性格光譜</a>
-    <a href="./#hub" onclick="closeHeroMenu();">性格百科</a>
-    <a href="./#social" onclick="closeHeroMenu();">個人相處</a>
-    <a href="./#romance" onclick="closeHeroMenu();">個人拍拖</a>
-    <a href="./stats.html" onclick="closeHeroMenu();">香港16型統計</a>
-    <a href="./#privacy" onclick="closeHeroMenu();">私隱聲明</a>
-    <div class="sep"></div>
-    <button onclick="clearAllRecords();closeHeroMenu();" style="color:#ff8a8a;">全部清除紀錄</button>
-  </div>
+ <div class="hero-row">
+ <a href="./" class="back-nav" onclick="siteBack();return false;">返回</a>
+ <h1>我的紀錄</h1>
+ <button class="hero-menu" onclick="toggleHeroMenu(event)" aria-label="更多">⋯</button>
+ </div>
+ <p style="margin:6px 0 0;font-size:12px;opacity:0.75;text-align:center;">分享卡、記錄及16型人格訪問統計</p>
+ <div class="hero-popover" id="heroPopover" onclick="event.stopPropagation()">
+ <a href="./" onclick="closeHeroMenu();">主頁</a>
+ <a href="./record.html" onclick="closeHeroMenu();">我的紀錄</a>
+ <a href="./#about" onclick="closeHeroMenu();">關於港式 MBTI</a>
+ <a href="./#spectrum" onclick="closeHeroMenu();">MBTI 性格光譜</a>
+ <a href="./#hub" onclick="closeHeroMenu();">性格百科</a>
+ <a href="./#social" onclick="closeHeroMenu();">個人相處</a>
+ <a href="./#romance" onclick="closeHeroMenu();">個人拍拖</a>
+ <a href="./stats.html" onclick="closeHeroMenu();">香港16型統計</a>
+ <a href="./#privacy" onclick="closeHeroMenu();">私隱聲明</a>
+ <div class="sep"></div>
+ <button onclick="clearAllRecords();closeHeroMenu();" style="color:#ff8a8a;">全部清除紀錄</button>
+ </div>
 </div>
 
 <div class="section-title">最近 5 次測試</div>
 <p class="section-note">只保留最近五次紀錄，新記錄會覆寫最舊的紀錄</p>
 <div id="historyList">
-  <div class="empty">
-    <div class="ico">📭</div>
-    <div>暫時未有紀錄</div>
-    <div style="margin-top:8px;font-size:12px;">做完測試就會自動儲存</div>
-  </div>
+ <div class="empty">
+ <div class="ico"></div>
+ <div>暫時未有紀錄</div>
+ <div style="margin-top:8px;font-size:12px;">做完測試就會自動儲存</div>
+ </div>
 </div>
 
 <div class="summary-card">
-  <div style="font-size:16px;font-weight:900;margin:0 0 14px;color:var(--ink);">16 型人格統計</div>
-  <div style="display:flex;justify-content:space-between;align-items:flex-end;">
-    <div>
-      <div class="summary-num" id="totalTests">0</div>
-      <div style="font-size:13px;color:#666;margin-top:4px;">總共測試次數</div>
-    </div>
-    <div style="text-align:right;">
-      <div class="summary-num" id="typesVisited">0<span style="font-size:18px;color:#888;"> / 16</span></div>
-      <div style="font-size:13px;color:#666;margin-top:4px;">已探索類型</div>
-    </div>
-  </div>
-  <div class="stat-grid" id="statGrid" style="padding:0;margin-top:16px;"></div>
+ <div style="font-size:16px;font-weight:900;margin:0 0 14px;color:var(--ink);">16 型人格統計</div>
+ <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+ <div>
+ <div class="summary-num" id="totalTests">0</div>
+ <div style="font-size:13px;color:#666;margin-top:4px;">總共測試次數</div>
+ </div>
+ <div style="text-align:right;">
+ <div class="summary-num" id="typesVisited">0<span style="font-size:18px;color:#888;"> / 16</span></div>
+ <div style="font-size:13px;color:#666;margin-top:4px;">已探索類型</div>
+ </div>
+ </div>
+ <div class="stat-grid" id="statGrid" style="padding:0;margin-top:16px;"></div>
 </div>
 
 <div class="actions-bar">
-  <button class="btn-gold" onclick="exportRecords()">匯出資料</button>
-  <button class="btn-danger" onclick="clearAllRecords()">全部刪除</button>
+ <button class="btn-gold" onclick="exportRecords()">匯出資料</button>
+ <button class="btn-danger" onclick="clearAllRecords()">全部刪除</button>
 </div>
 
 <div class="footer-note">
-  資料 100% 喺你部機（localStorage）· 跨裝置唔同步
+資料 100% 喺你部機（localStorage）· 跨裝置唔同步
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
 function siteBack(){
-  try{
-    if(document.referrer){
-      var u = new URL(document.referrer, location.href);
-      if(u.origin === location.origin){ history.back(); return; }
-    }
-  }catch(e){}
-  location.href = './';
+try{
+if(document.referrer){
+var u = new URL(document.referrer, location.href);
+if(u.origin === location.origin){ history.back(); return; }
+ }
+ }catch(e){}
+location.href = './';
 }
 
 // Hero menu (一行式 header 用)
 function toggleHeroMenu(e){
-  if(e) e.stopPropagation();
-  const p = document.getElementById('heroPopover');
-  if(p) p.classList.toggle('open');
+if(e) e.stopPropagation();
+const p = document.getElementById('heroPopover');
+if(p) p.classList.toggle('open');
 }
 function closeHeroMenu(){
-  const p = document.getElementById('heroPopover');
-  if(p) p.classList.remove('open');
+const p = document.getElementById('heroPopover');
+if(p) p.classList.remove('open');
 }
 document.addEventListener('click', function(e){
-  if(!e.target.closest('.hero-popover') && !e.target.closest('.hero-menu')) closeHeroMenu();
+if(!e.target.closest('.hero-popover') && !e.target.closest('.hero-menu')) closeHeroMenu();
 });
 // 載入 localStorage
 function loadHistory(){
-  let arr = [];
-  try{ arr = JSON.parse(localStorage.getItem("hkmbti_history")||"[]") || []; }catch(e){ arr = []; }
-  // 兼容舊版 hkmbti_last_result
-  try{
-    if(arr.length === 0){
-      const last = localStorage.getItem("hkmbti_last_result");
-      if(last){ const r = JSON.parse(last); arr = [r]; }
-    }
-  }catch(e){}
-  return Array.isArray(arr) ? arr : [];
+let arr = [];
+try{ arr = JSON.parse(localStorage.getItem("hkmbti_history")||"[]") || []; }catch(e){ arr = []; }
+ // 兼容舊版 hkmbti_last_result
+try{
+if(arr.length === 0){
+const last = localStorage.getItem("hkmbti_last_result");
+if(last){ const r = JSON.parse(last); arr = [r]; }
+ }
+ }catch(e){}
+return Array.isArray(arr) ? arr : [];
 }
 function loadCounts(){
-  let obj = {};
-  try{ obj = JSON.parse(localStorage.getItem("hkmbti_type_counts")||"{}") || {}; }catch(e){ obj = {}; }
-  return obj;
+let obj = {};
+try{ obj = JSON.parse(localStorage.getItem("hkmbti_type_counts")||"{}") || {}; }catch(e){ obj = {}; }
+return obj;
 }
 
 // 16 type meta
 const TYPE_META = {
-  INTJ:{cn:"建築師",emoji:"🏛️",color:"#6B4E9E"}, INTP:{cn:"邏輯學家",emoji:"🧪",color:"#3E5F9E"},
-  ENTJ:{cn:"指揮官",emoji:"👔",color:"#1E8A8A"}, ENTP:{cn:"辯論家",emoji:"💡",color:"#E07B35"},
-  INFJ:{cn:"提倡者",emoji:"🌙",color:"#8A3E9E"}, INFP:{cn:"調解員",emoji:"🌸",color:"#B085C4"},
-  ENFJ:{cn:"主人公",emoji:"🤗",color:"#E05A4A"}, ENFP:{cn:"競選者",emoji:"🎉",color:"#D9A028"},
-  ISTJ:{cn:"物流師",emoji:"📋",color:"#4A6E9E"}, ISFJ:{cn:"守衛者",emoji:"🎁",color:"#5C8A5C"},
-  ESTJ:{cn:"總經理",emoji:"📊",color:"#A85240"}, ESFJ:{cn:"執事",emoji:"🎈",color:"#E08058"},
-  ISTP:{cn:"鑒賞家",emoji:"🔧",color:"#3E8A7A"}, ISFP:{cn:"探險家",emoji:"🎨",color:"#C0709E"},
-  ESTP:{cn:"企業家",emoji:"🎲",color:"#6B8A3E"}, ESFP:{cn:"表演者",emoji:"🎤",color:"#C04070"}
+INTJ:{cn:"建築師",emoji:"️",color:"#6B4E9E"}, INTP:{cn:"邏輯學家",emoji:"",color:"#3E5F9E"},
+ENTJ:{cn:"指揮官",emoji:"",color:"#1E8A8A"}, ENTP:{cn:"辯論家",emoji:"",color:"#E07B35"},
+INFJ:{cn:"提倡者",emoji:"",color:"#8A3E9E"}, INFP:{cn:"調解員",emoji:"",color:"#B085C4"},
+ENFJ:{cn:"主人公",emoji:"",color:"#E05A4A"}, ENFP:{cn:"競選者",emoji:"",color:"#D9A028"},
+ISTJ:{cn:"物流師",emoji:"",color:"#4A6E9E"}, ISFJ:{cn:"守衛者",emoji:"",color:"#5C8A5C"},
+ESTJ:{cn:"總經理",emoji:"",color:"#A85240"}, ESFJ:{cn:"執事",emoji:"",color:"#E08058"},
+ISTP:{cn:"鑒賞家",emoji:"",color:"#3E8A7A"}, ISFP:{cn:"探險家",emoji:"",color:"#C0709E"},
+ESTP:{cn:"企業家",emoji:"",color:"#6B8A3E"}, ESFP:{cn:"表演者",emoji:"",color:"#C04070"}
 };
 const VER_LABEL = {life:"生活版", advanced:"進階版", bb:"BB版"};
 
 function timeAgo(ts){
-  const ms = Date.now() - ts;
-  const m = Math.floor(ms/60000);
-  const h = Math.floor(ms/3600000);
-  const d = Math.floor(ms/86400000);
-  if(m < 1) return "啱啱";
-  if(h < 1) return m + " 分鐘前";
-  if(d < 1) return h + " 小時前";
-  if(d < 30) return d + " 日前";
-  const dt = new Date(ts);
-  return (dt.getMonth()+1) + "/" + dt.getDate();
+const ms = Date.now() - ts;
+const m = Math.floor(ms/60000);
+const h = Math.floor(ms/3600000);
+const d = Math.floor(ms/86400000);
+if(m < 1) return "啱啱";
+if(h < 1) return m + " 分鐘前";
+if(d < 1) return h + " 小時前";
+if(d < 30) return d + " 日前";
+const dt = new Date(ts);
+return (dt.getMonth()+1) + "/" + dt.getDate();
 }
 
 VER_PILL = {life:"生活版", advanced:"進階版", bb:"BB版"};
 
 function render(){
-  const list = loadHistory();
-  const counts = loadCounts();
-  
-  // 計算 summary
-  // total = sum of counts (or list.length if counts empty)
-  const totalByCounts = Object.values(counts).reduce((a,b) => a + (parseInt(b,10)||0), 0);
-  const totalTests = totalByCounts || list.length;
-  document.getElementById("totalTests").textContent = totalTests;
-  
-  // types visited
-  const visited = Object.keys(counts).filter(k => (parseInt(counts[k],10)||0) > 0);
-  document.getElementById("typesVisited").innerHTML = visited.length + '<span style="font-size:18px;color:#888;"> / 16</span>';
-  
-  // history list — 編號固定 1..5（缺嘅就顯示 —）
-  const histBox = document.getElementById("historyList");
-  if(list.length === 0){
-    histBox.innerHTML = `
-      <div class="empty">
-        <div class="ico">📭</div>
-        <div>暫時未有紀錄</div>
-        <div style="margin-top:8px;font-size:12px;"><a href="./" style="color:var(--gold);">做完測試就會自動儲存</a></div>
-      </div>`;
-  } else {
-    histBox.innerHTML = list.map((rec, i) => {
-      const code = (rec.mbti||"").substring(0,4).toUpperCase();
-      const meta = TYPE_META[code] || {cn:code, emoji:"❓"};
-      const verLabel = VER_PILL[rec.version] || rec.version || "—";
-      const name = [rec.name, rec.nickname].filter(Boolean).join(" · ") || "匿名港人";
-      const time = rec.timestamp ? timeAgo(rec.timestamp) : "";
-      const num = i + 1;
-      return `
-        <div class="history-item">
-          <div class="rec-num">#${num}</div>
-          <div class="history-main">
-            <div class="history-name">${escapeHtml(name)}</div>
-            <div class="history-mbti">${code} · ${meta.cn}</div>
-            <div class="history-meta">${escapeHtml(verLabel)} · ${time}</div>
-            <div class="history-actions">
-              <button type="button" class="act-view" aria-label="睇結果" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
-              <button type="button" class="act-share" aria-label="分享" onclick="shareRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg></button>
-              <button type="button" class="act-del" aria-label="刪除" onclick="delRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg></button>
-            </div>
-          </div>
-          ${rec.card ? `<img src="${rec.card}" class="rec-card" alt="分享卡" role="button" tabindex="0" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})">` : ""}
-        </div>`;
-    }).join("");
-  }
-  
-  // 16 型 stats
-  const grid = document.getElementById("statGrid");
-  grid.innerHTML = Object.keys(TYPE_META).map(code => {
-    const c = parseInt(counts[code]||0, 10) || 0;
-    const meta = TYPE_META[code];
-    const visited = c > 0;
-    const color = meta.color || "#999";
-    return `
-      <button type="button" class="stat-pill ${visited ? "visited" : ""}" style="border-color:${color}" onclick="goType('${code}')">
-        <span class="code" style="color:${visited ? "var(--gold)" : color}">${code}</span>
-        <span style="display:block;font-size:10px;opacity:0.7;">${meta.cn}</span>
-        <span class="count">${c > 0 ? c + "次" : "—"}</span>
-      </button>`;
-  }).join("");
+const list = loadHistory();
+const counts = loadCounts();
+ 
+ // 計算 summary
+ // total = sum of counts (or list.length if counts empty)
+const totalByCounts = Object.values(counts).reduce((a,b) => a + (parseInt(b,10)||0), 0);
+const totalTests = totalByCounts || list.length;
+document.getElementById("totalTests").textContent = totalTests;
+ 
+ // types visited
+const visited = Object.keys(counts).filter(k => (parseInt(counts[k],10)||0) > 0);
+document.getElementById("typesVisited").innerHTML = visited.length + '<span style="font-size:18px;color:#888;"> / 16</span>';
+ 
+ // history list — 編號固定 1..5（缺嘅就顯示 —）
+const histBox = document.getElementById("historyList");
+if(list.length === 0){
+histBox.innerHTML = `
+ <div class="empty">
+ <div class="ico"></div>
+ <div>暫時未有紀錄</div>
+ <div style="margin-top:8px;font-size:12px;"><a href="./" style="color:var(--gold);">做完測試就會自動儲存</a></div>
+ </div>`;
+ } else {
+histBox.innerHTML = list.map((rec, i) => {
+const code = (rec.mbti||"").substring(0,4).toUpperCase();
+const meta = TYPE_META[code] || {cn:code, emoji:""};
+const verLabel = VER_PILL[rec.version] || rec.version || "—";
+const name = [rec.name, rec.nickname].filter(Boolean).join(" · ") || "匿名港人";
+const time = rec.timestamp ? timeAgo(rec.timestamp) : "";
+const num = i + 1;
+return `
+ <div class="history-item">
+ <div class="rec-num">#${num}</div>
+ <div class="history-main">
+ <div class="history-name">${escapeHtml(name)}</div>
+ <div class="history-mbti">${code} · ${meta.cn}</div>
+ <div class="history-meta">${escapeHtml(verLabel)} · ${time}</div>
+ <div class="history-actions">
+ <button type="button" class="act-view" aria-label="睇結果" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+ <button type="button" class="act-share" aria-label="分享" onclick="shareRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg></button>
+ <button type="button" class="act-del" aria-label="刪除" onclick="delRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg></button>
+ </div>
+ </div>
+ ${rec.card ? `<img src="${rec.card}" class="rec-card" alt="分享卡" role="button" tabindex="0" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})">` : ""}
+ </div>`;
+ }).join("");
+ }
+ 
+ // 16 型 stats
+const grid = document.getElementById("statGrid");
+grid.innerHTML = Object.keys(TYPE_META).map(code => {
+const c = parseInt(counts[code]||0, 10) || 0;
+const meta = TYPE_META[code];
+const visited = c > 0;
+const color = meta.color || "#999";
+return `
+ <button type="button" class="stat-pill ${visited ? "visited" : ""}" style="border-color:${color}" onclick="goType('${code}')">
+ <span class="code" style="color:${visited ? "var(--gold)" : color}">${code}</span>
+ <span style="display:block;font-size:10px;opacity:0.7;">${meta.cn}</span>
+ <span class="count">${c > 0 ? c + "次" : "—"}</span>
+ </button>`;
+ }).join("");
 }
 
 function escapeHtml(s){
-  const map = {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"};
-  return String(s||"").replace(/[&<>"']/g, c => map[c]);
+const map = {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"};
+return String(s||"").replace(/[&<>"']/g, c => map[c]);
 }
 function escapeAttr(s){ return escapeHtml(s).replace(/`/g,"&#96;"); }
 
 function toast(msg){
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2200);
+const t = document.getElementById("toast");
+t.textContent = msg;
+t.classList.add("show");
+setTimeout(() => t.classList.remove("show"), 2200);
 }
 
 function viewRec(id, i){
-  // 跳返主頁 replay history result，透過 hash #view={i}
-  // 主頁 detect 到 #view=N 就自動 call viewHistoryResult(N)
-  try{
-    location.href = "./#view=" + i;
-  }catch(e){ toast("跳轉失敗"); }
+ // 跳返主頁 replay history result，透過 hash #view={i}
+ // 主頁 detect 到 #view=N 就自動 call viewHistoryResult(N)
+try{
+location.href = "./#view=" + i;
+ }catch(e){ toast("跳轉失敗"); }
 }
 
 function goType(code){
-  // 跳去主頁睇該類型嘅完整百科（#type=XXXX）
-  try{
-    location.href = "./#type=" + code;
-  }catch(e){ toast("跳轉失敗"); }
+ // 跳去主頁睇該類型嘅完整百科（#type=XXXX）
+try{
+location.href = "./#type=" + code;
+ }catch(e){ toast("跳轉失敗"); }
 }
 
 async function shareRec(i){
-  const rec = loadHistory()[i];
-  if(!rec) return;
-  const src = rec.cardShare || rec.card;
-  const code = (rec.mbti||"").substring(0,4);
-  if(!src){
-    toast("呢筆未有分享卡圖片");
-    return;
-  }
-  let file = null;
-  try{
-    const blob = await (await fetch(src)).blob();
-    const isPng = (blob.type||"").indexOf("png") >= 0 || src.indexOf("image/png") >= 0;
-    file = new File([blob], "港式MBTI-" + code + (isPng ? ".png" : ".jpg"), { type: blob.type || (isPng ? "image/png" : "image/jpeg") });
-  }catch(e){ file = null; }
-  if(file && navigator.share && navigator.canShare){
-    let canFile = false;
-    try{ canFile = navigator.canShare({ files: [file] }); }catch(e){ canFile = false; }
-    if(canFile){
-      const attempts = [
-        { files: [file] },
-        { files: [file], text: "我嘅港式 MBTI：" + code }
-      ];
-      for(const payload of attempts){
-        try{
-          await navigator.share(payload);
-          toast("✅ 已叫起分享");
-          return;
-        }catch(e){
-          if(e && e.name === "AbortError") return;
-        }
-      }
-    }
-  }
-  try{
-    const a = document.createElement("a");
-    a.href = src;
-    a.download = "港式MBTI-" + code + ".jpg";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    toast("✅ 已嘗試儲存分享卡");
-  }catch(e2){
-    toast("分享失敗，請長按縮圖儲存");
-  }
+const rec = loadHistory()[i];
+if(!rec) return;
+const src = rec.cardShare || rec.card;
+const code = (rec.mbti||"").substring(0,4);
+if(!src){
+toast("呢筆未有分享卡圖片");
+return;
+ }
+let file = null;
+try{
+const blob = await (await fetch(src)).blob();
+const isPng = (blob.type||"").indexOf("png") >= 0 || src.indexOf("image/png") >= 0;
+file = new File([blob], "港式MBTI-" + code + (isPng ? ".png" : ".jpg"), { type: blob.type || (isPng ? "image/png" : "image/jpeg") });
+ }catch(e){ file = null; }
+if(file && navigator.share && navigator.canShare){
+let canFile = false;
+try{ canFile = navigator.canShare({ files: [file] }); }catch(e){ canFile = false; }
+if(canFile){
+const attempts = [
+ { files: [file] },
+ { files: [file], text: "我嘅港式 MBTI：" + code }
+ ];
+for(const payload of attempts){
+try{
+await navigator.share(payload);
+toast(" 已叫起分享");
+return;
+ }catch(e){
+if(e && e.name === "AbortError") return;
+ }
+ }
+ }
+ }
+try{
+const a = document.createElement("a");
+a.href = src;
+a.download = "港式MBTI-" + code + ".jpg";
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+toast(" 已嘗試儲存分享卡");
+ }catch(e2){
+toast("分享失敗，請長按縮圖儲存");
+ }
 }
 
 let _delArmTimer = null;
 function delRec(i){
-  // 兩段確認（armed 模式）
-  const btn = event.target;
-  if(btn.dataset.armed !== "1"){
-    btn.dataset.armed = "1";
-    btn.textContent = "⚠️ 再撳一次";
-    btn.style.background = "#fdd";
-    clearTimeout(_delArmTimer);
-    _delArmTimer = setTimeout(() => {
-      btn.dataset.armed = "";
-      btn.textContent = "🗑 刪除";
-      btn.style.background = "";
-    }, 5000);
-    return;
-  }
-  clearTimeout(_delArmTimer);
-  if(!confirm("確定要刪除呢個紀錄？\n刪咗就返唔到。")) return;
-  
-  let arr = loadHistory();
-  const removed = arr.splice(i, 1)[0];
-  localStorage.setItem("hkmbti_history", JSON.stringify(arr));
-  
-  // 同步 hkmbti_last_result（首筆）
-  try{
-    if(arr.length > 0){
-      localStorage.setItem("hkmbti_last_result", JSON.stringify(arr[0]));
-    } else {
-      localStorage.removeItem("hkmbti_last_result");
-    }
-  }catch(e){}
-  
-  // 同步 type_counts -1
-  if(removed && removed.mbti){
-    const code = removed.mbti.substring(0,4).toUpperCase();
-    const counts = loadCounts();
-    if(counts[code]){
-      counts[code] = Math.max(0, (parseInt(counts[code],10)||0) - 1);
-      if(counts[code] === 0) delete counts[code];
-      localStorage.setItem("hkmbti_type_counts", JSON.stringify(counts));
-    }
-  }
-  
-  toast("✅ 已刪除");
-  render();
+ // 兩段確認（armed 模式）
+const btn = event.target;
+if(btn.dataset.armed !== "1"){
+btn.dataset.armed = "1";
+btn.textContent = "️ 再撳一次";
+btn.style.background = "#fdd";
+clearTimeout(_delArmTimer);
+ _delArmTimer = setTimeout(() => {
+btn.dataset.armed = "";
+btn.textContent = " 刪除";
+btn.style.background = "";
+ }, 5000);
+return;
+ }
+clearTimeout(_delArmTimer);
+if(!confirm("確定要刪除呢個紀錄？\n刪咗就返唔到。")) return;
+ 
+let arr = loadHistory();
+const removed = arr.splice(i, 1)[0];
+localStorage.setItem("hkmbti_history", JSON.stringify(arr));
+ 
+ // 同步 hkmbti_last_result（首筆）
+try{
+if(arr.length > 0){
+localStorage.setItem("hkmbti_last_result", JSON.stringify(arr[0]));
+ } else {
+localStorage.removeItem("hkmbti_last_result");
+ }
+ }catch(e){}
+ 
+ // 同步 type_counts -1
+if(removed && removed.mbti){
+const code = removed.mbti.substring(0,4).toUpperCase();
+const counts = loadCounts();
+if(counts[code]){
+counts[code] = Math.max(0, (parseInt(counts[code],10)||0) - 1);
+if(counts[code] === 0) delete counts[code];
+localStorage.setItem("hkmbti_type_counts", JSON.stringify(counts));
+ }
+ }
+ 
+toast(" 已刪除");
+render();
 }
 
 function exportRecords(){
-  const data = {
-    exported_at: new Date().toISOString(),
-    site: "https://fung2222.github.io/hk-mbti/",
-    history: loadHistory(),
-    type_counts: loadCounts()
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `hkmbti-records-${new Date().toISOString().slice(0,10)}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  toast("✅ 已匯出 JSON");
+const data = {
+exported_at: new Date().toISOString(),
+site: "https://fung2222.github.io/hk-mbti/",
+history: loadHistory(),
+type_counts: loadCounts()
+ };
+const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+const url = URL.createObjectURL(blob);
+const a = document.createElement("a");
+a.href = url;
+a.download = `hkmbti-records-${new Date().toISOString().slice(0,10)}.json`;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+toast(" 已匯出 JSON");
 }
 
 let _clearArmTimer = null;
 function clearAllRecords(){
-  const btn = event.target;
-  if(btn.dataset.armed !== "1"){
-    btn.dataset.armed = "1";
-    btn.textContent = "再撳一次";
-    btn.style.background = "#fcc";
-    clearTimeout(_clearArmTimer);
-    _clearArmTimer = setTimeout(() => {
-      btn.dataset.armed = "";
-      btn.textContent = "全部刪除";
-      btn.style.background = "";
-    }, 5000);
-    return;
-  }
-  clearTimeout(_clearArmTimer);
-  if(!confirm("確定要清除所有紀錄？\n（包括歷史 + 16 型統計）\n清除後無法復原。")) return;
-  
-  localStorage.removeItem("hkmbti_history");
-  localStorage.removeItem("hkmbti_last_result");
-  localStorage.removeItem("hkmbti_type_counts");
-  
-  toast("✅ 已全部清除");
-  render();
+const btn = event.target;
+if(btn.dataset.armed !== "1"){
+btn.dataset.armed = "1";
+btn.textContent = "再撳一次";
+btn.style.background = "#fcc";
+clearTimeout(_clearArmTimer);
+ _clearArmTimer = setTimeout(() => {
+btn.dataset.armed = "";
+btn.textContent = "全部刪除";
+btn.style.background = "";
+ }, 5000);
+return;
+ }
+clearTimeout(_clearArmTimer);
+if(!confirm("確定要清除所有紀錄？\n（包括歷史 + 16 型統計）\n清除後無法復原。")) return;
+ 
+localStorage.removeItem("hkmbti_history");
+localStorage.removeItem("hkmbti_last_result");
+localStorage.removeItem("hkmbti_type_counts");
+ 
+toast(" 已全部清除");
+render();
 }
 
 // SW
 if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("./sw.js").catch(()=>{});
+navigator.serviceWorker.register("./sw.js").catch(()=>{});
 }
 
 render();
@@ -477,24 +477,24 @@ render();
 <script>
 // ====================== 永久去廣告 unlock (Demo IAP) ======================
 (function(){
-  const KEY = 'hkmbti_no_ad';
-  function hasNoAd(){
-    try{ return localStorage.getItem(KEY) === '1'; }catch(e){ return false; }
-  }
-  function applyNoAd(){
-    document.body.classList.add('no-ad');
-    document.querySelectorAll('[data-no-ad-hide]').forEach(b => b.style.display='none');
-  }
-  window.HAS_PAID_NO_AD = hasNoAd();
-  window.purchaseNoAd = function(){
-    if(hasNoAd()) return;
-    const ok = confirm('你嘅 HK$18 會做兩件事：\n\n支援港式 MBTI 繼續整新測試\n幫你永久免廣告\n\n此示範版本即時解鎖（Play 上架後改用 Google Play Billing）。\n\n確定支持？');
-    if(!ok) return;
-    try{ localStorage.setItem(KEY, '1'); }catch(e){}
-    applyNoAd();
-  };
-  window.restoreAds = function(){ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); };
-  if(hasNoAd()) applyNoAd();
+const KEY = 'hkmbti_no_ad';
+function hasNoAd(){
+try{ return localStorage.getItem(KEY) === '1'; }catch(e){ return false; }
+ }
+function applyNoAd(){
+document.body.classList.add('no-ad');
+document.querySelectorAll('[data-no-ad-hide]').forEach(b => b.style.display='none');
+ }
+window.HAS_PAID_NO_AD = hasNoAd();
+window.purchaseNoAd = function(){
+if(hasNoAd()) return;
+const ok = confirm('你嘅 HK$18 會做兩件事：\n\n支援港式 MBTI 繼續整新測試\n幫你永久免廣告\n\n此示範版本即時解鎖（Play 上架後改用 Google Play Billing）。\n\n確定支持？');
+if(!ok) return;
+try{ localStorage.setItem(KEY, '1'); }catch(e){}
+applyNoAd();
+ };
+window.restoreAds = function(){ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); };
+if(hasNoAd()) applyNoAd();
 })();
 </script>
 

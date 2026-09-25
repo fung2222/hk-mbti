@@ -19,11 +19,11 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap');
 :root{
-  --gold:#D4A95F;
-  --ink:#1a1a1a;
-  --paper:#FAF7F0;
-  --accent:#E85D5D;
-  --soft:#F2EDE0;
+ --gold:#D4A95F;
+ --ink:#1a1a1a;
+ --paper:#FAF7F0;
+ --accent:#E85D5D;
+ --soft:#F2EDE0;
 }
 *{font-family:"PingFang HK","PingFang TC","Noto Sans HK",sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px;margin:0}
@@ -65,110 +65,110 @@ a{color:var(--accent)}
 </head>
 <body>
 <div class="hero">
-  <div class="hero-row">
-    <a href="./" class="back-nav" onclick="siteBack();return false;">返回</a>
-    <h1>私隱聲明</h1>
-    <button class="hero-menu" onclick="toggleHeroMenu(event)" aria-label="更多">⋯</button>
-  </div>
-  <p class="hero-sub">本 App 點處理你嘅資料</p>
-  <div class="hero-popover" id="heroPopover" onclick="event.stopPropagation()">
-    <a href="./">主頁</a>
-    <a href="./record.html">我的紀錄</a>
-    <a href="./#about">關於港式 MBTI</a>
-    <a href="./#spectrum">MBTI 性格光譜</a>
-    <a href="./#hub">性格百科</a>
-    <a href="./#social">個人相處</a>
-    <a href="./#romance">個人拍拖</a>
-    <a href="./stats.html">香港16型統計</a>
-    <a href="./#privacy">私隱聲明</a>
-  </div>
+ <div class="hero-row">
+ <a href="./" class="back-nav" onclick="siteBack();return false;">返回</a>
+ <h1>私隱聲明</h1>
+ <button class="hero-menu" onclick="toggleHeroMenu(event)" aria-label="更多">⋯</button>
+ </div>
+ <p class="hero-sub">本 App 點處理你嘅資料</p>
+ <div class="hero-popover" id="heroPopover" onclick="event.stopPropagation()">
+ <a href="./">主頁</a>
+ <a href="./record.html">我的紀錄</a>
+ <a href="./#about">關於港式 MBTI</a>
+ <a href="./#spectrum">MBTI 性格光譜</a>
+ <a href="./#hub">性格百科</a>
+ <a href="./#social">個人相處</a>
+ <a href="./#romance">個人拍拖</a>
+ <a href="./stats.html">香港16型統計</a>
+ <a href="./#privacy">私隱聲明</a>
+ </div>
 </div>
 <main>
 
-  <div class="card">
-    <div class="eyebrow">🔒 私隱聲明</div>
-    <h1>本 App 點處理你嘅資料</h1>
+ <div class="card">
+ <div class="eyebrow"> 私隱聲明</div>
+ <h1>本 App 點處理你嘅資料</h1>
 
-    <div class="body">
+ <div class="body">
 
-      <div>
-        <h2>① 我哋收集咩</h2>
-        <ul>
-          <li>你輸入嘅姓名同稱呼（<b>可選</b>，唔輸入亦可匿名使用）</li>
-          <li>你嘅測試結果（4 字母類型）、版本、時間</li>
-          <li>本機最近 5 次測試紀錄</li>
-        </ul>
-      </div>
+ <div>
+ <h2>1. 我哋收集咩</h2>
+ <ul>
+ <li>你輸入嘅姓名同稱呼（<b>可選</b>，唔輸入亦可匿名使用）</li>
+ <li>你嘅測試結果（4 字母類型）、版本、時間</li>
+ <li>本機最近 5 次測試紀錄</li>
+ </ul>
+ </div>
 
-      <div class="divider">
-        <h2>② 我哋點儲存</h2>
-        <p>所有資料<b>只儲存喺你部機嘅瀏覽器</b>（localStorage），由系統管理。</p>
-        <ul>
-          <li>開發者 <b>無法存取</b>你嘅資料</li>
-          <li>資料 <b>唔會上載</b>到任何伺服器</li>
-          <li>清除瀏覽器資料 = 永久刪除所有紀錄</li>
-        </ul>
-      </div>
+ <div class="divider">
+ <h2>2. 我哋點儲存</h2>
+ <p>所有資料<b>只儲存喺你部機嘅瀏覽器</b>（localStorage），由系統管理。</p>
+ <ul>
+ <li>開發者 <b>無法存取</b>你嘅資料</li>
+ <li>資料 <b>唔會上載</b>到任何伺服器</li>
+ <li>清除瀏覽器資料 = 永久刪除所有紀錄</li>
+ </ul>
+ </div>
 
-      <div class="divider">
-        <h2>③ 我哋點分享</h2>
-        <p><b>唔會</b>將測試紀錄分享畀第三方。</p>
-      </div>
+ <div class="divider">
+ <h2>3. 我哋點分享</h2>
+ <p><b>唔會</b>將測試紀錄分享畀第三方。</p>
+ </div>
 
-      <div class="divider">
-        <h2>④ 你嘅權利</h2>
-        <ul>
-          <li><b>逐筆刪除</b>：喺「我的記錄」頁，每筆都有刪除掣</li>
-          <li><b>全部清除</b>：同一頁「紀錄管理」或頂欄 ⋯</li>
-          <li><b>永久刪除</b>：喺瀏覽器設定清除網站資料</li>
-        </ul>
-      </div>
+ <div class="divider">
+ <h2>4. 你嘅權利</h2>
+ <ul>
+ <li><b>逐筆刪除</b>：喺「我的記錄」頁，每筆都有刪除掣</li>
+ <li><b>全部清除</b>：同一頁「紀錄管理」或頂欄 ⋯</li>
+ <li><b>永久刪除</b>：喺瀏覽器設定清除網站資料</li>
+ </ul>
+ </div>
 
-      <div class="divider">
-        <h2>⑤ 聯絡</h2>
-        <p>如對私隱有任何查詢，可透過 GitHub Issues 聯絡開發者：<br>
-        <a href="https://github.com/fung2222/hk-mbti/issues" target="_blank" rel="noopener">github.com/fung2222/hk-mbti/issues</a></p>
-      </div>
+ <div class="divider">
+ <h2>5. 聯絡</h2>
+ <p>如對私隱有任何查詢，可透過 GitHub Issues 聯絡開發者：<br>
+ <a href="https://github.com/fung2222/hk-mbti/issues" target="_blank" rel="noopener">github.com/fung2222/hk-mbti/issues</a></p>
+ </div>
 
-      <div class="callout" style="margin-top:1rem">
-        <b>最後更新：</b>2026-09-24 · v1.9
-      </div>
+ <div class="callout" style="margin-top:1rem">
+ <b>最後更新：</b>2026-09-24 · v1.9
+ </div>
 
-    </div>
-  </div>
+ </div>
+ </div>
 
-  <div class="card" style="text-align:center">
-    <p style="font-size:.75rem;color:#4b5563;margin-bottom:.75rem">睇完想試？返主頁揀版本開始</p>
-    <a href="./" class="cta btn-gold">返主頁開始測試</a>
-  </div>
+ <div class="card" style="text-align:center">
+ <p style="font-size:.75rem;color:#4b5563;margin-bottom:.75rem">睇完想試？返主頁揀版本開始</p>
+ <a href="./" class="cta btn-gold">返主頁開始測試</a>
+ </div>
 
-  <p class="meta">
-    港式 MBTI · v1.9.0<br>
-    廣東話繁體
-  </p>
+ <p class="meta">
+港式 MBTI · v1.9.0<br>
+廣東話繁體
+ </p>
 </main>
 <script>
 function siteBack(){
-  try{
-    if(document.referrer){
-      var u = new URL(document.referrer, location.href);
-      if(u.origin === location.origin){ history.back(); return; }
-    }
-  }catch(e){}
-  location.href = './';
+try{
+if(document.referrer){
+var u = new URL(document.referrer, location.href);
+if(u.origin === location.origin){ history.back(); return; }
+ }
+ }catch(e){}
+location.href = './';
 }
 
 function toggleHeroMenu(e){
-  if(e) e.stopPropagation();
-  const p = document.getElementById('heroPopover');
-  if(p) p.classList.toggle('open');
+if(e) e.stopPropagation();
+const p = document.getElementById('heroPopover');
+if(p) p.classList.toggle('open');
 }
 function closeHeroMenu(){
-  const p = document.getElementById('heroPopover');
-  if(p) p.classList.remove('open');
+const p = document.getElementById('heroPopover');
+if(p) p.classList.remove('open');
 }
 document.addEventListener('click', function(e){
-  if(!e.target.closest('.hero-popover') && !e.target.closest('.hero-menu')) closeHeroMenu();
+if(!e.target.closest('.hero-popover') && !e.target.closest('.hero-menu')) closeHeroMenu();
 });
 </script>
 </body>
