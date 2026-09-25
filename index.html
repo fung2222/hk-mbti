@@ -217,11 +217,12 @@ color:var(--ink);
 .result-bleed{margin:0 -16px 16px;padding:28px 20px 24px;background:linear-gradient(180deg,#fff,var(--paper));}
 .result-bleed-inner{max-width:26rem;margin:0 auto;}
 .result-divider{height:1px;background:rgba(30,42,59,.08);margin:22px 0;}
-/* 結果頁「挑戰再測一次」：置中、留白、柔和 pill CTA */
-.retry-card{padding:26px 22px 24px;text-align:center;border:1px solid rgba(212,169,95,.22)}
-.retry-title{font-size:1.15rem;font-weight:900;letter-spacing:-.01em;color:var(--ink);line-height:1.35;margin:0}
-.retry-sub{font-size:.95rem;color:#6b6560;margin-top:7px;line-height:1.6}
-.retry-cta{
+/* 底部 CTA box 統一風格（結果頁 / 關於 / 光譜 / 字母 / 類型）：置中、留白、柔和 pill */
+.softbox{padding:26px 22px 24px;text-align:center;border:1px solid rgba(212,169,95,.22)}
+.softbox-title{font-size:1.15rem;font-weight:900;letter-spacing:-.01em;color:var(--ink);line-height:1.35;margin:0}
+.softbox-sub{font-size:.95rem;color:#6b6560;margin-top:7px;line-height:1.6;margin-bottom:0}
+.softbox-sub:first-child{margin-top:0}
+.softbox-btn{
  -webkit-appearance:none;appearance:none;font-family:inherit;cursor:pointer;
  display:inline-flex;align-items:center;justify-content:center;
  margin-top:18px;padding:13px 34px;border-radius:999px;
@@ -229,8 +230,8 @@ color:var(--ink);
  border:1px solid #E0D6BE;
  transition:border-color .2s ease,color .2s ease,transform .12s ease
 }
-.retry-cta:hover{border-color:var(--gold);color:#8B6F3D}
-.retry-cta:active{transform:scale(.97)}
+.softbox-btn:hover{border-color:var(--gold);color:#8B6F3D}
+.softbox-btn:active{transform:scale(.97)}
 .hub-bleed{margin:0 -16px 16px;padding:24px 14px 20px;background:linear-gradient(180deg,#fff,var(--paper));}
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
 .hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
@@ -721,9 +722,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  </div>
 
- <div class="card p-4 mb-4 text-center">
- <p class="text-xs text-gray-600 mb-3">睇完想試？返主頁揀版本開始</p>
- <button onclick="goHome()" class="btn-gold px-6 py-2.5 rounded-xl text-sm font-bold">返主頁開始測試</button>
+ <div class="card mb-4 softbox">
+ <p class="softbox-sub">睇完想試？返主頁揀版本開始</p>
+ <button type="button" class="softbox-btn" onclick="goHome()">返主頁開始測試</button>
  </div>
  </section>
 
@@ -784,9 +785,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  </div>
 
- <div class="card p-4 mb-4 text-center">
- <p class="text-xs text-gray-600 mb-3">想睇 16 種詳細介紹？去性格百科</p>
- <button onclick="openHub()" class="btn-gold px-6 py-2.5 rounded-xl text-sm font-bold">去性格百科</button>
+ <div class="card mb-4 softbox">
+ <p class="softbox-sub">想睇 16 種詳細介紹？去性格百科</p>
+ <button type="button" class="softbox-btn" onclick="openHub()">去性格百科</button>
  </div>
  </section>
 
@@ -926,9 +927,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  </div>
 
- <div class="card p-4 mb-4 text-center">
- <p class="text-xs text-gray-600 mb-3">睇完想試？返主頁揀版本開始</p>
- <button onclick="goHome()" class="btn-gold px-6 py-2.5 rounded-xl text-sm font-bold">返主頁開始測試</button>
+ <div class="card mb-4 softbox">
+ <p class="softbox-sub">睇完想試？返主頁揀版本開始</p>
+ <button type="button" class="softbox-btn" onclick="goHome()">返主頁開始測試</button>
  </div>
  </section>
 
@@ -1111,10 +1112,10 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="typeConflict" class="text-sm text-gray-700 leading-relaxed"></div>
  </div>
 
- <div class="card p-5 mb-4 text-center">
- <h3 class="font-bold mb-2 text-sm">想確認自己係咪呢個類型？</h3>
- <p class="text-xs text-gray-600 mb-3">做返個 60 題測試</p>
- <button onclick="openProfile('life')" class="btn-gold px-5 py-2.5 rounded-xl text-sm">立即開始</button>
+ <div class="card mb-4 softbox">
+ <h3 class="softbox-title">想確認自己係咪呢個類型？</h3>
+ <p class="softbox-sub">做返個 60 題測試</p>
+ <button type="button" class="softbox-btn" onclick="openProfile('life')">立即開始</button>
  </div>
  </section>
 
@@ -1460,10 +1461,10 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
  </div>
 
- <div class="card mb-4 retry-card">
- <h3 class="retry-title">挑戰再測一次</h3>
- <p class="retry-sub">用另一個身份（朋友 / 家人）再測一次</p>
- <button type="button" class="retry-cta" onclick="goPickVersion()">再測一次</button>
+ <div class="card mb-4 softbox">
+ <h3 class="softbox-title">挑戰再測一次</h3>
+ <p class="softbox-sub">用另一個身份（朋友 / 家人）再測一次</p>
+ <button type="button" class="softbox-btn" onclick="goPickVersion()">再測一次</button>
  </div>
 
  <p class="text-[11px] text-gray-400 text-center px-3 mt-4 leading-relaxed">
