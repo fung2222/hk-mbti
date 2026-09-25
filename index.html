@@ -50,6 +50,12 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .scene-cell[data-scene="friend"] .scene-ico{color:#C97B8A}
 .scn-ico-wrap{display:flex;justify-content:center;margin:2px 0 4px}
 .scn-ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+/* 個人相處 / 個人拍拖 hub 場景列 */
+.hub-row{display:flex;align-items:center;gap:13px}
+.hub-row-body{flex:1;min-width:0}
+.hub-row-title{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hub-row-chev{font-size:.62rem;color:#C0B08A;flex-shrink:0;line-height:1}
+.hub-detail-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
 .scene-name{font-size:1rem;font-weight:800;color:var(--ink);}
 .scene-sub{font-size:.82rem;color:#6b6560;line-height:1.5;}
 /* 全局字體加大：text-xs / 10px 太細 → 抬一檔 */
@@ -2159,6 +2165,25 @@ window.SCENARIO_ICONS = {
  "旺角掃街": {color:"#D08A3E", path:'<path d="M4.2 20L19.4 6.2"/><circle cx="15.6" cy="9.7" r="2.7"/><circle cx="11.8" cy="13.1" r="2.7"/><circle cx="8" cy="16.6" r="2.7"/>'},
   "Boardroom 開波": {color:"#6B7F9E", path:'<g transform="translate(12 12) scale(0.928) translate(-12 -12)" stroke-width="1.616"><rect x="3.6" y="4.6" width="16.8" height="11.2" rx="1.6"/><path d="M8.2 13.2v-2.6M12 13.2v-4.8M15.8 13.2v-1.8"/><path d="M12 15.8v2.6M9.2 20.6h5.6"/></g>'},
   "腦內黑客松": {color:"#C97B8A", path:'<g transform="translate(12 12) scale(0.888) translate(-12 -12)" stroke-width="1.689"><path d="M12 3.2a6 6 0 00-3.4 10.9c.5.4.9 1 .9 1.6v1h5v-1c0-.6.4-1.2.9-1.6A6 6 0 0012 3.2z"/><path d="M9.4 18.6h5.2M10.4 20.8h3.2"/><path d="M12.6 8.2l-1.6 2.6h2.2l-1.6 2.6"/></g>'},
+};
+// hub 場景 icon（相處 / 拍拖）：同結果頁同一套風格（24 viewBox、stroke 1.5、無填色、每項一色）
+window.HUB_SCENE_ICONS = Object.assign({}, window.SCENARIO_ICONS);
+Object.assign(window.HUB_SCENE_ICONS, {
+ "親戚飯局": {color:"#C08552", path:'<path d="M4.8 12.4h10.6"/><path d="M5.4 12.4a4.4 4.4 0 004.4 4.4h.4a4.4 4.4 0 004.4-4.4"/><path d="M14.4 4.8l3.6 6.4"/><path d="M16.6 4.8l3.6 6.4"/>'},
+ "飲茶吹水朋友": {color:"#B07D4B", path:'<circle cx="12" cy="15.4" r="4.8"/><path d="M7.6 13.2L4.6 11.4"/><path d="M16.6 13.6c1.7.4 2.8 1.2 2.8 2.1s-1.1 1.7-2.8 2.1"/><path d="M8.9 10.4c.7-1.3 1.8-2 3.1-2s2.4.7 3.1 2"/><path d="M12 8.4V6.6"/>'},
+ "Group Project 隊友": {color:"#6B7F9E", path:'<circle cx="12" cy="7.8" r="2.4"/><path d="M8.6 19.2v-.7a3.4 3.4 0 013.4-3.4 3.4 3.4 0 013.4 3.4v.7"/><circle cx="7.4" cy="9.4" r="1.9"/><path d="M4.6 19.2v-.5a2.8 2.8 0 012.8-2.8h.3"/><circle cx="16.6" cy="9.4" r="1.9"/><path d="M19.4 19.2v-.5a2.8 2.8 0 00-2.8-2.8h-.3"/>'},
+ "室友": {color:"#8A6A4F", path:'<path d="M4.6 11.6L12 5l7.4 6.6"/><path d="M6.4 10.8v9.4h11.2v-9.4"/><path d="M10.4 20.2v-5h3.2v5"/>'},
+ "返工同事": {color:"#6B7F9E", path:'<g transform="translate(12 12) scale(0.94) translate(-12 -12)" stroke-width="1.596"><rect x="3.6" y="7.8" width="16.8" height="11.6" rx="2.6"/><path d="M9 7.8V6.4a2 2 0 012-2h2a2 2 0 012 2v1.4"/><path d="M3.6 13.6h16.8"/><path d="M11 13.6v1.5h2v-1.5"/></g>'},
+ "失戀時陪佢": {color:"#4E86B0", path:'<path d="M4.6 12.8a7.4 7.4 0 0114.8 0"/><path d="M4.6 12.8h14.8"/><path d="M12 12.8v5a2.2 2.2 0 01-4.4 0"/>'},
+ "點同佢拍拖": {color:"#C97B8A", path:'<path d="M12 20.2c-4.4-3.2-7.6-6.2-7.6-9.6a3.9 3.9 0 017.1-2.2l.5.6.5-.6a3.9 3.9 0 017.1 2.2c0 3.4-3.2 6.4-7.6 9.6z"/>'},
+ "同佢點收科": {color:"#D08A3E", path:'<g transform="translate(12 12) scale(0.94) translate(-12 -12)" stroke-width="1.596"><path d="M3.6 9a2.6 2.6 0 012.6-2.6h11.6A2.6 2.6 0 0120.4 9v5.4a2.6 2.6 0 01-2.6 2.6h-6.4l-3.4 2.6v-2.6H6.2A2.6 2.6 0 013.6 14.4z"/><path d="M9 11.4l2 2 4-4"/></g>'},
+ "點同佢分手": {color:"#6B7F9E", path:'<path d="M12 20.2c-4.4-3.2-7.6-6.2-7.6-9.6a3.9 3.9 0 017.1-2.2l.5.6.5-.6a3.9 3.9 0 017.1 2.2c0 3.4-3.2 6.4-7.6 9.6z"/><path d="M12 8.6l-1.9 3.4h3.4l-1.5 3.4"/>'}
+});
+window.hubSceneIconHtml = function(name, size, cls){
+ if(!window.HUB_SCENE_ICONS) return "";
+ const ic = window.HUB_SCENE_ICONS[name];
+ if(!ic) return "";
+ return '<svg class="scene-ico' + (cls ? " " + cls : "") + '" viewBox="0 0 24 24" aria-hidden="true" style="color:' + ic.color + ';width:' + size + 'px;height:' + size + 'px">' + ic.path + '</svg>';
 };
 
 window.state = {
@@ -4356,10 +4381,11 @@ Object.keys(window.SOCIAL).forEach(key => {
 const s = window.SOCIAL[key];
 html += `
  <div class="card p-5 mb-4 cursor-pointer" onclick="openSocialScenario('${key}')">
- <div class="flex items-center justify-between">
- <div>
- <h3 class="font-bold mb-1 text-sm">${s.name}</h3>
- <p class="text-xs text-gray-500">${s.desc}</p>
+ <div class="hub-row">
+ ${window.hubSceneIconHtml(s.name, 22)}
+ <div class="hub-row-body">
+ <div class="hub-row-title"><h3 class="font-bold text-sm">${s.name}</h3><span class="hub-row-chev">▼</span></div>
+ <p class="text-xs text-gray-500 mt-1">${s.desc}</p>
  <p class="text-[10px] text-gray-400 mt-1">16 種性格攻略</p>
  </div>
  </div>
@@ -4382,7 +4408,10 @@ const container = $("socialScenarios");
 if(!container) return;
 const html = `
  <div class="card p-5 mb-4">
- <h3 class="text-xl font-black mb-2">${s.name}</h3>
+ <div class="hub-detail-head">
+ ${window.hubSceneIconHtml(s.name, 26)}
+ <h3 class="text-xl font-black">${s.name}</h3>
+ </div>
  <p class="text-sm text-gray-600">${s.desc}</p>
  </div>
  <p class="hub-type-hint">請選擇其中一種人格</p>
@@ -4484,10 +4513,11 @@ Object.keys(window.ROMANCE).forEach(key => {
 const s = window.ROMANCE[key];
 html += `
  <div class="card p-5 mb-4 cursor-pointer" onclick="openRomanceScenario('${key}')">
- <div class="flex items-center justify-between">
- <div>
- <h3 class="font-bold mb-1 text-sm">${s.name}</h3>
- <p class="text-xs text-gray-500">${s.desc}</p>
+ <div class="hub-row">
+ ${window.hubSceneIconHtml(s.name, 22)}
+ <div class="hub-row-body">
+ <div class="hub-row-title"><h3 class="font-bold text-sm">${s.name}</h3><span class="hub-row-chev">▼</span></div>
+ <p class="text-xs text-gray-500 mt-1">${s.desc}</p>
  <p class="text-[10px] text-gray-400 mt-1">16 種性格攻略</p>
  </div>
  </div>
@@ -4509,7 +4539,10 @@ const container = $("romanceScenarios");
 if(!container) return;
 const html = `
  <div class="card p-5 mb-4">
- <h3 class="text-xl font-black mb-2">${s.name}</h3>
+ <div class="hub-detail-head">
+ ${window.hubSceneIconHtml(s.name, 26)}
+ <h3 class="text-xl font-black">${s.name}</h3>
+ </div>
  <p class="text-sm text-gray-600">${s.desc}</p>
  </div>
  <p class="hub-type-hint">請選擇其中一種人格</p>
