@@ -51,6 +51,13 @@ const CANDIDATES = [
 ];
 const ALL16 = ['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+// 量 ink 闊度再決定字級，確保四個字母放得落卡（左右各 60px 邊距 → 最多 600px）
+const measureCtx = document.createElement('canvas').getContext('2d');
+function fitSize(stack, text, maxW, base){
+  measureCtx.font = 'bold ' + base + 'px ' + stack;
+  const w = measureCtx.measureText(text).width;
+  return { size: w > maxW ? Math.round(base * maxW / w) : base, width: Math.round(w) };
+}
 
 function stripCanvas(stack){
   const c = document.createElement('canvas');
@@ -61,7 +68,8 @@ function stripCanvas(stack){
   const per = 8, cw = c.width / per;
   ALL16.forEach((code, i) => {
     const col = i % per, row = Math.floor(i / per);
-    x.font = '700 66px ' + stack;
+    const f = fitSize(stack, code, cw - 28, 66);
+    x.font = '700 ' + f.size + 'px ' + stack;
     x.textAlign = 'center';
     x.fillText(code, cw * col + cw/2, 55 + row * 90);
   });
@@ -91,17 +99,19 @@ function stripCanvas(stack){
   let html = '';
   for (let i = 0; i < CANDIDATES.length; i++) {
     const f = CANDIDATES[i];
-    W.CARD_CODE_FONT = 'bold 240px ' + f.stack;
+    const fit = fitSize(f.stack, 'INFP', 600, 240);
+    W.CARD_CODE_FONT = 'bold ' + fit.size + 'px ' + f.stack;
     await W.generateCardImage();
     const url = D.getElementById('shareCardImg').src;
-    probe.font = 'bold 240px ' + f.stack;
-    const w = probe.measureText('INFP').width.toFixed(0);
     const warn = (f.need && !loaded[i]) ? '<span style="color:#E0805A">（字型未載入，睇到嘅係 fallback）</span>' : '';
+    const sizeNote = fit.size === 240
+      ? '字級 240px（同而家一樣）'
+      : '字級自動縮到 ' + fit.size + 'px 先放得落卡（原本 240px 會闊 ' + fit.width + 'px，超出卡邊）';
     html += '<div class="block"><div class="hd"><span class="no">' + f.no + '</span><span class="nm">' + f.name + '</span><span class="tag">' + f.tag + '</span></div>'
           + '<img class="card" alt="' + f.name + '" src="' + url + '">'
           + '<img class="strip" alt="16 型對照" src="' + stripCanvas(f.stack) + '">'
           + '<div class="note">' + f.note + '</div>'
-          + '<div class="metrics">INFP 量度闊度 ' + w + 'px @240px 字級 ' + warn + '</div></div>';
+          + '<div class="metrics">' + sizeNote + ' ' + warn + '</div></div>';
   }
   mount.innerHTML = html;
   const bad = CANDIDATES.filter((f, i) => f.need && !loaded[i]).map(f => f.name);
