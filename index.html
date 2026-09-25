@@ -18,6 +18,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@800&text=EIJSFNTP-A&display=swap">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Noto+Sans+HK:wght@400;500;700;900&display=swap');
@@ -3473,6 +3474,10 @@ return labels[key] + " · " + (totalQ || counts[key]) + "題";
 
 window.generateCardImage = function(){
 if(!window.lastResult) return;
+ // 等 Syne 載入完（有 timeout 保護，唔會卡住生成）
+const _fontReady = (document.fonts && document.fonts.load)
+? Promise.race([document.fonts.load('800 240px "Syne"', 'INFP').catch(() => {}), new Promise(r => setTimeout(r, 1500))])
+: Promise.resolve();
 const t = window.TYPES[window.lastResult.substring(0,4)];
 if(!t) return;
 
@@ -3564,7 +3569,7 @@ resolve();
  };
 iconImg.src = "icon-192.png";
  });
-return drawIcon.then(() => {
+return Promise.all([drawIcon, _fontReady]).then(() => {
 renderCardBody(ctx, t, canvas);
  });
 };
@@ -3596,8 +3601,19 @@ ctx.font = "28px sans-serif";
 ctx.fillText("你是", 360, 280);
  // 4 字母（大）
 ctx.fillStyle = "white";
-ctx.font = window.CARD_CODE_FONT || "bold 240px serif";
-ctx.fillText(window.lastResult.substring(0,4), 360, 560);
+ // v1.9.1: 4 字母用 Syne 800；太闊會自動收窄（最多 600px，確保唔會出界）
+const _codeStr = window.lastResult.substring(0,4);
+const _codeFam = '"Syne", Georgia, "Times New Roman", serif';
+let _codeFont = window.CARD_CODE_FONT;
+if(!_codeFont){
+const _base = 240, _maxW = 600;
+const _full = "800 " + _base + "px " + _codeFam;
+ctx.font = _full;
+const _w = ctx.measureText(_codeStr).width;
+_codeFont = _w > _maxW ? ("800 " + Math.floor(_base * _maxW / _w) + "px " + _codeFam) : _full;
+ }
+ctx.font = _codeFont;
+ctx.fillText(_codeStr, 360, 560);
  // 性格名
 ctx.font = "bold 52px sans-serif";
 ctx.fillText(t.name, 360, 660);
