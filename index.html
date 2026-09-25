@@ -155,6 +155,13 @@ background:none;border:0;font-family:inherit;font-size:.95rem;color:#6b6560;
 cursor:pointer;-webkit-appearance:none;appearance:none;
 }
 .wiz-ghost:active{opacity:.6;}
+/* 測試頁右上角控制 */
+.q-ctrl{
+display:inline-flex;align-items:center;background:none;border:0;padding:0;
+font-family:inherit;font-size:.95rem;font-weight:600;color:#9ca3af;
+cursor:pointer;-webkit-appearance:none;appearance:none;
+}
+.q-ctrl:active{opacity:.6;}
 #nickGrid{justify-content:center;}
 .gender-btn{border:2px solid #e5e0d5;background:#fff;border-radius:16px;padding:18px 12px;font-size:18px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--ink);transition:all .15s;-webkit-appearance:none;appearance:none;}
 .gender-btn.on{border-color:var(--gold);background:rgba(212,169,95,.1);}
@@ -1416,8 +1423,12 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="flex items-center justify-between mb-4">
  <div class="text-xs text-gray-500"><span id="qIdx">1</span> / 60</div>
  <div class="flex items-center gap-3">
- <button type="button" id="voiceBtn" onclick="toggleVoice()" class="text-xs text-gray-400" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">朗讀開</button>
- <button onclick="confirmExit()" class="text-xs text-gray-400">退出</button>
+ <button type="button" id="voiceBtn" onclick="toggleVoice()" class="q-ctrl">
+ <svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><g id="voiceOnIco"><path d="M4.6 9.4h3.4L12.4 6v12l-4.4-3.4H4.6z"/><path d="M15.2 9.7a3.5 3.5 0 010 4.6"/><path d="M17.6 7.5a6.8 6.8 0 010 9"/></g><g id="voiceOffIco" style="display:none"><path d="M4.6 9.4h3.4L12.4 6v12l-4.4-3.4H4.6z"/><path d="M15.4 10.2l3.6 3.6"/><path d="M19 10.2l-3.6 3.6"/></g></svg><span id="voiceLabel">朗讀開</span>
+ </button>
+ <button onclick="confirmExit()" class="q-ctrl">
+ <svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.6 5.6H6.4a1.8 1.8 0 00-1.8 1.8v9.2a1.8 1.8 0 001.8 1.8h3.2"/><path d="M14.2 8.6L17.6 12l-3.4 3.4"/><path d="M10.4 12h7"/></svg>退出
+ </button>
  </div>
  </div>
  <div class="progress-bar mb-6">
@@ -3192,8 +3203,13 @@ b.style.display = "none";
 return;
  }
 b.style.display = "";
-b.textContent = window.VOICE_ON ? "朗讀開" : "朗讀關";
-b.style.color = window.VOICE_ON ? "#C4922E" : "#9ca3af";
+const on = !!window.VOICE_ON;
+const lbl = $("voiceLabel");
+if(lbl) lbl.textContent = on ? "朗讀開" : "朗讀關";
+const icoOn = $("voiceOnIco"), icoOff = $("voiceOffIco");
+if(icoOn) icoOn.style.display = on ? "" : "none";
+if(icoOff) icoOff.style.display = on ? "none" : "";
+b.style.color = on ? "#C4922E" : "#9ca3af";
  };
 window.toggleVoice = function(){
 window.VOICE_ON = !window.VOICE_ON;
