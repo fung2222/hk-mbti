@@ -3593,7 +3593,7 @@ ctx.font = "28px sans-serif";
 ctx.fillText("你是", 360, 280);
  // 4 字母（大）
 ctx.fillStyle = "white";
-ctx.font = "bold 240px serif";
+ctx.font = window.CARD_CODE_FONT || "bold 240px serif";
 ctx.fillText(window.lastResult.substring(0,4), 360, 560);
  // 性格名
 ctx.font = "bold 52px sans-serif";

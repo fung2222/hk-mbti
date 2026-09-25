@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>分享卡字型測試 · 港式 MBTI</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link id="gfont" href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Archivo+Black&family=Anton&family=Abril+Fatface&family=Bebas+Neue&family=JetBrains+Mono:wght@800&family=Oswald:wght@700&family=Playfair+Display:wght@900&family=Space+Grotesk:wght@700&family=Syne:wght@800&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#D4A95F}
+*{box-sizing:border-box}
+body{margin:0;background:#12161d;color:#F5F1E8;font-family:"PingFang HK","PingFang TC","Noto Sans HK",sans-serif;padding:18px 16px 70px;}
+h1{font-size:1.3rem;font-weight:900;margin:0 0 8px;letter-spacing:-.01em}
+p.lead{font-size:.9rem;color:#B9B2A4;line-height:1.65;margin:0 0 6px}
+p.lead b{color:var(--gold)}
+.block{margin:0 0 24px;background:#1B2029;border:1px solid rgba(212,169,95,.18);border-radius:18px;padding:13px 13px 12px}
+.hd{display:flex;align-items:baseline;gap:9px;margin:0 0 10px;flex-wrap:wrap}
+.no{font-size:1.02rem;font-weight:900}
+.nm{font-size:.9rem;color:#E4DCCB;font-weight:700}
+.tag{font-size:.72rem;color:#8E8779}
+img.card{width:100%;display:block;border-radius:12px;box-shadow:0 6px 22px rgba(0,0,0,.4)}
+.strip{display:block;width:100%;margin-top:9px;border-radius:10px;background:#0E1218;border:1px solid rgba(255,255,255,.06)}
+.note{font-size:.8rem;color:#B9B2A4;margin:9px 2px 0;line-height:1.55}
+.metrics{font-size:.7rem;color:#6F6A60;margin-top:5px}
+#boot{font-size:.85rem;color:var(--gold);margin:0 0 14px}
+</style>
+</head>
+<body>
+<h1>分享卡中間四個大字母 · 字型測試</h1>
+<p class="lead">每格都係用<b>真身分享卡生成器</b>畫出嚟（同一個 INFP、同一張卡），淨係換中間四個大字母嘅字型。</p>
+<p class="lead">睇完記住號碼話我知，例如「用 ⑤」。</p>
+<p id="boot">字型載入中…</p>
+<div id="mount"></div>
+<iframe id="app" src="index.html?a=1" title="app" style="position:absolute;width:720px;height:1400px;left:-9999px;top:0;border:0"></iframe>
+<script>
+const GF_HREF = document.getElementById('gfont').href;
+const CANDIDATES = [
+ {no:'①', name:'現況（系統襯線）', stack:'Georgia, "Times New Roman", serif', need:null, note:'而家分享卡用緊嘅（bold 240px serif）', tag:'現況'},
+ {no:'②', name:'Amatic SC', stack:'"Amatic SC", cursive', need:'700 240px "Amatic SC"', note:'現時 16 型格用緊 —— 你話太難睇嗰隻，擺出嚟對照', tag:'現況（16 型格）'},
+ {no:'③', name:'Archivo Black', stack:'"Archivo Black", sans-serif', need:'400 240px "Archivo Black"', note:'超粗無襯線，最清楚最穩', tag:'候選'},
+ {no:'④', name:'Anton', stack:'Anton, sans-serif', need:'400 240px "Anton"', note:'窄身重體，海報感', tag:'候選'},
+ {no:'⑤', name:'Bebas Neue', stack:'"Bebas Neue", sans-serif', need:'400 240px "Bebas Neue"', note:'高瘦大寫，型格', tag:'候選'},
+ {no:'⑥', name:'Abril Fatface', stack:'"Abril Fatface", serif', need:'400 240px "Abril Fatface"', note:'肥 didone，最搶眼', tag:'候選'},
+ {no:'⑦', name:'Playfair Display 900', stack:'"Playfair Display", serif', need:'900 240px "Playfair Display"', note:'高反差襯線，優雅', tag:'候選'},
+ {no:'⑧', name:'Space Grotesk 700', stack:'"Space Grotesk", sans-serif', need:'700 240px "Space Grotesk"', note:'幾何科技感', tag:'候選'},
+ {no:'⑨', name:'Syne 800', stack:'Syne, sans-serif', need:'800 240px "Syne"', note:'前衛幾何，最有個性', tag:'候選'},
+ {no:'⑩', name:'JetBrains Mono 800', stack:'"JetBrains Mono", monospace', need:'800 240px "JetBrains Mono"', note:'等寬字，科技感', tag:'候選'},
+ {no:'⑪', name:'Oswald 700', stack:'Oswald, sans-serif', need:'700 240px "Oswald"', note:'窄身高身，清爽易讀', tag:'候選'}
+];
+const ALL16 = ['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function stripCanvas(stack){
+  const c = document.createElement('canvas');
+  c.width = 1440; c.height = 200;      // 2x
+  const x = c.getContext('2d');
+  x.fillStyle = '#0E1218'; x.fillRect(0,0,c.width,c.height);
+  x.fillStyle = '#E4DCCB'; x.textBaseline = 'middle';
+  const per = 8, cw = c.width / per;
+  ALL16.forEach((code, i) => {
+    const col = i % per, row = Math.floor(i / per);
+    x.font = '700 66px ' + stack;
+    x.textAlign = 'center';
+    x.fillText(code, cw * col + cw/2, 55 + row * 90);
+  });
+  return c.toDataURL('image/png');
+}
+
+(async () => {
+  const ifr = document.getElementById('app');
+  const mount = document.getElementById('mount');
+  const boot = document.getElementById('boot');
+  for (let i = 0; i < 100; i++) { try { if (typeof ifr.contentWindow.generateCardImage === 'function' && ifr.contentWindow.TYPES) break; } catch(e){} await sleep(150); }
+  const W = ifr.contentWindow, D = ifr.contentDocument;
+  // 注入候選字型去 iframe（canvas 要喺同一個 document 先用到）
+  const lk = D.createElement('link'); lk.rel = 'stylesheet'; lk.href = GF_HREF; D.head.appendChild(lk);
+  // 假資料
+  W.state.displayName = '小明'; W.state.nickname = '港女'; W.state.version = 'life'; W.state.totalQ = 60;
+  W.lastResult = 'INFP';
+  const loaded = [];
+  for (const f of CANDIDATES) {
+    if (!f.need) { loaded.push(true); continue; }
+    let ok = false;
+    try { await D.fonts.load(f.need, 'INFP'); ok = D.fonts.check(f.need, 'INFP') && W.document.fonts.check(f.need, 'INFP'); } catch(e){ ok = false; }
+    if (!ok) { try { await D.fonts.load(f.need, 'INFP'); ok = D.fonts.check(f.need, 'INFP'); } catch(e){} }
+    loaded.push(ok);
+  }
+  const probe = document.createElement('canvas').getContext('2d');
+  let html = '';
+  for (let i = 0; i < CANDIDATES.length; i++) {
+    const f = CANDIDATES[i];
+    W.CARD_CODE_FONT = 'bold 240px ' + f.stack;
+    await W.generateCardImage();
+    const url = D.getElementById('shareCardImg').src;
+    probe.font = 'bold 240px ' + f.stack;
+    const w = probe.measureText('INFP').width.toFixed(0);
+    const warn = (f.need && !loaded[i]) ? '<span style="color:#E0805A">（字型未載入，睇到嘅係 fallback）</span>' : '';
+    html += '<div class="block"><div class="hd"><span class="no">' + f.no + '</span><span class="nm">' + f.name + '</span><span class="tag">' + f.tag + '</span></div>'
+          + '<img class="card" alt="' + f.name + '" src="' + url + '">'
+          + '<img class="strip" alt="16 型對照" src="' + stripCanvas(f.stack) + '">'
+          + '<div class="note">' + f.note + '</div>'
+          + '<div class="metrics">INFP 量度闊度 ' + w + 'px @240px 字級 ' + warn + '</div></div>';
+  }
+  mount.innerHTML = html;
+  const bad = CANDIDATES.filter((f, i) => f.need && !loaded[i]).map(f => f.name);
+  boot.textContent = bad.length ? '完成（有 ' + bad.length + ' 款未載入：' + bad.join('、') + '）' : '完成 — 全部 11 款都載入成功，可以揀';
+  document.title = '完成 · 分享卡字型測試';
+  window.__done = true;
+})();
+</script>
+</body>
+</html>
