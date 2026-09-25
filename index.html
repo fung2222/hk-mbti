@@ -2179,6 +2179,7 @@ window._navSnap = function(){
     sKey: window._lastSocialScenario,
     rKey: window._lastRomanceScenario,
     type: window._lastType,
+    typeFrom: window._typeFrom || null,
     letter: window._lastLetter,
     articleType: window._lastArticleType,
     pendingVersion: (window.state && window.state.pendingVersion) || null
@@ -3942,7 +3943,7 @@ window.restoreNav = function(prev){
     return;
   }
   if(id === "type"){
-    if(prev && prev.type){ openType(prev.type); return; }
+    if(prev && prev.type){ openType(prev.type, prev.typeFrom); return; }
     if(typeof window.openHub === "function"){ openHub(); return; }
   }
   if(id === "letter"){
@@ -3969,84 +3970,17 @@ window.restoreNav = function(prev){
 };
 
 window.goBack = function(){
-  const here = window._showing;
-  const stay = function(fn){
-    window._navSilent = true;
-    try{ fn(); }catch(e){}
-    window._navSilent = false;
-    try{ window._histWrite("replace"); }catch(e){}
-  };
-  if(here === "socialArticle"){
-    const k = window._lastSocialScenario;
-    const t = window._lastArticleType;
-    stay(function(){
-      if(k){ openSocialScenario(k); window.scrollToTypeCards("social", t); }
-      else openSocial();
-    });
-    return;
-  }
-  if(here === "romanceArticle"){
-    const k = window._lastRomanceScenario;
-    const t = window._lastArticleType;
-    stay(function(){
-      if(k){ openRomanceScenario(k); window.scrollToTypeCards("romance", t); }
-      else openRomance();
-    });
-    return;
-  }
-  if(here === "type"){
-    const t = window._lastType;
-    const from = window._typeFrom;
-    if(from === "home"){
-      stay(function(){ goHome(); });
-      return;
-    }
-    if(from === "result"){
-      stay(function(){
-        let idx = 0;
-        try{ idx = parseInt(sessionStorage.getItem("hkmbti_last_record_idx"), 10) || 0; }catch(e){}
-        if(typeof window.viewHistoryResult === "function") window.viewHistoryResult(idx);
-      });
-      return;
-    }
-    if(from === "ext"){
-      try{ history.back(); return; }catch(e){}
-    }
-    stay(function(){ openHub(); window.scrollToTypeCards("hub", t); });
-    return;
-  }
-  if(here === "letter"){
-    stay(function(){ openSpectrum(); });
-    return;
-  }
-  if(here === "social" && window._lastSocialScenario){
-    stay(function(){ openSocial(); });
-    return;
-  }
-  if(here === "romance" && window._lastRomanceScenario){
-    stay(function(){ openRomance(); });
-    return;
-  }
   if((window._histDepth || 0) > 0){
     try{ history.back(); return; }catch(e){}
   }
   const st = history.state;
-  if(st && st.hk && st.id && st.id !== "home" && st.id !== window._showing){
+  if(st && st.hk && st.id && st.id !== window._showing){
     try{ history.back(); return; }catch(e){}
   }
-  const onlyHome = !window._navStack.length || (window._navStack.length === 1 && window._navStack[0].id === "home");
-  if(window._cameFromOtherPage && onlyHome){
+  if(window._cameFromOtherPage){
     try{ history.back(); return; }catch(e){}
   }
-  let prev = window._navStack.pop();
-  while(prev && prev.id === window._showing){
-    prev = window._navStack.pop();
-  }
-  if(!prev || prev.id === "home"){ goHome(); return; }
-  window._navSilent = true;
-  try{ window.restoreNav(prev); }
-  catch(e){ goHome(); }
-  window._navSilent = false;
+  if(window._showing !== "home"){ goHome(); }
 };
 
 window.addEventListener("popstate", function(e){
@@ -4385,6 +4319,8 @@ window.openSocial = function(){
 window.openSocialScenario = function(scenarioKey){
   const s = window.SOCIAL[scenarioKey];
   if(!s) return;
+  const was = window._showing;
+  const prevKey = window._lastSocialScenario;
   window._lastSocialScenario = scenarioKey;
   // 渲染 16 個類型 grid — 寫入 container 而唔係整個 section
   const container = $("socialScenarios");
@@ -4405,6 +4341,9 @@ window.openSocialScenario = function(scenarioKey){
   `;
   container.innerHTML = html;
   show("social");
+  if(!window._fromPop && !window._navSilent && was === "social" && prevKey !== scenarioKey){
+    window._histWrite("push");
+  }
   window.scrollTo(0,0);
 };
 
@@ -4511,6 +4450,8 @@ window.openRomance = function(){
 window.openRomanceScenario = function(scenarioKey){
   const s = window.ROMANCE[scenarioKey];
   if(!s) return;
+  const was = window._showing;
+  const prevKey = window._lastRomanceScenario;
   window._lastRomanceScenario = scenarioKey;
   const container = $("romanceScenarios");
   if(!container) return;
@@ -4530,6 +4471,9 @@ window.openRomanceScenario = function(scenarioKey){
   `;
   container.innerHTML = html;
   show("romance");
+  if(!window._fromPop && !window._navSilent && was === "romance" && prevKey !== scenarioKey){
+    window._histWrite("push");
+  }
   window.scrollTo(0,0);
 };
 
