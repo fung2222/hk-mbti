@@ -217,6 +217,20 @@ color:var(--ink);
 .result-bleed{margin:0 -16px 16px;padding:28px 20px 24px;background:linear-gradient(180deg,#fff,var(--paper));}
 .result-bleed-inner{max-width:26rem;margin:0 auto;}
 .result-divider{height:1px;background:rgba(30,42,59,.08);margin:22px 0;}
+/* 結果頁「挑戰再測一次」：置中、留白、柔和 pill CTA */
+.retry-card{padding:26px 22px 24px;text-align:center;border:1px solid rgba(212,169,95,.22)}
+.retry-title{font-size:1.15rem;font-weight:900;letter-spacing:-.01em;color:var(--ink);line-height:1.35;margin:0}
+.retry-sub{font-size:.95rem;color:#6b6560;margin-top:7px;line-height:1.6}
+.retry-cta{
+ -webkit-appearance:none;appearance:none;font-family:inherit;cursor:pointer;
+ display:inline-flex;align-items:center;justify-content:center;
+ margin-top:18px;padding:13px 34px;border-radius:999px;
+ background:var(--soft);color:#6b6560;font-weight:800;font-size:1rem;
+ border:1px solid #E0D6BE;
+ transition:border-color .2s ease,color .2s ease,transform .12s ease
+}
+.retry-cta:hover{border-color:var(--gold);color:#8B6F3D}
+.retry-cta:active{transform:scale(.97)}
 .hub-bleed{margin:0 -16px 16px;padding:24px 14px 20px;background:linear-gradient(180deg,#fff,var(--paper));}
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
 .hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
@@ -1446,10 +1460,10 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
  </div>
 
- <div class="card p-5 mb-4">
- <h3 class="font-bold mb-2">挑戰再測一次</h3>
- <p class="text-xs text-gray-600 mb-3">用另一個身份（朋友 / 家人）再測一次</p>
- <button onclick="startTest()" class="bg-soft w-full py-2.5 rounded-lg text-sm font-bold">再測一次</button>
+ <div class="card mb-4 retry-card">
+ <h3 class="retry-title">挑戰再測一次</h3>
+ <p class="retry-sub">用另一個身份（朋友 / 家人）再測一次</p>
+ <button type="button" class="retry-cta" onclick="goPickVersion()">再測一次</button>
  </div>
 
  <p class="text-[11px] text-gray-400 text-center px-3 mt-4 leading-relaxed">
@@ -3886,6 +3900,16 @@ window.scrollHomeBelow = function(){
 const el = $("homeBelow");
 if(!el) return;
 el.scrollIntoView({behavior:"smooth", block:"start"});
+};
+// 結果頁「再測一次」：返主頁，捲到 3 個版本卡（唔直接開測）
+window.goPickVersion = function(){
+window.goHome();
+setTimeout(function(){
+try{
+const el = $("homeBelow");
+if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+ }catch(e){}
+ }, 120);
 };
 window.scrollHomeTop = function(){
 const hero = document.querySelector("#home .home-hero");
