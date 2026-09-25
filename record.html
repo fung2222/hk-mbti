@@ -77,6 +77,7 @@ display:flex;align-items:center;justify-content:center;
 .empty .ico{font-size:48px;opacity:0.4;margin-bottom:8px;}
 .footer-note{text-align:center;color:#888;font-size:12px;padding:24px 16px 16px;}
 .actions-bar{display:flex;gap:8px;padding:0 16px;margin-top:8px;flex-wrap:wrap;}
+.actions-bar button{display:inline-flex;align-items:center;}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1E2A3B;color:white;padding:10px 20px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .3s;z-index:100;pointer-events:none;}
 .toast.show{opacity:1;}
 .summary-card{background:linear-gradient(135deg,rgba(212,169,95,0.1),rgba(212,169,95,0.04));border:1px dashed var(--gold);border-radius:12px;padding:16px;margin:0 16px 12px;}
@@ -153,8 +154,8 @@ body.no-ad{padding-bottom:0!important;}
 </div>
 
 <div class="actions-bar">
-  <button class="btn-gold" onclick="exportRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;margin-right:6px;"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg>匯出資料</button>
-  <button class="btn-danger" onclick="clearAllRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;margin-right:6px;"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg>全部刪除</button>
+  <button class="btn-gold" onclick="exportRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg>匯出資料</button>
+  <button class="btn-danger" onclick="clearAllRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg>全部刪除</button>
 </div>
 
 <div class="footer-note">
