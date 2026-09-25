@@ -22,11 +22,8 @@
 body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei",sans-serif;background:var(--soft);color:var(--ink);margin:0;padding-bottom:80px;}
 .brand-gold{color:var(--gold);}
 .bg-soft{background:rgba(212,169,95,0.06);}
-.btn-gold{background:rgba(212,169,95,.12);color:#7C6B45;font-weight:600;padding:10px 16px;border-radius:10px;display:inline-block;text-align:center;border:1px solid rgba(212,169,95,.35);cursor:pointer;font-size:14px;}
-.btn-gold:hover{background:rgba(212,169,95,.18);}
 .btn-ghost{background:#fff;border:1px solid rgba(212,169,95,0.4);color:var(--ink);font-weight:700;padding:10px 16px;border-radius:10px;display:inline-block;text-align:center;cursor:pointer;font-size:14px;}
 .btn-ghost:hover{background:rgba(212,169,95,0.06);}
-.btn-danger{background:rgba(232,93,93,.08);color:#B05555;font-weight:600;padding:10px 16px;border-radius:10px;display:inline-block;text-align:center;border:1px solid rgba(232,93,93,.25);cursor:pointer;font-size:14px;}
 .hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:white;padding:14px 16px 16px;text-align:left;}
 .hero h1{font-size:22px;font-weight:900;margin:0;line-height:1.2;}
 .hero p{opacity:0.75;font-size:12px;margin:4px 0 0;}
@@ -75,8 +72,23 @@ display:flex;align-items:center;justify-content:center;
 .empty{text-align:center;color:#888;padding:30px 16px;font-size:14px;}
 .empty .ico{font-size:48px;opacity:0.4;margin-bottom:8px;}
 .footer-note{text-align:center;color:#888;font-size:12px;padding:24px 16px 16px;}
-.actions-bar{display:flex;gap:8px;padding:0 16px;margin-top:8px;flex-wrap:wrap;}
-.actions-bar button{display:inline-flex;align-items:center;}
+.softbox{background:#fff;border:1px solid rgba(212,169,95,.22);border-radius:16px;padding:26px 22px 24px;margin:0 16px 12px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.06);}
+.softbox-title{font-size:1.15rem;font-weight:900;letter-spacing:-.01em;color:var(--ink);line-height:1.35;margin:0;}
+.softbox-sub{font-size:.95rem;color:#6b6560;margin:8px 0 0;line-height:1.6;}
+.softbox-sub:first-child{margin-top:0;}
+.softbox-btn{
+display:inline-flex;align-items:center;justify-content:center;gap:2px;
+margin-top:18px;padding:13px 28px;border-radius:999px;
+background:var(--soft);color:#6b6560;font-weight:800;font-size:16px;
+border:1px solid #E0D6BE;font-family:inherit;cursor:pointer;text-decoration:none;
+-webkit-appearance:none;appearance:none;transition:border-color .2s ease,color .2s ease,transform .12s ease;
+}
+.softbox-btn:hover{border-color:var(--gold);color:#8B6F3D;}
+.softbox-btn:active{transform:scale(.97);}
+.record-actions{display:flex;gap:10px;}
+.record-actions .softbox-btn{flex:1;min-width:0;margin-top:0;padding:13px 10px;}
+.softbox-btn.danger{background:rgba(232,93,93,.08);color:#B05555;border-color:rgba(232,93,93,.25);}
+.softbox-btn.danger:hover{border-color:#c96b6b;color:#A04545;}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1E2A3B;color:white;padding:10px 20px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .3s;z-index:100;pointer-events:none;}
 .toast.show{opacity:1;}
 .summary-card{background:linear-gradient(135deg,rgba(212,169,95,0.1),rgba(212,169,95,0.04));border:1px dashed var(--gold);border-radius:12px;padding:16px;margin:0 16px 12px;}
@@ -152,9 +164,9 @@ body.no-ad{padding-bottom:0!important;}
  <div class="stat-grid" id="statGrid" style="padding:0;margin-top:16px;"></div>
 </div>
 
-<div class="actions-bar">
-  <button class="btn-gold" onclick="exportRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg>匯出資料</button>
-  <button class="btn-danger" onclick="clearAllRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg>全部刪除</button>
+<div class="softbox record-actions">
+  <button type="button" class="softbox-btn" onclick="exportRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg>匯出資料</button>
+  <button type="button" class="softbox-btn danger" onclick="clearAllRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg>全部刪除</button>
 </div>
 
 <div class="footer-note">

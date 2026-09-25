@@ -47,6 +47,19 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .section-title{font-size:22px;font-weight:900;margin:32px 16px 16px;display:flex;align-items:center;gap:8px;}
 .section-title:before{content:"";display:inline-block;width:4px;height:22px;background:var(--gold);border-radius:2px;}
 .notice{background:rgba(255,193,7,0.12);border:1px dashed var(--gold);border-radius:10px;padding:12px 14px;margin:20px 16px;font-size:13px;line-height:1.6;}
+.softbox{background:#fff;border:1px solid rgba(212,169,95,.22);border-radius:16px;padding:26px 22px 24px;margin:0 16px 12px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.06);}
+.softbox-title{font-size:1.15rem;font-weight:900;letter-spacing:-.01em;color:var(--ink);line-height:1.35;margin:0;}
+.softbox-sub{font-size:.95rem;color:#6b6560;margin:8px 0 0;line-height:1.6;}
+.softbox-sub:first-child{margin-top:0;}
+.softbox-btn{
+display:inline-flex;align-items:center;justify-content:center;gap:2px;
+margin-top:18px;padding:13px 28px;border-radius:999px;
+background:var(--soft);color:#6b6560;font-weight:800;font-size:16px;
+border:1px solid #E0D6BE;font-family:inherit;cursor:pointer;text-decoration:none;
+-webkit-appearance:none;appearance:none;transition:border-color .2s ease,color .2s ease,transform .12s ease;
+}
+.softbox-btn:hover{border-color:var(--gold);color:#8B6F3D;}
+.softbox-btn:active{transform:scale(.97);}
 .notice b{color:var(--ink);}
 .nav-home{display:inline-block;margin:14px;font-size:14px;color:rgba(255,255,255,0.7);text-decoration:none;}
 .nav-home:hover{color:white;}
@@ -114,9 +127,10 @@ body.no-ad{padding-bottom:0!important;}
  <!-- cards injected by JS -->
 </div>
 
-<div class="notice">
- <b>溫馨提示</b> · 呢個係預覽 page · 真實落單仲未 launch。
- <br>想收到 launch 通知？做完個測試 share 出街，我哋見到會 update 你
+<div class="softbox">
+ <div class="softbox-title">溫馨提示</div>
+ <p class="softbox-sub">呢個係預覽 page · 真實落單仲未 launch。</p>
+ <p class="softbox-sub">想收到 launch 通知？做完個測試 share 出街，我哋見到會 update 你</p>
 </div>
 
 <div class="section-title">點解 16 型色唔同？</div>

@@ -267,23 +267,8 @@ margin:0 0 8px;line-height:1.7;font-size:1.02rem;color:#3a3632;
 font-size:.7rem;letter-spacing:.14em;font-weight:700;color:var(--gold);
 margin:18px 0 8px;
 }
-.article-more{margin:8px 0 20px;}
-.article-more-h{
-font-size:.72rem;letter-spacing:.16em;font-weight:700;color:var(--gold);
-margin:0 0 12px;text-align:left;
-}
-.article-more button{
-display:flex;align-items:center;justify-content:space-between;width:100%;
-text-align:left;background:var(--soft);border:0;border-radius:12px;
-padding:14px 14px;margin:0 0 8px;
-font-family:inherit;font-size:1.02rem;font-weight:800;color:var(--ink);
-cursor:pointer;-webkit-appearance:none;appearance:none;
-}
-.article-more button:last-child{margin-bottom:0;}
-.article-more button::after{
-content:"▼";font-size:.7rem;color:#8a7a5a;transform:rotate(-90deg);
-display:inline-block;line-height:1;
-}
+.article-more-list{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:18px}
+.article-more-list .softbox-btn{margin-top:0}
 .hub-type-card{
 aspect-ratio:9/16;border-radius:0;color:#fff;border:0;cursor:pointer;
 box-shadow:0 4px 14px rgba(0,0,0,.16);
@@ -864,6 +849,10 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button onclick="compareTypes()" class="btn-gold w-full py-2.5 rounded-lg text-sm">比較</button>
  <div id="compareResult" class="mt-4"></div>
  </div>
+ <div class="card mb-4 softbox">
+ <p class="softbox-sub">睇完想試？返主頁揀版本開始</p>
+ <button type="button" class="softbox-btn" onclick="goHome()">返主頁開始測試</button>
+ </div>
  </section>
 
  <!-- ========== PRIVACY（私隱聲明 · Play Store 強制） ========== -->
@@ -972,6 +961,10 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <h3 class="font-bold mb-3 text-sm">朋友配對</h3>
  <div id="letterFriends" class="text-sm text-gray-700 leading-relaxed"></div>
  </div>
+ <div class="card mb-4 softbox">
+ <p class="softbox-sub">睇完想試？返主頁揀版本開始</p>
+ <button type="button" class="softbox-btn" onclick="goHome()">返主頁開始測試</button>
+ </div>
  </section>
 
  <!-- ========== SOCIAL HUB ========== -->
@@ -985,6 +978,10 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div id="socialScenarios"></div>
+ <div class="card mb-4 softbox">
+ <p class="softbox-sub">睇完想試？返主頁揀版本開始</p>
+ <button type="button" class="softbox-btn" onclick="goHome()">返主頁開始測試</button>
+ </div>
  </section>
 
  <!-- ========== SOCIAL ARTICLE ========== -->
@@ -1010,11 +1007,13 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="socialArticleBody" class="article-guide-body"></div>
  </div>
 
- <div class="card p-5 mb-4 article-more">
- <div class="article-more-h">立即睇睇其他攻略</div>
- <button type="button" onclick="openHub()">性格百科</button>
- <button type="button" onclick="openSocial()">個人相處</button>
- <button type="button" onclick="openRomance()">個人拍拖</button>
+ <div class="card mb-4 softbox">
+ <div class="softbox-title">立即睇睇其他攻略</div>
+ <div class="article-more-list">
+ <button type="button" class="softbox-btn" onclick="openHub()">性格百科</button>
+ <button type="button" class="softbox-btn" onclick="openSocial()">個人相處</button>
+ <button type="button" class="softbox-btn" onclick="openRomance()">個人拍拖</button>
+ </div>
  </div>
  </section>
 
@@ -1029,6 +1028,10 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div id="romanceScenarios"></div>
+ <div class="card mb-4 softbox">
+ <p class="softbox-sub">睇完想試？返主頁揀版本開始</p>
+ <button type="button" class="softbox-btn" onclick="goHome()">返主頁開始測試</button>
+ </div>
  </section>
 
  <!-- ========== ROMANCE ARTICLE ========== -->
@@ -1054,11 +1057,13 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="romanceArticleBody" class="article-guide-body"></div>
  </div>
 
- <div class="card p-5 mb-4 article-more">
- <div class="article-more-h">立即睇睇其他攻略</div>
- <button type="button" onclick="openHub()">性格百科</button>
- <button type="button" onclick="openSocial()">個人相處</button>
- <button type="button" onclick="openRomance()">個人拍拖</button>
+ <div class="card mb-4 softbox">
+ <div class="softbox-title">立即睇睇其他攻略</div>
+ <div class="article-more-list">
+ <button type="button" class="softbox-btn" onclick="openHub()">性格百科</button>
+ <button type="button" class="softbox-btn" onclick="openSocial()">個人相處</button>
+ <button type="button" class="softbox-btn" onclick="openRomance()">個人拍拖</button>
+ </div>
  </div>
  </section>
 

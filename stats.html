@@ -18,6 +18,19 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap');
 :root{--gold:#D4A95F;--gold-dim:#B8A878;--ink:#0a0a1a;--soft:#FAF8F3;}
+.softbox{background:#fff;border:1px solid rgba(212,169,95,.22);border-radius:16px;padding:26px 22px 24px;margin:0 16px 12px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.06);}
+.softbox-title{font-size:1.15rem;font-weight:900;letter-spacing:-.01em;color:var(--ink);line-height:1.35;margin:0;}
+.softbox-sub{font-size:.95rem;color:#6b6560;margin:8px 0 0;line-height:1.6;}
+.softbox-sub:first-child{margin-top:0;}
+.softbox-btn{
+display:inline-flex;align-items:center;justify-content:center;gap:2px;
+margin-top:18px;padding:13px 28px;border-radius:999px;
+background:var(--soft);color:#6b6560;font-weight:800;font-size:16px;
+border:1px solid #E0D6BE;font-family:inherit;cursor:pointer;text-decoration:none;
+-webkit-appearance:none;appearance:none;transition:border-color .2s ease,color .2s ease,transform .12s ease;
+}
+.softbox-btn:hover{border-color:var(--gold);color:#8B6F3D;}
+.softbox-btn:active{transform:scale(.97);}
 *{box-sizing:border-box;}
 body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei",sans-serif;background:var(--soft);color:var(--ink);margin:0;}
 .brand-gold{color:var(--gold);}
@@ -65,6 +78,10 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
  </div>
  <div id="typeStats" class="space-y-2"></div>
  <p class="text-xs text-gray-500 mt-4 pt-3" style="border-top:1px solid #eee;">基線參考常見 16 型分佈 143,021 樣本量級；你喺呢部手機完成測試會 +1。唔係全港實時普查。</p>
+ <div class="softbox" style="margin:20px 0 0;">
+ <p class="softbox-sub">睇完想試？返主頁揀版本開始</p>
+ <a href="./" class="softbox-btn">返主頁開始測試</a>
+ </div>
 </div>
 <script>
 function siteBack(){
