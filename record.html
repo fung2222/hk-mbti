@@ -267,22 +267,18 @@ function render(){
       const num = i + 1;
       return `
         <div class="history-item">
+          <div class="rec-num">#${num}</div>
           <div class="history-main">
-          <div class="history-row">
-            <div class="rec-num">#${num}</div>
-            <div style="flex:1;min-width:0;">
-              <div class="history-name">${escapeHtml(name)}</div>
-              <div class="history-mbti">${code} · ${meta.cn}</div>
-              <div class="history-meta">${escapeHtml(verLabel)} · ${time}</div>
+            <div class="history-name">${escapeHtml(name)}</div>
+            <div class="history-mbti">${code} · ${meta.cn}</div>
+            <div class="history-meta">${escapeHtml(verLabel)} · ${time}</div>
+            <div class="history-actions">
+              <button type="button" class="act-view" aria-label="睇結果" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              <button type="button" class="act-share" aria-label="分享" onclick="shareRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg></button>
+              <button type="button" class="act-del" aria-label="刪除" onclick="delRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg></button>
             </div>
           </div>
-          <div class="history-actions">
-            <button type="button" class="act-view" aria-label="睇結果" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
-            <button type="button" class="act-share" aria-label="分享" onclick="shareRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg></button>
-            <button type="button" class="act-del" aria-label="刪除" onclick="delRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg></button>
-          </div>
-          </div>
-            ${rec.card ? `<img src="${rec.card}" class="rec-card" alt="分享卡" role="button" tabindex="0" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})">` : ""}
+          ${rec.card ? `<img src="${rec.card}" class="rec-card" alt="分享卡" role="button" tabindex="0" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})">` : ""}
         </div>`;
     }).join("");
   }
