@@ -530,8 +530,41 @@ body.no-ad{padding-bottom:0!important;}
    if("serviceWorker" in navigator){
      navigator.serviceWorker.register("sw.js").catch(() => {});
    }
-   // 1) 還原上次離開時嘅 section（reload 留喺原位）
+   const revealApp = function(){
+     document.body.classList.remove("js-boot");
+     const app = document.getElementById("app");
+     if(app) app.classList.add("js-ready");
+   };
    try{
+     let openedHash = false;
+     const hash = window.location.hash||"";
+     if(hash){
+       window._openViaHash = true;
+       const m = hash.match(/^#view=(\d+)$/);
+       const tm = hash.match(/^#type=([A-Z]{4})$/);
+       if(m && typeof window.viewHistoryResult === "function"){
+         window.viewHistoryResult(parseInt(m[1], 10));
+         openedHash = true;
+       } else if(tm && typeof window.openType === "function"){
+         window.openType(tm[1]);
+         openedHash = true;
+       } else {
+         const MAP = {
+           "#about": "openAbout",
+           "#spectrum": "openSpectrum",
+           "#hub": "openHub",
+           "#social": "openSocial",
+           "#romance": "openRomance",
+           "#privacy": "openPrivacy"
+         };
+         const fn = MAP[hash];
+         if(fn && typeof window[fn] === "function"){
+           window[fn]();
+           openedHash = true;
+         }
+       }
+     }
+     if(!openedHash){
      const last = sessionStorage.getItem("hkmbti_last_section");
      let navType = "navigate";
      try{
@@ -541,7 +574,6 @@ body.no-ad{padding-bottom:0!important;}
      const isReload = navType === "reload";
      if(last && last !== "home"){
        if(last === "test"){
-         // 測試中 reload：直接由進度還原，唔彈主頁
          try{
            if(typeof window.loadProgress === "function" && typeof window.startTestWithVersion === "function"){
              const p = window.loadProgress();
@@ -556,7 +588,6 @@ body.no-ad{padding-bottom:0!important;}
            }
          }catch(e){}
        } else if(last === "result"){
-         // 結果頁：淨係真 reload 先還原；由其他頁導航返嚟應該去主頁
          if(isReload){
            try{
              if(typeof window.viewHistoryResult === "function"){
@@ -582,14 +613,10 @@ body.no-ad{padding-bottom:0!important;}
          fire();
        }
      }
-     // 還原完成 → 顯示（移除 js-boot，避免主頁閃一閃）
-     document.body.classList.remove("js-boot");
-     const app = document.getElementById("app");
-     if(app) app.classList.add("js-ready");
+     }
+     revealApp();
      }catch(e){
-     document.body.classList.remove("js-boot");
-     const app = document.getElementById("app");
-     if(app) app.classList.add("js-ready");
+     revealApp();
      }
    if(typeof window.loadHistory === "function"){
      window.loadHistory();
@@ -603,49 +630,7 @@ body.no-ad{padding-bottom:0!important;}
    if(typeof window.renderHubTypes === "function"){
      window.renderHubTypes();
    }
-   // v1.7.9: detect #view=N hash from record.html → replay history
-   try{
-     const hash = window.location.hash||"";
-     if(hash) window._openViaHash = true;
-     const m = hash.match(/^#view=(\d+)$/);
-     const tm = hash.match(/^#type=([A-Z]{4})$/);
-     if(m){
-       const idx = parseInt(m[1], 10);
-       const fire = () => {
-         if(typeof window.viewHistoryResult === "function"){
-           window.viewHistoryResult(idx);
-         } else {
-           setTimeout(fire, 50);
-         }
-       };
-       setTimeout(fire, 80);
-     } else if(tm){
-       const code = tm[1];
-       const fire = () => {
-         if(typeof window.openType === "function"){ window.openType(code); }
-         else { setTimeout(fire, 50); }
-       };
-       setTimeout(fire, 80);
-     } else {
-       const MAP = {
-         "#about": "openAbout",
-         "#spectrum": "openSpectrum",
-         "#hub": "openHub",
-         "#social": "openSocial",
-         "#romance": "openRomance",
-         "#privacy": "openPrivacy"
-       };
-       const fn = MAP[hash];
-       if(fn){
-         const fire = () => {
-           if(typeof window[fn] === "function"){ window[fn](); }
-           else { setTimeout(fire, 50); }
-         };
-         setTimeout(fire, 80);
-       }
-     }
-     }catch(e){}
- });
+   });
  </script>
 
     <!-- ========== ABOUT MBTI ========== -->
