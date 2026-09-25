@@ -85,7 +85,9 @@ border:1px solid #E0D6BE;font-family:inherit;cursor:pointer;text-decoration:none
 }
 .softbox-btn:hover{border-color:var(--gold);color:#8B6F3D;}
 .softbox-btn:active{transform:scale(.97);}
-.record-actions{display:flex;gap:10px;}
+.record-actions{display:flex;gap:10px;justify-content:center;}
+.record-actions .softbox-btn.mini{flex:0 1 auto;min-width:0;padding:8px 16px;font-size:.85rem;font-weight:700;gap:0;}
+.record-actions .softbox-btn.mini svg{margin-right:5px;}
 .record-actions .softbox-btn{flex:1;min-width:0;margin-top:0;padding:13px 10px;}
 .softbox-btn.danger{background:rgba(232,93,93,.08);color:#B05555;border-color:rgba(232,93,93,.25);}
 .softbox-btn.danger:hover{border-color:#c96b6b;color:#A04545;}
@@ -165,8 +167,8 @@ body.no-ad{padding-bottom:0!important;}
 </div>
 
 <div class="softbox record-actions">
-  <button type="button" class="softbox-btn" onclick="exportRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg>匯出資料</button>
-  <button type="button" class="softbox-btn danger" onclick="clearAllRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg>全部刪除</button>
+  <button type="button" class="softbox-btn mini" onclick="exportRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg>匯出資料</button>
+  <button type="button" class="softbox-btn mini danger" onclick="clearAllRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg>全部刪除</button>
 </div>
 
 <div class="footer-note">
@@ -210,7 +212,21 @@ const last = localStorage.getItem("hkmbti_last_result");
 if(last){ const r = JSON.parse(last); arr = [r]; }
  }
  }catch(e){}
-return Array.isArray(arr) ? arr : [];
+if(!Array.isArray(arr)) return [];
+ // 去重：舊版分享掣會喺同一段測試再存一次（同 mbti/名/版本，3 分鐘內）→ 只留最早嗰條
+const seen = new Set(), clean = [];
+arr.forEach(rec => {
+if(!rec || !rec.mbti) return;
+const ts = Number(rec.timestamp) || 0;
+const k = [rec.mbti, rec.name||"", rec.nickname||"", rec.version||""].join("|");
+const dup = clean.some(c => c._k === k && Math.abs((Number(c.timestamp)||0) - ts) <= 180000);
+if(dup) return;
+clean.push(Object.assign({}, rec, {_k:k}));
+ });
+if(clean.length !== arr.length){
+try{ localStorage.setItem("hkmbti_history", JSON.stringify(clean.map(c => { const o = Object.assign({}, c); delete o._k; return o; }))); }catch(e){}
+ }
+return clean.map(c => { const o = Object.assign({}, c); delete o._k; return o; });
 }
 function loadCounts(){
 let obj = {};
