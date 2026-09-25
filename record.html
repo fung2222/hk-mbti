@@ -53,7 +53,6 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .history-item{background:#fff;border-radius:12px;margin:0 16px 10px;padding:14px;box-shadow:0 1px 6px rgba(0,0,0,0.05);display:flex;align-items:center;gap:12px;}
 .history-main{flex:1;min-width:0;}
 .history-row{display:flex;align-items:center;gap:12px;}
-.history-emoji{font-size:32px;line-height:1;}
 .history-name{font-weight:900;font-size:16px;}
 .history-mbti{font-size:13px;color:#555;margin-top:2px;}
 .history-meta{font-size:12px;color:#888;margin-top:4px;}
@@ -209,14 +208,14 @@ return obj;
 
 // 16 type meta
 const TYPE_META = {
-INTJ:{cn:"建築師",emoji:"",color:"#6B4E9E"}, INTP:{cn:"邏輯學家",emoji:"",color:"#3E5F9E"},
-ENTJ:{cn:"指揮官",emoji:"",color:"#1E8A8A"}, ENTP:{cn:"辯論家",emoji:"",color:"#E07B35"},
-INFJ:{cn:"提倡者",emoji:"",color:"#8A3E9E"}, INFP:{cn:"調解員",emoji:"",color:"#B085C4"},
-ENFJ:{cn:"主人公",emoji:"",color:"#E05A4A"}, ENFP:{cn:"競選者",emoji:"",color:"#D9A028"},
-ISTJ:{cn:"物流師",emoji:"",color:"#4A6E9E"}, ISFJ:{cn:"守衛者",emoji:"",color:"#5C8A5C"},
-ESTJ:{cn:"總經理",emoji:"",color:"#A85240"}, ESFJ:{cn:"執事",emoji:"",color:"#E08058"},
-ISTP:{cn:"鑒賞家",emoji:"",color:"#3E8A7A"}, ISFP:{cn:"探險家",emoji:"",color:"#C0709E"},
-ESTP:{cn:"企業家",emoji:"",color:"#6B8A3E"}, ESFP:{cn:"表演者",emoji:"",color:"#C04070"}
+INTJ:{cn:"建築師",color:"#6B4E9E"}, INTP:{cn:"邏輯學家",color:"#3E5F9E"},
+ENTJ:{cn:"指揮官",color:"#1E8A8A"}, ENTP:{cn:"辯論家",color:"#E07B35"},
+INFJ:{cn:"提倡者",color:"#8A3E9E"}, INFP:{cn:"調解員",color:"#B085C4"},
+ENFJ:{cn:"主人公",color:"#E05A4A"}, ENFP:{cn:"競選者",color:"#D9A028"},
+ISTJ:{cn:"物流師",color:"#4A6E9E"}, ISFJ:{cn:"守衛者",color:"#5C8A5C"},
+ESTJ:{cn:"總經理",color:"#A85240"}, ESFJ:{cn:"執事",color:"#E08058"},
+ISTP:{cn:"鑒賞家",color:"#3E8A7A"}, ISFP:{cn:"探險家",color:"#C0709E"},
+ESTP:{cn:"企業家",color:"#6B8A3E"}, ESFP:{cn:"表演者",color:"#C04070"}
 };
 const VER_LABEL = {life:"生活版", advanced:"進階版", bb:"BB版"};
 
@@ -261,7 +260,7 @@ histBox.innerHTML = `
  } else {
 histBox.innerHTML = list.map((rec, i) => {
 const code = (rec.mbti||"").substring(0,4).toUpperCase();
-const meta = TYPE_META[code] || {cn:code, emoji:""};
+const meta = TYPE_META[code] || {cn:code};
 const verLabel = VER_PILL[rec.version] || rec.version || "—";
 const name = [rec.name, rec.nickname].filter(Boolean).join(" · ") || "匿名港人";
 const time = rec.timestamp ? timeAgo(rec.timestamp) : "";
