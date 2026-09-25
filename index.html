@@ -18,7 +18,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@800&text=EIJSFNTP-A&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&text=EIJSFNTP-A&display=swap">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&family=Noto+Sans+HK:wght@400;500;700;900&display=swap');
@@ -657,6 +657,9 @@ revealApp();
  }
 if(typeof window.loadHistory === "function"){
 window.loadHistory();
+ }
+if(typeof window.refreshRecordCards === "function"){
+setTimeout(() => { try{ window.refreshRecordCards(); }catch(e){} }, 2500);
  }
 if(typeof window.refreshResumeBanner === "function"){
 window.refreshResumeBanner();
@@ -3351,8 +3354,48 @@ let list = JSON.parse(localStorage.getItem("hkmbti_history")||"[]") || [];
 if(!Array.isArray(list) || !list.length) return;
 if(thumbUrl) list[0].card = thumbUrl;
 if(shareUrl) list[0].cardShare = shareUrl;
+if(thumbUrl) list[0].cardFont = window.CARD_FONT_ID;   // 記住用邊隻字型畫，方便日後換字型時自動重畫
 localStorage.setItem("hkmbti_history", JSON.stringify(list));
 try{ loadHistory(); }catch(e){}
+ }catch(e){}
+};
+
+// 換字型之後，幫舊紀錄嘅縮圖重畫一次（用最新字型），唔需要用戶做任何事
+window.CARD_FONT_ID = "archivo";   // 改字型時改呢個代號 → 舊紀錄會自動重畫
+window.refreshRecordCards = async function(){
+try{
+if(document.getElementById("test") && !document.getElementById("test").classList.contains("hidden")) return;  // 測試中唔好搞
+if(!(document.fonts && document.fonts.load)) return;
+await Promise.race([document.fonts.load('bold 240px "Archivo Black"', 'INFP').catch(() => {}), new Promise(r => setTimeout(r, 2500))]);
+let list = [];
+try{ list = JSON.parse(localStorage.getItem("hkmbti_history")||"[]") || []; }catch(e){ return; }
+if(!Array.isArray(list) || !list.length) return;
+const prevResult = window.lastResult, prevMeta = window._cardMeta;
+let changed = false;
+for(const rec of list){
+if(!rec || !rec.mbti) continue;
+if(rec.cardFont === window.CARD_FONT_ID && rec.card) continue;
+window.lastResult = rec.mbti;
+window._cardMeta = { version: rec.version || "life", totalQ: rec.version === "bb" ? 10 : rec.version === "advanced" ? 30 : 60 };
+try{
+await generateCardImage();
+const img = document.getElementById("shareCardImg");
+if(!img || !img.src || img.src.indexOf("data:") !== 0) continue;
+const full = new Image();
+await new Promise((res, rej) => { full.onload = res; full.onerror = rej; full.src = img.src; });
+const tc = document.createElement("canvas"); tc.width = 480; tc.height = 854;
+tc.getContext("2d").drawImage(full, 0, 0, 480, 854);
+rec.card = tc.toDataURL("image/jpeg", 0.74);
+rec.cardFont = window.CARD_FONT_ID;
+changed = true;
+ }catch(e){}
+ }
+window.lastResult = prevResult; window._cardMeta = prevMeta;
+if(changed){
+try{ localStorage.setItem("hkmbti_history", JSON.stringify(list)); }catch(e){}
+try{ loadHistory(); }catch(e){}
+ }
+if(prevResult){ try{ await generateCardImage(); }catch(e){} }   // 還原返結果頁嗰張卡
  }catch(e){}
 };
 
@@ -3476,7 +3519,7 @@ window.generateCardImage = function(){
 if(!window.lastResult) return;
  // 等 Syne 載入完（有 timeout 保護，唔會卡住生成）
 const _fontReady = (document.fonts && document.fonts.load)
-? Promise.race([document.fonts.load('800 240px "Syne"', 'INFP').catch(() => {}), new Promise(r => setTimeout(r, 1500))])
+? Promise.race([document.fonts.load('bold 240px "Archivo Black"', 'INFP').catch(() => {}), new Promise(r => setTimeout(r, 1500))])
 : Promise.resolve();
 const t = window.TYPES[window.lastResult.substring(0,4)];
 if(!t) return;
@@ -3601,16 +3644,16 @@ ctx.font = "28px sans-serif";
 ctx.fillText("你是", 360, 280);
  // 4 字母（大）
 ctx.fillStyle = "white";
- // v1.9.1: 4 字母用 Syne 800；太闊會自動收窄（最多 600px，確保唔會出界）
+ // v1.9.1: 4 字母用 Archivo Black；太闊會自動收窄（最多 600px，確保唔會出界）
 const _codeStr = window.lastResult.substring(0,4);
-const _codeFam = '"Syne", Georgia, "Times New Roman", serif';
+const _codeFam = '"Archivo Black", Georgia, "Times New Roman", serif';
 let _codeFont = window.CARD_CODE_FONT;
 if(!_codeFont){
 const _base = 240, _maxW = 600;
-const _full = "800 " + _base + "px " + _codeFam;
+const _full = "bold " + _base + "px " + _codeFam;
 ctx.font = _full;
 const _w = ctx.measureText(_codeStr).width;
-_codeFont = _w > _maxW ? ("800 " + Math.floor(_base * _maxW / _w) + "px " + _codeFam) : _full;
+_codeFont = _w > _maxW ? ("bold " + Math.round(_base * _maxW / _w) + "px " + _codeFam) : _full;
  }
 ctx.font = _codeFont;
 ctx.fillText(_codeStr, 360, 560);
