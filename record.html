@@ -209,7 +209,7 @@ return obj;
 
 // 16 type meta
 const TYPE_META = {
-INTJ:{cn:"建築師",emoji:"️",color:"#6B4E9E"}, INTP:{cn:"邏輯學家",emoji:"",color:"#3E5F9E"},
+INTJ:{cn:"建築師",emoji:"",color:"#6B4E9E"}, INTP:{cn:"邏輯學家",emoji:"",color:"#3E5F9E"},
 ENTJ:{cn:"指揮官",emoji:"",color:"#1E8A8A"}, ENTP:{cn:"辯論家",emoji:"",color:"#E07B35"},
 INFJ:{cn:"提倡者",emoji:"",color:"#8A3E9E"}, INFP:{cn:"調解員",emoji:"",color:"#B085C4"},
 ENFJ:{cn:"主人公",emoji:"",color:"#E05A4A"}, ENFP:{cn:"競選者",emoji:"",color:"#D9A028"},
@@ -381,7 +381,7 @@ function delRec(i){
 const btn = event.target;
 if(btn.dataset.armed !== "1"){
 btn.dataset.armed = "1";
-btn.textContent = "️ 再撳一次";
+btn.textContent = " 再撳一次";
 btn.style.background = "#fdd";
 clearTimeout(_delArmTimer);
  _delArmTimer = setTimeout(() => {
