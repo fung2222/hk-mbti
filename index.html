@@ -43,7 +43,11 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 .scenes-grid{max-width:26rem;margin:0 auto;display:flex;flex-direction:column;gap:20px;}
 .scene-cell{display:flex;flex-direction:column;gap:5px;text-align:left;}
 .scene-title{display:flex;align-items:center;gap:10px;}
-.scene-emoji{font-size:1.7rem;line-height:1;flex-shrink:0;}
+.scene-ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.scene-cell[data-scene="eat"] .scene-ico{color:#C08552}
+.scene-cell[data-scene="mtr"] .scene-ico{color:#4E86B0}
+.scene-cell[data-scene="work"] .scene-ico{color:#6B7F9E}
+.scene-cell[data-scene="friend"] .scene-ico{color:#C97B8A}
 .scene-name{font-size:1rem;font-weight:800;color:var(--ink);}
 .scene-sub{font-size:.82rem;color:#6b6560;line-height:1.5;}
 /* 全局字體加大：text-xs / 10px 太細 → 抬一檔 */
@@ -1197,20 +1201,20 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="text-sm font-bold mb-5">題目散落喺香港人嘅每一日</div>
  </div>
  <div class="scenes-grid">
- <div class="scene-cell">
- <div class="scene-title"><span class="scene-emoji"></span><span class="scene-name">食同買</span></div>
+ <div class="scene-cell" data-scene="eat">
+ <div class="scene-title"><svg class="scene-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 9h11l-1 10.3a1.4 1.4 0 01-1.4 1.2H8.9a1.4 1.4 0 01-1.4-1.2L6.5 9z"/><path d="M5.6 9h12.8"/><path d="M14.6 9L17 4.6"/></svg><span class="scene-name">食同買</span></div>
  <div class="scene-sub">茶餐廳 · 便利店 · 街市 · 公司 lunch · 排隊買嘢</div>
  </div>
- <div class="scene-cell">
- <div class="scene-title"><span class="scene-emoji"></span><span class="scene-name">出街同車廂</span></div>
+ <div class="scene-cell" data-scene="mtr">
+ <div class="scene-title"><svg class="scene-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="4.8" width="15" height="12.4" rx="2.5"/><path d="M7.6 8.4h3.4M13 8.4h3.4"/><circle cx="8.6" cy="19" r="1.5"/><circle cx="15.4" cy="19" r="1.5"/></svg><span class="scene-name">出街同車廂</span></div>
  <div class="scene-sub">港鐵 · 巴士 · 問路 · 迫車 · 颱風假</div>
  </div>
- <div class="scene-cell">
- <div class="scene-title"><span class="scene-emoji"></span><span class="scene-name">返工返學</span></div>
+ <div class="scene-cell" data-scene="work">
+ <div class="scene-title"><svg class="scene-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.6" y="7.8" width="16.8" height="11.6" rx="2.6"/><path d="M9 7.8V6.4a2 2 0 012-2h2a2 2 0 012 2v1.4"/><path d="M3.6 13.6h16.8"/><path d="M11 13.6v1.5h2v-1.5"/></svg><span class="scene-name">返工返學</span></div>
  <div class="scene-sub">開會 · deadline · 考試 · 出差 · 同事</div>
  </div>
- <div class="scene-cell">
- <div class="scene-title"><span class="scene-emoji"></span><span class="scene-name">朋友同屋企</span></div>
+ <div class="scene-cell" data-scene="friend">
+ <div class="scene-title"><svg class="scene-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.6c-4.6 0-8.4 3.05-8.4 6.8 0 2.1 1.15 3.98 2.95 5.18l-.85 3.42 3.55-1.88c.88.18 1.8.28 2.75.28 4.6 0 8.4-3.05 8.4-6.8S16.6 4.6 12 4.6z"/><path d="M12 14.4c-1.4-1.05-2.4-1.95-2.4-2.95a1.35 1.35 0 012.4-.8 1.35 1.35 0 012.4.8c0 1-1 1.9-2.4 2.95z"/></svg><span class="scene-name">朋友同屋企</span></div>
  <div class="scene-sub">WhatsApp · 唱 K · 搬屋 · 相處 · 道歉</div>
  </div>
  </div>
