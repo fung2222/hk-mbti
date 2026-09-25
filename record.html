@@ -50,7 +50,8 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .nav-home img{width:24px;height:24px;border-radius:6px;}
 .nav-home .home-label{opacity:0.95;}
 .nav-home .arrow{opacity:0.7;}
-.history-item{background:#fff;border-radius:12px;margin:0 16px 10px;padding:14px;box-shadow:0 1px 6px rgba(0,0,0,0.05);}
+.history-item{background:#fff;border-radius:12px;margin:0 16px 10px;padding:14px;box-shadow:0 1px 6px rgba(0,0,0,0.05);display:flex;align-items:center;gap:12px;}
+.history-main{flex:1;min-width:0;}
 .history-row{display:flex;align-items:center;gap:12px;}
 .history-emoji{font-size:32px;line-height:1;}
 .history-name{font-weight:900;font-size:16px;}
@@ -81,8 +82,7 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .summary-card{background:linear-gradient(135deg,rgba(212,169,95,0.1),rgba(212,169,95,0.04));border:1px dashed var(--gold);border-radius:12px;padding:16px;margin:0 16px 12px;}
 .summary-num{font-size:32px;font-weight:900;color:var(--gold);line-height:1;}
 .rec-num{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:rgba(212,169,95,.12);color:#7C6B45;font-weight:700;font-size:16px;flex-shrink:0;font-family:-apple-system,sans-serif;letter-spacing:-0.02em;border:1px solid rgba(212,169,95,.35);}
-.history-row{align-items:center;}
-.rec-card{width:54px;height:96px;object-fit:cover;border-radius:8px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.16);cursor:pointer;}
+.rec-card{width:54px;height:96px;object-fit:cover;border-radius:8px;flex-shrink:0;margin-left:auto;box-shadow:0 2px 8px rgba(0,0,0,.16);cursor:pointer;}
 @media (min-width:769px){
   .stat-grid{grid-template-columns:repeat(8,1fr);}
   .hero h1{font-size:42px;}
@@ -267,6 +267,7 @@ function render(){
       const num = i + 1;
       return `
         <div class="history-item">
+          <div class="history-main">
           <div class="history-row">
             <div class="rec-num">#${num}</div>
             <div style="flex:1;min-width:0;">
@@ -274,13 +275,14 @@ function render(){
               <div class="history-mbti">${code} · ${meta.cn}</div>
               <div class="history-meta">${escapeHtml(verLabel)} · ${time}</div>
             </div>
-            ${rec.card ? `<img src="${rec.card}" class="rec-card" alt="分享卡" role="button" tabindex="0" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})">` : ""}
           </div>
           <div class="history-actions">
             <button type="button" class="act-view" aria-label="睇結果" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
             <button type="button" class="act-share" aria-label="分享" onclick="shareRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg></button>
             <button type="button" class="act-del" aria-label="刪除" onclick="delRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg></button>
           </div>
+          </div>
+            ${rec.card ? `<img src="${rec.card}" class="rec-card" alt="分享卡" role="button" tabindex="0" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})">` : ""}
         </div>`;
     }).join("");
   }
