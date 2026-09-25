@@ -56,13 +56,15 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .history-name{font-weight:900;font-size:16px;}
 .history-mbti{font-size:13px;color:#555;margin-top:2px;}
 .history-meta{font-size:12px;color:#888;margin-top:4px;}
-.history-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
-.history-actions button{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;border:none;cursor:pointer;}
-.act-view{background:rgba(212,169,95,0.15);color:var(--ink);}
-.act-view:hover{background:rgba(212,169,95,0.3);}
-.act-share{background:#f0f0f0;color:var(--ink);}
-.act-share:hover{background:#e0e0e0;}
-.act-del{background:#fee;color:#900;}
+.history-actions{display:flex;gap:8px;margin-top:10px;justify-content:flex-end;}
+.history-actions button{
+  width:36px;height:36px;padding:0;border-radius:10px;border:0;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-appearance:none;appearance:none;background:var(--soft);color:var(--ink);
+}
+.history-actions svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;}
+.act-view:hover,.act-share:hover{background:rgba(212,169,95,.22);}
+.act-del{color:#9a4444;background:#fee;}
 .act-del:hover{background:#fdd;}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px;}
 .stat-pill{background:#fff;border-radius:10px;padding:10px 6px;text-align:center;font-size:11px;border:2px solid transparent;line-height:1.3;cursor:pointer;font-family:inherit;-webkit-appearance:none;appearance:none;}
@@ -121,7 +123,7 @@ body.no-ad{padding-bottom:0!important;}
     <a href="./stats.html" onclick="closeHeroMenu();">📊 香港16型統計</a>
     <a href="./#privacy" onclick="closeHeroMenu();">🔒 私隱聲明</a>
     <div class="sep"></div>
-    <button onclick="clearAllRecords();closeHeroMenu();" style="color:#ff8a8a;">🗑 全部清除紀錄</button>
+    <button onclick="clearAllRecords();closeHeroMenu();" style="color:#ff8a8a;">全部清除紀錄</button>
   </div>
 </div>
 
@@ -151,8 +153,8 @@ body.no-ad{padding-bottom:0!important;}
 </div>
 
 <div class="actions-bar">
-  <button class="btn-gold" onclick="exportRecords()">📋 匯出全部（JSON）</button>
-  <button class="btn-danger" onclick="clearAllRecords()">🧹 全部清除</button>
+  <button class="btn-gold" onclick="exportRecords()">全部</button>
+  <button class="btn-danger" onclick="clearAllRecords()">全部刪除</button>
 </div>
 
 <div class="footer-note">
@@ -275,9 +277,9 @@ function render(){
             ${rec.card ? `<img src="${rec.card}" class="rec-card" alt="分享卡" role="button" tabindex="0" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})">` : ""}
           </div>
           <div class="history-actions">
-            <button class="act-view" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})">👁 睇結果</button>
-            <button class="act-share" onclick="shareRec(${i})">📤 分享</button>
-            <button class="act-del" onclick="delRec(${i})">🗑 刪除</button>
+            <button type="button" class="act-view" aria-label="睇結果" onclick="viewRec('${escapeAttr(rec.id||"")}', ${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></button>
+            <button type="button" class="act-share" aria-label="分享" onclick="shareRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg></button>
+            <button type="button" class="act-del" aria-label="刪除" onclick="delRec(${i})"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg></button>
           </div>
         </div>`;
     }).join("");
@@ -445,12 +447,12 @@ function clearAllRecords(){
   const btn = event.target;
   if(btn.dataset.armed !== "1"){
     btn.dataset.armed = "1";
-    btn.textContent = "⚠️ 再撳一次";
+    btn.textContent = "再撳一次";
     btn.style.background = "#fcc";
     clearTimeout(_clearArmTimer);
     _clearArmTimer = setTimeout(() => {
       btn.dataset.armed = "";
-      btn.textContent = "🧹 全部清除";
+      btn.textContent = "全部刪除";
       btn.style.background = "";
     }, 5000);
     return;
