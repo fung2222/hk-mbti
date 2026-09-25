@@ -1110,15 +1110,15 @@ body.no-ad{padding-bottom:0!important;}
       <div class="home-menu-wrap">
         <button type="button" class="home-menu-btn" onclick="toggleHomeMenu(event)" aria-label="選單">⋯</button>
         <div class="home-menu" id="homeMenu">
-          <button type="button" onclick="goHome();closeHomeMenu();">🏠 主頁</button>
-          <a href="./record.html" onclick="closeHomeMenu()">📋 我的紀錄</a>
-          <button type="button" onclick="openAbout();closeHomeMenu();">📖 關於港式 MBTI</button>
-          <button type="button" onclick="openSpectrum();closeHomeMenu();">🔤 MBTI 性格光譜</button>
-          <button type="button" onclick="openHub();closeHomeMenu();">📚 性格百科</button>
-          <button type="button" onclick="openSocial();closeHomeMenu();">🤝 個人相處</button>
-          <button type="button" onclick="openRomance();closeHomeMenu();">💕 個人拍拖</button>
-          <a href="./stats.html" onclick="closeHomeMenu()">📊 香港16型統計</a>
-          <button type="button" onclick="openPrivacy();closeHomeMenu();">🔒 私隱聲明</button>
+          <button type="button" onclick="goHome();closeHomeMenu();">主頁</button>
+          <a href="./record.html" onclick="closeHomeMenu()">我的紀錄</a>
+          <button type="button" onclick="openAbout();closeHomeMenu();">關於港式 MBTI</button>
+          <button type="button" onclick="openSpectrum();closeHomeMenu();">MBTI 性格光譜</button>
+          <button type="button" onclick="openHub();closeHomeMenu();">性格百科</button>
+          <button type="button" onclick="openSocial();closeHomeMenu();">個人相處</button>
+          <button type="button" onclick="openRomance();closeHomeMenu();">個人拍拖</button>
+          <a href="./stats.html" onclick="closeHomeMenu()">香港16型統計</a>
+          <button type="button" onclick="openPrivacy();closeHomeMenu();">私隱聲明</button>
           <div class="home-menu-foot">版本 v1.9</div>
         </div>
       </div>
@@ -2283,15 +2283,15 @@ document.addEventListener("click", function(e){
 // 每個分頁頂欄右邊自動加 ⋯ 選單浮波（萬用選單）
 (function(){
   const LINKS = [
-    ["home", "🏠 主頁"],
-    ["record", "📋 我的紀錄", "./record.html"],
-    ["about", "📖 關於港式 MBTI"],
-    ["spectrum", "🔤 MBTI 性格光譜"],
-    ["hub", "📚 性格百科"],
-    ["social", "🤝 個人相處"],
-    ["romance", "💕 個人拍拖"],
-    ["stats", "📊 香港16型統計", "./stats.html"],
-    ["privacy", "🔒 私隱聲明"]
+    ["home", "主頁"],
+    ["record", "我的紀錄", "./record.html"],
+    ["about", "關於港式 MBTI"],
+    ["spectrum", "MBTI 性格光譜"],
+    ["hub", "性格百科"],
+    ["social", "個人相處"],
+    ["romance", "個人拍拖"],
+    ["stats", "香港16型統計", "./stats.html"],
+    ["privacy", "私隱聲明"]
   ];
   const NAV = {
     home: function(){ window.goHome(); },
