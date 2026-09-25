@@ -297,8 +297,11 @@ margin:0 0 6px;line-height:1.5;font-size:1.05rem;color:#374151;
 font-size:.85rem;letter-spacing:.06em;font-weight:800;color:var(--gold);
 margin:18px 0 8px;
 }
-.article-more-list{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:18px}
-.article-more-list .softbox-btn{margin-top:0}
+.article-more-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.article-more-list .softbox-btn{margin-top:0;padding:11px 4px;font-size:.92rem;border-radius:12px;white-space:nowrap}
+/* 少用嘅「其他攻略」方塊：縮細啲 */
+.softbox-tight{padding:18px 16px 16px}
+.softbox-tight .softbox-title{font-size:1.02rem}
 .hub-type-card{
 aspect-ratio:9/16;border-radius:0;color:#fff;border:0;cursor:pointer;
 box-shadow:0 4px 14px rgba(0,0,0,.16);
@@ -1040,7 +1043,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="socialArticleBody" class="article-guide-body"></div>
  </div>
 
- <div class="card mb-4 softbox">
+ <div class="card mb-4 softbox softbox-tight">
  <div class="softbox-title">立即睇睇其他攻略</div>
  <div class="article-more-list">
  <button type="button" class="softbox-btn" onclick="openHub()">性格百科</button>
@@ -1090,7 +1093,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="romanceArticleBody" class="article-guide-body"></div>
  </div>
 
- <div class="card mb-4 softbox">
+ <div class="card mb-4 softbox softbox-tight">
  <div class="softbox-title">立即睇睇其他攻略</div>
  <div class="article-more-list">
  <button type="button" class="softbox-btn" onclick="openHub()">性格百科</button>
