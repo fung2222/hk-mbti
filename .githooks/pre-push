@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+# git pre-push hook：push 之前自動跑體檢，唔過就唔准推。
+# 安裝（每部 clone 做一次）：git config core.hooksPath .githooks
+python3 tools/preflight.py || {
+  echo ""
+  echo "✗ Preflight 未過，push 終止。修好之後再 push（或用 git push --no-verify 硬推）。"
+  exit 1
+}
+exit 0
