@@ -561,7 +561,6 @@ localStorage.setItem("hkmbti_installed", "1");
  });
  // Service worker + 首次主頁 load history
 window.addEventListener("load", () => {
-try{ refreshResumeBanner(); }catch(e){}
  // 安全網：萬一還原邏輯卡住，500ms 後強制顯示
 setTimeout(() => {
 document.body.classList.remove("js-boot");
@@ -1198,12 +1197,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" class="home-more-down" onclick="scrollHomeBelow()" aria-label="睇下面內容">▼</button>
  </div>
 
-
- <!-- 未完成嘅測試（有 progress 才顯示） -->
- <button type="button" id="resumeBanner" class="hidden w-full mb-4 text-left rounded-xl px-4 py-3" style="-webkit-appearance:none;appearance:none;font-family:inherit;cursor:pointer;background:rgba(212,169,95,.08);border:1px solid rgba(212,169,95,.25)" onclick="resumeTest()">
- <div class="text-[10px] tracking-widest font-bold" style="color:#8A7A5A">未完成嘅測試</div>
- <div class="text-sm font-bold text-ink mt-0.5" id="resumeLabel">繼續</div>
- </button>
 
  <!-- 版本選擇（一按著燈，再按進入） -->
  <div class="card p-5 mb-4" id="homeBelow">
@@ -3800,21 +3793,14 @@ timestamp: Date.now(),
 completed: true,
 name: window.state.displayName || "",
 nickname: window.state.nickname || "",
-version: window.state.version || "life",
-startedAt: window.state.startedAt || Date.now()
+version: window.state.version || "life"
  };
  // 兼容舊 key + 新 5 次 list
 localStorage.setItem("hkmbti_last_result", JSON.stringify(record));
 let list = [];
 try{ list = JSON.parse(localStorage.getItem("hkmbti_history")||"[]") || []; }catch(e){ list = []; }
 if(!Array.isArray(list)) list = [];
-// 同一次測試重複儲存（例如分享卡再叫一次）→ 覆蓋最頂一條，唔會出現兩條
-const top = list[0];
-if(top && record.startedAt && top.startedAt && top.mbti === record.mbti && top.startedAt === record.startedAt){
-list[0] = record;
- } else {
 list.unshift(record);
- }
 list = list.slice(0, 5);
 localStorage.setItem("hkmbti_history", JSON.stringify(list));
 try{ recordTypeStat(window.lastResult); }catch(e){}
@@ -4154,34 +4140,11 @@ break;
  };
 requestAnimationFrame(function(){ requestAnimationFrame(go); });
 };
-window.refreshResumeBanner = function(){
-try{
-const wrap = document.getElementById("resumeBanner"), lbl = document.getElementById("resumeLabel");
-if(!wrap || !lbl) return;
-const p = window.loadProgress ? window.loadProgress() : null;
-if(!p || !p.version){ wrap.classList.add("hidden"); return; }
-const total = p.version === "bb" ? 10 : p.version === "advanced" ? 30 : 60;
-const at = Math.max(1, Math.min(total, (p.idx || 0) + 1));
-const verName = p.version === "bb" ? "BB 版" : p.version === "advanced" ? "進階版" : "生活版";
-lbl.innerText = verName + " · 上次做到第 " + at + " 題，撳返繼續";
-wrap.classList.remove("hidden");
- }catch(e){}
-};
-
-window.resumeTest = function(){
-try{
-const p = window.loadProgress ? window.loadProgress() : null;
-if(!p) return;
-window.startTestWithVersion(p.version, { idx:p.idx, answers:p.answers, startedAt:p.startedAt });
- }catch(e){}
-};
-
 window.goHome = function(){
 window._navStack = [];
 window._navSilent = true;
 show("home");
 try{ loadHistory(); }catch(e){}
-try{ refreshResumeBanner(); }catch(e){}
 window._navSilent = false;
 try{
 const snap = window._navSnap();
