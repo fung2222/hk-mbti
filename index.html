@@ -3474,12 +3474,13 @@ if(Math.abs(J-P) <= 1) closeAxes.push("J/P");
 if(Math.abs(T2-A2) <= 1) closeAxes.push("T/A");
  // 每軸兩邊嘅得分比例（0 分都冇就當 50%）
 const pctOf = function(a,b){ const t = a + b; return t > 0 ? Math.round(a * 100 / t) : 50; };
+const pair = function(a,b){ const x = pctOf(a,b); return [x, 100 - x]; };
 const pct = {
- EI:[pctOf(E,I), pctOf(I,E)],
- SN:[pctOf(S,N), pctOf(N,S)],
- TF:[pctOf(T,F), pctOf(F,T)],
- JP:[pctOf(J,P), pctOf(P,J)],
- TA:[pctOf(T2,A2), pctOf(A2,T2)]
+ EI:pair(E,I),
+ SN:pair(S,N),
+ TF:pair(T,F),
+ JP:pair(J,P),
+ TA:pair(T2,A2)
  };
 return {mbti: mbti + ta, score:{E,I,S,N,T,F,J,P,T2,A2}, pct: pct, version: state.version || "life", totalQ: max, closeAxes: closeAxes};
 };
@@ -3638,9 +3639,10 @@ let detailHtml = `
  <div class="flex gap-2 flex-wrap mt-3">
  ${t.tags.map(tag => `<span class="scenario-badge bg-soft text-ink">${tag}</span>`).join("")}
  </div>
+ ${pctBlock}
  <div class="mt-4 pt-4 border-t border-gray-100">
  <div class="sub-label">性格刻度</div>
- ${pctBlock}${scoreBars}${closeNote}
+ ${scoreBars}${closeNote}
  </div>
  ${prosCons}
  `;
