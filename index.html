@@ -655,7 +655,7 @@ const prof = JSON.parse(localStorage.getItem("hkmbti_profile")||"null");
 if(prof && prof.name) state.displayName = prof.name;
 if(prof && prof.nickname) state.nickname = prof.nickname;
  }catch(e){}
-window.startTestWithVersion(p.version, { idx:p.idx, answers:p.answers, startedAt:p.startedAt });
+window.startTestWithVersion(p.version, { idx:p.idx, answers:p.answers, startedAt:p.startedAt, deck:p.deck });
  }
  }
  }catch(e){}
@@ -1819,7 +1819,7 @@ window.QUESTIONS = [
  {l:"C", t:"試新嘢，或者自己配個新組合", v:{S: 0,N: 1}},
  {l:"D", t:"問埋朋友／同事叫咩先一齊決定", v:{S: 1,N: 0}}
  ]},
- {d:"S/N - 溫習", t:"溫習考試（DSE／公開試／执照試），你會？", o:[
+ {d:"S/N - 溫習", t:"溫習考試（DSE／公開試／執照試），你會？", o:[
  {l:"A", t:"past paper 由舊做到新，跟住標答", v:{S: 2,N: 0}},
  {l:"B", t:"先睇 YouTube 教學搞清楚個概念，再操卷", v:{S: 0,N: 2}},
  {l:"C", t:"先搞清楚概念，再用自己方法記", v:{S: 0,N: 1}},
@@ -2432,6 +2432,8 @@ try{ clearVersionUI(); }catch(e){}
  }
  // 淨係測試頁鎖下拉（防誤觸 reload 清走進度）
 document.body.classList.toggle("in-test", id === "test");
+// 測試期間連 html 都鎖 overscroll（body 鎖唔晒 Android Chrome 嘅下拉重新整理）
+try{ document.documentElement.style.overscrollBehaviorY = (id === "test") ? "contain" : ""; }catch(e){}
 try{ sessionStorage.setItem("hkmbti_last_section", id); }catch(e){}
 try{ sessionStorage.setItem("hkmbti_last_nav", JSON.stringify(window._navSnap())); }catch(e){}
  // Android / 瀏覽器返回掣：用 history 先唔會直接關 app
@@ -3270,7 +3272,14 @@ startTestWithVersion("life");
 window.startTestWithVersion = function(version, resume){
  // version: 'life' (60題), 'advanced' (30題), 'bb' (10題)
 window.state.version = version;
-const deck = buildDeck(version);
+// 續做（重新載入、關 app 再開、撳「上次未完成」）要用返同一副牌，
+// 否則已經答嘅答案會對唔上重抽嘅題目 → 結果唔準（2026-09-26 Roy 報下拉重新整理）
+let deck = null;
+if(resume && Array.isArray(resume.deck) && Array.isArray(resume.answers)
+   && resume.deck.length && resume.deck.length === resume.answers.length){
+deck = resume.deck;
+ }
+if(!deck) deck = buildDeck(version);
 window.state.deck = deck;
 window.state.maxQ = deck.length;
 if(resume && resume.idx >= 0 && resume.idx < deck.length && Array.isArray(resume.answers) && resume.answers.length === deck.length){
@@ -3302,6 +3311,8 @@ if(Date.now() - (p.savedAt || 0) > 7 * 24 * 60 * 60 * 1000) return null;
 if(!Array.isArray(p.answers)) return null;
 if(typeof p.idx !== "number") return null;
 if(typeof p.version !== "string") return null;
+// 舊格式（2026-09-26 之前）冇存副牌 → 續做會令答案對唔上題目 → 當無進度，重新開始好過計錯分
+if(!Array.isArray(p.deck) || p.deck.length !== p.answers.length) return null;
 return p;
  }catch(e){ return null; }
 };
@@ -3312,6 +3323,9 @@ const data = {
 version: state.version,
 idx: state.idx,
 answers: state.answers,
+// 副牌（題目＋變體文字＋選項次序）一定要存：牌係隨機抽，
+// 重新載入／下拉重新整理之後如果重抽，舊答案就會對唔上新題目 → 分數會錯
+deck: state.deck,
 startedAt: state.startedAt,
 savedAt: Date.now()
  };
@@ -4693,7 +4707,7 @@ if(prof.nickname) state.nickname = prof.nickname;
  }
  }catch(e){}
 state.pendingVersion = r.version;
-startTestWithVersion(r.version, { idx: r.idx, answers: r.answers, startedAt: r.startedAt });
+startTestWithVersion(r.version, { idx: r.idx, answers: r.answers, startedAt: r.startedAt, deck: r.deck });
  };
 if(drop) drop.onclick = () => {
 if(confirm("放棄上次進度？")){

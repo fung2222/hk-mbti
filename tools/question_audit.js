@@ -42,12 +42,11 @@ Q.forEach((q,i) => {
   if(spread >= 14) out.lens.push(`#${i+1} 長短差 ${spread}（${Math.min(...L)}–${Math.max(...L)}）`);
   if(Math.max(...L) > 24) out.lens.push(`#${i+1} 超長 ${Math.max(...L)} 字`);
   const all = [q.t].concat(texts).join(" ");
-  if(/[这为说还没个样时机东车们对错时间]/.test(all) && /[\u4e00-\u9fff]/.test(all)) {
-    // 簡體字抽樣檢查（只針對常用簡體特徵字）
-    const simp = ["这","为","说","还","没","个","样","时","东","车","们","对","错","经","与","体","后","发"];
-    const hits = simp.filter(c => all.includes(c));
-    if(hits.length) out.grammar.push(`#${i+1} 可能簡體：${hits.join("")}`);
-  }
+  // 簡體字檢查（2026-09-26 加「执」—— 真係喺「執照試」題目撞到過）
+  const simp = ["这","为","说","还","没","个","样","时","东","车","们","对","错","经","与","体","后","发",
+                "执","温","结","学","习","试","现","历","脑","谊","级","让","听","觉","过","来","钱","专","电","语"];
+  const hits = simp.filter(c => all.includes(c));
+  if(hits.length) out.grammar.push(`#${i+1} 可能簡體：${hits.join("")}`);
   if(!/？$/.test(String(q.t).trim())) out.grammar.push(`#${i+1} 問題冇「？」結尾`);
   if(/\s{2,}/.test(all)) out.grammar.push(`#${i+1} 連續空格`);
   if(/[\uff0c\uff01\uff1f]{2,}/.test(all)) out.grammar.push(`#${i+1} 重複標點`);
