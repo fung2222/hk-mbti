@@ -2206,7 +2206,7 @@ window.QUESTIONS = [
  {l:"A", t:"完全唔知下一步會點", v:{T: 2,A: 0}},
  {l:"B", t:"被否定，或者怕自己做錯傷害到人", v:{T: 1,A: 0}},
  {l:"C", t:"其實冇乜，壓力反而令我更想做", v:{T: 0,A: 1}},
- {l:"D", t:"其實唔多覺，好少因為呢啲唔安", v:{T: 0,A: 2}}
+ {l:"D", t:"其實唔多覺，好少因為呢啲嘢覺得不安", v:{T: 0,A: 2}}
  ]},
  {d:"T/A - 改變", t:"突然要搬屋或者轉工，你第一反應？", o:[
  {l:"A", t:"會焦慮幾日，夜夜諗細節", v:{T: 2,A: 0}},
@@ -2251,7 +2251,7 @@ window.QUESTIONS = [
  ]},
 
  // TA 軸 Step 3 +5 新場景
- {d:"T/A - 比較", t:"IG 見到朋友旅行大曬特曬，你會？", o:[
+ {d:"T/A - 比較", k:"T/A - 朋友旅行", t:"IG 見到朋友旅行大曬特曬，你會？", o:[
  {l:"A",t:"諗下自己幾時去",v:{T: 1,A: 1}}, {l:"B",t:"影響心情，覺得自己悶",v:{T: 2,A: 0}}, {l:"C",t:"當睇娛樂新聞",v:{T: 0,A: 2}}, {l:"D",t:"順手 like 就算",v:{T: 1,A: 1}}
  ]},
  {d:"T/A - 朋友病咗", t:"朋友病咗臥床，你會點？", o:[
@@ -2816,7 +2816,7 @@ window.Q_ALTS = {
  "同事喺背後講你你會？"
  ],
  "T/F - 朋友失業": [
- "朋友失業你會？",
+ "朋友失業，你會點做？",
  "朋友突然冇咗份工你會？"
  ],
  "T/F - 朋友炫耀": [
@@ -3012,8 +3012,12 @@ window.Q_ALTS = {
  "朋友評論你體型你會？"
  ],
  "T/A - 比較": [
- "以下邊樣最易令你心入面唔安？",
+ "以下邊樣最易令你心入面不安？",
  "咩情況最易令你覺得唔踏實？"
+ ],
+ "T/A - 朋友旅行": [
+ "朋友喺 IG 大曬旅行相，你會？",
+ "睇到朋友不停出旅行相，你會？"
  ],
  "T/F - 開會": [
  "開會入面有人意見好離地你會？",
@@ -3086,7 +3090,7 @@ picked = picked.concat(drawBalanced(dim, pool, Math.min(perDim, pool.length)));
 const deck = shuffleArr(picked).map(q => {
 const copy = {d:q.d, t:q.t, o:q.o.map(o => ({l:o.l, t:o.t, v:Object.assign({}, o.v)}))};
  // 題目變體
-const alts = window.Q_ALTS[q.d];
+const alts = window.Q_ALTS[q.k || q.d];
 if(alts && alts.length){
 const pool = [q.t].concat(alts);
 copy.t = pool[Math.floor(Math.random()*pool.length)];
