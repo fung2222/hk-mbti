@@ -31,7 +31,7 @@ INDEX = os.path.join(REPO, "index.html")
 AUDIO_Q = os.path.join(REPO, "audio", "q")
 AUDIO_O = os.path.join(REPO, "audio", "o")
 AUDIO_L = os.path.join(REPO, "audio", "l")
-MAP_JS = os.path.join(REPO, "voice-map.js")
+MAP_JS = os.path.join(REPO, "voice-data.js")
 MANIFEST = os.path.join(REPO, "tools", "voice-manifest.json")
 
 DEFAULT_VOICE = "zh-HK-HiuMaanNeural"

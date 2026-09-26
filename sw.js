@@ -4,7 +4,7 @@ const ASSETS = [
   "/hk-mbti/index.html",
   "/hk-mbti/data.js",
   "/hk-mbti/social.js",
-  "/hk-mbti/voice-map.js",
+  "/hk-mbti/voice-data.js",
   "/hk-mbti/manifest.json",
   "/hk-mbti/icon-192.png",
   "/hk-mbti/icon-512.png"
@@ -32,10 +32,12 @@ self.addEventListener("fetch", e => {
   // 用 Cache API 存 media 唔穩（seek／range），545 個檔亦會撐大 cache。
   if(url.pathname.endsWith(".mp3")) return;
 
-  // HTML documents: network-first (永遠取 fresh 解決 stale cache)
+  // HTML documents + 朗讀對照表: network-first (永遠取 fresh 解決 stale cache)
+  // voice-data.js 指住音檔路徑；佢一 stale 就會 404 → 跌返機械聲，所以一定要 network-first
   const isHTML = e.request.mode === "navigate" ||
                  (e.request.headers.get("accept") || "").includes("text/html") ||
-                 url.pathname.endsWith(".html");
+                 url.pathname.endsWith(".html") ||
+                 url.pathname.endsWith("voice-data.js");
 
   if(isHTML){
     e.respondWith(

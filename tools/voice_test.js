@@ -83,7 +83,7 @@ const sandbox = {
 sandbox.window = sandbox;
 vm.createContext(sandbox);
 vm.runInContext(block, sandbox);
-vm.runInContext(fs.readFileSync(path.join(REPO, "voice-map.js"), "utf8"), sandbox);
+vm.runInContext(fs.readFileSync(path.join(REPO, "voice-data.js"), "utf8"), sandbox);
 
 const Q_AUDIO = sandbox.Q_AUDIO || {};
 const O_AUDIO = sandbox.O_AUDIO || {};

@@ -141,7 +141,7 @@ GitHub Pages 做靜態檔，前端改用 `<audio>` 播；`speechSynthesis` 保�
 |---|---|
 | 音檔位置 | `audio/q/<key>.mp3`（題目）、`audio/o/<key>.mp3`（選項**文字**）、`audio/l/<key>.mp3`（字母 A–D） |
 | 檔名 | `sha1(voice|rate|文字)[:12]` → 換聲／改速自動出新檔，唔怕 HTTP cache 留舊聲 |
-| 對照表 | `voice-map.js`（`window.Q_AUDIO` / `O_AUDIO` / `L_AUDIO`，key = 題庫原本嘅字） |
+| 對照表 | `voice-data.js`（`window.Q_AUDIO` / `O_AUDIO` / `L_AUDIO`，key = 題庫原本嘅字）；`sw.js` 對佢 network-first |
 | 生成器 | `tools/gen_voice.py`（edge-tts，venv 喺 `/opt/data/venvs/edge-tts`） |
 | 測試 | `node tools/voice_test.js`（覆蓋率／檔案／播放次序／打亂迴歸／fallback／stop／關掉） |
 | 內容 | 題目 327（109 正題 + 218 `Q_ALTS` 變體）＋ 選項 436 ＋ 字母 4 |
