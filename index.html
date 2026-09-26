@@ -3424,6 +3424,9 @@ try{ loadHistory(); }catch(e){}
 };
 
 // 換字型之後，幫舊紀錄嘅縮圖重畫一次（用最新字型），唔需要用戶做任何事
+// 分享卡字體：同 app 網頁同一套（iPhone PingFang HK / Android Noto Sans HK）
+window.CARD_FS = '"PingFang HK","Noto Sans HK","Hiragino Sans CNS","Microsoft JhengHei",sans-serif';
+window.CARD_ARCHIVO = '"Archivo Black", Georgia, "Times New Roman", serif';
 window.CARD_FONT_ID = "archivo-ta2";   // 改字型／卡內容時改呢個代號 → 舊紀錄會自動重畫
 window.refreshRecordCards = async function(){
 try{
@@ -3633,18 +3636,22 @@ const dateLabel = now.getFullYear() + "." + String(now.getMonth()+1).padStart(2,
 
  // 品牌名：同 icon 同一水平中線，字級收細（42 → 34）
 ctx.fillStyle = "white";
-ctx.font = "bold 34px sans-serif";
 ctx.textAlign = "left";
 ctx.textBaseline = "middle";
-ctx.fillText("港式 MBTI", iconX + iconSize + 20, headerMidY + 3);
+const _brandX = iconX + iconSize + 20;
+ctx.font = "bold 34px " + window.CARD_FS;
+ctx.fillText("港式 ", _brandX, headerMidY + 3);
+const _brandW = ctx.measureText("港式 ").width;
+ctx.font = "34px " + window.CARD_ARCHIVO;
+ctx.fillText("MBTI", _brandX + _brandW, headerMidY + 3);
 
  // 右側：日期 + 版本，右對齊同一條邊（660），上下對稱 icon 中線
 ctx.textAlign = "right";
 ctx.fillStyle = "rgba(255,255,255,0.95)";
-ctx.font = "bold 23px sans-serif";
+ctx.font = "bold 23px " + window.CARD_FS;
 ctx.fillText(dateLabel, RIGHT, headerMidY - 15);
 ctx.fillStyle = "rgba(255,255,255,0.68)";
-ctx.font = "bold 20px sans-serif";
+ctx.font = "bold 20px " + window.CARD_FS;
 ctx.fillText(versionLabel, RIGHT, headerMidY + 17);
  // header 底下幼分隔線（同 grid 同寬）
 ctx.fillStyle = "rgba(255,255,255,0.16)";
@@ -3677,7 +3684,7 @@ resolve();
  };
 iconImg.onerror = function(){
 ctx.fillStyle = "white";
-ctx.font = "bold 40px sans-serif";
+ctx.font = "bold 40px " + window.CARD_FS;
 ctx.textAlign = "center";
 ctx.textBaseline = "middle";
 ctx.fillText("港", iconX + iconSize/2, headerMidY);
@@ -3711,17 +3718,17 @@ ctx.textAlign = "center";
 const who = [window.state.displayName, window.state.nickname].filter(Boolean).join(" · ");
 if(who){
 ctx.fillStyle = "rgba(255,255,255,0.9)";
-ctx.font = "bold 40px sans-serif"; // v1.7.8 加強：30 → 40
+ctx.font = "bold 40px " + window.CARD_FS; // v1.7.8 加強：30 → 40
 ctx.fillText(who, 360, 230);
  }
 ctx.fillStyle = "rgba(255,255,255,0.8)";
-ctx.font = "28px sans-serif";
+ctx.font = "28px " + window.CARD_FS;
 ctx.fillText("你是", 360, 355);
  // 4 字母（大）
 ctx.fillStyle = "white";
  // v1.9.1: 4 字母用 Archivo Black；太闊會自動收窄（最多 600px，確保唔會出界）
 const _codeStr = window.lastResult.substring(0,4);
-const _codeFam = '"Archivo Black", Georgia, "Times New Roman", serif';
+const _codeFam = window.CARD_ARCHIVO;
 let _codeFont = window.CARD_CODE_FONT;
 if(!_codeFont){
 const _base = 240, _maxW = 600;
@@ -3733,10 +3740,10 @@ _codeFont = _w > _maxW ? ("bold " + Math.round(_base * _maxW / _w) + "px " + _co
 ctx.font = _codeFont;
 ctx.fillText(_codeStr, 360, 560);
  // 性格名
-ctx.font = "bold 52px sans-serif";
+ctx.font = "bold 52px " + window.CARD_FS;
 ctx.fillText(t.name, 360, 690);
  // 港式 slogan
-ctx.font = "italic 32px sans-serif";
+ctx.font = "30px " + window.CARD_FS;
 ctx.fillStyle = "rgba(255,255,255,0.85)";
 ctx.fillText("「" + t.slogan + "」", 360, 775);
  // T/A 情緒指標（第 5 條軸）：細 chip
@@ -3744,7 +3751,7 @@ const _taSuf = String(window.lastResult).slice(4);
 if(_taSuf === "-A" || _taSuf === "-T"){
 const _taLabel = _taSuf === "-A" ? "自信型 A" : "敏感型 T";
 ctx.textAlign = "center";
-ctx.font = "bold 30px sans-serif";
+ctx.font = "bold 28px " + window.CARD_FS;
 const _tw = ctx.measureText(_taLabel).width + 68;
 ctx.fillStyle = "rgba(255,255,255,0.16)";
 cardRoundRect(ctx, 360 - _tw/2, 842, _tw, 54, 27);
@@ -3754,16 +3761,17 @@ ctx.fillText(_taLabel, 360, 878);
  // 3 個分數
 const scores = t.score;
 ctx.fillStyle = "white";
-ctx.font = "24px sans-serif";
 ctx.textAlign = "left";
 let y = 960;
 for(let i=0;i<3;i++){
 const parts = scores[i].split("/");
 const label = parts[0];
 const value = parts[0].match(/\d+/)[0] + "/10";
-ctx.fillStyle = "rgba(255,255,255,0.8)";
+ctx.font = "24px " + window.CARD_FS;
+ctx.fillStyle = "rgba(255,255,255,0.78)";
 ctx.fillText(label, 60, y);
 ctx.textAlign = "right";
+ctx.font = "bold 26px " + window.CARD_FS;
 ctx.fillStyle = "white";
 ctx.fillText(value, 660, y);
 ctx.fillStyle = "rgba(255,255,255,0.2)";
@@ -3779,7 +3787,7 @@ const tagPal = window.getPalette(code4);
 const v1 = (tagPal.vibes && tagPal.vibes[0]) || "16型";
 const v2 = (tagPal.vibes && tagPal.vibes[1]) || "香港人";
 ctx.fillStyle = "rgba(255,255,255,0.55)";
-ctx.font = "bold 24px sans-serif";
+ctx.font = "22px " + window.CARD_FS;
 ctx.textAlign = "center";
 ctx.fillText(`#港式MBTI #${code4} #${v1} #${v2}`, 360, 1190);
  // Set 落 img tag
