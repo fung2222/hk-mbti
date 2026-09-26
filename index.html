@@ -627,6 +627,22 @@ return true;
  }catch(e){ window._lastErr = "pendingType: " + (e && e.message ? e.message : e); }
 return false;
 };
+// 選單連結（關於／光譜／百科／相處／拍拖…）嘅第二條渠道：
+// 由其他頁面嘅 ./#xxx 連結跳入嚟，唔靠 URL 解析都開得到
+window._openPendingScreen = function(){
+try{
+const raw = sessionStorage.getItem("hkmbti_pending_screen");
+if(!raw) return false;
+sessionStorage.removeItem("hkmbti_pending_screen");
+let o = null;
+try{ o = JSON.parse(raw); }catch(e){ o = null; }
+if(!o || !o.h) return false;
+if(o.t && (Date.now() - o.t) > 60000) return false;
+window._openViaHash = true;   // 由另一頁跳入嚟：replaceState，唔好 push
+return !!window._openDeepLink(o.h);
+ }catch(e){ window._lastErr = "pendingScreen: " + (e && e.message ? e.message : e); }
+return false;
+};
 window._openDeepLink = function(hashStr){
 try{
 const hash = hashStr || "";
@@ -700,13 +716,17 @@ alert(lines.join("\n"));
 };
 // hash 變更（同一文件內錨點跳轉）／bfcache 還原（load 唔會再跑）都要補做深層連結
 window.addEventListener("hashchange", function(){
-try{ if(!window._openDeepLink(window.location.hash || "")) window._openPendingType(); }catch(e){}
+try{
+if(!window._openDeepLink(window.location.hash || "")){
+if(!window._openPendingScreen()) window._openPendingType();
+ }
+ }catch(e){}
 try{ setTimeout(function(){ window._navDiag(); }, 1500); }catch(e){}
 });
 window.addEventListener("pageshow", function(ev){
 try{
 // bfcache 還原：load handler 唔會再跑，兩個渠道都要補做
-if(window._openDeepLink(window.location.hash || "")){} else { window._openPendingType(); }
+if(window._openDeepLink(window.location.hash || "")){} else if(!window._openPendingScreen()){ window._openPendingType(); }
  }catch(e){}
 try{ setTimeout(function(){ window._navDiag(); }, 1500); }catch(e){}
 });
@@ -730,6 +750,7 @@ openedHash = window._openDeepLink(hash);
  }
 }
 try{ setTimeout(function(){ window._navDiag(); }, 1800); }catch(e){}
+if(!openedHash && window._openPendingScreen()){ openedHash = true; }
 if(!openedHash && window._openPendingType()){ openedHash = true; }
 if(!openedHash && pendingRec && typeof window.viewHistoryResult === "function"){
 // 由 record.html 跳入嚟：用 replaceState 取代當前 history 一筆，

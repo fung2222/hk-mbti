@@ -203,6 +203,19 @@ if(p) p.classList.remove('open');
 document.addEventListener('click', function(e){
 if(!e.target.closest('.hero-popover') && !e.target.closest('.hero-menu')) closeHeroMenu();
 });
+// 跨頁跳轉第二條渠道（同眼掣睇結果／人格圖一樣）：任何 ./#xxx 連結都寫低意圖。
+// 主頁 load / hashchange / bfcache 還原三個入口都會試，hash 唔通都補得到位。
+// 注意：一定要 capture 階段 —— 選單連結喺 .hero-popover 裏面，嗰度有
+// onclick="event.stopPropagation()"，bubble 階段嘅 document listener 收唔到。
+document.addEventListener('click', function(e){
+try{
+const t = e.target;
+const a = (t && t.closest) ? t.closest('a[href^="./#"]') : null;
+if(!a) return;
+const h = String(a.getAttribute("href") || "").replace(/^\.\//, "");
+if(h) sessionStorage.setItem("hkmbti_pending_screen", JSON.stringify({ h: h, t: Date.now() }));
+ }catch(err){}
+}, true);
 // 載入 localStorage
 function loadHistory(){
 let arr = [];

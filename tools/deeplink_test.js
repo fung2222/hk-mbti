@@ -53,6 +53,7 @@ function load(opts){
           window.localStorage.setItem("hkmbti_last_result", JSON.stringify(store[0]));
           window.sessionStorage.setItem("hkmbti_last_section", "home");
           if(opts.pending) window.sessionStorage.setItem("hkmbti_pending_record", JSON.stringify(opts.pending));
+          if(opts.pendingScreen) window.sessionStorage.setItem("hkmbti_pending_screen", JSON.stringify(Object.assign({ t: Date.now() }, opts.pendingScreen)));
           if(opts.pendingType) window.sessionStorage.setItem("hkmbti_pending_type", JSON.stringify(Object.assign({ t: Date.now() }, opts.pendingType)));
           if(opts.navlog) window.sessionStorage.setItem("hkmbti_navlog", JSON.stringify(Object.assign({ t: Date.now(), build: "d1" }, opts.navlog)));
         }catch(e){}
@@ -60,6 +61,25 @@ function load(opts){
     });
     setTimeout(() => resolve({ w: dom.window, alerts, errs }), opts.wait || 2300);   // 等埋 1.8s 診斷
   });
+}
+
+
+// 載入其他頁（record/stats/tee/privacy）用嚟測選單連結
+const PAGE_CACHE = {};
+function pageHtml(file){
+  if(!PAGE_CACHE[file]) PAGE_CACHE[file] = inlineLocal(fs.readFileSync(path.join(REPO, file), "utf8"));
+  return PAGE_CACHE[file];
+}
+function loadOther(file){
+  const dom = new JSDOM(pageHtml(file), {
+    url: BASE + file, runScripts: "dangerously", virtualConsole: new VirtualConsole(),
+    beforeParse(w){
+      w.alert = () => {}; w.confirm = () => false;
+      stubCanvas(w);
+      try{ w.localStorage.setItem("hkmbti_history", JSON.stringify(store)); }catch(e){}
+    },
+  });
+  return dom.window;
 }
 
 const visible = w => ["home","type","about","spectrum","hub","social","romance","method","privacy","result"]
@@ -179,6 +199,30 @@ const visible = w => ["home","type","about","spectrum","hub","social","romance",
     if(!ok) bad++;
     console.log(`  #type=ZZZZ（冇 pending）→ 實際 ${w._showing}，有冇提示：${said ? "✓ 有" : "✗ 靜靜死"}`);
     w.close();
+  }
+  console.log("\n【6】選單連結第二渠道（關於／光譜／百科／相處／拍拖）");
+  {
+    const { w } = await load({ pendingScreen: { h: "#hub" } });
+    const ok = w._showing === "hub";
+    if(!ok) bad++;
+    console.log(`  淨係 pending_screen → 實際 ${w._showing} ${ok ? "✓" : "✗"}`);
+    w.close();
+  }
+  {
+    const pages = ["record.html", "stats.html", "tee.html", "privacy.html"];
+    const out = [];
+    for(const f of pages){
+      const w = loadOther(f);
+      const a = w.document.querySelector('a[href="./#hub"]');
+      let got = "";
+      if(a){ a.dispatchEvent(new w.MouseEvent("click", { bubbles: true })); }
+      try{ const raw = w.sessionStorage.getItem("hkmbti_pending_screen"); got = raw ? JSON.parse(raw).h : ""; }catch(e){}
+      const ok = got === "#hub";
+      if(!ok) bad++;
+      out.push(`${f}:${ok ? "✓" : "✗" + (a ? "冇寫旗標" : "冇連結")}`);
+      w.close();
+    }
+    console.log(`  撳「性格百科」連結會唔會寫低意圖 → ${out.join("  ")}`);
   }
   console.log(bad ? `\n✗ ${bad} 項唔合格` : "\n✓ 全部深層連結都開到對應畫面");
   process.exit(bad ? 1 : 0);
