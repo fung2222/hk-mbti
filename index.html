@@ -2372,7 +2372,7 @@ window._histDepth = (window._histDepth || 0) + 1;
 // 開機即刻 seed 一筆 home state：令系統返回鍵（Android 手勢／實體鍵）第一次撳都有得褪。
 // 冇呢筆嘅話，第一次 show() 只會 replaceState（見 show() 內 _histSeeded 分支），
 // 結果 history 裏面冇上一頁 → 撳返回會「停留冇反應」（2026-09-26 Roy 報嘅計分方法分頁 bug）。
-// ⚠️ 一定要 setTimeout 0：_navSnap 喺呢個位之後才定義，直接叫會 throw 被 catch 食咗 → seed 唔生效。
+// 注意：一定要 setTimeout 0：_navSnap 喺呢個位之後才定義，直接叫會 throw 被 catch 食咗 → seed 唔生效。
 setTimeout(function(){
 try{
 if(!window._histSeeded){
