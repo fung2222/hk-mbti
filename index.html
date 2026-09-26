@@ -756,7 +756,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" class="page-back" onclick="goBack()">返回</button>
  <h1>MBTI 性格光譜</h1>
  </div>
- <p class="page-hero-sub">E/I · S/N · T/F · J/P 四個維度</p>
+ <p class="page-hero-sub">E/I · S/N · T/F · J/P 四個維度 + T/A 情緒指標</p>
  </div>
 
  <div class="card p-5 mb-4">
@@ -798,6 +798,15 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <br><span class="font-bold text-accent">P（Prospecting 感知）</span>：鍾意彈性、即興。佢哋 deadline 前一晚先衝刺，房間「自己嘅秩序」。
  </div>
  <div class="text-[10px] text-gray-500 mt-1">唔係「P 型 = 散漫」— P 只係「鍾意拖到最後一刻先做」</div>
+ </div>
+
+ <div class="border-l-4 pl-3 py-1" style="border-color:#8A7A5A">
+ <div class="text-xs font-bold mb-1">額外指標：T vs A <span class="text-gray-400">（情緒反應）</span></div>
+ <div class="text-[11px] text-gray-700 leading-relaxed">
+ <span class="font-bold text-accent">T（Turbulent 敏感）</span>：情緒起伏較大，容易自省、對自己要求高，對壓力比較敏感。結果會寫「敏感型」。
+ <br><span class="font-bold text-accent">A（Assertive 自信）</span>：情緒較穩定，對自己嘅決定有信心，抗壓能力較高。結果會寫「自信型」。
+ </div>
+ <div class="text-[10px] text-gray-500 mt-1">呢個係後加嘅第 5 個指標，唔屬於原本 4 個字母；同一型號都可以 T 或者 A</div>
  </div>
  </div>
 
@@ -1470,6 +1479,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  <div class="text-center mb-2 hidden" id="taBadgeWrap">
  <span id="taBadge" class="inline-block text-[11.5px] font-bold rounded-full px-3 py-1" style="background:rgba(212,169,95,.10);color:#6B5A3A"></span>
+ <div id="taNote" class="text-[10px] text-gray-500 mt-1.5"></div>
  </div>
  <div class="text-center mb-4">
  <div class="text-xs text-gray-500">完成時間：<span id="finishTime">5 分鐘</span></div>
@@ -3323,7 +3333,7 @@ renderQ();
 };
 
 window.confirmExit = function(){
-if(confirm("離開測試？\n\n下次再入 app 可以撳『上次做到第 N 題』續做。")){
+if(confirm("離開測試？\n\n下次入 app，主頁會出『上次未完成』卡，撳「開始」就續做。")){
 clearVersionUI();
 goHome();
  }
@@ -3463,6 +3473,8 @@ const taW = document.getElementById("taBadgeWrap"), taB = document.getElementByI
 const code4 = String(r.mbti || "").substring(0,4), taSuffix = String(r.mbti || "").slice(4);
 if(taW && taB){
 taB.innerText = code4 + " · " + (taSuffix === "-A" ? "自信型" : "敏感型");
+const taN = document.getElementById("taNote");
+if(taN) taN.innerText = taSuffix === "-A" ? "情緒指標 T/A：自信型較穩定、抗壓" : "情緒指標 T/A：敏感型易自省、起伏較大";
 taW.classList.remove("hidden");
  }
  }catch(e){}
