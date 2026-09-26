@@ -506,6 +506,28 @@ display:inline-block;background:#2a4a3a;color:#a8e6c8;
 font-size:10px;font-weight:700;padding:3px 8px;
 border-radius:10px;margin-left:6px;letter-spacing:0.04em;
 }
+
+/* ---- 計分方法同限制（app 感：幼分隔線、大字、留空、色點）---- */
+.mth-lead{margin:2px 0 4px;font-size:15.5px;line-height:1.9;color:#3F3A34;}
+.mth-h{margin:30px 0 16px;padding-top:24px;border-top:1px solid rgba(26,26,26,.07);font-size:13px;font-weight:800;color:var(--ink);letter-spacing:.14em;}
+.mth-axes{display:flex;flex-direction:column;gap:16px;}
+.mth-axis{display:flex;gap:14px;align-items:flex-start;}
+.mth-key{flex:0 0 52px;font-size:19px;font-weight:900;letter-spacing:.02em;line-height:1.35;color:var(--c);}
+.mth-key i{font-style:normal;font-weight:500;opacity:.4;padding:0 1px;}
+.mth-axis p{margin:0;font-size:15px;line-height:1.85;color:#3F3A34;}
+.mth-steps{display:flex;flex-direction:column;gap:14px;}
+.mth-step{display:flex;gap:14px;align-items:flex-start;}
+.mth-step p{margin:0;font-size:15px;line-height:1.85;color:#3F3A34;}
+.mth-num{flex:0 0 24px;text-align:right;font-size:22px;font-weight:900;line-height:1.25;color:rgba(26,26,26,.16);}
+.mth-notes{display:flex;flex-direction:column;gap:12px;}
+.mth-notes p,.mth-notes-p{margin:0;font-size:15px;line-height:1.85;color:#3F3A34;}
+.mth-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.mth-stat{background:var(--soft);border-radius:1rem;padding:15px 14px 16px;}
+.mth-n{display:block;font-size:21px;font-weight:900;line-height:1.15;color:var(--ink);}
+.mth-l{display:block;margin-top:7px;font-size:12px;line-height:1.65;color:#6E665B;}
+.mth-limits{background:var(--soft);border-radius:1rem;padding:18px 16px;display:flex;flex-direction:column;gap:13px;}
+.mth-limits p{margin:0;font-size:14.5px;line-height:1.85;color:#3F3A34;}
+#method{padding-bottom:28px;}
 </style>
 </head>
 <body class="js-boot">
@@ -1181,72 +1203,52 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <p class="page-hero-sub">我哋點計分、點出題，同埋有咩做唔到</p>
  </div>
 
- <div class="card p-5 mb-4">
- <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>呢個測驗係咩</div>
- <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
- <p>港式 MBTI 係用廣東話情境題寫嘅「傾向測驗」，框架參考 MBTI 嘅四個維度，加 16Personalities 提出嘅第五個指標（T/A 情緒反應）。</p>
- <p>我哋唔係官方 MBTI 認證產品，亦唔係心理診斷工具。</p>
- </div>
+ <p class="mth-lead">港式 MBTI 係用廣東話情境題寫嘅「傾向測驗」：框架參考 MBTI 四個維度，再加 16Personalities 提出嘅第五個指標（T/A）。<br>我哋唔係官方認證產品，亦唔係心理診斷工具。</p>
+
+ <h2 class="mth-h">五條軸</h2>
+ <div class="mth-axes">
+ <div class="mth-axis" style="--c:#E89A6B"><div class="mth-key">E<i>/</i>I</div><p>邊度攞能量 — 同外界互動，定返自己內在世界。</p></div>
+ <div class="mth-axis" style="--c:#A86B7C"><div class="mth-key">S<i>/</i>N</div><p>認知方式 — 睇事實同經驗，定睇可能性同模式。</p></div>
+ <div class="mth-axis" style="--c:#3A4F6B"><div class="mth-key">T<i>/</i>F</div><p>決策方式 — 用邏輯原則，定用價值同人情。</p></div>
+ <div class="mth-axis" style="--c:#6B5A8A"><div class="mth-key">J<i>/</i>P</div><p>生活態度 — 有計劃有結構，定彈性即興。</p></div>
+ <div class="mth-axis" style="--c:#8A7A5A"><div class="mth-key">T<i>/</i>A</div><p>情緒反應 — T（Turbulent 敏感）起伏較大、易自省；A（Assertive 自信）較穩定、抗壓。呢個係後加指標，唔屬原本四個字母。</p></div>
  </div>
 
- <div class="card p-5 mb-4">
- <div class="text-xs tracking-widest brand-gold font-bold mb-2">5 條軸</div>
- <div class="space-y-2 text-sm text-gray-700 leading-relaxed">
- <p><span class="font-bold text-ink">E / I</span>：邊度攞能量 — 外界互動，定自己內在世界。</p>
- <p><span class="font-bold text-ink">S / N</span>：認知方式 — 睇事實同經驗，定睇可能性同模式。</p>
- <p><span class="font-bold text-ink">T / F</span>：決策方式 — 用邏輯原則，定用價值同人情。</p>
- <p><span class="font-bold text-ink">J / P</span>：生活態度 — 有計劃有結構，定彈性即興。</p>
- <p><span class="font-bold text-ink">T / A</span>：情緒反應 — T（Turbulent 敏感）起伏較大、易自省；A（Assertive 自信）較穩定、抗壓。呢個係後加嘅指標，唔屬原本 MBTI 四個字母。</p>
- </div>
+ <h2 class="mth-h">點計分</h2>
+ <div class="mth-steps">
+ <div class="mth-step"><span class="mth-num">1</span><p>每題 4 個選項，兩邊各 2 個。每個選項最多 2 分，同一題兩邊總分一定相等。</p></div>
+ <div class="mth-step"><span class="mth-num">2</span><p>每條軸分開加總，分數高嗰邊就係你嘅字母。</p></div>
+ <div class="mth-step"><span class="mth-num">3</span><p>打和：先睇邊一邊答得頻密；仲打和就用一次亂數（同一份答案永遠出同一個結果）。</p></div>
+ <div class="mth-step"><span class="mth-num">4</span><p>結果頁嘅百分比＝該軸兩邊嘅得分比例，50% 即中間。</p></div>
  </div>
 
- <div class="card p-5 mb-4">
- <div class="text-xs tracking-widest brand-gold font-bold mb-2">點計分</div>
- <div class="space-y-2 text-sm text-gray-700 leading-relaxed">
- <p>一、每題 4 個選項，兩邊各 2 個。每個選項最多 2 分，同一題兩邊嘅總分一定相等。</p>
- <p>二、每條軸分開加總，分數高嗰邊就係你嘅字母。</p>
- <p>三、打和：先睇邊一邊「答得頻密」；仲打和就用一次亂數決定（同一份答案永遠出同一個結果）。</p>
- <p>四、結果頁嘅百分比，係該軸兩邊嘅得分比例（50% 即中間）。</p>
- </div>
- </div>
-
- <div class="card p-5 mb-4">
- <div class="text-xs tracking-widest brand-gold font-bold mb-2">點出題</div>
- <div class="space-y-2 text-sm text-gray-700 leading-relaxed">
- <p>三個版本：10 題、30 題、60 題；每條軸分別抽 2、6、12 題。</p>
- <p>抽題時會保持兩邊平衡，所以每次玩都隨機，但唔會偏埋一邊。</p>
- <p>同一條題目有機會用另一個問法出現（意思一樣，選項一樣）。</p>
+ <h2 class="mth-h">點出題</h2>
+ <div class="mth-notes">
+ <p>三個版本：10 題、30 題、60 題 — 每條軸分別抽 2、6、12 題。</p>
+ <p>抽題時保持兩邊平衡：每次玩都隨機，但唔會偏埋一邊。</p>
+ <p>同一條題目有機會用另一個問法出現（意思一樣、選項一樣）。</p>
  <p>題目越多，結果越穩定：60 題 &gt; 30 題 &gt; 10 題。</p>
  </div>
+
+ <h2 class="mth-h">我哋做過嘅檢查</h2>
+ <div class="mth-stats">
+ <div class="mth-stat"><span class="mth-n">112</span><span class="mth-l">條題目全部左右對稱</span></div>
+ <div class="mth-stat"><span class="mth-n">47.5–51.3%</span><span class="mth-l">隨機亂答時每個字母（理想 50%）</span></div>
+ <div class="mth-stat"><span class="mth-n">4,800 次</span><span class="mth-l">模擬一致作答：0% 錯型</span></div>
+ <div class="mth-stat"><span class="mth-n">24 字</span><span class="mth-l">最長選項；冇重複、冇同分</span></div>
  </div>
 
- <div class="card p-5 mb-4">
- <div class="text-xs tracking-widest brand-gold font-bold mb-2">我哋做過嘅檢查</div>
- <div class="space-y-2 text-sm text-gray-700 leading-relaxed">
- <p>112 條題目全部左右對稱（2:2、兩邊總分相等）。</p>
- <p>模擬「完全隨機作答」：每個字母 47.5–51.3%（理想係 50%）。</p>
- <p>模擬「答案一致」嘅受試者 4,800 次：0% 出錯型。</p>
- <p>選項最長 24 字；冇重複選項、冇同一題兩個選項同分。</p>
- </div>
- </div>
-
- <div class="card p-5 mb-4">
- <div class="text-xs tracking-widest brand-gold font-bold mb-2">限制（請留意）</div>
- <div class="space-y-2 text-sm text-gray-700 leading-relaxed">
- <p>一、我哋冇做真人重測研究，亦冇同行評審驗證。上面嗰啲檢查只證明「計分公平、唔會系統性偏一邊」，唔等於「已通過心理測量學驗證」。</p>
- <p>二、結果反映你今日嘅自我描述，會隨心情同情境改變。文獻顯示：連官方收費 MBTI，4–6 星期後重測都有約一半人會換至少一個字母。</p>
- <p>三、唔可以用嚟斷症、唔應該用嚟招聘或者判斷其他人。</p>
- <p>四、網站上嘅分佈百分比係參考基線，唔係本站收集嘅數據。</p>
- <p>五、自我報告偏差（人會想表現好啲）冇辦法完全消除，我哋只可以盡量將兩邊寫得同樣體面。</p>
- </div>
+ <h2 class="mth-h">限制（請留意）</h2>
+ <div class="mth-limits">
+ <p>我哋冇做真人重測研究，亦冇同行評審驗證。上面嗰啲檢查只證明「計分公平、唔會系統性偏一邊」，唔等於已通過心理測量學驗證。</p>
+ <p>結果反映你今日嘅自我描述，會隨心情同情境改變。文獻顯示：連官方收費 MBTI，4–6 星期後重測都有約一半人會換至少一個字母。</p>
+ <p>唔可以用嚟斷症，亦唔應該用嚟招聘或者判斷其他人。</p>
+ <p>網站上嘅分佈百分比係參考基線，唔係本站收集嘅數據。</p>
+ <p>自我報告偏差（人會想表現好啲）冇辦法完全消除，我哋只可以盡量將兩邊寫得同樣體面。</p>
  </div>
 
- <div class="card p-5 mb-4">
- <div class="text-xs tracking-widest brand-gold font-bold mb-2">私隱</div>
- <div class="space-y-2 text-sm text-gray-700 leading-relaxed">
- <p>測試答案同紀錄只存喺你自己部電話（瀏覽器儲存），唔會上傳。清除瀏覽器資料就會冇咗，我哋冇辦法幫你救返。</p>
- </div>
- </div>
+ <h2 class="mth-h">私隱</h2>
+ <p class="mth-notes-p">測試答案同紀錄只存喺你自己部電話（瀏覽器儲存），唔會上傳。清除瀏覽器資料就會冇咗。</p>
  </section>
 
  <section id="home" class="fade-up">
