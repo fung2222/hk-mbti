@@ -4145,6 +4145,7 @@ window._navStack = [];
 window._navSilent = true;
 show("home");
 try{ loadHistory(); }catch(e){}
+try{ refreshResumeBanner(); }catch(e){}
 window._navSilent = false;
 try{
 const snap = window._navSnap();
