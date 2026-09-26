@@ -615,6 +615,9 @@ if(pend){
 sessionStorage.removeItem("hkmbti_pending_record");
 const p = JSON.parse(pend);
 if(p && typeof window.viewHistoryResult === "function"){
+// 由 record.html 跳入嚟：用 replaceState 取代當前 history 一筆，
+// 唔好 push（push 會留低一筆「主頁」→ 撳手機返回鍵會褪去主頁，唔係返上一頁）
+window._openViaHash = true;
 window.viewHistoryResult((p.id === undefined || p.id === null || p.id === "") ? p.i : p.id);
 openedHash = true;
  }

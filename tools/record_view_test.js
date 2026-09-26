@@ -151,6 +151,34 @@ function judge(dom, alerts){
     dom.window.close();
   }
 
+  console.log("\n【渠道 4】手機返回鍵（history）");
+  {
+    const store = STORES["5 條（正常）"];
+
+    // (a) 由 record.html 跳入睇結果（sessionStorage 渠道）
+    //     必須 replaceState：唔可以喺 history 留低一筆「主頁」，
+    //     否則手機返回鍵會褪去主頁，而唔係返上一頁（record.html）。2026-09-26 Roy 報。
+    const { dom } = await loadPage(INDEX, store, { pending: { id: store[1].id, i: 1 } });
+    const w = dom.window;
+    const st = w.history.state || {};
+    const okArrive = w._showing === "result" && st.id === "result" && (w._histDepth || 0) === 0;
+    console.log(`  由記錄頁入結果 → history.state.id=${st.id} depth=${w._histDepth} → ` +
+      (okArrive ? "✓ 返回鍵返上一頁（record.html）" : "✗ 會褪去主頁，唔係返上一頁"));
+    if(!okArrive) fail("由記錄頁入結果嘅 history");
+    dom.window.close();
+
+    // (b) 對照：由主頁內部開結果 → 應該 push（返回鍵返主頁）＝正確行為
+    const { dom: d2 } = await loadPage(INDEX, store, { wait: 1100 });
+    const w2 = d2.window;
+    w2.viewHistoryResult(store[2].id);
+    await new Promise(r => setTimeout(r, 250));
+    const st2 = w2.history.state || {};
+    const okInApp = w2._showing === "result" && (w2._histDepth || 0) >= 1 && st2.id === "result";
+    console.log(`  主頁內部開結果 → depth=${w2._histDepth} → ${okInApp ? "✓ 返回鍵返主頁（正確）" : "✗"}`);
+    if(!okInApp) fail("主頁內部開結果嘅 history");
+    d2.window.close();
+  }
+
   console.log(bad ? `\n✗ ${bad} 項唔合格` : "\n✓ 全部通過（兩個渠道都通、冇眼掣會靜靜死、出卡壞都睇到結果）");
   process.exit(bad ? 1 : 0);
 })();
