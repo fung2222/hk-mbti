@@ -1477,12 +1477,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="mx-auto mb-4 fade-up" style="width:360px; max-width:100%;">
  <img id="shareCardImg" class="w-full rounded-2xl shadow-lg" alt="分享卡" style="display:block;">
  </div>
- <div class="text-center mb-2 hidden" id="taBadgeWrap">
- <span id="taBadge" class="inline-block text-[11.5px] font-bold rounded-full px-3 py-1" style="background:rgba(212,169,95,.10);color:#6B5A3A"></span>
- <div id="taNote" class="text-[10px] text-gray-500 mt-1.5"></div>
- </div>
  <div class="text-center mb-4">
- <div class="text-xs text-gray-500">完成時間：<span id="finishTime">5 分鐘</span></div>
+ <div class="text-xs text-gray-500"><span id="resultTaInline"></span><span id="taDot" class="hidden">　·　</span>完成時間：<span id="finishTime">5 分鐘</span></div>
  </div>
  <div class="mb-2 px-1">
  <div class="grid grid-cols-3 gap-2 max-w-sm mx-auto">
@@ -3428,7 +3424,7 @@ try{ loadHistory(); }catch(e){}
 };
 
 // 換字型之後，幫舊紀錄嘅縮圖重畫一次（用最新字型），唔需要用戶做任何事
-window.CARD_FONT_ID = "archivo";   // 改字型時改呢個代號 → 舊紀錄會自動重畫
+window.CARD_FONT_ID = "archivo-ta";   // 改字型／卡內容時改呢個代號 → 舊紀錄會自動重畫
 window.refreshRecordCards = async function(){
 try{
 if(document.getElementById("test") && !document.getElementById("test").classList.contains("hidden")) return;  // 測試中唔好搞
@@ -3467,15 +3463,13 @@ if(prevResult){ try{ await generateCardImage(); }catch(e){} }   // 還原返結�
 };
 
 window.renderResult = function(r){
- // T/A 軸（第 5 條軸）— 之前計完冇顯示，而家出細細個 badge
+ // T/A 軸（第 5 條軸）：同完成時間同一行，唔另開 badge（卡入面已有 chip）
 try{
-const taW = document.getElementById("taBadgeWrap"), taB = document.getElementById("taBadge");
+const taInline = document.getElementById("resultTaInline"), taDot = document.getElementById("taDot");
 const code4 = String(r.mbti || "").substring(0,4), taSuffix = String(r.mbti || "").slice(4);
-if(taW && taB){
-taB.innerText = code4 + " · " + (taSuffix === "-A" ? "自信型" : "敏感型");
-const taN = document.getElementById("taNote");
-if(taN) taN.innerText = taSuffix === "-A" ? "情緒指標 T/A：自信型較穩定、抗壓" : "情緒指標 T/A：敏感型易自省、起伏較大";
-taW.classList.remove("hidden");
+if(taInline){
+taInline.innerText = code4 + " · " + (taSuffix === "-A" ? "自信型" : "敏感型");
+if(taDot) taDot.classList.remove("hidden");
  }
  }catch(e){}
  // 結果已經由 generateCardImage() 渲染落 <img id="shareCardImg">
@@ -3745,6 +3739,18 @@ ctx.fillText(t.name, 360, 660);
 ctx.font = "italic 32px sans-serif";
 ctx.fillStyle = "rgba(255,255,255,0.85)";
 ctx.fillText("「" + t.slogan + "」", 360, 730);
+ // T/A 情緒指標（第 5 條軸）：細 chip
+const _taSuf = String(window.lastResult).slice(4);
+if(_taSuf === "-A" || _taSuf === "-T"){
+const _taLabel = _taSuf === "-A" ? "自信型 A" : "敏感型 T";
+ctx.textAlign = "center";
+ctx.font = "bold 30px sans-serif";
+const _tw = ctx.measureText(_taLabel).width + 68;
+ctx.fillStyle = "rgba(255,255,255,0.16)";
+cardRoundRect(ctx, 360 - _tw/2, 762, _tw, 54, 27);
+ctx.fillStyle = "rgba(255,255,255,0.94)";
+ctx.fillText(_taLabel, 360, 798);
+}
  // 3 個分數
 const scores = t.score;
 ctx.fillStyle = "white";
