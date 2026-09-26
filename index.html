@@ -3398,14 +3398,17 @@ voiceNext();
 // 一題 = 題目 + 4 個選項，順序讀
 window.speakQuestionSet = function(q){
 if(!window.VOICE_ON || !q) return;
-const qm = window.Q_AUDIO || {}, om = window.O_AUDIO || {};
+const qm = window.Q_AUDIO || {}, om = window.O_AUDIO || {}, lm = window.L_AUDIO || {};
 const items = [];
 const qt = String(q.t || "").trim();
 if(qt) items.push({src: qm[qt] || null, text: qt});
+// 字母要分開播：buildDeck 每局打亂選項次序再重派 A/B/C/D，字母錄死喺選項檔
+// 就會交叉（2026-09-26 Roy 報「B 讀咗 C」）→ 字母跟當時嘅 o.l 由 L_AUDIO 播
 (q.o || []).forEach(function(o){
 const ot = String(o.t || "").trim();
 if(!ot) return;
-items.push({src: om[ot] || null, text: (o.l ? o.l + "、" : "") + ot});
+if(o.l) items.push({src: lm[String(o.l)] || null, text: String(o.l) + "、"});
+items.push({src: om[ot] || null, text: ot});
  });
 if(!items.length) return;
 stopQuestionVoice();
@@ -3425,10 +3428,13 @@ const deck = (window.state && window.state.deck) ? window.state.deck : window.QU
 if(!deck) return;
 const q = deck[window.state.idx + 1];
 if(!q) return;
-const qm = window.Q_AUDIO || {}, om = window.O_AUDIO || {};
+const qm = window.Q_AUDIO || {}, om = window.O_AUDIO || {}, lm = window.L_AUDIO || {};
 const files = [];
 if(qm[q.t]) files.push(qm[q.t]);
-(q.o || []).forEach(function(o){ if(om[o.t]) files.push(om[o.t]); });
+(q.o || []).forEach(function(o){
+if(om[o.t]) files.push(om[o.t]);
+if(o.l && lm[String(o.l)]) files.push(lm[String(o.l)]);
+ });
 files.forEach(function(f){ try{ fetch(f, {cache: "force-cache"}); }catch(e){} });
  };
 window.syncVoiceBtn = function(){

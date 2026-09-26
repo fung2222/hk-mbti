@@ -30,10 +30,12 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INDEX = os.path.join(REPO, "index.html")
 AUDIO_Q = os.path.join(REPO, "audio", "q")
 AUDIO_O = os.path.join(REPO, "audio", "o")
+AUDIO_L = os.path.join(REPO, "audio", "l")
 MAP_JS = os.path.join(REPO, "voice-map.js")
 MANIFEST = os.path.join(REPO, "tools", "voice-manifest.json")
 
 DEFAULT_VOICE = "zh-HK-HiuMaanNeural"
+LETTERS = ["A", "B", "C", "D"]
 
 
 # ---------- 由 index.html 抽出題庫（唔靠 browser，用 bracket match） ----------
@@ -85,11 +87,13 @@ def normalize(text):
     return t
 
 
-def key_of(text):
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()[:12]
+def key_of(text, voice, rate):
+    """檔名 = sha1(voice|rate|文字)：換聲／改速就出新檔，唔會殘留舊 cache。"""
+    raw = "%s|%s|%s" % (voice, rate, text)
+    return hashlib.sha1(raw.encode("utf-8")).hexdigest()[:12]
 
 
-def collect_items(questions, alts=None):
+def collect_items(questions, alts=None, voice=DEFAULT_VOICE, rate="+0%"):
     """回傳 [(kind, raw_text, spoken_text, path)]
 
     raw_text  = index.html 原本嘅字（前端用佢做 lookup key，唔需要喺 JS 重做正規化）
@@ -107,7 +111,8 @@ def collect_items(questions, alts=None):
             return
         spoken = normalize(raw)
         seen.add(("q", raw))
-        items.append(("q", raw, spoken, os.path.join(AUDIO_Q, key_of(spoken) + ".mp3")))
+        items.append(("q", raw, spoken,
+                      os.path.join(AUDIO_Q, key_of(spoken, voice, rate) + ".mp3")))
 
     for q in questions:
         add_q(q.get("t"))
@@ -119,11 +124,17 @@ def collect_items(questions, alts=None):
             oraw = (opt.get("t") or "").strip()
             if not oraw or ("o", oraw) in seen:
                 continue
-            otext = normalize(oraw)
-            letter = opt.get("l", "")
-            ospoken = "%s、%s" % (letter, otext) if letter else otext
+            # ⚠️ 唔加字母前綴：buildDeck 會打亂選項次序再重派 A/B/C/D
+            ospoken = normalize(oraw)
             seen.add(("o", oraw))
-            items.append(("o", oraw, ospoken, os.path.join(AUDIO_O, key_of(ospoken) + ".mp3")))
+            items.append(("o", oraw, ospoken,
+                          os.path.join(AUDIO_O, key_of(ospoken, voice, rate) + ".mp3")))
+
+    # 選項字母短檔（4 個）— 前端跟當時顯示嘅 o.l 播
+    for letter in LETTERS:
+        spoken = "%s、" % letter
+        items.append(("l", letter, spoken,
+                      os.path.join(AUDIO_L, key_of(spoken, voice, rate) + ".mp3")))
     return items
 
 
@@ -135,7 +146,7 @@ async def _synth(sem, voice, text, path, rate, retries=4):
                 c = edge_tts.Communicate(text, voice, rate=rate)
                 tmp = path + ".part"
                 await c.save(tmp)
-                if os.path.getsize(tmp) < 1000:
+                if os.path.getsize(tmp) < 500:
                     raise RuntimeError("音檔太細，可能失敗")
                 os.replace(tmp, path)
             return True
@@ -150,8 +161,8 @@ async def _synth(sem, voice, text, path, rate, retries=4):
 async def run(items, voice, rate, force, quiet):
     sem = asyncio.Semaphore(5)
     todo = [it for it in items if force or not os.path.exists(it[3])]
-    os.makedirs(AUDIO_Q, exist_ok=True)
-    os.makedirs(AUDIO_O, exist_ok=True)
+    for d in (AUDIO_Q, AUDIO_O, AUDIO_L):
+        os.makedirs(d, exist_ok=True)
     if not todo:
         print("冇新檔要生成（共 %d 條）" % len(items))
         return 0
@@ -173,6 +184,8 @@ def write_map(items):
     lines = ["// 自動生成 — 唔好手改。重生：python3 tools/gen_voice.py",
              "// key = index.html 題庫原本嘅字（未經正規化），前端直接 Q_AUDIO[q.t] lookup；",
              "// 搵唔到就 fallback 用 speechSynthesis（見 index.html speakQuestion）。",
+             "// ⚠️ O_AUDIO 係「純選項文字」，唔包字母 — 字母由 L_AUDIO 跟 o.l 播，",
+             "//    因為 buildDeck 會打亂選項次序再重派 A/B/C/D。",
              "window.Q_AUDIO = {"]
     for kind, raw, _spoken, path in items:
         if kind != "q":
@@ -187,11 +200,20 @@ def write_map(items):
         lines.append("  %s: %s," % (json.dumps(raw, ensure_ascii=False),
                                     json.dumps(os.path.relpath(path, REPO).replace(os.sep, "/"))))
     lines.append("};")
+    lines.append("window.L_AUDIO = {")
+    for kind, raw, _spoken, path in items:
+        if kind != "l":
+            continue
+        lines.append("  %s: %s," % (json.dumps(raw, ensure_ascii=False),
+                                    json.dumps(os.path.relpath(path, REPO).replace(os.sep, "/"))))
+    lines.append("};")
     with open(MAP_JS, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
-    print("寫入 %s（%d 題 + %d 選項）" % (os.path.relpath(MAP_JS, REPO),
-                                    sum(1 for k, _, _, _ in items if k == "q"),
-                                    sum(1 for k, _, _, _ in items if k == "o")))
+    print("寫入 %s（%d 題 + %d 選項 + %d 字母）" % (
+        os.path.relpath(MAP_JS, REPO),
+        sum(1 for k, _, _, _ in items if k == "q"),
+        sum(1 for k, _, _, _ in items if k == "o"),
+        sum(1 for k, _, _, _ in items if k == "l")))
 
 
 def write_manifest(items, voice, rate):
@@ -219,7 +241,7 @@ def verify_map(items):
 def prune(items):
     keep = {os.path.abspath(p) for _, _, _, p in items}
     removed = 0
-    for d in (AUDIO_Q, AUDIO_O):
+    for d in (AUDIO_Q, AUDIO_O, AUDIO_L):
         if not os.path.isdir(d):
             continue
         for fn in os.listdir(d):
@@ -261,14 +283,15 @@ def main():
         return
 
     questions, alts = load_bank()
-    items = collect_items(questions, alts)
+    items = collect_items(questions, alts, args.voice, args.rate)
     nq = sum(1 for k, _, _, _ in items if k == "q")
     no = sum(1 for k, _, _, _ in items if k == "o")
+    nl = sum(1 for k, _, _, _ in items if k == "l")
     if args.check:
         total = sum(os.path.getsize(p) for _, _, _, p in items if os.path.exists(p))
         have = sum(1 for _, _, _, p in items if os.path.exists(p))
-        print("題目（含 Q_ALTS 變體）%d 條、選項 %d 條、合共 %d 條（已有 %d 個檔）"
-              % (nq, no, len(items), have))
+        print("題目（含 Q_ALTS 變體）%d、選項 %d、字母 %d、合共 %d 條（已有 %d 個檔）"
+              % (nq, no, nl, len(items), have))
         print("已存在音檔 %.2f MB" % (total / 1048576))
         print("題目 sample：%s" % items[0][1][:40])
         return

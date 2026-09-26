@@ -139,13 +139,20 @@ GitHub Pages 做靜態檔，前端改用 `<audio>` 播；`speechSynthesis` 保�
 
 | 項目 | 值 |
 |---|---|
-| 音檔位置 | `audio/q/<sha1-12>.mp3`（題目）、`audio/o/<sha1-12>.mp3`（選項） |
-| 對照表 | `voice-map.js`（`window.Q_AUDIO` / `window.O_AUDIO`，key = 題庫原本嘅字） |
+| 音檔位置 | `audio/q/<key>.mp3`（題目）、`audio/o/<key>.mp3`（選項**文字**）、`audio/l/<key>.mp3`（字母 A–D） |
+| 檔名 | `sha1(voice|rate|文字)[:12]` → 換聲／改速自動出新檔，唔怕 HTTP cache 留舊聲 |
+| 對照表 | `voice-map.js`（`window.Q_AUDIO` / `O_AUDIO` / `L_AUDIO`，key = 題庫原本嘅字） |
 | 生成器 | `tools/gen_voice.py`（edge-tts，venv 喺 `/opt/data/venvs/edge-tts`） |
-| 測試 | `node tools/voice_test.js`（覆蓋率／檔案／播放次序／fallback／stop／關掉） |
-| 內容 | 題目 327（109 正題 + 218 `Q_ALTS` 變體）＋ 選項 436 |
-| 大細 | 約 20 MB，48 kbps mono 24 kHz |
-| 讀嘅次序 | 題目 → A → B → C → D（`speakQuestionSet`） |
+| 測試 | `node tools/voice_test.js`（覆蓋率／檔案／播放次序／打亂迴歸／fallback／stop／關掉） |
+| 內容 | 題目 327（109 正題 + 218 `Q_ALTS` 變體）＋ 選項 436 ＋ 字母 4 |
+| 聲／速 | `zh-HK-HiuGaaiNeural`，`rate=+15%` |
+| 讀嘅次序 | 題目 → A、→ 選項A → B、→ 選項B → C、→ 選項C → D、→ 選項D |
+
+**⚠️ 陷阱：選項字母唔可以錄入選項音檔。** `buildDeck()` 每局會
+`shuffleArr(copy.o).map((o,i) => ({l: String.fromCharCode(65+i), …}))` —— **打亂次序再按位置重派 A/B/C/D**。
+如果音檔錄死「B、<文字>」，一打亂就會出現「畫面顯示 B、但讀出 C」（2026-09-26 Roy 實測撞到）。
+字母改用 `audio/l` 4 個獨立短檔，前端按當時嘅 `o.l` 播（`speakQuestionSet`）。
+`tools/voice_test.js` 有「反轉選項再重派字母」嘅迴歸測試守住呢點。
 
 **改題目之後一定要重生音檔**：`python3 tools/gen_voice.py --voice zh-HK-HiuGaaiNeural`
 （已存在嘅檔會跳過，只補新／改過嘅），跟住 `node tools/voice_test.js` 要全綠。

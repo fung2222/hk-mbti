@@ -87,6 +87,7 @@ vm.runInContext(fs.readFileSync(path.join(REPO, "voice-map.js"), "utf8"), sandbo
 
 const Q_AUDIO = sandbox.Q_AUDIO || {};
 const O_AUDIO = sandbox.O_AUDIO || {};
+const L_AUDIO = sandbox.L_AUDIO || {};
 
 // ---------- 1. 覆蓋率 ----------
 let needQ = 0, missQ = [], needO = 0, missO = [];
@@ -99,6 +100,9 @@ if(missQ.length === 0) ok.push(`題目覆蓋 ${needQ}/${needQ}（含 Q_ALTS 變�
 else fail.push(`題目音檔缺 ${missQ.length} 條，例如「${missQ[0]}」`);
 if(missO.length === 0) ok.push(`選項覆蓋 ${needO}/${needO}`);
 else fail.push(`選項音檔缺 ${missO.length} 條，例如「${missO[0]}」`);
+const missL = ["A","B","C","D"].filter(l => !L_AUDIO[l]);
+if(missL.length === 0) ok.push("字母音檔齊 A/B/C/D");
+else fail.push(`字母音檔缺 ${missL.join(",")}`);
 
 // ---------- 2. 檔案存在 + 大細 ----------
 let files = 0, bad = [];
@@ -114,20 +118,48 @@ Object.keys(O_AUDIO).forEach(k => {
   if(!fs.existsSync(p)) bad.push(O_AUDIO[k]);
   else if(fs.statSync(p).size < 1024) bad.push(O_AUDIO[k] + "（太細）");
 });
+Object.keys(L_AUDIO).forEach(k => {
+  const p = path.join(REPO, L_AUDIO[k]);
+  files++;
+  if(!fs.existsSync(p)) bad.push(L_AUDIO[k]);
+  else if(fs.statSync(p).size < 200) bad.push(L_AUDIO[k] + "（太細）");
+});
 if(bad.length === 0) ok.push(`map 指向嘅 ${files} 個音檔全部存在且 > 1KB`);
 else fail.push(`${bad.length} 個音檔有問題，例如 ${bad[0]}`);
 
 // ---------- 3. 播放次序 ----------
+function playAll(q){
+  sandbox.window.VOICE_ON = true;
+  vm.runInContext("window.VOICE_QUEUE = [];", sandbox);
+  sandbox.speakQuestionSet(q);
+  const n = (q.t ? 1 : 0) + q.o.length * 2;
+  const seq = [audio.src];
+  for(let i = 0; i < n - 1; i++){ audio.fire("ended"); seq.push(audio.src); }
+  return seq;
+}
+function expectSeq(q){
+  return [Q_AUDIO[q.t]].concat(q.o.reduce((acc, o) => acc.concat([L_AUDIO[o.l], O_AUDIO[o.t]]), []));
+}
+
 const q0 = QUESTIONS[0];
-sandbox.window.VOICE_ON = true;
-vm.runInContext("window.VOICE_QUEUE = [];", sandbox);
-sandbox.speakQuestionSet(q0);
-const expect = [Q_AUDIO[q0.t]].concat(q0.o.map(o => O_AUDIO[o.t]));
-const got = [audio.src];
-// 每次 ended 就播下一條
-for(let n = 0; n < expect.length - 1; n++){ audio.fire("ended"); got.push(audio.src); }
-if(JSON.stringify(got) === JSON.stringify(expect)) ok.push(`次序正確：題目 + 4 個選項（共 ${got.length} 條）`);
+let got = playAll(q0);
+let expect = expectSeq(q0);
+if(JSON.stringify(got) === JSON.stringify(expect)) ok.push(`次序正確：題目 + 4×(字母+選項)，共 ${got.length} 條`);
 else fail.push(`播放次序唔對：\n    expect ${JSON.stringify(expect)}\n    got    ${JSON.stringify(got)}`);
+
+// 🔴 迴歸測試（2026-09-26 Roy 報「B 讀咗 C」）：buildDeck 會打亂選項再重派 A/B/C/D，
+// 字母一定要跟「重派之後」嘅 o.l，唔可以係題庫原本嘅字母。
+const relabelled = {
+  t: q0.t,
+  o: q0.o.slice().reverse().map((o, i) => ({ l: String.fromCharCode(65 + i), t: o.t })),
+};
+got = playAll(relabelled);
+expect = expectSeq(relabelled);
+if(JSON.stringify(got) === JSON.stringify(expect)){
+  ok.push("選項打亂 + 重派字母之後，字母依然對得住（B/C 交叉迴歸測試）");
+}else{
+  fail.push(`重派字母之後字母唔對（就係 Roy 撞到嘅 bug）：\n    expect ${JSON.stringify(expect)}\n    got    ${JSON.stringify(got)}`);
+}
 if(sandbox.VOICE_QUEUE.length !== 0) fail.push("播完之後 queue 未清空");
 else ok.push("播完之後 queue 自動清空");
 
