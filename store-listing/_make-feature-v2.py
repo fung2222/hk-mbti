@@ -37,7 +37,7 @@ f_tag = ImageFont.truetype(FONT_REG, 21)
 
 X = 306
 d.text((X, 138), "港式 MBTI", font=f_title, fill=GOLD)
-d.text((X + 2, 246), "你是哪種港人？", font=f_sub, fill=PAPER)
+d.text((X + 2, 246), "16 型人格測試", font=f_sub, fill=PAPER)
 
 # 3) 金色幼線
 d.line([(X + 2, 316), (X + 330, 316)], fill=(120, 100, 62), width=2)
