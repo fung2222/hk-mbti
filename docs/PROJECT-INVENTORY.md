@@ -95,7 +95,7 @@
 
 | 檔 | 說明 |
 |---|---|
-| hk-mbti-full-20260926-220414.tar.gz + .gitbundle | **今次完整 backup**（工作樹 + 全 git 歷史） |
+| hk-mbti-full-`<stamp>`.tar.gz + `.gitbundle` | 完整 backup（工作樹 + 全 git 歷史；精確 stamp 見同名 `.meta.txt`） |
 | hk-mbti-v2.0.0-freeze-20260926-135002.tar.gz | v2.0.0 freeze |
 | hk-mbti-v1.9.0-freeze-20260926-103718.tar.gz | v1.9.0 freeze |
 | hk-mbti-v1.7.14-freeze-20260917-005106.tar.gz | v1.7.14 freeze |
