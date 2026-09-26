@@ -53,10 +53,11 @@ function load(opts){
           window.localStorage.setItem("hkmbti_last_result", JSON.stringify(store[0]));
           window.sessionStorage.setItem("hkmbti_last_section", "home");
           if(opts.pending) window.sessionStorage.setItem("hkmbti_pending_record", JSON.stringify(opts.pending));
+          if(opts.navlog) window.sessionStorage.setItem("hkmbti_navlog", JSON.stringify(Object.assign({ t: Date.now(), build: "d1" }, opts.navlog)));
         }catch(e){}
       },
     });
-    setTimeout(() => resolve({ w: dom.window, alerts, errs }), opts.wait || 1200);
+    setTimeout(() => resolve({ w: dom.window, alerts, errs }), opts.wait || 2300);   // 等埋 1.8s 診斷
   });
 }
 
@@ -128,6 +129,30 @@ const visible = w => ["home","type","about","spectrum","hub","social","romance",
     w.close();
   }
 
+  console.log("\n【4】臨時診斷報告（跳轉開唔到要做聲，開到就唔嘈）");
+  {
+    const { w, alerts } = await load({ hash: "#type=INFP", navlog: { k: "type", v: "INFP" } });
+    const ok = w._showing === "type" && !alerts.length;
+    if(!ok) bad++;
+    console.log(`  開得到 → 實際 ${w._showing}，診斷提示 ${alerts.length} 個 ${ok ? "✓ 唔嘈" : "✗ 嘈咗"}`);
+    w.close();
+  }
+  {
+    const { w, alerts } = await load({ hash: "#type=ZZZZ", navlog: { k: "type", v: "ZZZZ" } });
+    const report = alerts.find(a => a.indexOf("診斷報告") === 0);
+    const ok = w._showing === "home" && !!report;
+    if(!ok) bad++;
+    console.log(`  開唔到 → 實際 ${w._showing}，有冇報告：${report ? "✓ 有" : "✗ 冇"}`);
+    if(report) console.log("    報告內容：\n" + report.split("\n").map(l => "      " + l).join("\n"));
+    w.close();
+  }
+  {
+    const { w, alerts } = await load({});
+    const ok = w._showing === "home" && !alerts.length;
+    if(!ok) bad++;
+    console.log(`  正常瀏覽（冇跳轉意圖）→ 診斷提示 ${alerts.length} 個 ${ok ? "✓ 唔嘈" : "✗ 嘈咗"}`);
+    w.close();
+  }
   console.log(bad ? `\n✗ ${bad} 項唔合格` : "\n✓ 全部深層連結都開到對應畫面");
   process.exit(bad ? 1 : 0);
 })();

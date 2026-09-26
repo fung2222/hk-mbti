@@ -154,7 +154,7 @@ body.no-ad{padding-bottom:0!important;}
 </div>
 
 <div class="summary-card">
- <div style="font-size:16px;font-weight:900;margin:0 0 14px;color:var(--ink);">16 型人格統計</div>
+ <div style="font-size:16px;font-weight:900;margin:0 0 14px;color:var(--ink);">16 型人格統計<span style="font-size:10px;font-weight:600;color:#bbb;margin-left:8px;">診斷 d1</span></div>
  <div style="display:flex;justify-content:space-between;align-items:flex-end;">
  <div>
  <div class="summary-num" id="totalTests">0</div>
@@ -350,6 +350,8 @@ function viewRec(id, i){
  //  1. sessionStorage —— 唔靠 URL／hash 解析，最穩（2026-09-26：hash 渠道喺某些情況唔通）
  //  2. hash #view=<id> —— backup（舊版／直接分享連結都會用）
 try{ sessionStorage.setItem("hkmbti_pending_record", JSON.stringify({ id: id || "", i: i })); }catch(e){}
+// 臨時診斷（2026-09-26）：寫低跳轉意圖，主頁開唔到就會出報告
+try{ sessionStorage.setItem("hkmbti_navlog", JSON.stringify({ k:"result", v:String(id || i), t:Date.now(), build:"d1" })); }catch(e){}
 try{
 location.href = "./#view=" + encodeURIComponent(id || i);
  }catch(e){ toast("跳轉失敗"); }
@@ -357,6 +359,8 @@ location.href = "./#view=" + encodeURIComponent(id || i);
 
 function goType(code){
  // 跳去主頁睇該類型嘅完整百科（#type=XXXX）
+// 臨時診斷（2026-09-26）：寫低跳轉意圖，主頁開唔到就會出報告
+try{ sessionStorage.setItem("hkmbti_navlog", JSON.stringify({ k:"type", v:code, t:Date.now(), build:"d1" })); }catch(e){}
 try{
 location.href = "./#type=" + code;
  }catch(e){ toast("跳轉失敗"); }

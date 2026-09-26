@@ -640,17 +640,55 @@ if(fn && typeof window[fn] === "function"){
 window[fn]();
 return true;
  }
- }catch(e){}
+ }catch(e){ window._lastErr = "deepLink: " + (e && e.message ? e.message : e); }
 return false;
+};
+// 臨時診斷（2026-09-26）：記錄未捕捉錯誤，開唔到畫面時連原因一齊報告
+window._lastErr = window._lastErr || "";
+window.addEventListener("error", function(e){
+try{ window._lastErr = String(e.message) + " @" + String(e.filename||"").slice(-40) + ":" + e.lineno; }catch(_){}
+});
+window.addEventListener("unhandledrejection", function(e){
+try{ window._lastErr = "promise: " + String((e.reason && e.reason.message) || e.reason); }catch(_){}
+});
+// 臨時診斷（2026-09-26）：跳轉入嚟但開唔到目標畫面 → 出報告（Roy 讀返畀我）。
+// 冇 navlog（正常瀏覽）就完全唔會嘈。修好之後成段會刪。
+window._navDiag = function(){
+try{
+const raw = sessionStorage.getItem("hkmbti_navlog");
+if(!raw) return;
+sessionStorage.removeItem("hkmbti_navlog");
+let log = null;
+try{ log = JSON.parse(raw); }catch(e){}
+if(!log || !log.t || (Date.now() - log.t) > 60000) return;
+const want = (log.k === "type") ? "type" : "result";
+if(window._showing === want) return;
+const lines = ["診斷報告（照讀畀我就可以）", "想開：" + log.k + " " + log.v, "實際停喺：" + window._showing];
+lines.push("URL：" + location.href);
+lines.push("hash：" + (location.hash || "（冇）") + "  build：" + (log.build || "?"));
+if(log.k === "type"){
+lines.push("TYPES：" + (window.TYPES ? Object.keys(window.TYPES).length + " 型" : "冇") +
+ "/TYPES_FULL：" + (window.TYPES_FULL ? Object.keys(window.TYPES_FULL).length + " 型" : "冇"));
+lines.push("呢型有冇：" + (window.TYPES && window.TYPES[log.v] ? "TYPES有" : "TYPES冇") +
+ "/" + (window.TYPES_FULL && window.TYPES_FULL[log.v] ? "FULL有" : "FULL冇"));
+lines.push("openType：" + (typeof window.openType) + "  formatTypeFullHtml：" + (typeof window.formatTypeFullHtml));
+ } else {
+lines.push("pending：" + (function(){ try{ return String(sessionStorage.getItem("hkmbti_pending_record") || "（冇）").slice(0, 60); }catch(e){ return "?"; } })());
+ }
+lines.push("錯誤：" + (window._lastErr || "（冇記錄）"));
+alert(lines.join("\n"));
+ }catch(e){}
 };
 // hash 變更（同一文件內錨點跳轉）／bfcache 還原（load 唔會再跑）都要補做深層連結
 window.addEventListener("hashchange", function(){
 try{ window._openDeepLink(window.location.hash || ""); }catch(e){}
+try{ setTimeout(function(){ window._navDiag(); }, 1500); }catch(e){}
 });
 window.addEventListener("pageshow", function(ev){
 try{
 if(ev && ev.persisted) window._openDeepLink(window.location.hash || "");
  }catch(e){}
+try{ setTimeout(function(){ window._navDiag(); }, 1500); }catch(e){}
 });
 let openedHash = false;
 // 記錄頁「睇結果」渠道：sessionStorage（唔靠 URL 解析）
@@ -671,6 +709,7 @@ window._openViaHash = true;
 openedHash = window._openDeepLink(hash);
  }
 }
+try{ setTimeout(function(){ window._navDiag(); }, 1800); }catch(e){}
 if(!openedHash && pendingRec && typeof window.viewHistoryResult === "function"){
 // 由 record.html 跳入嚟：用 replaceState 取代當前 history 一筆，
 // 唔好 push（push 會留低一筆「主頁」→ 撳手機返回鍵會褪去主頁，唔係返上一頁）
