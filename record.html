@@ -346,10 +346,10 @@ setTimeout(() => t.classList.remove("show"), 2200);
 }
 
 function viewRec(id, i){
- // 跳返主頁 replay history result，透過 hash #view={i}
- // 主頁 detect 到 #view=N 就自動 call viewHistoryResult(N)
+ // 跳返主頁 replay history result：hash #view=<id>
+ // 有 id 就傳 id（兩頁就算排序／數量唔同都搵得到），冇 id 先 fallback 落 index
 try{
-location.href = "./#view=" + i;
+location.href = "./#view=" + encodeURIComponent(id || i);
  }catch(e){ toast("跳轉失敗"); }
 }
 

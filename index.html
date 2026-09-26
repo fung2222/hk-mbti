@@ -611,10 +611,12 @@ let openedHash = false;
 const hash = window.location.hash||"";
 if(hash){
 window._openViaHash = true;
-const m = hash.match(/^#view=(\d+)$/);
+const m = hash.match(/^#view=(.+)$/);
 const tm = hash.match(/^#type=([A-Z]{4})$/);
 if(m && typeof window.viewHistoryResult === "function"){
-window.viewHistoryResult(parseInt(m[1], 10));
+let ref = m[1];
+try{ ref = decodeURIComponent(ref); }catch(e){}
+window.viewHistoryResult(/^\d+$/.test(ref) ? parseInt(ref, 10) : ref);
 openedHash = true;
  } else if(tm && typeof window.openType === "function"){
 window.openType(tm[1], "ext");
@@ -4507,7 +4509,9 @@ window._fromPop = false;
 });
 
 // ====================== History Functions ======================
-window.getHistoryList = function(){
+// 完整紀錄清單（最多 5 條由 saveResult 控制，但唔好喺度再 slice：
+// record.html 顯示全部，主頁睇結果要用同一個 index/順序）
+window.getHistoryAll = function(){
 let list = [];
 try{ list = JSON.parse(localStorage.getItem("hkmbti_history")||"[]") || []; }catch(e){ list = []; }
 if(!Array.isArray(list) || !list.length){
@@ -4544,7 +4548,12 @@ clean.push(item);
 if(dirty || clean.length !== list.length){
 try{ localStorage.setItem("hkmbti_history", JSON.stringify(clean.map(c => { const o = Object.assign({}, c); delete o._k; return o; }))); }catch(e){}
  }
-return clean.map(c => { const o = Object.assign({}, c); delete o._k; return o; }).slice(0, 5);
+return clean.map(c => { const o = Object.assign({}, c); delete o._k; return o; });
+};
+
+// 主頁「最近 5 次」清單
+window.getHistoryList = function(){
+return getHistoryAll().slice(0, 5);
 };
 
 window.toggleHistory = function(){
@@ -4698,13 +4707,30 @@ if(day < 365) return Math.floor(day/30) + " 個月前";
 return Math.floor(day/365) + " 年前";
 }
 
-window.viewHistoryResult = function(idx){
+// ref 可以係 index（number／數字字串）或者紀錄 id（record.html 而家傳 id 過嚟）
+window.viewHistoryResult = function(ref){
 try{
-const realIdx = idx || 0;
-try{ sessionStorage.setItem("hkmbti_last_record_idx", realIdx); }catch(e){}
-const list = getHistoryList();
+const list = (typeof getHistoryAll === "function") ? getHistoryAll() : getHistoryList();
+const raw = (ref === null || ref === undefined) ? "" : String(ref).trim();
+let realIdx = 0;
+if(/^\d+$/.test(raw)){
+realIdx = parseInt(raw, 10);
+ } else if(raw){
+realIdx = list.findIndex(function(r){ return r && r.id === raw; });
+ }
+if(realIdx < 0 || realIdx >= list.length){
+// 以前係 `if(!rec) return;` → 用戶淨係見到主頁，完全唔知發生咩事
+alert("搵唔到呢筆記錄（可能已經清除）。");
+return;
+ }
 const rec = list[realIdx];
-if(!rec) return;
+try{ sessionStorage.setItem("hkmbti_last_record_idx", realIdx); }catch(e){}
+// 舊／壞紀錄可能有 TYPES 冇嘅類型代號 → renderResult 會 throw → 睇唔到結果
+const code4 = String(rec.mbti || "").substring(0, 4).toUpperCase();
+if(!window.TYPES || !window.TYPES[code4]){
+alert("呢筆記錄嘅類型代號（" + String(rec.mbti || "空") + "）唔完整，開唔到結果。");
+return;
+ }
 window.lastResult = rec.mbti;
 window.state.displayName = rec.name || "";
 window.state.nickname = rec.nickname || "";
@@ -4718,7 +4744,7 @@ generateCardImage();
 if($("versionBadge")) $("versionBadge").innerText = ver === "bb" ? "BB版" : ver === "advanced" ? "進階版" : "生活版";
 show("result");
  } catch(e){
-alert("載入失敗");
+alert("載入失敗（呢筆記錄資料唔完整）");
  }
 };
 
