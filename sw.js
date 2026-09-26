@@ -4,6 +4,7 @@ const ASSETS = [
   "/hk-mbti/index.html",
   "/hk-mbti/data.js",
   "/hk-mbti/social.js",
+  "/hk-mbti/voice-map.js",
   "/hk-mbti/manifest.json",
   "/hk-mbti/icon-192.png",
   "/hk-mbti/icon-512.png"
@@ -26,6 +27,10 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   if(e.request.method !== "GET") return;
   const url = new URL(e.request.url);
+
+  // 朗讀音檔 (mp3)：唔攔截，交返畀瀏覽器原生處理（Range request + HTTP cache）。
+  // 用 Cache API 存 media 唔穩（seek／range），545 個檔亦會撐大 cache。
+  if(url.pathname.endsWith(".mp3")) return;
 
   // HTML documents: network-first (永遠取 fresh 解決 stale cache)
   const isHTML = e.request.mode === "navigate" ||

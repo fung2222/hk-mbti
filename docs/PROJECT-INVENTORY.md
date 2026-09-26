@@ -57,6 +57,9 @@
 - `tools/question_audit.js` — 題庫審計（結構／計分／文法／走軸／重複／變體撞 key／簡體字）
 - `tools/preflight.py` — 15 項 deploy 前檢查（inline JS syntax、版本一致、onclick 存在、emoji 殘留）
 - `tools/sync-version.sh` — `VERSION` 作單一來源同步 manifest/sw/UI
+- `tools/extract_bank.js` — 由 index.html 抽 `QUESTIONS` / `Q_ALTS` 做純 JSON（Python 唔使自己 parse JS）
+- `tools/gen_voice.py` — 生成／更新朗讀音檔（見 §11）
+- `tools/voice_test.js` — 朗讀邏輯離線測試（stub DOM，唔需要瀏覽器）
 - `.githooks/pre-push` — push 前自動跑 preflight
 
 ---
@@ -123,3 +126,28 @@
 - 字型：iPhone PingFang HK／Android Noto Sans HK；分享卡 canvas 字暫唔跟 webfont
 - freeze 記錄：`docs/freeze-log.md`
 - 資料儲存 key：`docs/data-storage.md`
+
+---
+
+## 11. 朗讀（TTS）音檔 — 2026-09-26 加
+
+**背景**：原本用瀏覽器 `speechSynthesis`，把聲係手機 OS 提供（Android Google 粵語 TTS／
+iPhone Sinji），機械感重而且每部機唔同。Roy 要求「更真實嘅女性聲」。
+
+**做法**：預先用 Microsoft neural 粵語女聲 **`zh-HK-HiuGaaiNeural`** 生成 MP3，放上
+GitHub Pages 做靜態檔，前端改用 `<audio>` 播；`speechSynthesis` 保留做 fallback。
+
+| 項目 | 值 |
+|---|---|
+| 音檔位置 | `audio/q/<sha1-12>.mp3`（題目）、`audio/o/<sha1-12>.mp3`（選項） |
+| 對照表 | `voice-map.js`（`window.Q_AUDIO` / `window.O_AUDIO`，key = 題庫原本嘅字） |
+| 生成器 | `tools/gen_voice.py`（edge-tts，venv 喺 `/opt/data/venvs/edge-tts`） |
+| 測試 | `node tools/voice_test.js`（覆蓋率／檔案／播放次序／fallback／stop／關掉） |
+| 內容 | 題目 327（109 正題 + 218 `Q_ALTS` 變體）＋ 選項 436 |
+| 大細 | 約 20 MB，48 kbps mono 24 kHz |
+| 讀嘅次序 | 題目 → A → B → C → D（`speakQuestionSet`） |
+
+**改題目之後一定要重生音檔**：`python3 tools/gen_voice.py --voice zh-HK-HiuGaaiNeural`
+（已存在嘅檔會跳過，只補新／改過嘅），跟住 `node tools/voice_test.js` 要全綠。
+**同一個文字重新錄音（例如換聲）要 bump `VERSION`**，因為 `sw.js` 對 mp3 唔攔截，
+瀏覽器 HTTP cache 會留住舊檔。

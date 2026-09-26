@@ -1688,6 +1688,7 @@ if(hasNoAd()) applyNoAd();
 <!-- ====================== 60 題港式情境題庫 ====================== -->
 <script src="data.js"></script>
 <script src="social.js"></script>
+<script src="voice-map.js"></script>
 <script>
 window.QUESTIONS = [
  // E/I 軸 (12 題)
@@ -3332,31 +3333,109 @@ return s;
  };
 return vs.slice().sort((a,b) => score(b) - score(a))[0];
  }
-window.stopQuestionVoice = function(){
-try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
- };
-window.speakQuestion = function(text){
-if(!window.VOICE_ON) return;
-if(!window.speechSynthesis) return;
-const t = String(text || "").trim();
-if(!t) return;
-stopQuestionVoice();
-const u = new SpeechSynthesisUtterance(t);
+// ---- 朗讀（v2 聲）：優先播預先錄好嘅 neural 粵語女聲 audio/*.mp3 ----
+// 對照表 = voice-map.js（由 tools/gen_voice.py 生成）。搵唔到 key 就 fallback 落
+// 系統 speechSynthesis，所以改題目字／音檔未 push 都唔會壞。
+window.VOICE_AUDIO = null;
+window.VOICE_QUEUE = [];
+function voiceEl(){
+if(!window.VOICE_AUDIO){
+const a = document.createElement("audio");
+a.preload = "auto";
+a.setAttribute("playsinline", "");
+a.addEventListener("ended", voiceNext);
+a.addEventListener("error", voiceNext);
+// 掛入 DOM（收埋）：部分 iOS Safari 對完全 detached 嘅 audio element 會唔肯播
+try{ if(document.body) { a.style.display = "none"; document.body.appendChild(a); } }catch(e){}
+window.VOICE_AUDIO = a;
+ }
+return window.VOICE_AUDIO;
+ }
+function voiceFallbackSpeak(text){
+if(!window.speechSynthesis){ voiceNext(); return; }
+const u = new SpeechSynthesisUtterance(text);
 u.lang = "zh-HK";
 u.rate = 1.0;
 u.pitch = 1.05;
-const voice = pickYueVoice();
-if(voice) u.voice = voice;
-try{ speechSynthesis.speak(u); }catch(e){}
+const v = pickYueVoice();
+if(v) u.voice = v;
+u.onend = function(){ voiceNext(); };
+u.onerror = function(){ voiceNext(); };
+try{ speechSynthesis.speak(u); }catch(e){ voiceNext(); }
+ }
+function voiceNext(){
+if(!window.VOICE_ON){ window.VOICE_QUEUE = []; return; }
+const item = window.VOICE_QUEUE.shift();
+if(!item) return;
+if(item.src){
+const a = voiceEl();
+try{ a.src = item.src; }catch(e){ voiceFallbackSpeak(item.text); return; }
+const p = a.play();
+if(p && p.catch) p.catch(function(err){
+// AbortError = 換下一題時自己打斷，唔算失敗
+if(err && err.name === "AbortError") return;
+voiceFallbackSpeak(item.text);
+ });
+return;
+ }
+voiceFallbackSpeak(item.text);
+ }
+window.stopQuestionVoice = function(){
+window.VOICE_QUEUE = [];
+try{ if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+const a = window.VOICE_AUDIO;
+if(a){ try{ a.pause(); }catch(e){} }
+ };
+window.speakQuestion = function(text){
+if(!window.VOICE_ON) return;
+const t = String(text || "").trim();
+if(!t) return;
+const src = (window.Q_AUDIO || {})[t] || null;
+stopQuestionVoice();
+window.VOICE_QUEUE = [{src: src, text: t}];
+voiceNext();
+ };
+// 一題 = 題目 + 4 個選項，順序讀
+window.speakQuestionSet = function(q){
+if(!window.VOICE_ON || !q) return;
+const qm = window.Q_AUDIO || {}, om = window.O_AUDIO || {};
+const items = [];
+const qt = String(q.t || "").trim();
+if(qt) items.push({src: qm[qt] || null, text: qt});
+(q.o || []).forEach(function(o){
+const ot = String(o.t || "").trim();
+if(!ot) return;
+items.push({src: om[ot] || null, text: (o.l ? o.l + "、" : "") + ot});
+ });
+if(!items.length) return;
+stopQuestionVoice();
+window.VOICE_QUEUE = items;
+voiceNext();
  };
 window.replayQuestionVoice = function(){
+const deck = (window.state && window.state.deck) ? window.state.deck : window.QUESTIONS;
+const q = deck ? deck[window.state.idx] : null;
+if(q){ speakQuestionSet(q); return; }
 const el = $("qText");
 if(el) speakQuestion(el.innerText);
+ };
+// 暖下一題嘅音檔，轉題就唔會停一停（只 fetch，唔建立 media element）
+window.prefetchNextVoice = function(){
+const deck = (window.state && window.state.deck) ? window.state.deck : window.QUESTIONS;
+if(!deck) return;
+const q = deck[window.state.idx + 1];
+if(!q) return;
+const qm = window.Q_AUDIO || {}, om = window.O_AUDIO || {};
+const files = [];
+if(qm[q.t]) files.push(qm[q.t]);
+(q.o || []).forEach(function(o){ if(om[o.t]) files.push(om[o.t]); });
+files.forEach(function(f){ try{ fetch(f, {cache: "force-cache"}); }catch(e){} });
  };
 window.syncVoiceBtn = function(){
 const b = $("voiceBtn");
 if(!b) return;
-if(!window.speechSynthesis){
+// 冇 speechSynthesis 但音檔可以照播 → 都唔應該收埋粒掣
+if(!window.speechSynthesis && !(window.Q_AUDIO || window.O_AUDIO)){
 b.style.display = "none";
 return;
  }
@@ -3418,7 +3497,7 @@ opts.appendChild(div);
  $("prevBtn").style.opacity = state.idx === 0 ? "0.3" : "1";
  $("prevBtn").disabled = state.idx === 0;
 try{ syncVoiceBtn(); }catch(e){}
-try{ speakQuestion(q.t); }catch(e){}
+try{ speakQuestionSet(q); prefetchNextVoice(); }catch(e){}
 };
 
 window.selectOpt = function(i){
