@@ -608,6 +608,19 @@ if(app) app.classList.add("js-ready");
  };
 try{
 let openedHash = false;
+// 記錄頁「睇結果」嘅主要渠道：sessionStorage（唔靠 URL 解析）
+try{
+const pend = sessionStorage.getItem("hkmbti_pending_record");
+if(pend){
+sessionStorage.removeItem("hkmbti_pending_record");
+const p = JSON.parse(pend);
+if(p && typeof window.viewHistoryResult === "function"){
+window.viewHistoryResult((p.id === undefined || p.id === null || p.id === "") ? p.i : p.id);
+openedHash = true;
+ }
+ }
+ }catch(e){}
+if(!openedHash){
 const hash = window.location.hash||"";
 if(hash){
 window._openViaHash = true;
@@ -638,6 +651,7 @@ openedHash = true;
  }
  }
  }
+}
 if(!openedHash){
 const last = sessionStorage.getItem("hkmbti_last_section");
 let navType = "navigate";
@@ -4720,7 +4734,7 @@ realIdx = list.findIndex(function(r){ return r && r.id === raw; });
  }
 if(realIdx < 0 || realIdx >= list.length){
 // 以前係 `if(!rec) return;` → 用戶淨係見到主頁，完全唔知發生咩事
-alert("搵唔到呢筆記錄（可能已經清除）。");
+alert("搵唔到呢筆記錄（可能已經清除）。\n\n搵緊：" + raw + "\n現有紀錄：" + list.length + " 條");
 return;
  }
 const rec = list[realIdx];
@@ -4738,12 +4752,16 @@ const ver = rec.version || "life";
 const totalQ = ver === "bb" ? 10 : ver === "advanced" ? 30 : 60;
 window._cardMeta = { version: ver, totalQ: totalQ };
 const r = {mbti: rec.mbti, score:{}, version: ver, totalQ: totalQ};
-renderResult(r);
-generateCardImage();
- $("finishTime").innerText = formatTimeAgo(rec.timestamp);
-if($("versionBadge")) $("versionBadge").innerText = ver === "bb" ? "BB版" : ver === "advanced" ? "進階版" : "生活版";
-show("result");
+// 每步獨立 try：任何一步（例如畫分享卡）出事都唔可以令用戶睇唔到結果
+let rendered = false;
+try{ renderResult(r); rendered = true; }catch(e){}
+try{ show("result"); }catch(e){}
+try{ generateCardImage(); }catch(e){}
+try{ $("finishTime").innerText = formatTimeAgo(rec.timestamp); }catch(e){}
+try{ if($("versionBadge")) $("versionBadge").innerText = ver === "bb" ? "BB版" : ver === "advanced" ? "進階版" : "生活版"; }catch(e){}
+if(!rendered){ alert("呢筆記錄開唔到（資料唔完整）"); }
  } catch(e){
+try{ show("result"); }catch(_){}
 alert("載入失敗（呢筆記錄資料唔完整）");
  }
 };
