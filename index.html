@@ -38,6 +38,7 @@ body.js-boot #app.js-ready{opacity:1;transition:opacity .12s}
 body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavior:contain}
 /* 港式日常情景 · 滿板設計（無卡片） */
 .scenes-title-ico{display:inline-block;width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-right:6px;vertical-align:-2px;}
+.rbtn-ico{display:inline-block;width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-right:5px;vertical-align:-3px;}
 .brand-gold{display:inline-flex !important;align-items:center;white-space:nowrap;}
 .scenes-bleed{margin:0 -16px 16px;padding:28px 20px 24px;background:linear-gradient(180deg,#fff,var(--paper));}
 .scenes-head{max-width:26rem;margin:0 auto;text-align:left;}
@@ -1482,9 +1483,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  <div class="mb-2 px-1">
  <div class="grid grid-cols-3 gap-2 max-w-sm mx-auto">
- <button onclick="downloadCard()" class="btn-gold py-2.5 px-1 rounded-xl text-[13.6px] font-bold leading-tight">儲存圖片</button>
- <button onclick="shareResult()" class="bg-soft py-2.5 px-1 rounded-xl text-[13.6px] font-bold leading-tight">分享圖片</button>
- <button onclick="shareLinkOnly()" class="bg-soft py-2.5 px-1 rounded-xl text-[13.6px] font-bold leading-tight">分享網址</button>
+ <button onclick="downloadCard()" class="btn-gold py-2.5 px-1 rounded-xl text-[13.6px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v11"/><path d="M7.5 10l4.5 4.5L16.5 10"/><path d="M4.5 19.5h15"/></svg>儲存圖片</button>
+ <button onclick="shareResult()" class="bg-soft py-2.5 px-1 rounded-xl text-[13.6px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5V4"/><path d="M8.5 7.5L12 4l3.5 3.5"/><path d="M5.5 12.5v7h13v-7"/></svg>分享圖片</button>
+ <button onclick="shareLinkOnly()" class="bg-soft py-2.5 px-1 rounded-xl text-[13.6px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.2 13.8a3.6 3.6 0 005.4.4l2.6-2.6a3.7 3.7 0 10-5.2-5.2l-1.2 1.2"/><path d="M13.8 10.2a3.6 3.6 0 00-5.4-.4l-2.6 2.6a3.7 3.7 0 105.2 5.2l1.2-1.2"/></svg>分享網址</button>
  </div>
  </div>
  <div id="shareStatus" class="text-[10px] text-gray-500 mt-1 text-center px-2"></div>
