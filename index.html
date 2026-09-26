@@ -3586,14 +3586,14 @@ const _pct = r.pct || {};
 const _ac = {EI:"#E89A6B", SN:"#A86B7C", TF:"#3A4F6B", JP:"#6B5A8A", TA:"#8A7A5A"};
 const _row = function(lab, lv, rlab, rv, col){
 if(typeof lv !== "number" || typeof rv !== "number") return "";
-const lWin = lv >= rv, rWin = rv > lv;
+const lWin = lv > rv, rWin = rv > lv;
 return `<div class="mb-3">
  <div class="flex justify-between text-[11px] mb-1">
  <span class="${lWin ? "font-bold text-ink" : "text-gray-500"}">${lab} ${lv}%</span>
  <span class="${rWin ? "font-bold text-ink" : "text-gray-500"}">${rv}% ${rlab}</span>
  </div>
  <div class="relative h-2 rounded-full overflow-hidden bg-soft">
- <div style="height:100%;width:${lv}%;background:${col}"></div>
+ <div style="position:absolute;top:0;bottom:0;background:${col};${lv >= rv ? "right:50%;" : "left:50%;"}width:${Math.abs(lv - rv)}%"></div>
  <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(26,26,26,.18)"></div>
  </div>
  </div>`;
