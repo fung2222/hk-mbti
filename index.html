@@ -3424,7 +3424,7 @@ try{ loadHistory(); }catch(e){}
 };
 
 // 換字型之後，幫舊紀錄嘅縮圖重畫一次（用最新字型），唔需要用戶做任何事
-window.CARD_FONT_ID = "archivo-ta";   // 改字型／卡內容時改呢個代號 → 舊紀錄會自動重畫
+window.CARD_FONT_ID = "archivo-ta2";   // 改字型／卡內容時改呢個代號 → 舊紀錄會自動重畫
 window.refreshRecordCards = async function(){
 try{
 if(document.getElementById("test") && !document.getElementById("test").classList.contains("hidden")) return;  // 測試中唔好搞
@@ -3716,7 +3716,7 @@ ctx.fillText(who, 360, 230);
  }
 ctx.fillStyle = "rgba(255,255,255,0.8)";
 ctx.font = "28px sans-serif";
-ctx.fillText("你是", 360, 280);
+ctx.fillText("你是", 360, 355);
  // 4 字母（大）
 ctx.fillStyle = "white";
  // v1.9.1: 4 字母用 Archivo Black；太闊會自動收窄（最多 600px，確保唔會出界）
@@ -3734,11 +3734,11 @@ ctx.font = _codeFont;
 ctx.fillText(_codeStr, 360, 560);
  // 性格名
 ctx.font = "bold 52px sans-serif";
-ctx.fillText(t.name, 360, 660);
+ctx.fillText(t.name, 360, 690);
  // 港式 slogan
 ctx.font = "italic 32px sans-serif";
 ctx.fillStyle = "rgba(255,255,255,0.85)";
-ctx.fillText("「" + t.slogan + "」", 360, 730);
+ctx.fillText("「" + t.slogan + "」", 360, 775);
  // T/A 情緒指標（第 5 條軸）：細 chip
 const _taSuf = String(window.lastResult).slice(4);
 if(_taSuf === "-A" || _taSuf === "-T"){
@@ -3747,16 +3747,16 @@ ctx.textAlign = "center";
 ctx.font = "bold 30px sans-serif";
 const _tw = ctx.measureText(_taLabel).width + 68;
 ctx.fillStyle = "rgba(255,255,255,0.16)";
-cardRoundRect(ctx, 360 - _tw/2, 762, _tw, 54, 27);
+cardRoundRect(ctx, 360 - _tw/2, 842, _tw, 54, 27);
 ctx.fillStyle = "rgba(255,255,255,0.94)";
-ctx.fillText(_taLabel, 360, 798);
+ctx.fillText(_taLabel, 360, 878);
 }
  // 3 個分數
 const scores = t.score;
 ctx.fillStyle = "white";
 ctx.font = "24px sans-serif";
 ctx.textAlign = "left";
-let y = 880;
+let y = 960;
 for(let i=0;i<3;i++){
 const parts = scores[i].split("/");
 const label = parts[0];
