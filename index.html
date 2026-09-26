@@ -607,37 +607,25 @@ const app = document.getElementById("app");
 if(app) app.classList.add("js-ready");
  };
 try{
-let openedHash = false;
-// 記錄頁「睇結果」嘅主要渠道：sessionStorage（唔靠 URL 解析）
+// 深層連結（#view= / #type=XXXX / #about ...）：
+// load 時做一次，之後 hash 再變（同一文件內跳轉、bfcache 還原）都要照做，
+// 唔可以停留喺主頁（2026-09-26 Roy 報：記錄頁撳 16 型統計嘅人格圖彈返主頁）
+window._openDeepLink = function(hashStr){
 try{
-const pend = sessionStorage.getItem("hkmbti_pending_record");
-if(pend){
-sessionStorage.removeItem("hkmbti_pending_record");
-const p = JSON.parse(pend);
-if(p && typeof window.viewHistoryResult === "function"){
-// 由 record.html 跳入嚟：用 replaceState 取代當前 history 一筆，
-// 唔好 push（push 會留低一筆「主頁」→ 撳手機返回鍵會褪去主頁，唔係返上一頁）
-window._openViaHash = true;
-window.viewHistoryResult((p.id === undefined || p.id === null || p.id === "") ? p.i : p.id);
-openedHash = true;
- }
- }
- }catch(e){}
-if(!openedHash){
-const hash = window.location.hash||"";
-if(hash){
-window._openViaHash = true;
+const hash = hashStr || "";
+if(!hash) return false;
 const m = hash.match(/^#view=(.+)$/);
-const tm = hash.match(/^#type=([A-Z]{4})$/);
+const tm = hash.match(/^#type=([A-Za-z]{4})$/);
 if(m && typeof window.viewHistoryResult === "function"){
 let ref = m[1];
 try{ ref = decodeURIComponent(ref); }catch(e){}
 window.viewHistoryResult(/^\d+$/.test(ref) ? parseInt(ref, 10) : ref);
-openedHash = true;
- } else if(tm && typeof window.openType === "function"){
-window.openType(tm[1], "ext");
-openedHash = true;
- } else {
+return true;
+ }
+if(tm && typeof window.openType === "function"){
+window.openType(tm[1].toUpperCase(), "ext");
+return true;
+ }
 const MAP = {
  "#about": "openAbout",
  "#spectrum": "openSpectrum",
@@ -650,10 +638,45 @@ const MAP = {
 const fn = MAP[hash];
 if(fn && typeof window[fn] === "function"){
 window[fn]();
+return true;
+ }
+ }catch(e){}
+return false;
+};
+// hash 變更（同一文件內錨點跳轉）／bfcache 還原（load 唔會再跑）都要補做深層連結
+window.addEventListener("hashchange", function(){
+try{ window._openDeepLink(window.location.hash || ""); }catch(e){}
+});
+window.addEventListener("pageshow", function(ev){
+try{
+if(ev && ev.persisted) window._openDeepLink(window.location.hash || "");
+ }catch(e){}
+});
+let openedHash = false;
+// 記錄頁「睇結果」渠道：sessionStorage（唔靠 URL 解析）
+// 注意：一定要讀完即清，而且只喺「冇明確深層連結」時先用，
+// 否則舊旗標會劫持之後嘅跳轉（例如撳 16 型統計嘅人格圖）。
+let pendingRec = null;
+try{
+const pend = sessionStorage.getItem("hkmbti_pending_record");
+if(pend){
+sessionStorage.removeItem("hkmbti_pending_record");
+try{ pendingRec = JSON.parse(pend); }catch(e){ pendingRec = null; }
+ }
+ }catch(e){}
+if(!openedHash){
+const hash = window.location.hash||"";
+if(hash){
+window._openViaHash = true;
+openedHash = window._openDeepLink(hash);
+ }
+}
+if(!openedHash && pendingRec && typeof window.viewHistoryResult === "function"){
+// 由 record.html 跳入嚟：用 replaceState 取代當前 history 一筆，
+// 唔好 push（push 會留低一筆「主頁」→ 撳手機返回鍵會褪去主頁，唔係返上一頁）
+window._openViaHash = true;
+window.viewHistoryResult((pendingRec.id === undefined || pendingRec.id === null || pendingRec.id === "") ? pendingRec.i : pendingRec.id);
 openedHash = true;
- }
- }
- }
 }
 if(!openedHash){
 const last = sessionStorage.getItem("hkmbti_last_section");
