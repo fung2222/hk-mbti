@@ -1,4 +1,4 @@
-# Google Play · Data Safety Form 答案（v1.7.0 · 2026-07-31 更新）
+# Google Play · Data Safety Form 答案（v2.0.0 · 2026-09-26 更新）
 
 > **狀態**：✅ 站內私隱頁已完成（Step 1b-C · index.html `#privacy` section）
 > **狀態**：✅ 獨立 Privacy URL 已上線（Step 2a · `privacy.html`）
@@ -34,7 +34,7 @@ https://fung2222.github.io/hk-mbti/privacy.html
 | 📂 檔案 / 文件 | ❌ 否 | |
 | 📅 行事曆 | ❌ 否 | |
 | 👥 聯絡人 | ❌ 否 | |
-| 📊 App 活動 | ✅ 是 | 測試結果、版本、稱呼（localStorage） |
+| 📊 App 活動 | ✅ 是 | ① 測試結果、版本、稱呼（存 localStorage，留喺部機）② **頁面瀏覽**（GoatCounter 匿名彙總計數） |
 | 🌐 Web 瀏覽 | ❌ 否 | |
 | 📈 App 資訊 / 效能 | ❌ 否 | |
 | 🆔 裝置 ID | ❌ 否 | |
