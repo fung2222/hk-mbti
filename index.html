@@ -596,6 +596,7 @@ const MAP = {
  "#hub": "openHub",
  "#social": "openSocial",
  "#romance": "openRomance",
+ "#method": "openMethod",
  "#privacy": "openPrivacy"
  };
 const fn = MAP[hash];
@@ -2384,7 +2385,7 @@ if(window._navStack.length > 24) window._navStack.shift();
  }
  }
 window._showing = id;
- ["home","profile","test","result","about","spectrum","hub","letter","type","social","socialArticle","romance","romanceArticle","privacy"].forEach(s => window.$(s).classList.add("hidden"));
+ ["home","profile","test","result","about","spectrum","hub","letter","type","social","socialArticle","romance","romanceArticle","method","privacy"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
 window.scrollTo(0,0);
 if(id === "home"){
@@ -4344,6 +4345,7 @@ if(prev && prev.letter){ openLetter(prev.letter); return; }
 if(typeof window.openHub === "function"){ openHub(); return; }
  }
 if(id === "about"){ openAbout(); return; }
+if(id === "method"){ if(typeof window.openMethod === "function"){ openMethod(); return; } }
 if(id === "privacy"){ openPrivacy(); return; }
 if(id === "spectrum"){ openSpectrum(); return; }
 if(id === "hub"){ openHub(); return; }
