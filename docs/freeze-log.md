@@ -8,6 +8,19 @@
 
 ---
 
+## v2.0.0 · 2026-09-26（正式推出）
+- **tag**：`v2.0.0`（`31b7166`，annotated，已 push）｜**backup**：`/opt/data/backups/hk-mbti-v2.0.0-freeze-20260926-135002.tar.gz`（16MB、594 項）+ `.meta.txt`
+- **版本**：`VERSION` 2.0.0｜`manifest.json` 2.0.0｜`sw.js` CACHE `hk-mbti-v2.0.0`｜UI badge「版本 v2.0」（＋privacy／tee footer v2.0）
+- **改咗**（v1.9.0 → v2.0.0）：
+  - 題庫最後執漏：六項審計全綠；111×2 條變體逐條讀，修好「變體問朋友 post 旅行、但選項問有冇安全感」類錯配（規矩：變體＝同主問同一件事，唔可換情境／對象／動作）
+  - 結果頁每軸**真實百分比**（5 行、由 50% 中線向贏邊延伸、長度＝兩邊差距一半、加埋一定 100%）＋「計分方法同限制」入口
+  - 新頁「計分方法同限制」：5 條軸、點計分、點出題、做過嘅檢查、限制、私隱（7 段，實測 685 字）
+  - 分享卡：T/A chip、字體同 app 統一（HK 字 stack、去假斜體）、spacing 重排（你是↔大字 55px、名字↔你是 94px）
+  - 底部 CTA：8 個「探索更多」分頁統一 softbox；7 個掣改 `goPickVersion()`（一撳捲到版本卡 y=862）
+  - 全站字體統一：字級 30→9 級、字重 6→4、行高 11→5（四個大字 Archivo Black 冇動）
+  - GoatCounter 私人訪客統計（5 頁）＋私隱聲明新增第 5 節「瀏覽統計」；移除 `font-test.html`
+- **未做／注意**：Play 正式版未申請（12 testers × 14 日未完）｜Play Console 資料安全表要加「App 活動：頁面瀏覽」｜舊定義「v2.0＝題目逐條核對」未做（六項審計已全綠，要做留 v2.1）
+
 ## v1.9.0 · 2026-09-26
 - **tag**：`v1.9.0`（`d599b20`，annotated，已 push）
 - **backup**：`/opt/data/backups/hk-mbti-v1.9.0-freeze-20260926-103718.tar.gz`（7.1MB、97 項）+ `.meta.txt`
