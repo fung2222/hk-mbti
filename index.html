@@ -64,8 +64,8 @@ body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavio
 #app .text-\[10px\]{font-size:14px!important;line-height:1.45}
 #app .text-xs{font-size:15px!important;line-height:1.45}
 #app .text-sm{font-size:17px!important;line-height:1.6}
-#app .text-base{font-size:19px!important}
-#app .text-lg{font-size:19px!important}
+#app .text-[15px]{font-size:19px!important}
+#app .text-[19px]{font-size:19px!important}
 .option{font-size:17px}
 .option .flex-1{font-size:17px;line-height:1.45}
 /* 版本雙擊確認 · 三色預設 */
@@ -546,7 +546,7 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
  <div class="text-xs text-gray-500 truncate">港MBTI · 隨時玩 60 題測試</div>
  </div>
  <button id="installBtn" class="btn-gold px-4 py-2 rounded-lg text-sm font-bold flex-shrink-0">安裝</button>
- <button id="installDismiss" class="text-gray-400 text-xl px-2 flex-shrink-0"></button>
+ <button id="installDismiss" class="text-gray-400 text-[19px] px-2 flex-shrink-0"></button>
  </div>
  </div>
 
@@ -938,7 +938,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <div class="card p-5 mb-4">
  <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>私隱聲明</div>
- <h2 class="text-lg font-black mb-3">本 App 點處理你嘅資料</h2>
+ <h2 class="text-[19px] font-black mb-3">本 App 點處理你嘅資料</h2>
 
  <div class="space-y-4 text-sm text-gray-700 leading-relaxed">
  <div>
@@ -1159,7 +1159,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <div id="typeHero" class="card p-6 mb-4 text-center">
  <div class="text-5xl font-black mb-1" id="typeBig">INTJ</div>
- <h2 class="text-xl font-black mb-1" id="typeName">建築師</h2>
+ <h2 class="text-[19px] font-black mb-1" id="typeName">建築師</h2>
  <p class="text-sm" id="typeSlogan">「東鐵企到金鐘」</p>
  </div>
 
@@ -1268,7 +1268,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="flex items-center justify-between mb-8">
  <a href="./" id="homeLogoLink" onclick="goHome();return false;" class="flex items-center gap-2 cursor-pointer" style="-webkit-tap-highlight-color:transparent;text-decoration:none;color:inherit;">
  <img src="icon-192.png" class="w-9 h-9 rounded-lg flex-shrink-0" alt="港MBTI">
- <div class="font-black text-lg tracking-tight">港式 MBTI</div>
+ <div class="font-black text-[19px] tracking-tight">港式 MBTI</div>
  </a>
  <div class="home-menu-wrap">
  <button type="button" class="home-menu-btn" onclick="toggleHomeMenu(event)" aria-label="選單">⋯</button>
@@ -1307,7 +1307,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
- <div class="text-base font-black text-ink">生活版（完整測試）</div>
+ <div class="text-[15px] font-black text-ink">生活版（完整測試）</div>
  <div class="text-xs text-gray-600 mt-0.5">60 題 · 5 分鐘 · 最準確</div>
  <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('life')">立即進行</button>
  </div>
@@ -1317,7 +1317,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
- <div class="text-base font-black text-ink">進階版（快速版）</div>
+ <div class="text-[15px] font-black text-ink">進階版（快速版）</div>
  <div class="text-xs text-gray-600 mt-0.5">30 題 · 3 分鐘 · 平衡選擇</div>
  <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('advanced')">立即進行</button>
  </div>
@@ -1327,7 +1327,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
- <div class="text-base font-black text-ink">BB 版（極簡版）</div>
+ <div class="text-[15px] font-black text-ink">BB 版（極簡版）</div>
  <div class="text-xs text-gray-600 mt-0.5">10 題 · 1 分鐘 · 純粹試下</div>
  <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('bb')">立即進行</button>
  </div>
@@ -1337,7 +1337,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div data-ver="record" onclick="selectRecord()" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
- <div class="text-base font-black text-ink">我的記錄 <span id="homeRecordCount" class="text-gray-500 font-bold">（0/5）</span></div>
+ <div class="text-[15px] font-black text-ink">我的記錄 <span id="homeRecordCount" class="text-gray-500 font-bold">（0/5）</span></div>
  <div class="text-xs text-gray-600 mt-0.5">本機保存，最多 5 次</div>
  <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goRecord()">查看紀錄</button>
  </div>
@@ -1488,46 +1488,46 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <!-- 第 1 步：姓名 -->
  <div class="wiz-step" id="wizStep1">
  <div class="wiz-ico" style="color:#4E86B0"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.8" y="5.4" width="18.4" height="13.2" rx="2.4"/><circle cx="8.6" cy="11.2" r="1.9"/><path d="M5.8 15.4c.5-1.2 1.6-2 2.8-2s2.3.8 2.8 2"/><path d="M14.4 10.6h4.4"/><path d="M14.4 13.8h4.4"/></svg></div>
- <h2 class="text-xl font-black mb-1">你叫咩名？</h2>
+ <h2 class="text-[19px] font-black mb-1">你叫咩名？</h2>
  <p class="text-xs text-gray-500 mb-4 wiz-sub">姓名會印喺分享卡同紀錄入面</p>
- <input id="profileName" type="text" maxlength="12" placeholder="例如：阿明、KaKa" class="w-full mb-4 px-3 py-3 rounded-xl border-2 border-gray-200 focus:border-gold outline-none text-base bg-white">
- <button onclick="wizNext(1)" class="btn-gold w-full py-3.5 rounded-xl text-base font-black">下一頁</button>
+ <input id="profileName" type="text" maxlength="12" placeholder="例如：阿明、KaKa" class="w-full mb-4 px-3 py-3 rounded-xl border-2 border-gray-200 focus:border-gold outline-none text-[15px] bg-white">
+ <button onclick="wizNext(1)" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">下一頁</button>
  <button onclick="wizSkip()" class="wiz-ghost">匿名港人 · 跳過</button>
  </div>
 
  <!-- 第 2 步：港式稱呼 -->
  <div class="wiz-step hidden" id="wizStep2">
  <div class="wiz-ico" style="color:#C08552"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.4 11.2V5.4a2 2 0 012-2h5.8a2 2 0 011.4.6l7.2 7.2a2 2 0 010 2.8l-5.8 5.8a2 2 0 01-2.8 0L3.9 12.6a2 2 0 01-.5-1.4z"/><circle cx="8.2" cy="8.2" r="1.3"/></svg></div>
- <h2 class="text-xl font-black mb-1">揀個港式稱呼</h2>
+ <h2 class="text-[19px] font-black mb-1">揀個港式稱呼</h2>
  <p class="text-xs text-gray-500 mb-4 wiz-sub">揀一個啱你嘅稱呼（會印喺分享卡）</p>
  <div id="nickGrid" class="flex flex-wrap gap-2 mb-4"></div>
- <button onclick="wizNext(2)" class="btn-gold w-full py-3.5 rounded-xl text-base font-black">下一頁</button>
+ <button onclick="wizNext(2)" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">下一頁</button>
  <button onclick="wizPrev(2)" class="wiz-ghost">上一步</button>
  </div>
 
  <!-- 第 3 步：性別 -->
  <div class="wiz-step hidden" id="wizStep3">
  <div class="wiz-ico" style="color:#C97B8A"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.2" cy="9.8" r="4"/><path d="M8.2 13.8v5.4"/><path d="M6 16.8h4.4"/><circle cx="15.6" cy="14.6" r="3.2"/><path d="M17.8 12.4l2.6-2.6"/><path d="M18.2 9.6h2.2v2.2"/></svg></div>
- <h2 class="text-xl font-black mb-1">你係男定女？</h2>
+ <h2 class="text-[19px] font-black mb-1">你係男定女？</h2>
  <p class="text-xs text-gray-500 mb-4 wiz-sub">用嚟調整分享卡嘅語氣</p>
  <div class="grid grid-cols-2 gap-3 mb-4">
  <button type="button" onclick="pickGender('男')" id="genderM" class="gender-btn">男</button>
  <button type="button" onclick="pickGender('女')" id="genderF" class="gender-btn">女</button>
  </div>
- <button onclick="wizNext(3)" class="btn-gold w-full py-3.5 rounded-xl text-base font-black">下一頁</button>
+ <button onclick="wizNext(3)" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">下一頁</button>
  <button onclick="wizPrev(3)" class="wiz-ghost">上一步</button>
  </div>
 
  <!-- 第 4 步：說明 + 開始 -->
  <div class="wiz-step hidden" id="wizStep4">
  <div class="wiz-ico" style="color:#D4A95F"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M10.2 8.8v6.4l5-3.2z"/></svg></div>
- <h2 class="text-xl font-black mb-3">準備好未？</h2>
+ <h2 class="text-[19px] font-black mb-3">準備好未？</h2>
  <div class="space-y-2.5 wiz-facts">
  <div class="flex items-start gap-2 text-sm text-gray-600"><span class="brand-gold font-black flex-shrink-0">·</span><span>題目會打亂，跟直覺揀就啱</span></div>
  <div class="flex items-start gap-2 text-sm text-gray-600"><span class="brand-gold font-black flex-shrink-0">·</span><span>多個版本結果互通</span></div>
  <div class="flex items-start gap-2 text-sm text-gray-600"><span class="brand-gold font-black flex-shrink-0">·</span><span>測完會得到一張人格分享卡</span></div>
  </div>
- <button onclick="wizStart()" class="btn-gold w-full py-3.5 rounded-xl text-base font-black">正式開始</button>
+ <button onclick="wizStart()" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">正式開始</button>
  <button onclick="wizPrev(4)" class="wiz-ghost">上一步</button>
  </div>
  </section>
@@ -1556,7 +1556,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <div class="card p-5 mb-4 fade-up" id="qCard">
  <div class="text-[10px] tracking-widest brand-gold font-bold mb-2 q-enter q-dim" id="qDimension">載入中...</div>
- <h2 id="qText" class="text-lg font-bold leading-snug mb-5 q-enter q-text" onclick="replayQuestionVoice()" style="cursor:pointer;">載入中...</h2>
+ <h2 id="qText" class="text-[19px] font-bold leading-snug mb-5 q-enter q-text" onclick="replayQuestionVoice()" style="cursor:pointer;">載入中...</h2>
  <div id="qOptions" class="space-y-2.5"></div>
  </div>
 
@@ -4773,7 +4773,7 @@ const html = `
  <div class="card p-5 mb-4">
  <div class="hub-detail-head">
  ${window.hubSceneIconHtml(s.name, 30)}
- <h3 class="text-xl font-black">${s.name}</h3>
+ <h3 class="text-[19px] font-black">${s.name}</h3>
  </div>
  <p class="text-sm text-gray-600">${s.desc}</p>
  </div>
@@ -4903,7 +4903,7 @@ const html = `
  <div class="card p-5 mb-4">
  <div class="hub-detail-head">
  ${window.hubSceneIconHtml(s.name, 30)}
- <h3 class="text-xl font-black">${s.name}</h3>
+ <h3 class="text-[19px] font-black">${s.name}</h3>
  </div>
  <p class="text-sm text-gray-600">${s.desc}</p>
  </div>
@@ -5183,7 +5183,7 @@ let html = `
  <div class="card p-4" style="background:linear-gradient(135deg, ${Ta.color[0]}33, ${Tb.color[0]}33)">
  <div class="text-center mb-3">
  <div class="text-2xl font-black tracking-wide">${a} + ${b}</div>
- <div class="text-3xl font-black text-accent mt-2">${compatScore}% 相似</div>
+ <div class="text-[24px] font-black text-accent mt-2">${compatScore}% 相似</div>
  <div class="text-xs text-gray-500 mt-1">${same.length}/4 個維度相同</div>
  </div>
  <div class="mb-3">
