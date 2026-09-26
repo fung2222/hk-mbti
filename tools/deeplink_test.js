@@ -53,6 +53,7 @@ function load(opts){
           window.localStorage.setItem("hkmbti_last_result", JSON.stringify(store[0]));
           window.sessionStorage.setItem("hkmbti_last_section", "home");
           if(opts.pending) window.sessionStorage.setItem("hkmbti_pending_record", JSON.stringify(opts.pending));
+          if(opts.pendingType) window.sessionStorage.setItem("hkmbti_pending_type", JSON.stringify(Object.assign({ t: Date.now() }, opts.pendingType)));
           if(opts.navlog) window.sessionStorage.setItem("hkmbti_navlog", JSON.stringify(Object.assign({ t: Date.now(), build: "d1" }, opts.navlog)));
         }catch(e){}
       },
@@ -151,6 +152,32 @@ const visible = w => ["home","type","about","spectrum","hub","social","romance",
     const ok = w._showing === "home" && !alerts.length;
     if(!ok) bad++;
     console.log(`  正常瀏覽（冇跳轉意圖）→ 診斷提示 ${alerts.length} 個 ${ok ? "✓ 唔嘈" : "✗ 嘈咗"}`);
+    w.close();
+  }
+  console.log("\n【5】記錄頁人格圖（type 渠道對比：以前淨係 hash 一條）");
+  {
+    // (a) 淨係 sessionStorage（完全冇 hash）—— 同眼掣睇結果一樣嘅第二條渠道
+    const { w, alerts } = await load({ pendingType: { code: "INFP" } });
+    const ok = w._showing === "type" && !alerts.length;
+    if(!ok) bad++;
+    console.log(`  淨係 pending_type → 實際 ${w._showing} ${ok ? "✓ 開到百科" : "✗"}`);
+    w.close();
+  }
+  {
+    // (b) hash 壞（類型代號唔存在）＋ pending_type 好 → 一定要開到（渠道互相補位）
+    const { w } = await load({ hash: "#type=ZZZZ", pendingType: { code: "ESTJ" } });
+    const ok = w._showing === "type" && w.document.getElementById("typeBig").innerText === "ESTJ";
+    if(!ok) bad++;
+    console.log(`  hash 壞 + pending_type 好 → 實際 ${w._showing}/${w.document.getElementById("typeBig").innerText} ${ok ? "✓ 補位成功" : "✗"}`);
+    w.close();
+  }
+  {
+    // (c) 類型代號真係唔存在 → 一定要出聲，唔可以靜靜彈返主頁
+    const { w, alerts } = await load({ hash: "#type=ZZZZ" });
+    const said = alerts.some(a => a.indexOf("暫時未有資料") >= 0);
+    const ok = said && w._showing === "home";
+    if(!ok) bad++;
+    console.log(`  #type=ZZZZ（冇 pending）→ 實際 ${w._showing}，有冇提示：${said ? "✓ 有" : "✗ 靜靜死"}`);
     w.close();
   }
   console.log(bad ? `\n✗ ${bad} 項唔合格` : "\n✓ 全部深層連結都開到對應畫面");

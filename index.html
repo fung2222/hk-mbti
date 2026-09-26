@@ -610,6 +610,23 @@ try{
 // 深層連結（#view= / #type=XXXX / #about ...）：
 // load 時做一次，之後 hash 再變（同一文件內跳轉、bfcache 還原）都要照做，
 // 唔可以停留喺主頁（2026-09-26 Roy 報：記錄頁撳 16 型統計嘅人格圖彈返主頁）
+// 記錄頁撳人格圖：sessionStorage 渠道（唔靠 URL／hash，同眼掣睇結果一樣咁穩）
+window._openPendingType = function(){
+try{
+const raw = sessionStorage.getItem("hkmbti_pending_type");
+if(!raw) return false;
+sessionStorage.removeItem("hkmbti_pending_type");
+let o = null;
+try{ o = JSON.parse(raw); }catch(e){ o = null; }
+if(!o || !o.code) return false;
+if(o.t && (Date.now() - o.t) > 60000) return false;   // 一分鐘前嘅舊旗標唔理
+if(typeof window.openType !== "function") return false;
+window._openViaHash = true;   // 由另一頁跳入嚟：replaceState，唔好 push
+window.openType(String(o.code).toUpperCase(), "ext");
+return true;
+ }catch(e){ window._lastErr = "pendingType: " + (e && e.message ? e.message : e); }
+return false;
+};
 window._openDeepLink = function(hashStr){
 try{
 const hash = hashStr || "";
@@ -620,12 +637,14 @@ if(m && typeof window.viewHistoryResult === "function"){
 let ref = m[1];
 try{ ref = decodeURIComponent(ref); }catch(e){}
 window.viewHistoryResult(/^\d+$/.test(ref) ? parseInt(ref, 10) : ref);
-return true;
+// 開唔到（紀錄冇咗等）就交返畀下一個渠道（pending）補位，唔好當成功
+return window._showing === "result";
  }
 if(tm && typeof window.openType === "function"){
 window.openType(tm[1].toUpperCase(), "ext");
-return true;
- }
+if(window._showing === "type") return true;
+// 冇呢個類型代號：openType 已經出咗提示，交返畀下一個渠道試
+}
 const MAP = {
  "#about": "openAbout",
  "#spectrum": "openSpectrum",
@@ -681,12 +700,13 @@ alert(lines.join("\n"));
 };
 // hash 變更（同一文件內錨點跳轉）／bfcache 還原（load 唔會再跑）都要補做深層連結
 window.addEventListener("hashchange", function(){
-try{ window._openDeepLink(window.location.hash || ""); }catch(e){}
+try{ if(!window._openDeepLink(window.location.hash || "")) window._openPendingType(); }catch(e){}
 try{ setTimeout(function(){ window._navDiag(); }, 1500); }catch(e){}
 });
 window.addEventListener("pageshow", function(ev){
 try{
-if(ev && ev.persisted) window._openDeepLink(window.location.hash || "");
+// bfcache 還原：load handler 唔會再跑，兩個渠道都要補做
+if(window._openDeepLink(window.location.hash || "")){} else { window._openPendingType(); }
  }catch(e){}
 try{ setTimeout(function(){ window._navDiag(); }, 1500); }catch(e){}
 });
@@ -710,6 +730,7 @@ openedHash = window._openDeepLink(hash);
  }
 }
 try{ setTimeout(function(){ window._navDiag(); }, 1800); }catch(e){}
+if(!openedHash && window._openPendingType()){ openedHash = true; }
 if(!openedHash && pendingRec && typeof window.viewHistoryResult === "function"){
 // 由 record.html 跳入嚟：用 replaceState 取代當前 history 一筆，
 // 唔好 push（push 會留低一筆「主頁」→ 撳手機返回鍵會褪去主頁，唔係返上一頁）
@@ -5178,9 +5199,13 @@ window.scrollTo(0,0);
 };
 
 window.openType = function(type, from){
-const T = window.TYPES[type];
-const F = window.TYPES_FULL[type];
-if(!T) return;
+const T = window.TYPES && window.TYPES[type];
+// 以前係 `if(!T) return;` → 用戶淨係見到主頁，完全唔知咩事。而家一定講清楚。
+if(!T){
+alert("呢個類型代號（" + type + "）暫時未有資料。\n可能係舊版快取，請完全閂咗分頁再開一次。");
+return;
+ }
+const F = (window.TYPES_FULL && window.TYPES_FULL[type]) || null;
 if(from) window._typeFrom = from;
 window._homeReelHold = false;
 const reel = $("homeTypeReel");
@@ -5193,16 +5218,19 @@ window._lastType = type;
  $("typeName").innerText = T.cn || T.name;
  $("typeSlogan").innerText = "「" + T.slogan + "」";
  $("typeBreadcrumb").innerText = "性格 / " + type;
- $("typeHero").style.background = "linear-gradient(135deg, " + T.color[0] + ", " + T.color[1] + ")";
+ const _tc = Array.isArray(T.color) ? T.color : (T.color ? [T.color, T.color] : ["#4b5563", "#1f2937"]);
+ $("typeHero").style.background = "linear-gradient(135deg, " + _tc[0] + ", " + _tc[1] + ")";
  $("typeHero").style.color = "white";
  $("typeFull").innerHTML = window.formatTypeFullHtml(F && F.full);
- $("typeStrength").innerHTML = F.strength.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
- $("typeWeakness").innerHTML = F.weakness.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
- $("typeLove").innerText = F.love.join("、");
- $("typeWork").innerText = F.work.join("、");
+ // F（TYPES_FULL）冇資料都唔可以 throw：以前一 throw 就彈返主頁
+const _fl = F || {};
+ $("typeStrength").innerHTML = ((_fl.strength) || []).map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
+ $("typeWeakness").innerHTML = ((_fl.weakness) || []).map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
+ $("typeLove").innerText = ((_fl.love) || []).join("、");
+ $("typeWork").innerText = ((_fl.work) || []).join("、");
  // 兼容：friend 同 conflict 可能冇定義，fallback 用 love
- $("typeFriend").innerText = (F.friend || F.love).join("、");
- $("typeConflict").innerText = (F.conflict || F.love).join("、");
+ $("typeFriend").innerText = ((_fl.friend || _fl.love) || []).join("、");
+ $("typeConflict").innerText = ((_fl.conflict || _fl.love) || []).join("、");
 show("type");
 window.scrollTo(0,0);
 };

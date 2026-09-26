@@ -359,7 +359,11 @@ location.href = "./#view=" + encodeURIComponent(id || i);
 
 function goType(code){
  // 跳去主頁睇該類型嘅完整百科（#type=XXXX）
-// 臨時診斷（2026-09-26）：寫低跳轉意圖，主頁開唔到就會出報告
+// 兩個渠道一齊傳（同眼掣睇結果一樣）：
+//  1. sessionStorage hkmbti_pending_type —— 唔靠 URL 解析，最穩
+//  2. hash #type=XXXX —— backup（直接分享連結／舊版都用）
+// 2026-09-26：之前淨係用 hash 一條渠道，一斷就靜靜彈返主頁。
+try{ sessionStorage.setItem("hkmbti_pending_type", JSON.stringify({ code: code, t: Date.now() })); }catch(e){}
 try{ sessionStorage.setItem("hkmbti_navlog", JSON.stringify({ k:"type", v:code, t:Date.now(), build:"d1" })); }catch(e){}
 try{
 location.href = "./#type=" + code;
