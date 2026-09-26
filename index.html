@@ -432,6 +432,10 @@ color:white;position:relative;overflow:hidden
 .fade-up{animation:fadeUp 0.4s ease-out}
 .q-enter{opacity:0;transform:translateY(14px);animation:qEnter .7s cubic-bezier(.22,1,.36,1) forwards}
 .q-enter.q-dim{animation-delay:.05s}
+/* 測試頁維度標籤收埋（2026-09-26 Roy 決定）：用戶見到「T/A - 比較」等內部維度名
+   會知而家測緊邊條維度 → 可以照住「想點答」而扭曲答案（OPM 都指出透明題目容易被 fake）→
+   標準做法係做嘅時候唔標明測緊咩。元素保留（JS 照寫）但唔顯示，唔好改返做顯示。*/
+#qDimension{display:none !important}   /* .brand-gold 帶 display:inline-flex !important，唔加 !important 蓋唔到 */
 .q-enter.q-text{animation-delay:.15s}
 #qOptions .option{opacity:0;transform:translateY(10px);animation:qEnter .55s cubic-bezier(.22,1,.36,1) forwards}
 #qOptions .option:nth-child(1){animation-delay:.3s}
