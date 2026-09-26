@@ -1175,7 +1175,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <section id="method" class="hidden fade-up">
  <div class="page-hero">
  <div class="page-hero-row">
- <button type="button" class="page-back" onclick="goBack()">返回</button>
+ <button type="button" class="page-back" onclick="backFromMethod()">返回</button>
  <h1>計分方法同限制</h1>
  </div>
  <p class="page-hero-sub">我哋點計分、點出題，同埋有咩做唔到</p>
@@ -4690,7 +4690,20 @@ show("spectrum");
 };
 
 window.openMethod = function(){
+// 記住由邊一頁入嚟，返回時確定性返去（唔靠 history.back()，避免彈出 app）
+try{
+window._methodBackTo = (window._showing && window._showing !== "method") ? window._showing : "home";
+}catch(e){ window._methodBackTo = "home"; }
 show("method");
+};
+
+window.backFromMethod = function(){
+const to = window._methodBackTo;
+window._methodBackTo = null;
+if(to === "result"){
+try{ show("result"); return; }catch(e){}
+ }
+window.goHome();
 };
 
 window.toggleHomeAcc = function(id){
