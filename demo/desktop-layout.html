@@ -4,326 +4,86 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
-<title>桌面／平板版式示範 · 港式 MBTI</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<title>桌面／平板版式對照台 · 港式 MBTI</title>
 <style>
-:root{--gold:#D4A95F;--ink:#1a1a1a;--paper:#FAF7F0;--accent:#E85D5D;--soft:#F2EDE0;}
+:root{--gold:#D4A95F;--ink:#1a1a1a;--paper:#FAF7F0;--soft:#F2EDE0}
 *{box-sizing:border-box}
-body{margin:0;font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei",sans-serif;background:var(--soft);color:var(--ink);-webkit-font-smoothing:antialiased}
-
-/* ============ 1. 外框寬度（唯一一組斷點） ============ */
-.shell{max-width:448px;margin:0 auto;padding:0 16px}
-@media (min-width:768px){ .shell{max-width:720px;padding:0 24px} }      /* 平板 */
-@media (min-width:1024px){ .shell{max-width:1040px;padding:0 32px} }    /* 電腦 */
-
-/* ============ 2. 共用外觀（同 app 一樣嘅 token） ============ */
-.card{background:#fff;border-radius:16px;box-shadow:0 1px 8px rgba(0,0,0,.06)}
-.tag{font-size:11px;color:#a8a29a;letter-spacing:.02em;margin:0 0 8px}
-h2{font-size:19px;font-weight:900;margin:0 0 4px;letter-spacing:-.01em}
-.sub{font-size:13px;color:#7c766c;margin:0 0 14px;line-height:1.6}
-.sec{padding:26px 0;border-top:1px solid rgba(0,0,0,.05)}
-.sec:first-of-type{border-top:0}
-
-/* ---- Hero ---- */
-.logo{font-weight:900;font-size:19px;letter-spacing:-.02em;margin-bottom:18px}
-h1{font-size:34px;line-height:1.15;font-weight:900;letter-spacing:-.02em;margin:0 0 12px}
-.cta{display:inline-block;background:var(--ink);color:#fff;font-weight:800;font-size:15px;padding:14px 22px;border-radius:12px;margin:18px 0 10px}
-.hero-grid{display:grid;gap:22px}
-.hero-card{padding:16px}
-.hero-card .big{font-size:30px;font-weight:900;line-height:1}
-.hero-card .nm{font-size:14px;color:#6b665e;margin-top:6px}
-.hero-card .row{display:flex;justify-content:space-between;align-items:flex-end}
-@media (min-width:1024px){
-  .hero-grid{grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
-  h1{font-size:46px}
-}
-
-/* ---- 版本卡：手機 1 欄 → 平板／電腦 3 欄 ---- */
-.ver-grid{display:grid;gap:12px}
-@media (min-width:768px){ .ver-grid{grid-template-columns:repeat(3,1fr)} }
-.ver-card{padding:18px;border:2px solid #ece5d5;border-radius:14px;background:#fff;text-align:left}
-.ver-card.on{border-color:var(--gold);box-shadow:0 6px 20px rgba(212,169,95,.22)}
-.ver-card b{display:block;font-size:16px;font-weight:900;margin-bottom:4px}
-.ver-card span{font-size:12px;color:#7c766c}
-
-/* ---- 16 型格：手機 2 → 平板 4 → 電腦 8 ---- */
-.tgrid{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
-@media (min-width:768px){ .tgrid{grid-template-columns:repeat(4,1fr)} }
-@media (min-width:1024px){ .tgrid{grid-template-columns:repeat(8,1fr)} }
-.tcell{padding:12px 10px;border-radius:12px;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.05);text-align:center}
-.tcell b{display:block;font-weight:900;font-size:15px}
-.tcell span{font-size:11px;color:#8b857a}
-
-/* ---- 場景卡：手機 1 → 平板 2 → 電腦 3 ---- */
-.sgrid{display:grid;gap:14px}
-@media (min-width:768px){ .sgrid{grid-template-columns:repeat(2,1fr)} }
-@media (min-width:1024px){ .sgrid{grid-template-columns:repeat(3,1fr)} }
-.scard{padding:18px;min-height:104px;display:flex;flex-direction:column;justify-content:space-between}
-.scard b{font-size:16px;font-weight:900}
-.scard span{font-size:13px;color:#7c766c;line-height:1.6;margin-top:6px}
-
-/* ---- 紀錄列：手機 1 → 平板／電腦 2 ---- */
-.rgrid{display:grid;gap:12px}
-@media (min-width:768px){ .rgrid{grid-template-columns:repeat(2,1fr)} }
-.rrow{display:flex;align-items:center;gap:14px;padding:16px}
-.rrow .code{font-size:20px;font-weight:900;min-width:66px}
-.rrow .meta{font-size:12px;color:#8b857a}
-.thumb{width:44px;height:78px;border-radius:8px;background:linear-gradient(160deg,var(--gold),#b98c3f);margin-left:auto;flex-shrink:0}
-
-/* ---- 統計 16 格：手機 4 → 平板／電腦 8 ---- */
-.stgrid{display:grid;gap:8px;grid-template-columns:repeat(4,1fr)}
-@media (min-width:768px){ .stgrid{grid-template-columns:repeat(8,1fr)} }
-.stcell{padding:10px 6px;border-radius:10px;border:1.5px solid #e6dfd0;background:#fff;text-align:center}
-.stcell b{display:block;font-size:13px;font-weight:800}
-.stcell span{font-size:10px;color:#9a948a}
-
-/* ---- 測驗題：刻意保持窄欄 ---- */
-.quiz{max-width:640px;margin:0 auto}
-.opt{padding:15px 16px;border-radius:12px;border:1.5px solid #ece5d5;background:#fff;margin-bottom:10px;font-size:15px}
-
-/* ---- 示範頁專用：框 + 斷點提示 ---- */
+body{margin:0;background:var(--soft);color:var(--ink);font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei",sans-serif}
+.wrap{max-width:1500px;margin:0 auto;padding:26px 20px 60px}
+h1{font-size:26px;font-weight:900;letter-spacing:-.02em;margin:0 0 8px}
+.sub{font-size:13.5px;color:#6f6a61;line-height:1.8;margin:0 0 16px;max-width:900px}
 .modes{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px}
 .modes button{font-family:inherit;font-size:13.5px;font-weight:800;padding:10px 15px;border-radius:999px;border:1.5px solid #e2dacb;background:#fff;color:#4c4740;cursor:pointer}
 .modes button.on{border-color:var(--ink);background:var(--ink);color:#fff}
 .modes a{font-size:13px;font-weight:800;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--gold);margin-left:6px}
+.notice{background:#fff;border-left:4px solid var(--gold);border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.7;color:#4c4740;margin:0 0 16px}
 .stage{overflow:auto;max-width:100%}
 .fr-box{overflow:hidden;border-radius:14px;border:1px solid rgba(0,0,0,.09);background:var(--soft);transform-origin:top left}
 .fr-box iframe{border:0;display:block;transform-origin:top left}
-.notice{background:#fff;border-left:4px solid var(--gold);border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.75;color:#4c4740;margin:0 0 18px;max-width:900px}
-.wrap{max-width:1400px;margin:0 auto;padding:28px 20px 60px}
+h2{font-size:17px;font-weight:900;margin:26px 0 10px}
+ol{font-size:13.5px;color:#5f5a52;line-height:1.95;padding-left:20px;margin:0}
+code{background:#fff;border:1px solid #eae3d6;border-radius:6px;padding:1px 5px;font-size:12.5px}
 .badge{position:fixed;right:14px;bottom:14px;background:var(--ink);color:#fff;font-size:12px;font-weight:800;padding:8px 12px;border-radius:999px;z-index:99}
-.notes{font-size:13px;color:#5f5a52;line-height:1.9;padding-left:20px}
 </style>
 </head>
 <body>
-
-<!-- ================= 示範頁外殼（iframe 內唔會顯示） ================= -->
-<div id="viewer">
- <div class="wrap">
-  <h1 style="font-size:30px">桌面／平板版式示範</h1>
-  <p class="sub" style="max-width:640px">
-   三個框係同一版，只係闊度唔同（iframe 會真觸發斷點，唔係縮圖）。可以直接喺框內捲動。
-   想放大睇：撳框頂或者喺新視窗開 <code>demo/desktop-layout.html?frame=1</code>。
-  </p>
-  <div class="modes" id="modes">
-   <button type="button" data-w="390" data-h="760">手機 390</button>
-   <button type="button" data-w="820" data-h="820">平板 820</button>
-   <button type="button" data-w="1280" data-h="880" class="on">電腦 1280（橫向網頁版）</button>
-   <button type="button" id="btnFull">原尺寸（可左右捲）</button>
-   <a id="openNew" href="?frame=1" target="_blank" rel="noopener">新分頁開</a>
-  </div>
-  <div class="notice" id="notice">載入中…</div>
-  <div class="stage" id="stage">
-   <div class="fr-box" id="frBox"><iframe id="fr" src="?frame=1"></iframe></div>
-  </div>
-
-  <h2 style="margin-top:18px">今次改動清單（只放寬 ＋ 改多欄，冇加導航）</h2>
-  <ol class="notes">
-   <li>外框：手機 448px → 平板 720px → 電腦 1040px（<b>手機完全唔變</b>）</li>
-   <li>Hero：手機上下排；電腦變左字右卡</li>
-   <li>版本卡：手機 1 欄 → 平板／電腦 3 欄</li>
-   <li>16 型格：手機 2 欄 → 平板 4 欄 → 電腦 8 欄</li>
-   <li>探索場景卡：手機 1 欄 → 平板 2 欄 → 電腦 3 欄</li>
-   <li>紀錄列：手機 1 欄 → 平板／電腦 2 欄</li>
-   <li>統計 16 格：手機 4 欄 → 平板／電腦 8 欄</li>
-   <li><b>測驗題目／結果卡刻意保持 640px 窄欄</b>（唔跟外框放大，閱讀最舒服）</li>
-  </ol>
+<div class="wrap">
+ <h1>桌面／平板版式對照台</h1>
+ <p class="sub">呢個係<b>真身示範</b>：同 https://fung2222.github.io/hk-mbti 一模一樣嘅內容（連 16 型色牌、版本卡、場景卡、攻略風琴都係真資料），只係加咗一層只喺 ≥768px 生效嘅排版規則。<b>手機版完全冇改</b>。</p>
+ <div class="modes" id="modes">
+  <button type="button" data-w="390" data-h="760">手機 390</button>
+  <button type="button" data-w="820" data-h="900">平板 820</button>
+  <button type="button" data-w="1280" data-h="920" class="on">電腦 1280</button>
+  <button type="button" id="btnFull">原尺寸（可左右捲）</button>
+  <a href="desktop-full.html" target="_blank" rel="noopener">新分頁開真身</a>
  </div>
+ <div class="notice" id="notice">載入中…</div>
+ <div class="stage" id="stage">
+  <div class="fr-box" id="frBox"><iframe id="fr" src="desktop-full.html"></iframe></div>
+ </div>
+
+ <h2>今次加咗啲咩（只係排版，冇改內容／冇改導航）</h2>
+ <ol>
+  <li>外框：手機 448px → <b>平板 720px → 電腦 1040px</b>（手機維持 448px）</li>
+  <li>Hero 文字：桌面／平板改<b>靠左</b>，大字大一級（手機維持置中）</li>
+  <li>16 型色牌：手機係橫向捲嘅跑馬燈；平板／電腦<b>攤開成 8 × 2 格全部見到</b>（自動隱藏 JS 用嚟做跑馬燈嘅重複嗰半）</li>
+  <li>版本卡：手機 1 欄 → 平板 2 欄 → 電腦 <b>4 欄</b></li>
+  <li>探索場景卡：手機 1 欄 → 平板 2 欄 → 電腦 <b>4 欄</b></li>
+  <li>主頁攻略風琴：手機 1 欄 → 平板 2 欄 → 電腦 <b>3 欄</b></li>
+  <li>「▼ 睇下面」掣：平板／電腦隱藏（因為已經一眼睇到）</li>
+ </ol>
+ <h2>冇做嘅嘢</h2>
+ <ol>
+  <li>冇加頂部導航（你話先唔加）</li>
+  <li>冇改任何文案、顏色、字型</li>
+  <li>冇改手機（所有新規則都喺 <code>@media (min-width:768px)</code> 入面，程式已驗證）</li>
+ </ol>
 </div>
-
-<!-- ================= 版面本體 ================= -->
-<div id="page">
-<div class="shell">
-
- <section class="sec">
-  <div class="tag">Hero（手機：上下排 ／ 電腦：左字右卡）</div>
-  <div class="hero-grid">
-   <div>
-    <div class="logo">港式 MBTI</div>
-    <h1>你係邊一種<br>香港人？</h1>
-    <p class="sub">60 條港式生活情境題。<br>用你熟悉嘅場景，睇出你係 16 型邊一種。</p>
-    <div class="cta">開始測試 · 約 6 分鐘</div>
-    <p class="sub" style="margin:6px 0 0">或者由紀錄睇返上次結果</p>
-   </div>
-   <aside class="card hero-card">
-    <div class="tag">上次結果</div>
-    <div class="row">
-     <div>
-      <div class="big">INFP</div>
-      <div class="nm">調解員 · 3 日前</div>
-     </div>
-     <div class="thumb"></div>
-    </div>
-   </aside>
-  </div>
- </section>
-
- <section class="sec">
-  <div class="tag">版本卡（手機 1 欄 ／ 平板・電腦 3 欄）</div>
-  <h2>選擇版本</h2>
-  <p class="sub">撳一下著燈，再撳一下入去。</p>
-  <div class="ver-grid">
-   <button class="ver-card on"><b>生活版</b><span>60 題 · 約 6 分鐘 · 最詳細</span></button>
-   <button class="ver-card"><b>進階版</b><span>30 題 · 約 4 分鐘</span></button>
-   <button class="ver-card"><b>BB 版</b><span>10 題 · 約 2 分鐘</span></button>
-  </div>
- </section>
-
- <section class="sec">
-  <div class="tag">16 型格（手機 2 ／ 平板 4 ／ 電腦 8）</div>
-  <h2>16 型人格</h2>
-  <p class="sub">撳入去睇完整百科。</p>
-  <div class="tgrid">
-   <div class="tcell"><b>INTJ</b><span>建築師</span></div>
-   <div class="tcell"><b>INTP</b><span>邏輯學家</span></div>
-   <div class="tcell"><b>ENTJ</b><span>指揮官</span></div>
-   <div class="tcell"><b>ENTP</b><span>辯論家</span></div>
-   <div class="tcell"><b>INFJ</b><span>提倡者</span></div>
-   <div class="tcell"><b>INFP</b><span>調解員</span></div>
-   <div class="tcell"><b>ENFJ</b><span>主人公</span></div>
-   <div class="tcell"><b>ENFP</b><span>競選者</span></div>
-   <div class="tcell"><b>ISTJ</b><span>物流師</span></div>
-   <div class="tcell"><b>ISFJ</b><span>守衛者</span></div>
-   <div class="tcell"><b>ESTJ</b><span>總經理</span></div>
-   <div class="tcell"><b>ESFJ</b><span>執事</span></div>
-   <div class="tcell"><b>ISTP</b><span>鑒賞家</span></div>
-   <div class="tcell"><b>ISFP</b><span>探險家</span></div>
-   <div class="tcell"><b>ESTP</b><span>企業家</span></div>
-   <div class="tcell"><b>ESFP</b><span>表演者</span></div>
-  </div>
- </section>
-
- <section class="sec">
-  <div class="tag">探索場景卡（手機 1 ／ 平板 2 ／ 電腦 3）</div>
-  <h2>探索更多</h2>
-  <p class="sub">用生活場景睇你嘅性格。</p>
-  <div class="sgrid">
-   <div class="card scard"><b>個人相處</b><span>同朋友、同事、家人相處，你係邊種角色。</span></div>
-   <div class="card scard"><b>個人拍拖</b><span>拍拖時你最在意嘅事，同你嘅相處模式。</span></div>
-   <div class="card scard"><b>性格百科</b><span>16 型逐一拆解：強項、盲點、夾邊種。</span></div>
-   <div class="card scard"><b>MBTI 性格光譜</b><span>四個維度各有幾偏，一眼睇晒。</span></div>
-   <div class="card scard"><b>香港 16 型統計</b><span>香港人實際分佈，同你嘅位置。</span></div>
-   <div class="card scard"><b>計分方法同限制</b><span>點計分、有咩限制，講清楚。</span></div>
-  </div>
- </section>
-
- <section class="sec">
-  <div class="tag">紀錄列（手機 1 欄 ／ 平板・電腦 2 欄）</div>
-  <h2>最近 5 次測試</h2>
-  <p class="sub">只保留最近五次紀錄。</p>
-  <div class="rgrid">
-   <div class="card rrow"><div><div class="code">INFP</div><div class="meta">生活版 · 3 日前</div></div><div class="thumb"></div></div>
-   <div class="card rrow"><div><div class="code">ESTJ</div><div class="meta">進階版 · 5 日前</div></div><div class="thumb"></div></div>
-   <div class="card rrow"><div><div class="code">ENFP</div><div class="meta">BB 版 · 1 星期前</div></div><div class="thumb"></div></div>
-   <div class="card rrow"><div><div class="code">ISTJ</div><div class="meta">生活版 · 2 星期前</div></div><div class="thumb"></div></div>
-  </div>
- </section>
-
- <section class="sec">
-  <div class="tag">統計 16 格（手機 4 ／ 平板・電腦 8）</div>
-  <h2>16 型人格統計</h2>
-  <div class="stgrid">
-   <div class="stcell"><b>INTJ</b><span>2 次</span></div>
-   <div class="stcell"><b>INTP</b><span>—</span></div>
-   <div class="stcell"><b>ENTJ</b><span>—</span></div>
-   <div class="stcell"><b>ENTP</b><span>1 次</span></div>
-   <div class="stcell"><b>INFJ</b><span>—</span></div>
-   <div class="stcell"><b>INFP</b><span>3 次</span></div>
-   <div class="stcell"><b>ENFJ</b><span>—</span></div>
-   <div class="stcell"><b>ENFP</b><span>2 次</span></div>
-   <div class="stcell"><b>ISTJ</b><span>1 次</span></div>
-   <div class="stcell"><b>ISFJ</b><span>—</span></div>
-   <div class="stcell"><b>ESTJ</b><span>2 次</span></div>
-   <div class="stcell"><b>ESFJ</b><span>—</span></div>
-   <div class="stcell"><b>ISTP</b><span>—</span></div>
-   <div class="stcell"><b>ISFP</b><span>1 次</span></div>
-   <div class="stcell"><b>ESTP</b><span>—</span></div>
-   <div class="stcell"><b>ESFP</b><span>—</span></div>
-  </div>
- </section>
-
- <section class="sec">
-  <div class="tag">測驗題目（刻意保持 640px 窄欄，唔跟外框放大）</div>
-  <div class="quiz">
-   <p class="sub">第 7 / 60 題</p>
-   <h2 style="font-size:21px;line-height:1.4">朋友生日飯，小型派對，你最典型會點做？</h2>
-   <div style="margin-top:16px">
-    <div class="opt">主動搞氣氛，帶住全場玩</div>
-    <div class="opt">搵一兩個熟嘅傾到最尾</div>
-    <div class="opt">幫手執頭執尾，睇住有冇人唔舒服</div>
-    <div class="opt">早少少走，返屋企休息</div>
-   </div>
-  </div>
- </section>
-
-</div>
-</div>
-
 <div class="badge" id="badge">—</div>
-
 <script>
-// iframe 內唔顯示示範外殼
-if(location.search.indexOf("frame") >= 0){
-  var v = document.getElementById("viewer");
-  if(v) v.remove();
-}
-// 一個框、四粒掣：一開就係電腦 1280 橫向版，任何裝置都睇得到（自動縮到入螢幕）
-let CUR = { w:1280, h:880, full:false };
-function viewportW(){
-  // clientWidth 有機會係 0（隱藏分頁／罕見情況）→ 一定要 fallback，唔可以算出負數縮放
-  const a = document.documentElement ? document.documentElement.clientWidth : 0;
-  const b = window.innerWidth || 0;
-  const v = a > 0 ? a : b;
-  return v > 0 ? v : 1024;
-}
+let CUR={w:1280,h:920,full:false};
+function viewportW(){const a=document.documentElement?document.documentElement.clientWidth:0;const b=window.innerWidth||0;const v=a>0?a:b;return v>0?v:1024}
 function render(){
-  const fr = document.getElementById("fr");
-  const box = document.getElementById("frBox");
-  if(!fr || !box) return;
-  const vp = viewportW();
-  const avail = Math.min(vp, 1440) - 40;
-  fr.style.width = CUR.w + "px";
-  fr.style.height = CUR.h + "px";
-  const k = CUR.full ? 1 : Math.min(1, Math.max(0.2, avail / CUR.w));
-  fr.style.transform = "scale(" + k + ")";
-  box.style.width = Math.round(CUR.w * k) + "px";
-  box.style.height = Math.round(CUR.h * k) + "px";
-  const n = document.getElementById("notice");
-  if(n){
-    const tip = (vp < 768)
-      ? "你而家用 <b>手機（" + vp + "px）</b>睇緊：畫面自動縮細咗先入得曬。想睇清楚「橫向網頁版」，用電腦開同一條 URL 最準；或者撳「原尺寸」再左右捲。"
-      : (k < 1 ? "螢幕闊度 " + vp + "px：已自動縮細先睇得曬全版。撳「原尺寸」可以左右捲睇真實大小。" : "闊度 " + vp + "px：真實大小顯示。");
-    n.innerHTML = tip + " 而家顯示：<b>" + CUR.w + "px</b>（" + (CUR.w >= 1024 ? "橫向多欄" : CUR.w >= 768 ? "平板 2 欄" : "手機直欄") + "）";
-  }
-  const open = document.getElementById("openNew");
-  if(open) open.href = "?frame=1";
+ const fr=document.getElementById("fr"), box=document.getElementById("frBox");
+ const vp=viewportW(), avail=Math.min(vp,1500)-40;
+ fr.style.width=CUR.w+"px"; fr.style.height=CUR.h+"px";
+ const k=CUR.full?1:Math.min(1,Math.max(0.2,avail/CUR.w));
+ fr.style.transform="scale("+k+")";
+ box.style.width=Math.round(CUR.w*k)+"px"; box.style.height=Math.round(CUR.h*k)+"px";
+ const n=document.getElementById("notice");
+ n.innerHTML=(vp<768?"你而家用 <b>手機（"+vp+"px）</b>睇緊：畫面自動縮細咗先入得曬。想睇清楚，用電腦開同一條 URL 最準；或者撳「原尺寸」再左右捲。":(k<1?"螢幕闊度 "+vp+"px：已自動縮細先睇得曬全版（可以撳「原尺寸」左右捲）。":"闊度 "+vp+"px：真實大小。"))
+  +" 而家顯示：<b>"+CUR.w+"px</b>（"+(CUR.w>=1024?"電腦多欄":CUR.w>=768?"平板 2 欄":"手機直欄")+"）";
 }
-(function wire(){
-  const modes = document.getElementById("modes");
-  if(!modes) return;
-  modes.querySelectorAll("button[data-w]").forEach(b => {
-    b.addEventListener("click", () => {
-      modes.querySelectorAll("button[data-w]").forEach(x => x.classList.remove("on"));
-      b.classList.add("on");
-      CUR.w = +b.dataset.w; CUR.h = +b.dataset.h; CUR.full = false;
-      render();
-    });
-  });
-  const full = document.getElementById("btnFull");
-  if(full) full.addEventListener("click", () => { CUR.full = !CUR.full; render(); });
-})();
-window.addEventListener("resize", render);
-window.addEventListener("load", render);
-render();
-
-// 斷點提示
-function upd(){
-  var w = window.innerWidth;
-  var name = w < 768 ? "手機（1 欄）" : (w < 1024 ? "平板（2 欄）" : "電腦（多欄）");
-  document.getElementById("badge").textContent = w + "px · " + name;
-}
-upd();
-window.addEventListener("resize", upd);
+document.getElementById("modes").addEventListener("click", e=>{
+ const b=e.target.closest("button[data-w]"); if(!b) return;
+ document.querySelectorAll("#modes button[data-w]").forEach(x=>x.classList.remove("on"));
+ b.classList.add("on"); CUR.w=+b.dataset.w; CUR.h=+b.dataset.h; CUR.full=false; render();
+});
+document.getElementById("btnFull").addEventListener("click", ()=>{CUR.full=!CUR.full;render()});
+function upd(){const w=viewportW();document.getElementById("badge").textContent=w+"px · "+(w<768?"手機":w<1024?"平板":"電腦")}
+window.addEventListener("resize", ()=>{render();upd()});
+window.addEventListener("load", ()=>{render();upd()});
+render(); upd();
 </script>
 </body>
 </html>
