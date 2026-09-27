@@ -6,6 +6,8 @@
 //   1. #type=XXXX / #about / #hub / #spectrum / #social / #romance / #method / #privacy 都要開到
 //   2. sessionStorage 舊旗標唔可以劫持明確深層連結（hash 一定要贏）
 //   3. load 之後 hash 再變（同一文件內跳轉）／bfcache 還原（load 唔會再跑）都要照開
+//   4. 跨頁入口要有兩條渠道（sessionStorage + hash）：人格圖、四版選單連結
+//   5. 類型代號唔存在 → 一定要有可見提示，唔可以靜靜彈返主頁
 const fs = require("fs");
 const path = require("path");
 const { JSDOM, VirtualConsole } = require("jsdom");
@@ -55,11 +57,10 @@ function load(opts){
           if(opts.pending) window.sessionStorage.setItem("hkmbti_pending_record", JSON.stringify(opts.pending));
           if(opts.pendingScreen) window.sessionStorage.setItem("hkmbti_pending_screen", JSON.stringify(Object.assign({ t: Date.now() }, opts.pendingScreen)));
           if(opts.pendingType) window.sessionStorage.setItem("hkmbti_pending_type", JSON.stringify(Object.assign({ t: Date.now() }, opts.pendingType)));
-          if(opts.navlog) window.sessionStorage.setItem("hkmbti_navlog", JSON.stringify(Object.assign({ t: Date.now(), build: "d1" }, opts.navlog)));
         }catch(e){}
       },
     });
-    setTimeout(() => resolve({ w: dom.window, alerts, errs }), opts.wait || 2300);   // 等埋 1.8s 診斷
+    setTimeout(() => resolve({ w: dom.window, alerts, errs }), opts.wait || 1200);
   });
 }
 
@@ -150,31 +151,7 @@ const visible = w => ["home","type","about","spectrum","hub","social","romance",
     w.close();
   }
 
-  console.log("\n【4】臨時診斷報告（跳轉開唔到要做聲，開到就唔嘈）");
-  {
-    const { w, alerts } = await load({ hash: "#type=INFP", navlog: { k: "type", v: "INFP" } });
-    const ok = w._showing === "type" && !alerts.length;
-    if(!ok) bad++;
-    console.log(`  開得到 → 實際 ${w._showing}，診斷提示 ${alerts.length} 個 ${ok ? "✓ 唔嘈" : "✗ 嘈咗"}`);
-    w.close();
-  }
-  {
-    const { w, alerts } = await load({ hash: "#type=ZZZZ", navlog: { k: "type", v: "ZZZZ" } });
-    const report = alerts.find(a => a.indexOf("診斷報告") === 0);
-    const ok = w._showing === "home" && !!report;
-    if(!ok) bad++;
-    console.log(`  開唔到 → 實際 ${w._showing}，有冇報告：${report ? "✓ 有" : "✗ 冇"}`);
-    if(report) console.log("    報告內容：\n" + report.split("\n").map(l => "      " + l).join("\n"));
-    w.close();
-  }
-  {
-    const { w, alerts } = await load({});
-    const ok = w._showing === "home" && !alerts.length;
-    if(!ok) bad++;
-    console.log(`  正常瀏覽（冇跳轉意圖）→ 診斷提示 ${alerts.length} 個 ${ok ? "✓ 唔嘈" : "✗ 嘈咗"}`);
-    w.close();
-  }
-  console.log("\n【5】記錄頁人格圖（type 渠道對比：以前淨係 hash 一條）");
+  console.log("\n【4】記錄頁人格圖（type 渠道對比：以前淨係 hash 一條）");
   {
     // (a) 淨係 sessionStorage（完全冇 hash）—— 同眼掣睇結果一樣嘅第二條渠道
     const { w, alerts } = await load({ pendingType: { code: "INFP" } });
@@ -200,7 +177,7 @@ const visible = w => ["home","type","about","spectrum","hub","social","romance",
     console.log(`  #type=ZZZZ（冇 pending）→ 實際 ${w._showing}，有冇提示：${said ? "✓ 有" : "✗ 靜靜死"}`);
     w.close();
   }
-  console.log("\n【6】選單連結第二渠道（關於／光譜／百科／相處／拍拖）");
+  console.log("\n【5】選單連結第二渠道（關於／光譜／百科／相處／拍拖）");
   {
     const { w } = await load({ pendingScreen: { h: "#hub" } });
     const ok = w._showing === "hub";
