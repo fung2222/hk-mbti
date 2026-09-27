@@ -54,19 +54,20 @@ chk(/min-height:100dvh/.test(html), "app 原本 hero 100dvh 仍在（手機基�
 console.log("\n=== 開關情境 ===");
 // iw/ih = innerWidth/innerHeight, sw/sh = screen, sc = visualViewport.scale
 const SCEN = [
-  { n: "手機（正常模式）",             iw: 412,  ih: 915,  sw: 412,  sh: 915,  sc: 1,    dt: false, dm: false },
-  { n: "手機（screen.width 報細）",    iw: 412,  ih: 915,  sw: 320,  sh: 800,  sc: 1,    dt: false, dm: false },
-  { n: "手機（桌面版網站 sc=1）",      iw: 980,  ih: 2200, sw: 412,  sh: 915,  sc: 1,    dt: false, dm: true  },
-  { n: "手機（桌面版網站 sc=0.42）",   iw: 980,  ih: 2200, sw: 412,  sh: 915,  sc: 0.42, dt: false, dm: true  },
-  { n: "手機（桌面模式+screen 吹水）", iw: 980,  ih: 2200, sw: 980,  sh: 1743, sc: 0.42, dt: false, dm: true  },
-  { n: "手機（橫向 915×412）",         iw: 915,  ih: 412,  sw: 915,  sh: 412,  sc: 1,    dt: false, dm: false },
-  { n: "手機（大芒 700 闊）",           iw: 700,  ih: 1500, sw: 700,  sh: 1500, sc: 1,    dt: false, dm: false },
-  { n: "平板 iPad 直向",               iw: 810,  ih: 1080, sw: 810,  sh: 1080, sc: 1,    dt: true,  dm: false },
-  { n: "平板 iPad 橫向",               iw: 1080, ih: 810,  sw: 1080, sh: 810,  sc: 1,    dt: true,  dm: false },
-  { n: "電腦 1440",                    iw: 1440, ih: 900,  sw: 1920, sh: 1080, sc: 1,    dt: true,  dm: false },
-  { n: "電腦（頁面縮細 sc=0.8）",       iw: 1440, ih: 900,  sw: 1920, sh: 1080, sc: 0.8,  dt: true,  dm: false },
-  { n: "電腦窗口縮到 700",              iw: 700,  ih: 900,  sw: 1920, sh: 1080, sc: 1,    dt: false, dm: false },
-  { n: "電腦窗口 1024",                iw: 1024, ih: 900,  sw: 1920, sh: 1080, sc: 1,    dt: true,  dm: false },
+  { n: "手機（正常模式）",             iw: 412,  ih: 915,  vvH: 830,  sw: 412,  sh: 915,  sc: 1,    dt: false, dm: false },
+  { n: "手機（screen.width 報細）",    iw: 412,  ih: 915,  vvH: 830,  sw: 320,  sh: 800,  sc: 1,    dt: false, dm: false },
+  { n: "手機（桌面版網站 sc=1）",      iw: 980,  ih: 2176, vvH: 1914, sw: 412,  sh: 915,  sc: 1,    dt: false, dm: true  },
+  { n: "手機（桌面版網站 sc=0.42）",   iw: 980,  ih: 2176, vvH: 1914, sw: 412,  sh: 915,  sc: 0.42, dt: false, dm: true  },
+  { n: "手機（桌面模式+screen 吹水）", iw: 980,  ih: 2176, vvH: 1914, sw: 980,  sh: 1743, sc: 0.42, dt: false, dm: true  },
+  { n: "手機（桌面模式 vv 唔報）",      iw: 980,  ih: 2176, vvH: 0,    sw: 412,  sh: 915,  sc: 1,    dt: false, dm: true  },
+  { n: "手機（橫向 915×412）",         iw: 915,  ih: 412,  vvH: 380,  sw: 915,  sh: 412,  sc: 1,    dt: false, dm: false },
+  { n: "手機（大芒 700 闊）",           iw: 700,  ih: 1500, vvH: 1400, sw: 700,  sh: 1500, sc: 1,    dt: false, dm: false },
+  { n: "平板 iPad 直向",               iw: 810,  ih: 1080, vvH: 1000, sw: 810,  sh: 1080, sc: 1,    dt: true,  dm: false },
+  { n: "平板 iPad 橫向",               iw: 1080, ih: 810,  vvH: 750,  sw: 1080, sh: 810,  sc: 1,    dt: true,  dm: false },
+  { n: "電腦 1440",                    iw: 1440, ih: 900,  vvH: 900,  sw: 1920, sh: 1080, sc: 1,    dt: true,  dm: false },
+  { n: "電腦（頁面縮細 sc=0.8）",       iw: 1440, ih: 900,  vvH: 900,  sw: 1920, sh: 1080, sc: 0.8,  dt: true,  dm: false },
+  { n: "電腦窗口縮到 700",              iw: 700,  ih: 900,  vvH: 900,  sw: 1920, sh: 1080, sc: 1,    dt: false, dm: false },
+  { n: "電腦窗口 1024",                iw: 1024, ih: 900,  vvH: 900,  sw: 1920, sh: 1080, sc: 1,    dt: true,  dm: false },
 ];
 
 for (const s of SCEN) {
@@ -78,7 +79,7 @@ for (const s of SCEN) {
       Object.defineProperty(w, "innerWidth", { value: s.iw, configurable: true });
       Object.defineProperty(w, "innerHeight", { value: s.ih, configurable: true });
       Object.defineProperty(w, "screen", { value: { width: s.sw, height: s.sh }, configurable: true });
-      w.visualViewport = { scale: s.sc, width: s.iw, height: s.ih };
+      w.visualViewport = { scale: s.sc, width: s.iw, height: s.vvH };
     },
   });
   dom.window.eval(gate);
@@ -91,14 +92,18 @@ for (const s of SCEN) {
       "｜還原 " + (gotDm ? "開 zoom=" + zoom.toFixed(2) : "關") +
       (ok ? "" : "  ← 預期：桌面排版 " + (s.dt ? "開" : "關") + "、還原 " + (s.dm ? "開" : "關")));
 
-  // 桌面版網站模式：還原之後「1 CSS px ≈ 1 裝置 px」→ 版面闊度要等於裝置真實闊度
-  if (s.n === "手機（桌面版網站 sc=1）" || s.n === "手機（桌面版網站 sc=0.42）") {
+  // .dm 還原：闊度 = 裝置真實闊度；高度 = 可視高度（扣工具列）換算，而且永遠唔會高過螢幕
+  if (gotDm) {
     const vwVar = parseFloat(root.style.getPropertyValue("--dm-vw"));
     const vhVar = parseFloat(root.style.getPropertyValue("--dm-vh"));
-    chk(vwVar === 412 && vhVar === 915,
-        s.n + "：還原變數用裝置真實尺寸（--dm-vw 412 / --dm-vh 915，實際 " + vwVar + "/" + vhVar + "）");
-    chk(Math.abs(s.iw / zoom - 412) < 1.5,
-        s.n + "：還原後版面闊度 ≈ 412px（等於正常手機，實際 " + (s.iw / zoom).toFixed(1) + "）");
+    const rawH = (s.vvH > 0 ? s.vvH : s.ih) / zoom;
+    const wantH = Math.min(s.sh > 0 ? s.sh : rawH, Math.max(240, rawH));
+    chk(Math.abs(s.iw / zoom - vwVar) < 1.5,
+        s.n + "：還原後版面闊度 = --dm-vw（實際 " + (s.iw / zoom).toFixed(1) + " vs " + vwVar + "）");
+    chk(Math.abs(vhVar - wantH) <= 1.5,
+        s.n + "：--dm-vh 用可視高度換算（實際 " + vhVar + "，預期 " + wantH.toFixed(1) + "）");
+    chk(vhVar <= s.sh + 1 && vhVar >= 240,
+        s.n + "：--dm-vh 夾住喺 240 ～ 螢幕高度（" + vhVar + " ≤ " + s.sh + "）");
   }
   if (s.n === "電腦 1440") {   // 即場 resize：電腦拖窄窗口應該即刻唔再套用桌面排版
     Object.defineProperty(dom.window, "innerWidth", { value: 700, configurable: true });

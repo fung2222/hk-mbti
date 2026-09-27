@@ -629,11 +629,13 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
      ① .dt：viewport ≥768px 而且實體螢幕唔細（≥680×600）→ 開桌面／平板排版。
      ② .dm：細螢幕被瀏覽器逼用寬虛擬視窗（例如手機開 Chrome「桌面版網站」，vw 980 / sw 412）
         → 用裝置真實寬度還原（html zoom），效果 1 CSS px ≈ 1 裝置 px，睇落同正常手機版一樣。
+        高度用瀏覽器報嘅 visualViewport（已扣工具列）換算，並夾住唔可以高過螢幕。
         觸發條件極窄，正常手機（vw ≈ sw）同電腦（screen.width ≥680）永遠唔會有 .dm。 -->
 <script>
 (function(){
-  var root = document.documentElement, first = true;
+  var root = document.documentElement;
   function pick(){
+    if(root.style.zoom) root.style.zoom = "";   /* 量度前先還原，數字要係未 zoom 嘅空間 */
     var vw = window.innerWidth || 0;
     var vh = window.innerHeight || 0;
     var sw = (window.screen && screen.width) || 0;
@@ -650,15 +652,19 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
     if(small && sw > 0 && vw > sw * 1.45) eff = sw;                 /* 手機開桌面版網站 */
     else if(sc < 0.9 && vw * sc < 700) eff = Math.round(vw * sc);   /* screen 報大數嘅情況 */
     if(eff > 0){
+      var z = Math.max(1.02, Math.min(3, vw / eff));
+      /* 可視高度（扣工具列）換算成裝置 CSS px；再夾住唔可以高過螢幕 */
+      var rawH = ((vv && vv.height > 0) ? vv.height : vh) / z;
+      var cap = sh > 0 ? sh : rawH;
+      var h = Math.round(Math.min(cap, Math.max(240, rawH)));
       root.style.setProperty("--dm-vw", eff + "px");
-      root.style.setProperty("--dm-vh", (small && sh > 0 ? sh : Math.round(vh * sc || 800)) + "px");
-      root.style.zoom = Math.max(1.02, Math.min(3, eff ? vw / eff : 1));
+      root.style.setProperty("--dm-vh", h + "px");
+      root.style.zoom = z;
       root.classList.add("dm");
     } else {
       root.style.zoom = "";
       root.classList.remove("dm");
     }
-    first = false;
   }
   pick();
   window.addEventListener("resize", pick);
