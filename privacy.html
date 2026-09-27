@@ -77,6 +77,53 @@ a{color:var(--accent)}
 </style>
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
 <script data-goatcounter="https://fung2222.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<!-- 桌面／平板層開關（.dt）+ 手機「桌面版網站」還原（.dm）
+     ① .dt：viewport ≥768px 而且實體螢幕唔細（≥680×600）→ 開桌面／平板排版。
+     ② .dm：細螢幕被瀏覽器逼用寬虛擬視窗（例如手機開 Chrome「桌面版網站」，vw 980 / sw 412）
+        → 用裝置真實寬度還原（html zoom），效果 1 CSS px ≈ 1 裝置 px，睇落同正常手機版一樣。
+        觸發條件極窄，正常手機（vw ≈ sw）同電腦（screen.width ≥680）永遠唔會有 .dm。 -->
+<script>
+(function(){
+  var root = document.documentElement, first = true;
+  function pick(){
+    var vw = window.innerWidth || 0;
+    var vh = window.innerHeight || 0;
+    var sw = (window.screen && screen.width) || 0;
+    var sh = (window.screen && screen.height) || 0;
+    var vv = window.visualViewport;
+    var sc = (vv && vv.scale) ? vv.scale : 1;
+    var small = (sw > 0 && sw < 680) || (sh > 0 && sh < 600);   /* 手機／細平板 */
+    /* ① 桌面／平板排版 */
+    var dt = vw >= 768 && !small;
+    if(sc < 0.9 && vw * sc < 700) dt = false;   /* 頁面被縮到細螢幕咁 → 唔當桌面 */
+    if(dt) root.classList.add("dt"); else root.classList.remove("dt");
+    /* ② 桌面版網站還原：細螢幕（或頁面被縮細到細螢幕闊度）卻有寬虛擬視窗 */
+    var eff = 0;
+    if(small && sw > 0 && vw > sw * 1.45) eff = sw;                 /* 手機開桌面版網站 */
+    else if(sc < 0.9 && vw * sc < 700) eff = Math.round(vw * sc);   /* screen 報大數嘅情況 */
+    if(eff > 0){
+      root.style.setProperty("--dm-vw", eff + "px");
+      root.style.setProperty("--dm-vh", (small && sh > 0 ? sh : Math.round(vh * sc || 800)) + "px");
+      root.style.zoom = Math.max(1.02, Math.min(3, eff ? vw / eff : 1));
+      root.classList.add("dm");
+    } else {
+      root.style.zoom = "";
+      root.classList.remove("dm");
+    }
+    first = false;
+  }
+  pick();
+  window.addEventListener("resize", pick);
+  window.addEventListener("orientationchange", pick);
+})();
+</script>
+
+<style id="desktop-mode-fix">
+/* 只喺 .dm 生效（細螢幕 + 寬虛擬視窗，例如手機開 Chrome「桌面版網站」）。
+   把 app 自己用咗 viewport 單位嘅規則還原成裝置真實值（--dm-vw／--dm-vh 由 script 寫入），
+   其他一律唔動 → 還原出嚟同正常手機版一模一樣。 */
+html.dm body{min-height:var(--dm-vh)}
+</style>
 </head>
 <body>
 <div class="hero">
