@@ -8,7 +8,7 @@
  <meta http-equiv="Pragma" content="no-cache">
  <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>示範 · 桌面／平板版式 · 港式 MBTI</title>
+<title>示範 · 桌面／平板版式 ① · 港式 MBTI</title>
 <meta name="description" content="港式MBTI · 60 題廣東話版 MBTI 16型人格測試｜多種情景 · 港式日常｜5 分鐘知道你喺「I人」定係「E人」。">
 <meta name="theme-color" content="#1E2A3B">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -546,81 +546,99 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
      =================================================================== -->
 <style id="desktop-layer">
 /* ===================================================================
-   桌面／平板排版層（手機完全唔動）
-   雙重條件：① @media (min-width:768px) ② <html> 要有 .dt（JS 按實體螢幕大小判斷）
-   平板 768-1023：外框 720px、2 欄
-   桌面 ≥1024  ：外框 1440px、砌積木（hero 左右兩欄 + 全闊場景帶 + 攻略 4 欄）
+   桌面（≥1024px）／平板（768–1023px）排版層 —— ① 大站導覽型
+   兩個條件同時要中：① @media (min-width:…) ② <html> 有 .dt
+   （.dt 由 <head> script 按實體螢幕判斷：只有真電腦／平板才會有）
+   #dtNav／#dtHeroCta 預設 display:none → 手機完全唔會見到，一個 pixel 都唔動。
    =================================================================== */
+#dtNav,#dtHeroCta{display:none}
+
+/* ── 平板 768–1023px：外框 720px、重複區塊兩欄 ── */
 @media (min-width:768px){
-  html.dt #app{max-width:720px;padding-left:24px;padding-right:24px}
-  /* 非主頁各版（測驗／結果／百科⋯）保持窄欄 */
-  html.dt #app > section:not(#home){max-width:640px;margin-left:auto;margin-right:auto}
-  /* Hero 文字靠左、大一級 */
-  html.dt .home-hero-copy{text-align:left;align-items:flex-start}
-  html.dt .home-hero-copy p{font-size:15px}
-  html.dt .home-hero .home-more-down{display:none}
-  /* 16 型色牌：唔再橫向捲，攤開全部顯示 */
-  html.dt .home-type-reel-wrap{margin:0 0 12px}
-  html.dt .home-type-reel{flex-wrap:wrap;overflow:visible;padding:0;gap:10px;justify-content:flex-start;scroll-snap-type:none}
-  html.dt .home-type-reel .hub-type-card{flex:0 0 calc(12.5% - 9px);width:calc(12.5% - 9px);scroll-snap-align:none}
-  /* 色牌 JS 會渲染兩份做跑馬燈 → 攤開時隱藏重複嗰半 */
-  html.dt .home-type-reel .hub-type-card:nth-child(n+17){display:none}
-  html.dt .home-type-reel .hub-type-code{font-size:1.15rem;letter-spacing:-.02em}
-  html.dt .home-type-reel .hub-type-cn{font-size:10px;opacity:.92}
-  html.dt .home-type-nav{display:none}
-  /* 版本卡：1 欄 → 2 欄 */
-  html.dt #versionList{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  html.dt #versionList > * + *{margin-top:0}
-  /* 探索場景卡：1 欄 → 2 欄 */
-  html.dt .scenes-bleed{margin:0 -24px 20px;padding:32px 24px 28px}
-  html.dt .scenes-head{max-width:none}
-  html.dt .scenes-grid{max-width:none;display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
-  /* 攻略風琴：1 欄 → 2 欄 */
-  html.dt .home-acc{display:grid;grid-template-columns:repeat(2,1fr);column-gap:30px;align-items:start}
-  html.dt .home-acc-label{grid-column:1/-1}
+  html.dt #app{max-width:720px}
+  html.dt .scenes-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  html.dt .home-acc{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-/* ===================== 桌面（砌積木）≥1024px ===================== */
+
+/* ── 桌面 ≥1024px ── */
 @media (min-width:1024px){
-  html.dt{overflow-x:hidden}                     /* 全闊色帶用 50vw 技術，防橫向捲軸 */
-  html.dt #app{max-width:1440px;padding-left:36px;padding-right:36px}
-  /* 主頁：12 欄格；hero 左右兩欄（左：文案 + 版本卡；右：16 型矩陣） */
-  html.dt #home{
-    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);
-    column-gap:64px;align-items:start;padding-top:26px;
-    /* 全闊色帶：光暈延伸到畫面兩邊，內容仍然 1440px 上限 */
-    margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);
-    padding-left:calc(50vw - 50%);padding-right:calc(50vw - 50%);
-    background:radial-gradient(ellipse 40% 46% at 26% 92px,rgba(212,169,95,.40),rgba(212,169,95,.10) 52%,rgba(250,247,240,0) 78%);
-  }
-  html.dt .home-hero{display:contents}           /* 拆散 hero，令子女直接排入上面嘅格 */
-  html.dt .home-hero > div:first-child{grid-column:1/-1;margin-bottom:22px}
-  html.dt .home-hero-copy{grid-column:1;grid-row:2;padding-top:4px}
-  html.dt .home-hero-mbti{font-size:clamp(4.2rem,5.8vw,6.4rem);line-height:.88}
-  html.dt .home-hero-copy p{font-size:16px;max-width:32rem}
-  /* 16 型矩陣：跨兩行並垂直居中，同左欄高度對齊 */
-  html.dt .home-type-reel-wrap{grid-column:2;grid-row:2 / span 2;align-self:center;margin:0}
-  html.dt #homeBelow{grid-column:1;grid-row:3;background:none;border:0;box-shadow:none;padding:0;margin:0}
-  html.dt #resumeBanner{grid-column:1/-1}
-  /* 場景帶：全闊（延伸到畫面兩邊），內容 4 欄 */
-  html.dt .scenes-bleed{
-    grid-column:1/-1;margin:38px calc(50% - 50vw) 30px;padding:46px calc(50vw - 50%) 42px;border-radius:0;
-  }
-  html.dt .scenes-grid{grid-template-columns:repeat(4,1fr);gap:30px}
-  /* 「探索更多」桌面唔摺疊：8 格全部攤開（摺疊會令其他欄一齊跳位） */
-  html.dt #home > div.mb-4,html.dt #home > div:has(#homeAccordion){grid-column:1/-1;padding:8px 0 40px}
-  html.dt .home-acc{grid-template-columns:repeat(2,1fr);column-gap:64px;row-gap:30px}
+  html.dt{overflow-x:hidden}
+  html.dt #app{max-width:1440px;padding-left:40px;padding-right:40px}
+
+  /* ① 頂部導覽 */
+  html.dt #dtNav{display:block;position:sticky;top:0;z-index:60;
+    background:rgba(250,247,240,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    border-bottom:1px solid #EDE6D8}
+  html.dt .dt-nav-in{max-width:1440px;margin:0 auto;padding:0 40px;height:64px;
+    display:flex;align-items:center;gap:26px}
+  html.dt .dt-nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:inherit}
+  html.dt .dt-nav-brand img{width:30px;height:30px;border-radius:8px;flex-shrink:0}
+  html.dt .dt-nav-brand span{font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-size:17px;letter-spacing:.02em}
+  html.dt .dt-nav-links{display:flex;align-items:center;gap:24px;margin-left:auto}
+  html.dt .dt-nav-links a,html.dt .dt-nav-links button{background:none;border:0;padding:0;cursor:pointer;
+    font:inherit;font-size:14.5px;font-weight:700;color:#5c564f;text-decoration:none}
+  html.dt .dt-nav-links a:hover,html.dt .dt-nav-links button:hover{color:var(--ink)}
+  html.dt .dt-nav-cta{background:linear-gradient(135deg,var(--gold),#c1954a);color:#fff;border:0;
+    border-radius:11px;padding:11px 20px;font-size:14px;font-weight:900;cursor:pointer;flex-shrink:0;
+    box-shadow:0 8px 22px rgba(212,169,95,.30)}
+
+  /* ② hero：左大字／右 16 型 4×4 色格 */
+  html.dt #home{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);
+    column-gap:64px;align-items:center;padding-top:56px;padding-bottom:56px;
+    background:radial-gradient(ellipse 46% 60% at 18% 12%,rgba(212,169,95,.30),rgba(250,247,240,0) 70%)}
+  html.dt .home-hero{display:contents}
+  html.dt .home-hero > div:first-child{display:none}   /* 原本 logo 列：頂部導覽已經有 */
+  html.dt .home-hero-copy{grid-column:1;grid-row:2;text-align:left;align-items:flex-start}
+  html.dt .home-hero-mbti{font-size:clamp(60px,7vw,112px);line-height:.94}
+  html.dt .home-hero-copy p{font-size:16.5px;line-height:1.95;color:#5c564f;max-width:30ch;margin-top:26px;text-align:left}
+  html.dt #dtHeroCta{display:flex;gap:18px;align-items:center;margin-top:34px}
+  html.dt .dt-cta-gold{background:linear-gradient(135deg,var(--gold),#c1954a);color:#fff;border:0;
+    border-radius:12px;padding:14px 26px;font-size:15px;font-weight:900;cursor:pointer;
+    box-shadow:0 8px 22px rgba(212,169,95,.32)}
+  html.dt .dt-cta-ghost{background:none;border:0;color:var(--ink);font-size:15px;font-weight:900;
+    cursor:pointer;padding:14px 8px;border-bottom:2px solid var(--gold)}
+  html.dt .home-type-reel-wrap{grid-column:2;grid-row:2;margin:0;padding:0}
+  html.dt .home-type-nav{display:none}
+  html.dt .home-type-reel{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;
+    overflow:visible;padding:0;scroll-behavior:auto}
+  html.dt .home-type-reel .hub-type-card{aspect-ratio:1/1;border-radius:14px;padding:10px}
+  html.dt .home-type-reel .hub-type-card:nth-child(n+17){display:none}
+  html.dt .home-more-down{display:none}
+
+  /* ③ 版本卡 3 欄 */
+  html.dt #homeBelow{grid-column:1/-1;background:none;border:0;box-shadow:none;padding:0;margin:0}
+  html.dt #versionList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+  html.dt #versionList > *{width:auto}
+
+  /* ④ 全闊場景帶（--sbw 由 script 寫入，修正 scrollbar 造成嘅偏移） */
+  html.dt .scenes-bleed{grid-column:1/-1;border-radius:0;background:var(--soft);
+    margin:64px calc(50% - 50vw + var(--sbw,0px)/2) 0;
+    padding:64px calc(50vw - 50% - var(--sbw,0px)/2)}
+  html.dt .scenes-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+  html.dt .scene-cell{background:rgba(255,255,255,.72);border:1px solid #E7E0D2;border-radius:16px;padding:20px}
+
+  /* ⑤ 探索更多：桌面唔摺疊、2 欄、冇髮線 */
+  html.dt #home > div.mb-4{grid-column:1/-1;padding:62px 0 0}
+  html.dt .home-acc{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:64px;row-gap:32px}
   html.dt .home-acc-head{pointer-events:none;cursor:default;padding:0;gap:0;background:none}
   html.dt .home-acc-head:hover,html.dt .home-acc-head:active,
   html.dt .home-acc-item.open .home-acc-head{background:none}
   html.dt .home-acc-chev{display:none}
   html.dt .home-acc-item{border:0;padding:0}
   html.dt .home-acc-title{font-size:17.5px;font-weight:900;letter-spacing:-.01em}
-  html.dt .home-acc-body,
-  html.dt .home-acc-item.open .home-acc-body{max-height:none;opacity:1;overflow:visible;padding:9px 0 0;transition:none}
+  html.dt .home-acc-body,html.dt .home-acc-item.open .home-acc-body{max-height:none;opacity:1;overflow:visible;padding:8px 0 0;transition:none}
   html.dt .home-acc-desc{font-size:14.5px;line-height:1.8;margin:0 0 10px;max-width:46ch}
-  html.dt .home-acc-go{padding:0;border:0;border-bottom:1px solid var(--gold);border-radius:0;background:none;color:var(--gold-d);font-size:14px;font-weight:800;transition:color .2s,border-color .2s}
-  html.dt .home-acc-go:hover{color:var(--ink);border-color:var(--ink)}
+  html.dt .home-acc-go{padding:0;border:0;border-bottom:1px solid var(--gold);border-radius:0;
+    background:none;color:var(--gold);font-size:13.5px;font-weight:900}
   html.dt .home-more-up-wrap{grid-column:1/-1;padding:8px 0 40px}
+
+  /* ⑥ 唔係主頁嘅畫面保持窄欄 */
+  html.dt #app > section:not(#home){max-width:640px;margin-left:auto;margin-right:auto}
+}
+
+/* ── 大螢幕 ≥1280px：版本卡 4 張一行 ── */
+@media (min-width:1280px){
+  html.dt #versionList{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 </style>
 
@@ -647,6 +665,7 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
     var dt = vw >= 768 && !small;
     if(sc < 0.9 && vw * sc < 700) dt = false;   /* 頁面被縮到細螢幕咁 → 唔當桌面 */
     if(dt) root.classList.add("dt"); else root.classList.remove("dt");
+    root.style.setProperty("--sbw", Math.max(0, vw - (root.clientWidth || vw)) + "px");
     /* ② 桌面版網站還原：細螢幕（或頁面被縮細到細螢幕闊度）卻有寬虛擬視窗 */
     var eff = 0;
     if(small && sw > 0 && vw > sw * 1.45) eff = sw;                 /* 手機開桌面版網站 */
@@ -682,6 +701,21 @@ html.dm .home-hero-mbti{font-size:clamp(4.4rem, calc(var(--dm-vw) * 0.23), 6.6re
 </style>
 </head>
 <body class="js-boot">
+<!-- 桌面／平板頂部導覽（只喺 html.dt 顯示；手機係 display:none） -->
+<nav id="dtNav" aria-label="主導覽">
+ <div class="dt-nav-in">
+  <a href="./" class="dt-nav-brand" onclick="goHome();return false;"><img src="icon-192.png" alt="港MBTI"><span>港式 MBTI</span></a>
+  <span class="dt-nav-links">
+   <button type="button" onclick="openHub()">16 型人格</button>
+   <button type="button" onclick="openSpectrum()">性格光譜</button>
+   <button type="button" onclick="openSocial()">相處攻略</button>
+   <a href="./stats.html">香港統計</a>
+   <a href="./record.html">我的紀錄</a>
+  </span>
+  <button type="button" class="dt-nav-cta" onclick="goPickVersion()">開始測試</button>
+ </div>
+</nav>
+
 
 <!-- App container -->
 <div id="app" class="max-w-md mx-auto px-4 py-6 pb-24">
@@ -1528,6 +1562,10 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="home-hero-copy">
  <div class="home-hero-mbti">MBTI</div>
  <p class="text-sm text-gray-600 leading-relaxed mt-5">60 題廣東話版 16 型人格測試<br>多種生活情景 · 港人嘅日常<br>5–10 分鐘完成測試</p>
+   <div id="dtHeroCta">
+    <button type="button" class="dt-cta-gold" onclick="goPickVersion()">開始測試</button>
+    <button type="button" class="dt-cta-ghost" onclick="openHub()">性格百科 →</button>
+   </div>
  </div>
  <div class="home-type-reel-wrap" id="homeTypeReelWrap">
  <button type="button" class="home-type-nav is-l" data-dir="-1" aria-label="上一張"></button>

@@ -99,6 +99,7 @@ a{color:var(--accent)}
     var dt = vw >= 768 && !small;
     if(sc < 0.9 && vw * sc < 700) dt = false;   /* 頁面被縮到細螢幕咁 → 唔當桌面 */
     if(dt) root.classList.add("dt"); else root.classList.remove("dt");
+    root.style.setProperty("--sbw", Math.max(0, vw - (root.clientWidth || vw)) + "px");
     /* ② 桌面版網站還原：細螢幕（或頁面被縮細到細螢幕闊度）卻有寬虛擬視窗 */
     var eff = 0;
     if(small && sw > 0 && vw > sw * 1.45) eff = sw;                 /* 手機開桌面版網站 */
