@@ -540,53 +540,79 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
 <!-- ===================================================================
      桌面／平板排版層
-     規則全部喺 @media (min-width:768px) 以內 → 手機（<768px）完全唔受影響。
+     雙重條件：① @media (min-width:768px) ② <html> 要有 .dt（由 JS 按實體螢幕大小判斷）。
+     手機（<768px，或者實體螢幕細如手機開「桌面版網站」）完全唔受影響。
      只做兩件事：外框放寬 + 重複性區塊變多欄。冇改內容、文案、功能、導航。
      =================================================================== -->
 <style id="desktop-layer">
 @media (min-width:768px){
   /* 外框：手機 448px → 平板 720px（桌面見下一段） */
-  #app{max-width:720px;padding-left:24px;padding-right:24px}
+  html.dt #app{max-width:720px;padding-left:24px;padding-right:24px}
   /* 非主頁各版（測驗／結果／百科⋯）保持窄欄，唔跟外框放大 */
-  #app > section:not(#home){max-width:640px;margin-left:auto;margin-right:auto}
+  html.dt #app > section:not(#home){max-width:640px;margin-left:auto;margin-right:auto}
   /* Hero 文字靠左、大一級 */
-  #app .home-hero-copy{text-align:left;align-items:flex-start}
-  #app .home-hero-copy p{font-size:15px}
-  #app .home-hero .home-more-down{display:none}
+  html.dt #app .home-hero-copy{text-align:left;align-items:flex-start}
+  html.dt #app .home-hero-copy p{font-size:15px}
+  html.dt #app .home-hero .home-more-down{display:none}
   /* 16 型色牌：唔再橫向捲，攤開成 8 × 2 全部顯示 */
-  #app .home-type-reel-wrap{margin:0 0 12px}
-  #app .home-type-reel{flex-wrap:wrap;overflow:visible;padding:0;gap:10px;justify-content:flex-start;scroll-snap-type:none}
-  #app .home-type-reel .hub-type-card{flex:0 0 calc(12.5% - 9px);width:calc(12.5% - 9px);scroll-snap-align:none}
+  html.dt #app .home-type-reel-wrap{margin:0 0 12px}
+  html.dt #app .home-type-reel{flex-wrap:wrap;overflow:visible;padding:0;gap:10px;justify-content:flex-start;scroll-snap-type:none}
+  html.dt #app .home-type-reel .hub-type-card{flex:0 0 calc(12.5% - 9px);width:calc(12.5% - 9px);scroll-snap-align:none}
   /* 色牌 JS 會渲染兩份做跑馬燈 → 攤開成格仔時隱藏重複嗰半 */
-  #app .home-type-reel .hub-type-card:nth-child(n+17){display:none}
-  #app .home-type-reel .hub-type-code{font-size:1.15rem;letter-spacing:-.02em}
-  #app .home-type-reel .hub-type-cn{font-size:10px;opacity:.92}
-  #app .home-type-nav{display:none}
+  html.dt #app .home-type-reel .hub-type-card:nth-child(n+17){display:none}
+  html.dt #app .home-type-reel .hub-type-code{font-size:1.15rem;letter-spacing:-.02em}
+  html.dt #app .home-type-reel .hub-type-cn{font-size:10px;opacity:.92}
+  html.dt #app .home-type-nav{display:none}
   /* 版本卡：1 欄 → 2 欄 */
-  #app #versionList{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  #app #versionList > * + *{margin-top:0}
+  html.dt #app #versionList{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  html.dt #app #versionList > * + *{margin-top:0}
   /* 探索場景卡：1 欄 → 2 欄 */
-  #app .scenes-bleed{margin:0 -24px 20px;padding:32px 24px 28px}
-  #app .scenes-head{max-width:none}
-  #app .scenes-grid{max-width:none;display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+  html.dt #app .scenes-bleed{margin:0 -24px 20px;padding:32px 24px 28px}
+  html.dt #app .scenes-head{max-width:none}
+  html.dt #app .scenes-grid{max-width:none;display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
   /* 主頁攻略風琴：1 欄 → 2 欄 */
-  #app .home-acc{display:grid;grid-template-columns:repeat(2,1fr);column-gap:30px;align-items:start}
-  #app .home-acc-label{grid-column:1/-1}
+  html.dt #app .home-acc{display:grid;grid-template-columns:repeat(2,1fr);column-gap:30px;align-items:start}
+  html.dt #app .home-acc-label{grid-column:1/-1}
 }
 @media (min-width:1024px){
   /* 桌面：外框 1040px */
-  #app{max-width:1040px;padding-left:32px;padding-right:32px}
-  #app .home-hero-mbti{font-size:clamp(3rem,4.6vw,4.2rem);line-height:1.05}
-  #app .home-hero-copy p{font-size:16px}
+  html.dt #app{max-width:1040px;padding-left:32px;padding-right:32px}
+  html.dt #app .home-hero-mbti{font-size:clamp(3rem,4.6vw,4.2rem);line-height:1.05}
+  html.dt #app .home-hero-copy p{font-size:16px}
   /* 版本卡：4 欄 */
-  #app #versionList{grid-template-columns:repeat(4,1fr)}
+  html.dt #app #versionList{grid-template-columns:repeat(4,1fr)}
   /* 場景卡：4 欄 */
-  #app .scenes-bleed{margin:0 -32px 26px;padding:40px 32px 34px;border-radius:22px}
-  #app .scenes-grid{grid-template-columns:repeat(4,1fr);gap:30px}
+  html.dt #app .scenes-bleed{margin:0 -32px 26px;padding:40px 32px 34px;border-radius:22px}
+  html.dt #app .scenes-grid{grid-template-columns:repeat(4,1fr);gap:30px}
   /* 攻略風琴：3 欄 */
-  #app .home-acc{grid-template-columns:repeat(3,1fr);column-gap:34px}
+  html.dt #app .home-acc{grid-template-columns:repeat(3,1fr);column-gap:34px}
 }
 </style>
+
+<!-- 桌面／平板層開關：只有「真係大螢幕」才開（防止手機『桌面版網站』模式誤觸桌面排版）。
+     判準：viewport ≥768px 且實體螢幕唔細（screen.width ≥680 且 screen.height ≥600）；
+     首次載入再排除「畫面被縮細」（visualViewport.scale < 0.9 = 桌面模式／縮放特徵）。 -->
+<script>
+(function(){
+  var root = document.documentElement, first = true;
+  function pick(){
+    var vw = window.innerWidth || 0;
+    var sw = (window.screen && screen.width) || 0;
+    var sh = (window.screen && screen.height) || 0;
+    var small = (sw > 0 && sw < 680) || (sh > 0 && sh < 600);
+    var ok = vw >= 768 && !small;
+    if(first){
+      var vv = window.visualViewport;
+      if(vv && vv.scale && vv.scale < 0.9) ok = false;
+      first = false;
+    }
+    if(ok) root.classList.add("dt"); else root.classList.remove("dt");
+  }
+  pick();
+  window.addEventListener("resize", pick);
+  window.addEventListener("orientationchange", pick);
+})();
+</script>
 </head>
 <body class="js-boot">
 
