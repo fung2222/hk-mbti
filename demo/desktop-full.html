@@ -545,47 +545,73 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
      只做兩件事：外框放寬 + 重複性區塊變多欄。冇改內容、文案、功能、導航。
      =================================================================== -->
 <style id="desktop-layer">
+/* ===================================================================
+   桌面／平板排版層（手機完全唔動）
+   雙重條件：① @media (min-width:768px) ② <html> 要有 .dt（JS 按實體螢幕大小判斷）
+   平板 768-1023：外框 720px、2 欄
+   桌面 ≥1024  ：外框 1440px、砌積木（hero 左右兩欄 + 全闊場景帶 + 攻略 4 欄）
+   =================================================================== */
 @media (min-width:768px){
-  /* 外框：手機 448px → 平板 720px（桌面見下一段） */
   html.dt #app{max-width:720px;padding-left:24px;padding-right:24px}
-  /* 非主頁各版（測驗／結果／百科⋯）保持窄欄，唔跟外框放大 */
+  /* 非主頁各版（測驗／結果／百科⋯）保持窄欄 */
   html.dt #app > section:not(#home){max-width:640px;margin-left:auto;margin-right:auto}
   /* Hero 文字靠左、大一級 */
-  html.dt #app .home-hero-copy{text-align:left;align-items:flex-start}
-  html.dt #app .home-hero-copy p{font-size:15px}
-  html.dt #app .home-hero .home-more-down{display:none}
-  /* 16 型色牌：唔再橫向捲，攤開成 8 × 2 全部顯示 */
-  html.dt #app .home-type-reel-wrap{margin:0 0 12px}
-  html.dt #app .home-type-reel{flex-wrap:wrap;overflow:visible;padding:0;gap:10px;justify-content:flex-start;scroll-snap-type:none}
-  html.dt #app .home-type-reel .hub-type-card{flex:0 0 calc(12.5% - 9px);width:calc(12.5% - 9px);scroll-snap-align:none}
-  /* 色牌 JS 會渲染兩份做跑馬燈 → 攤開成格仔時隱藏重複嗰半 */
-  html.dt #app .home-type-reel .hub-type-card:nth-child(n+17){display:none}
-  html.dt #app .home-type-reel .hub-type-code{font-size:1.15rem;letter-spacing:-.02em}
-  html.dt #app .home-type-reel .hub-type-cn{font-size:10px;opacity:.92}
-  html.dt #app .home-type-nav{display:none}
+  html.dt .home-hero-copy{text-align:left;align-items:flex-start}
+  html.dt .home-hero-copy p{font-size:15px}
+  html.dt .home-hero .home-more-down{display:none}
+  /* 16 型色牌：唔再橫向捲，攤開全部顯示 */
+  html.dt .home-type-reel-wrap{margin:0 0 12px}
+  html.dt .home-type-reel{flex-wrap:wrap;overflow:visible;padding:0;gap:10px;justify-content:flex-start;scroll-snap-type:none}
+  html.dt .home-type-reel .hub-type-card{flex:0 0 calc(12.5% - 9px);width:calc(12.5% - 9px);scroll-snap-align:none}
+  /* 色牌 JS 會渲染兩份做跑馬燈 → 攤開時隱藏重複嗰半 */
+  html.dt .home-type-reel .hub-type-card:nth-child(n+17){display:none}
+  html.dt .home-type-reel .hub-type-code{font-size:1.15rem;letter-spacing:-.02em}
+  html.dt .home-type-reel .hub-type-cn{font-size:10px;opacity:.92}
+  html.dt .home-type-nav{display:none}
   /* 版本卡：1 欄 → 2 欄 */
-  html.dt #app #versionList{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  html.dt #app #versionList > * + *{margin-top:0}
+  html.dt #versionList{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  html.dt #versionList > * + *{margin-top:0}
   /* 探索場景卡：1 欄 → 2 欄 */
-  html.dt #app .scenes-bleed{margin:0 -24px 20px;padding:32px 24px 28px}
-  html.dt #app .scenes-head{max-width:none}
-  html.dt #app .scenes-grid{max-width:none;display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
-  /* 主頁攻略風琴：1 欄 → 2 欄 */
-  html.dt #app .home-acc{display:grid;grid-template-columns:repeat(2,1fr);column-gap:30px;align-items:start}
-  html.dt #app .home-acc-label{grid-column:1/-1}
+  html.dt .scenes-bleed{margin:0 -24px 20px;padding:32px 24px 28px}
+  html.dt .scenes-head{max-width:none}
+  html.dt .scenes-grid{max-width:none;display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+  /* 攻略風琴：1 欄 → 2 欄 */
+  html.dt .home-acc{display:grid;grid-template-columns:repeat(2,1fr);column-gap:30px;align-items:start}
+  html.dt .home-acc-label{grid-column:1/-1}
 }
+/* ===================== 桌面（砌積木）≥1024px ===================== */
 @media (min-width:1024px){
-  /* 桌面：外框 1040px */
-  html.dt #app{max-width:1040px;padding-left:32px;padding-right:32px}
-  html.dt #app .home-hero-mbti{font-size:clamp(3rem,4.6vw,4.2rem);line-height:1.05}
-  html.dt #app .home-hero-copy p{font-size:16px}
-  /* 版本卡：4 欄 */
-  html.dt #app #versionList{grid-template-columns:repeat(4,1fr)}
-  /* 場景卡：4 欄 */
-  html.dt #app .scenes-bleed{margin:0 -32px 26px;padding:40px 32px 34px;border-radius:22px}
-  html.dt #app .scenes-grid{grid-template-columns:repeat(4,1fr);gap:30px}
-  /* 攻略風琴：3 欄 */
-  html.dt #app .home-acc{grid-template-columns:repeat(3,1fr);column-gap:34px}
+  html.dt{overflow-x:hidden}                     /* 全闊色帶用 50vw 技術，防止橫向捲軸 */
+  html.dt #app{max-width:1440px;padding-left:36px;padding-right:36px}
+  /* 主頁變 12 欄格：hero 左右兩欄（左：文案 + 版本卡；右：16 型矩陣） */
+  html.dt #home{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.04fr);
+    column-gap:60px;align-items:start;
+    /* 全闊色帶：底色／光暈延伸到畫面兩邊，內容仍然有 1440px 上限 */
+    margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);
+    padding-left:calc(50vw - 50%);padding-right:calc(50vw - 50%);
+    background:radial-gradient(ellipse 40% 46% at 26% 90px,rgba(212,169,95,.40),rgba(212,169,95,.10) 52%,rgba(250,247,240,0) 78%);
+  }
+  html.dt .home-hero{display:contents}           /* 拆散 hero，令佢嘅子女直接排入上面嘅格 */
+  html.dt .home-hero > div:first-child{grid-column:1/-1;margin-bottom:18px}
+  html.dt .home-hero-copy{grid-column:1;grid-row:2;padding-top:6px}
+  html.dt .home-hero-mbti{font-size:clamp(4.6rem,7.4vw,7.6rem);line-height:.88}
+  html.dt .home-hero-copy p{font-size:16px;max-width:34rem}
+  html.dt .home-type-reel-wrap{grid-column:2;grid-row:2;align-self:start;margin:0}
+  html.dt #homeBelow{grid-column:1;grid-row:3;background:none;border:0;box-shadow:none;padding:0;margin:0}
+  html.dt #resumeBanner{grid-column:1/-1}
+  /* 場景帶：全闊（延伸到畫面兩邊），內容 4 欄 */
+  html.dt .scenes-bleed{
+    grid-column:1/-1;margin:34px calc(50% - 50vw) 26px;padding:46px calc(50vw - 50%) 40px;border-radius:0;
+  }
+  html.dt .scenes-grid{grid-template-columns:repeat(4,1fr);gap:30px}
+  /* 攻略：全闊，3 欄（≥1400px 見下面變 4 欄） */
+  html.dt #home > div.mb-4,html.dt #home > div:has(#homeAccordion){grid-column:1/-1}
+  html.dt .home-more-up-wrap{grid-column:1/-1}
+  html.dt .home-acc{grid-template-columns:repeat(3,1fr);column-gap:36px}
+}
+@media (min-width:1400px){
+  html.dt .home-acc{grid-template-columns:repeat(4,1fr);column-gap:40px}
 }
 </style>
 

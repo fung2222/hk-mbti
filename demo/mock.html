@@ -11,7 +11,7 @@
 :root{--gold:#D4A95F;--gold-d:#8B6F3D;--ink:#1a1a1a;--paper:#FAF7F0;--soft:#F2EDE0;--line:#EDE6D8}
 html{--cap:1280px}
 html.v-a{--cap:1280px}
-html.v-b{--cap:1280px}
+html.v-b{--cap:1440px}
 html.v-c{--cap:1600px}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei",sans-serif;font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .wrap{max-width:var(--cap);margin:0 auto;padding-left:36px;padding-right:36px;position:relative}
@@ -110,7 +110,7 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:"PingFang HK"
 var V=(location.search.match(/[?&]v=([abc])/)||[])[1]||"a";
 document.documentElement.className="v-"+V;
 var INFO={a:["A · 放寬（保守）","內容上限 1280px，結構唔改：hero 置中、版本卡 4 張一行、16 型 8×2"],
-          b:["B · 砌積木（建議）","內容上限 1280px：hero 變左右兩欄（左文案＋版本卡、右 16 型矩陣）、場景帶全闊、攻略 3 欄"],
+          b:["B · 砌積木（建議）· 已上線用呢個","內容上限 1440px：hero 變左右兩欄（左文案＋版本卡、右 16 型矩陣）、場景帶全闊、攻略 3 欄（≥1400px 4 欄）"],
           c:["C · 全闊砌積木（最滿）","內容上限 1600px：同上但更闊，16 型矩陣更大、攻略 4 欄"]}[V];
 document.getElementById("bar").innerHTML="<b>"+INFO[0]+"</b><em>"+INFO[1]+"</em><em style='margin-left:auto'>視窗闊度 "+window.innerWidth+"px</em>";
 </script>
