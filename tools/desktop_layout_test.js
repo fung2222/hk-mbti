@@ -36,7 +36,10 @@ check("桌面 hero 用 display:contents 拆散", /html\.dt \.home-hero\{display:
 check("桌面 #home 用 grid 兩欄", /html\.dt #home\{[\s\S]{0,300}grid-template-columns:minmax\(0,1fr\) minmax\(0,1\.0\d?fr\)/.test(layer));
 check("桌面有全闊色帶（50vw 技術）", /margin-left:calc\(50% - 50vw\)/.test(layer));
 check("桌面場景卡 4 欄", /html\.dt \.scenes-grid\{grid-template-columns:repeat\(4,1fr\)/.test(layer));
-check("桌面攻略 3 欄 + ≥1400px 4 欄", /home-acc\{grid-template-columns:repeat\(3,1fr\)/.test(layer) && /min-width:1400px/.test(layer));
+check("桌面「探索更多」2 欄、冇髮線（app 風，唔似表格）",
+  /html\.dt \.home-acc\{grid-template-columns:repeat\(2,1fr\)/.test(layer) &&
+  /html\.dt \.home-acc-item\{border:0;padding:0\}/.test(layer) &&
+  !/min-width:1400px/.test(layer));
 check("非主頁各版保持 640px 窄欄", /html\.dt #app > section:not\(#home\)\{max-width:640px/.test(layer));
 check("桌面「探索更多」唔摺疊（max-height:none，避免展開時其他欄跳位）",
   /html\.dt \.home-acc-body,\s*\n\s*html\.dt \.home-acc-item\.open \.home-acc-body\{max-height:none/.test(layer));

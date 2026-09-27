@@ -608,22 +608,19 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
   html.dt .scenes-grid{grid-template-columns:repeat(4,1fr);gap:30px}
   /* 「探索更多」桌面唔摺疊：8 格全部攤開（摺疊會令其他欄一齊跳位） */
   html.dt #home > div.mb-4,html.dt #home > div:has(#homeAccordion){grid-column:1/-1;padding:8px 0 40px}
-  html.dt .home-acc{grid-template-columns:repeat(3,1fr);column-gap:44px;row-gap:4px}
+  html.dt .home-acc{grid-template-columns:repeat(2,1fr);column-gap:64px;row-gap:30px}
   html.dt .home-acc-head{pointer-events:none;cursor:default;padding:0;gap:0;background:none}
   html.dt .home-acc-head:hover,html.dt .home-acc-head:active,
   html.dt .home-acc-item.open .home-acc-head{background:none}
   html.dt .home-acc-chev{display:none}
-  html.dt .home-acc-item{border-bottom:0;border-top:1px solid #f0ebe3;padding:22px 0 0}
-  html.dt .home-acc-title{font-size:17px;font-weight:900;letter-spacing:-.01em}
+  html.dt .home-acc-item{border:0;padding:0}
+  html.dt .home-acc-title{font-size:17.5px;font-weight:900;letter-spacing:-.01em}
   html.dt .home-acc-body,
   html.dt .home-acc-item.open .home-acc-body{max-height:none;opacity:1;overflow:visible;padding:9px 0 0;transition:none}
-  html.dt .home-acc-desc{font-size:14.5px;line-height:1.8;margin:0 0 12px}
-  html.dt .home-acc-go{padding:0;border:0;border-bottom:1px solid var(--gold);border-radius:0;background:none;color:var(--gold-d);font-size:14px;font-weight:800}
+  html.dt .home-acc-desc{font-size:14.5px;line-height:1.8;margin:0 0 10px;max-width:46ch}
+  html.dt .home-acc-go{padding:0;border:0;border-bottom:1px solid var(--gold);border-radius:0;background:none;color:var(--gold-d);font-size:14px;font-weight:800;transition:color .2s,border-color .2s}
   html.dt .home-acc-go:hover{color:var(--ink);border-color:var(--ink)}
   html.dt .home-more-up-wrap{grid-column:1/-1;padding:8px 0 40px}
-}
-@media (min-width:1400px){
-  html.dt .home-acc{grid-template-columns:repeat(4,1fr);column-gap:48px}
 }
 </style>
 
