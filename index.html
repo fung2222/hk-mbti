@@ -537,6 +537,56 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
 </style>
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
 <script data-goatcounter="https://fung2222.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+<!-- ===================================================================
+     桌面／平板排版層
+     規則全部喺 @media (min-width:768px) 以內 → 手機（<768px）完全唔受影響。
+     只做兩件事：外框放寬 + 重複性區塊變多欄。冇改內容、文案、功能、導航。
+     =================================================================== -->
+<style id="desktop-layer">
+@media (min-width:768px){
+  /* 外框：手機 448px → 平板 720px（桌面見下一段） */
+  #app{max-width:720px;padding-left:24px;padding-right:24px}
+  /* 非主頁各版（測驗／結果／百科⋯）保持窄欄，唔跟外框放大 */
+  #app > section:not(#home){max-width:640px;margin-left:auto;margin-right:auto}
+  /* Hero 文字靠左、大一級 */
+  #app .home-hero-copy{text-align:left;align-items:flex-start}
+  #app .home-hero-copy p{font-size:15px}
+  #app .home-hero .home-more-down{display:none}
+  /* 16 型色牌：唔再橫向捲，攤開成 8 × 2 全部顯示 */
+  #app .home-type-reel-wrap{margin:0 0 12px}
+  #app .home-type-reel{flex-wrap:wrap;overflow:visible;padding:0;gap:10px;justify-content:flex-start;scroll-snap-type:none}
+  #app .home-type-reel .hub-type-card{flex:0 0 calc(12.5% - 9px);width:calc(12.5% - 9px);scroll-snap-align:none}
+  /* 色牌 JS 會渲染兩份做跑馬燈 → 攤開成格仔時隱藏重複嗰半 */
+  #app .home-type-reel .hub-type-card:nth-child(n+17){display:none}
+  #app .home-type-reel .hub-type-code{font-size:1.15rem;letter-spacing:-.02em}
+  #app .home-type-reel .hub-type-cn{font-size:10px;opacity:.92}
+  #app .home-type-nav{display:none}
+  /* 版本卡：1 欄 → 2 欄 */
+  #app #versionList{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  #app #versionList > * + *{margin-top:0}
+  /* 探索場景卡：1 欄 → 2 欄 */
+  #app .scenes-bleed{margin:0 -24px 20px;padding:32px 24px 28px}
+  #app .scenes-head{max-width:none}
+  #app .scenes-grid{max-width:none;display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+  /* 主頁攻略風琴：1 欄 → 2 欄 */
+  #app .home-acc{display:grid;grid-template-columns:repeat(2,1fr);column-gap:30px;align-items:start}
+  #app .home-acc-label{grid-column:1/-1}
+}
+@media (min-width:1024px){
+  /* 桌面：外框 1040px */
+  #app{max-width:1040px;padding-left:32px;padding-right:32px}
+  #app .home-hero-mbti{font-size:clamp(3rem,4.6vw,4.2rem);line-height:1.05}
+  #app .home-hero-copy p{font-size:16px}
+  /* 版本卡：4 欄 */
+  #app #versionList{grid-template-columns:repeat(4,1fr)}
+  /* 場景卡：4 欄 */
+  #app .scenes-bleed{margin:0 -32px 26px;padding:40px 32px 34px;border-radius:22px}
+  #app .scenes-grid{grid-template-columns:repeat(4,1fr);gap:30px}
+  /* 攻略風琴：3 欄 */
+  #app .home-acc{grid-template-columns:repeat(3,1fr);column-gap:34px}
+}
+</style>
 </head>
 <body class="js-boot">
 
