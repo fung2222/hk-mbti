@@ -589,9 +589,11 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
 }
 </style>
 
-<!-- 桌面／平板層開關：只有「真係大螢幕」才開（防止手機『桌面版網站』模式誤觸桌面排版）。
-     判準：viewport ≥768px 且實體螢幕唔細（screen.width ≥680 且 screen.height ≥600）；
-     首次載入再排除「畫面被縮細」（visualViewport.scale < 0.9 = 桌面模式／縮放特徵）。 -->
+
+<!-- 桌面／平板層開關 + 手機「桌面版網站」補償
+     ① .dt：只有真大螢幕（viewport ≥768px 且實體螢幕唔細）才開桌面／平板排版
+     ② .dm + zoom：手機被 Chrome「桌面版網站」逼用 980px 虛擬視窗時，
+        按裝置真實寬度重新渲染，避免整版縮到 ~40% 又細又逼 -->
 <script>
 (function(){
   var root = document.documentElement, first = true;
@@ -599,20 +601,33 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
     var vw = window.innerWidth || 0;
     var sw = (window.screen && screen.width) || 0;
     var sh = (window.screen && screen.height) || 0;
+    var vv = window.visualViewport;
+    var sc = (vv && vv.scale) ? vv.scale : 1;
     var small = (sw > 0 && sw < 680) || (sh > 0 && sh < 600);
-    var ok = vw >= 768 && !small;
-    if(first){
-      var vv = window.visualViewport;
-      if(vv && vv.scale && vv.scale < 0.9) ok = false;
-      first = false;
-    }
-    if(ok) root.classList.add("dt"); else root.classList.remove("dt");
+    var dt = vw >= 768 && !small;
+    var z = 1;
+    if(small && sw > 0 && vw > sw * 1.25) z = vw / sw;      /* 桌面模式：viewport 遠闊過實體螢幕 */
+    if(first && sc < 0.9 && vw >= 768){ dt = false; z = Math.max(z, 1 / sc); }
+    if(dt) root.classList.add("dt"); else root.classList.remove("dt");
+    z = Math.max(1, Math.min(3, z));
+    if(z > 1.02){ root.style.zoom = z; root.classList.add("dm"); }
+    else { root.style.zoom = ""; root.classList.remove("dm"); }
+    first = false;
   }
   pick();
   window.addEventListener("resize", pick);
   window.addEventListener("orientationchange", pick);
 })();
 </script>
+
+<style id="desktop-mode-fix">
+/* 手機「桌面版網站」模式：hero 原本用 100dvh + 23vw，喺 980px 虛擬視窗下會拉到超高、
+   字又被 vw 放大 → 改用固定值，配合 html 嘅 zoom 以裝置真實寬度重新渲染。 */
+html.dm{background:var(--paper)}
+html.dm .home-hero{min-height:0;padding-top:16px}
+html.dm .home-hero-mbti{font-size:5rem}
+html.dm .home-hero{padding-bottom:20px}
+</style>
 </head>
 <body class="js-boot">
 
