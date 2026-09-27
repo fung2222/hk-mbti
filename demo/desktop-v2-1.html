@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-HK"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>① 大站導覽型 · 桌面版首頁 mock · 港式 MBTI</title>
+<style>
+:root{
+ --gold:#D4A95F;
+ --ink:#1a1a1a;
+ --paper:#FAF7F0;
+ --accent:#E85D5D;
+ --soft:#F2EDE0;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);
+  font-family:"PingFang HK","PingFang TC","Noto Sans HK","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1440px;margin:0 auto;padding:0 40px}
+.btn-gold{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--gold),#c1954a);
+  color:#fff;font-weight:800;border:0;border-radius:12px;padding:14px 26px;font-size:15px;cursor:pointer;
+  box-shadow:0 8px 22px rgba(212,169,95,.32)}
+.btn-ghost{display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--ink);
+  font-weight:800;font-size:15px;cursor:pointer;padding:14px 8px;border-bottom:2px solid var(--gold)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--gold);font-weight:800;font-size:12.5px;letter-spacing:.16em}
+.eyebrow svg{width:16px;height:16px;stroke:var(--gold);stroke-width:1.6;fill:none}
+h1.wordmark{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:.02em;margin:0;line-height:.92}
+.tcard{display:flex;flex-direction:column;justify-content:flex-end;color:#fff;border-radius:14px;padding:12px;
+  aspect-ratio:1/1;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.14);transition:transform .18s}
+.tcard:hover{transform:translateY(-3px)}
+.tcard b{font-family:Georgia,serif;font-weight:400;font-size:clamp(15px,1.35vw,21px);letter-spacing:.06em}
+.tcard i{font-style:normal;font-size:11.5px;opacity:.85;margin-top:3px}
+.ver{border:1px solid #E7E0D2;border-radius:16px;padding:20px;background:#fff;cursor:pointer;transition:.18s}
+.ver:hover{border-color:var(--gold);box-shadow:0 10px 26px rgba(212,169,95,.14)}
+.ver b{font-size:16px;font-weight:900;display:block}
+.ver span{font-size:12.5px;color:#6b6560;display:block;margin-top:6px}
+.ver i{font-style:normal;display:inline-block;margin-top:14px;color:var(--gold);font-weight:900;font-size:13px}
+.acc b{font-size:17px;font-weight:900;display:block}
+.acc p{font-size:14.5px;color:#5c564f;line-height:1.8;margin:8px 0 10px;max-width:46ch}
+.acc i{font-style:normal;color:var(--gold);font-weight:900;font-size:13.5px;border-bottom:1px solid var(--gold);padding-bottom:2px}
+footer{border-top:1px solid #E7E0D2;margin-top:56px;padding:26px 0 40px;font-size:13px;color:#6b6560;
+  display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.mockbar{position:sticky;top:0;z-index:99;background:#1a1a1a;color:#fff;font-size:13px;padding:9px 16px;
+  display:flex;gap:14px;align-items:center;justify-content:center;font-weight:700}
+.mockbar a{color:var(--gold)}
+
+.mockbar{font-family:system-ui,sans-serif}
+@media (max-width:900px){.mockbar{font-size:11.5px}.wrap{padding:0 20px}}
+</style></head><body>
+<div class="mockbar">桌面版首頁 mock · ① 大站導覽型　·　頂部導覽 + 大字 hero + 16 型 4×4　·　<a href="desktop-v2.html">← 返 3 個對照</a>　·　（mock 只係睇版面，唔會動真站）</div>
+<nav style="background:rgba(250,247,240,.94);backdrop-filter:blur(10px);position:sticky;top:37px;z-index:50;border-bottom:1px solid #EDE6D8">
+ <div class="wrap" style="height:64px;display:flex;align-items:center;gap:26px">
+  <span style="font-family:Georgia,serif;font-size:21px;letter-spacing:.04em">港式 MBTI</span>
+  <span style="flex:1"></span>
+  <a style="font-size:14.5px;font-weight:700;color:#5c564f">16 型人格</a>
+  <a style="font-size:14.5px;font-weight:700;color:#5c564f">性格百科</a>
+  <a style="font-size:14.5px;font-weight:700;color:#5c564f">香港統計</a>
+  <a style="font-size:14.5px;font-weight:700;color:#5c564f">我的記錄</a>
+  <button class="btn-gold" style="padding:11px 20px;font-size:14px">開始測試</button>
+ </div>
+</nav>
+
+<section style="background:radial-gradient(ellipse 46% 60% at 22% 10%,rgba(212,169,95,.28),rgba(250,247,240,0) 70%)">
+ <div class="wrap" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:64px;align-items:center;padding-top:70px;padding-bottom:70px">
+  <div>
+   <h1 class="wordmark" style="font-size:clamp(60px,7vw,112px)">MBTI</h1>
+   <p style="font-size:16.5px;line-height:1.95;color:#5c564f;margin:26px 0 0;max-width:30ch">
+     60 題廣東話版 16 型人格測試<br>多種生活情景 · 港人嘅日常<br>5–10 分鐘完成測試</p>
+   <div style="display:flex;gap:18px;align-items:center;margin-top:34px">
+    <button class="btn-gold">開始測試</button>
+    <button class="btn-ghost">睇 16 型人格 →</button>
+   </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px"><a class="tcard" style="background:linear-gradient(150deg,#6B4E9E,#33244E)"><b>INTJ</b><i>建築師</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#3E5F9E,#1E2E52)"><b>INTP</b><i>邏輯學家</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#1E8A8A,#0E4545)"><b>ENTJ</b><i>指揮官</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#E07B35,#703D1A)"><b>ENTP</b><i>辯論家</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#8A3E9E,#451E52)"><b>INFJ</b><i>提倡者</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#B085C4,#5A4573)"><b>INFP</b><i>調解員</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#E05A4A,#702D25)"><b>ENFJ</b><i>主人公</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#D9A028,#6B5014)"><b>ENFP</b><i>競選者</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#4A6E9E,#253750)"><b>ISTJ</b><i>物流師</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#5C8A5C,#2E452E)"><b>ISFJ</b><i>守衛者</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#A85240,#542920)"><b>ESTJ</b><i>總經理</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#E08058,#70402C)"><b>ESFJ</b><i>執事</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#3E8A7A,#1E453D)"><b>ISTP</b><i>鑒賞家</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#C0709E,#60384E)"><b>ISFP</b><i>探險家</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#6B8A3E,#35451F)"><b>ESTP</b><i>企業家</i></a>
+<a class="tcard" style="background:linear-gradient(150deg,#C04070,#602038)"><b>ESFP</b><i>表演者</i></a></div>
+ </div>
+</section>
+
+<section class="wrap" style="padding:24px 40px 4px">
+ <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px"><div class="ver"><b>生活版（完整測試）</b><span>60 題 · 5 分鐘 · 最準確</span><i>立即進行 →</i></div>
+<div class="ver"><b>進階版（快速版）</b><span>30 題 · 3 分鐘 · 平衡選擇</span><i>立即進行 →</i></div>
+<div class="ver"><b>BB 版（極簡版）</b><span>10 題 · 1 分鐘 · 純粹試下</span><i>立即進行 →</i></div></div>
+</section>
+
+<section style="background:var(--soft);margin-top:64px;padding:64px 0">
+ <div class="wrap">
+  <div class="eyebrow"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a13 13 0 010 18M12 3a13 13 0 000 18"/></svg>多種港式日常情景</div>
+  <div style="font-size:22px;font-weight:900;margin:12px 0 30px">題目散落喺香港人嘅每一日</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:22px"><div style="background:rgba(255,255,255,.72);border:1px solid #E7E0D2;border-radius:16px;padding:20px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:26px;height:26px;stroke:var(--gold);stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M6.5 9h11l-1 10.3a1.4 1.4 0 01-1.4 1.2H8.9a1.4 1.4 0 01-1.4-1.2L6.5 9z"/><path d="M5.6 9h12.8"/><path d="M14.6 9L17 4.6"/></svg><div style="font-weight:900;font-size:16px;margin:12px 0 6px">食同買</div><div style="font-size:12.5px;color:#6b6560;line-height:1.7">茶餐廳 · 便利店 · 街市 · 公司 lunch · 排隊買嘢</div></div>
+<div style="background:rgba(255,255,255,.72);border:1px solid #E7E0D2;border-radius:16px;padding:20px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:26px;height:26px;stroke:var(--gold);stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="4.5" y="4.8" width="15" height="12.4" rx="2.5"/><path d="M7.6 8.4h3.4M13 8.4h3.4"/><circle cx="8.6" cy="19" r="1.5"/><circle cx="15.4" cy="19" r="1.5"/></svg><div style="font-weight:900;font-size:16px;margin:12px 0 6px">出街同車廂</div><div style="font-size:12.5px;color:#6b6560;line-height:1.7">港鐵 · 巴士 · 問路 · 迫車 · 颱風假</div></div>
+<div style="background:rgba(255,255,255,.72);border:1px solid #E7E0D2;border-radius:16px;padding:20px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:26px;height:26px;stroke:var(--gold);stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><rect x="3.6" y="7.8" width="16.8" height="11.6" rx="2.6"/><path d="M9 7.8V6.4a2 2 0 012-2h2a2 2 0 012 2v1.4"/><path d="M3.6 13.6h16.8"/><path d="M11 13.6v1.5h2v-1.5"/></svg><div style="font-weight:900;font-size:16px;margin:12px 0 6px">返工返學</div><div style="font-size:12.5px;color:#6b6560;line-height:1.7">開會 · deadline · 考試 · 出差 · 同事</div></div>
+<div style="background:rgba(255,255,255,.72);border:1px solid #E7E0D2;border-radius:16px;padding:20px"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:26px;height:26px;stroke:var(--gold);stroke-width:1.6;fill:none;stroke-linecap:round;stroke-linejoin:round"><path d="M12 4.6c-4.6 0-8.4 3.05-8.4 6.8 0 2.1 1.15 3.98 2.95 5.18l-.85 3.42 3.55-1.88c.88.18 1.8.28 2.75.28 4.6 0 8.4-3.05 8.4-6.8S16.6 4.6 12 4.6z"/><path d="M12 14.4c-1.4-1.05-2.4-1.95-2.4-2.95a1.35 1.35 0 012.4-.8 1.35 1.35 0 012.4.8c0 1-1 1.9-2.4 2.95z"/></svg><div style="font-weight:900;font-size:16px;margin:12px 0 6px">朋友同屋企</div><div style="font-size:12.5px;color:#6b6560;line-height:1.7">WhatsApp · 唱 K · 搬屋 · 相處 · 道歉</div></div></div>
+ </div>
+</section>
+
+<section class="wrap" style="padding-top:62px">
+ <div class="eyebrow">探索更多</div>
+ <div style="display:grid;grid-template-columns:repeat(2,1fr);column-gap:64px;row-gap:32px;margin-top:26px"><div class="acc"><b>關於港式 MBTI</b><p>港式 MBTI 點解咁樣做、同普通版有咩分別，測完會見到咩。</p><a href="#"><i>了解港式 MBTI</i></a></div>
+<div class="acc"><b>MBTI 性格光譜</b><p>E/I、S/N、T/F、J/P 四個維度，幫你讀明 4 個字母。</p><a href="#"><i>進入光譜</i></a></div>
+<div class="acc"><b>計分方法同限制</b><p>點計分、點出題、我哋做過咩檢查，同埋有咩做唔到。</p><a href="#"><i>查看計分</i></a></div>
+<div class="acc"><b>性格百科</b><p>4 個維度、16 種性格完整介紹、性格比較工具。</p><a href="#"><i>進入百科</i></a></div>
+<div class="acc"><b>個人相處</b><p>點同每種人傾偈、共事、做朋友。7 個場景 16 型攻略。</p><a href="#"><i>進入相處攻略</i></a></div>
+<div class="acc"><b>個人拍拖</b><p>點同每種人拍拖、吵架、分手。3 個場景 16 型攻略。</p><a href="#"><i>進入拍拖攻略</i></a></div>
+<div class="acc"><b>香港 16 型統計</b><p>睇 16 型公開分佈估算，同香港人口基線對比。</p><a href="#"><i>查看統計</i></a></div>
+<div class="acc"><b>私隱聲明</b><p>本 App 點處理你嘅資料、儲存喺邊、可唔可以刪。</p><a href="#"><i>查看私隱聲明</i></a></div></div>
+</section>
+
+<div class="wrap"><footer><span>港式 MBTI</span><a>私隱聲明</a><a>香港 16 型統計</a><span style="margin-left:auto">版本 v2.0</span></footer></div>
+</body></html>
