@@ -27,4 +27,6 @@
 export NODE_PATH=<jsdom node_modules>
 node tools/desktop_layout_test.js && node tools/desktop_gate_test.js
 python3 tools/preflight.py
+python3 tools/desktop_render_test.py     # 真 Chrome：桌面實際位置（需要 playwright）
+python3 tools/mobile_zero_impact.py      # 真 Chrome：手機零影響 pixel diff
 ```

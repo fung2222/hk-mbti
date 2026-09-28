@@ -12,7 +12,7 @@ const fs = require("fs");
 const path = require("path");
 const { JSDOM, VirtualConsole } = require("jsdom");
 
-const REPO = "/opt/data/repos/hk-mbti";
+const REPO = require("path").join(__dirname, "..");
 function inlineLocal(html){
   return html
     .replace(/<script src="(https?:)?\/\/[^"]*"><\/script>/g, "")

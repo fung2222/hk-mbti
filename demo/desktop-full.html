@@ -538,109 +538,188 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
 #method .softbox{margin-top:30px;}
 </style>
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
-<!-- ===================================================================
-     桌面／平板排版層（① 大站導覽型）
-     兩個條件同時要中：① @media (min-width:768px/1024px) ② <html> 有 .dt
-     （.dt 由 <head> script 按實體螢幕判斷：只有真電腦／平板才會有 .dt）
-     新增嘅 #dtNav／#dtHeroCta 預設 display:none → 手機完全唔會見到、唔會動。
-     內容、文案、功能、導航全部冇改；只係換擺位。
-     =================================================================== -->
-
 <style id="desktop-layer">
 /* ===================================================================
-   桌面（≥1024px）／平板（768–1023px）排版層 —— ① 大站導覽型
-   兩個條件同時要中：① @media (min-width:…) ② <html> 有 .dt
-   （.dt 由 <head> script 按實體螢幕判斷：只有真電腦／平板才會有）
-   #dtNav／#dtHeroCta 預設 display:none → 手機完全唔會見到，一個 pixel 都唔動。
+   桌面（≥1024px）／平板（768–1023px）排版層 —— v3（2026-09-28 重做）
+   鐵律：
+   ① 每條規則都要 @media (min-width:…) ＋ html.dt 雙重把關（.dt 由 <head> gate script 加）
+   ② 唯一例外：下面一行「新增元素預設隱藏」—— 手機完全見唔到、一個 pixel 都唔郁
+   ③ 會被 JS 用 .hidden 收埋嘅元素（#home、各 section…）唔准覆寫 display；
+      真係要覆寫就一定要寫 :not(.hidden)（舊版 html.dt #home{display:grid} 蓋過 .hidden，
+      令主頁永遠收唔埋、測試頁／結果頁跌咗落主頁下面）
+   ④ 唔用 calc(50% - 50vw) 全闊色帶：桌面 #app 本身就係全闊，內容用 --dt-w 置中
    =================================================================== */
-#dtNav,#dtHeroCta{display:none}
+#dtNav,#dtHeroCta,#dtTypeRows,#dtFoot{display:none}
 
-/* ── 平板 768–1023px：外框 720px、重複區塊兩欄 ── */
-@media (min-width:768px){
-  html.dt #app{max-width:720px}
-  html.dt .scenes-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  html.dt .home-acc{grid-template-columns:repeat(2,minmax(0,1fr))}
+/* ── 平板 768–1023px：乾淨置中單欄（內容 720px；唔做兩欄），只修正跟手機版唔夾嘅位 ── */
+@media (min-width:768px) and (max-width:1023.98px){
+  html.dt #app{max-width:none}   /* 全闊：hero／跑馬燈／情景帶貼邊，同手機一樣唔會喺兩邊切斷 */
+  html.dt #app > section:not(#home),html.dt #homeBelow,html.dt #resumeBanner,html.dt #home > div.mb-4,
+  html.dt .home-more-up-wrap,html.dt .home-hero > div:first-child{width:100%;max-width:688px;margin-left:auto;margin-right:auto}
+  html.dt .home-hero{min-height:min(100dvh,880px);
+    background:radial-gradient(closest-side at 50% 42%,rgba(212,169,95,.42),rgba(212,169,95,.12) 55%,rgba(250,247,240,0))}
+  html.dt .scenes-head,html.dt .scenes-grid{max-width:600px}
+  html.dt .scenes-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 32px}
+  html.dt #versionList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  html.dt #versionList > *{margin:0 !important}
 }
 
 /* ── 桌面 ≥1024px ── */
 @media (min-width:1024px){
-  html.dt{overflow-x:hidden}
-  html.dt #app{max-width:1440px;padding-left:40px;padding-right:40px}
+  html.dt{--dt-w:min(1200px,calc(100% - 80px))}
 
-  /* ① 頂部導覽 */
+  /* 外框：#app 全闊（冇 max-width／左右 padding），每段內容自己用 --dt-w 置中 */
+  html.dt #app{max-width:none;padding-left:0;padding-right:0;padding-bottom:72px}
+  /* 頁尾貼底：內容短（例如測試頁）都唔會浮喺半空 */
+  html.dt body{display:flex;flex-direction:column;min-height:100vh}
+  html.dt body > #app{flex:1 0 auto;width:100%}
+
+  /* ── ① 頂部導覽（sticky）＋ 現時畫面高亮（:has，唔使 JS） ── */
   html.dt #dtNav{display:block;position:sticky;top:0;z-index:60;
-    background:rgba(250,247,240,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    background:rgba(250,247,240,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
     border-bottom:1px solid #EDE6D8}
-  html.dt .dt-nav-in{max-width:1440px;margin:0 auto;padding:0 40px;height:64px;
-    display:flex;align-items:center;gap:26px}
-  html.dt .dt-nav-brand{display:flex;align-items:center;gap:9px;text-decoration:none;color:inherit}
-  html.dt .dt-nav-brand img{width:30px;height:30px;border-radius:8px;flex-shrink:0}
-  html.dt .dt-nav-brand span{font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-size:17px;letter-spacing:.02em}
-  html.dt .dt-nav-links{display:flex;align-items:center;gap:24px;margin-left:auto}
-  html.dt .dt-nav-links a,html.dt .dt-nav-links button{background:none;border:0;padding:0;cursor:pointer;
-    font:inherit;font-size:14.5px;font-weight:700;color:#5c564f;text-decoration:none}
+  html.dt .dt-nav-in{width:var(--dt-w);margin:0 auto;height:64px;display:flex;align-items:center;gap:32px}
+  html.dt .dt-nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);flex-shrink:0}
+  html.dt .dt-nav-brand img{width:32px;height:32px;border-radius:9px}
+  html.dt .dt-nav-brand span{font-size:18px;font-weight:900;letter-spacing:-.01em}
+  html.dt .dt-nav-links{display:flex;align-items:center;gap:30px;margin-left:auto;height:100%}
+  html.dt .dt-nav-links a,html.dt .dt-nav-links button{position:relative;display:flex;align-items:center;height:100%;
+    background:none;border:0;padding:0;cursor:pointer;font:inherit;font-size:15px;font-weight:700;
+    color:#6b6560;text-decoration:none;transition:color .15s}
   html.dt .dt-nav-links a:hover,html.dt .dt-nav-links button:hover{color:var(--ink)}
-  html.dt .dt-nav-cta{background:linear-gradient(135deg,var(--gold),#c1954a);color:#fff;border:0;
-    border-radius:11px;padding:11px 20px;font-size:14px;font-weight:900;cursor:pointer;flex-shrink:0;
-    box-shadow:0 8px 22px rgba(212,169,95,.30)}
+  html.dt .dt-nav-links a::after,html.dt .dt-nav-links button::after{content:"";position:absolute;left:0;right:0;bottom:-1px;
+    height:2px;border-radius:2px;background:var(--gold);transform:scaleX(0);transition:transform .2s}
+  html.dt:has(#hub:not(.hidden)) #dtNav [data-nav="hub"],
+  html.dt:has(#type:not(.hidden)) #dtNav [data-nav="hub"],
+  html.dt:has(#letter:not(.hidden)) #dtNav [data-nav="hub"],
+  html.dt:has(#spectrum:not(.hidden)) #dtNav [data-nav="spectrum"],
+  html.dt:has(#social:not(.hidden)) #dtNav [data-nav="social"],
+  html.dt:has(#socialArticle:not(.hidden)) #dtNav [data-nav="social"]{color:var(--ink)}
+  html.dt:has(#hub:not(.hidden)) #dtNav [data-nav="hub"]::after,
+  html.dt:has(#type:not(.hidden)) #dtNav [data-nav="hub"]::after,
+  html.dt:has(#letter:not(.hidden)) #dtNav [data-nav="hub"]::after,
+  html.dt:has(#spectrum:not(.hidden)) #dtNav [data-nav="spectrum"]::after,
+  html.dt:has(#social:not(.hidden)) #dtNav [data-nav="social"]::after,
+  html.dt:has(#socialArticle:not(.hidden)) #dtNav [data-nav="social"]::after{transform:scaleX(1)}
+  html.dt .dt-nav-cta,html.dt .dt-cta-gold{background:var(--gold);color:var(--ink);border:0;cursor:pointer;
+    font-family:inherit;font-weight:900;border-radius:12px;box-shadow:0 6px 18px rgba(212,169,95,.32);
+    transition:background .15s,transform .15s,box-shadow .15s}
+  html.dt .dt-nav-cta:hover,html.dt .dt-cta-gold:hover{background:#c89a4d;transform:translateY(-1px);box-shadow:0 10px 24px rgba(212,169,95,.38)}
+  html.dt .dt-nav-cta{flex-shrink:0;padding:10px 20px;font-size:14.5px}
 
-  /* ② hero：左大字／右 16 型 4×4 色格 */
-  html.dt #home{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);
-    column-gap:64px;align-items:center;padding-top:56px;padding-bottom:56px;
-    background:radial-gradient(ellipse 46% 60% at 18% 12%,rgba(212,169,95,.30),rgba(250,247,240,0) 70%)}
-  html.dt .home-hero{display:contents}
-  html.dt .home-hero > div:first-child{display:none}   /* 原本 logo 列：頂部導覽已經有 */
-  html.dt .home-hero-copy{grid-column:1;grid-row:2;text-align:left;align-items:flex-start}
-  html.dt .home-hero-mbti{font-size:clamp(60px,7vw,112px);line-height:.94}
-  html.dt .home-hero-copy p{font-size:16.5px;line-height:1.95;color:#5c564f;max-width:30ch;margin-top:26px;text-align:left}
-  html.dt #dtHeroCta{display:flex;gap:18px;align-items:center;margin-top:34px}
-  html.dt .dt-cta-gold{background:linear-gradient(135deg,var(--gold),#c1954a);color:#fff;border:0;
-    border-radius:12px;padding:14px 26px;font-size:15px;font-weight:900;cursor:pointer;
-    box-shadow:0 8px 22px rgba(212,169,95,.32)}
-  html.dt .dt-cta-ghost{background:none;border:0;color:var(--ink);font-size:15px;font-weight:900;
-    cursor:pointer;padding:14px 8px;border-bottom:2px solid var(--gold)}
-  html.dt .home-type-reel-wrap{grid-column:2;grid-row:2;margin:0;padding:0}
+  /* ── ② Hero：左 5/12 文案；右 7/12 = 16 型 4×4 色牌（主角） ── */
+  html.dt #home{overflow-x:clip}
+  html.dt .home-hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:56px;align-items:center;
+    width:var(--dt-w);min-height:0;margin:-24px auto 0;padding:72px 0 96px;background:none}
+  html.dt .home-hero > div:first-child{display:none}          /* 原本 logo 列：導覽已經有 */
+  html.dt .home-more-down{display:none}                       /* ▼：桌面唔使 */
+  html.dt .home-hero-copy{grid-column:1;grid-row:1;flex:none;position:relative;
+    text-align:left;align-items:flex-start;justify-content:center}
+  html.dt .home-hero-copy::before{content:"";position:absolute;z-index:-1;pointer-events:none;
+    left:-18%;top:-30%;width:120%;height:160%;
+    background:radial-gradient(closest-side,rgba(212,169,95,.30),rgba(212,169,95,.10) 55%,rgba(212,169,95,0))}
+  html.dt .home-hero-mbti{font-size:clamp(88px,8.6vw,140px);line-height:.92}
+  html.dt #app .home-hero-copy p{font-size:19px !important;line-height:1.9;color:#5c564f;margin-top:28px;text-align:left}
+  html.dt #dtHeroCta{display:flex;gap:26px;align-items:center;margin-top:40px}
+  html.dt .dt-cta-gold{padding:15px 30px;font-size:16px}
+  html.dt .dt-cta-ghost{background:none;border:0;color:var(--ink);font-family:inherit;font-size:16px;font-weight:900;
+    cursor:pointer;padding:6px 2px;border-bottom:2px solid var(--gold);transition:color .15s}
+  html.dt .dt-cta-ghost:hover{color:#8B6F3D}
+
+  html.dt .home-type-reel-wrap{grid-column:2;grid-row:1;margin:0;position:relative;isolation:isolate;
+    display:grid;grid-template-columns:minmax(0,1fr)}
+  html.dt .home-type-reel-wrap::before{content:"";position:absolute;z-index:-1;pointer-events:none;
+    left:-10%;right:-10%;top:-16%;bottom:-16%;
+    background:radial-gradient(closest-side,rgba(212,169,95,.34),rgba(212,169,95,.12) 60%,rgba(212,169,95,0))}
   html.dt .home-type-nav{display:none}
-  html.dt .home-type-reel{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;
-    overflow:visible;padding:0;scroll-behavior:auto}
-  html.dt .home-type-reel .hub-type-card{aspect-ratio:1/1;border-radius:14px;padding:10px}
-  html.dt .home-type-reel .hub-type-card:nth-child(n+17){display:none}
-  html.dt .home-more-down{display:none}
+  html.dt .home-type-reel{grid-column:1;grid-row:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;
+    overflow:visible !important;padding:0;scroll-snap-type:none;scroll-behavior:auto}
+  html.dt .home-type-reel .hub-type-card{flex:none;width:auto;aspect-ratio:1/1;border-radius:16px;padding:10px 8px 14px;gap:5px}
+  html.dt .home-type-reel .hub-type-card:nth-child(n+17){display:none}   /* 跑馬燈後 16 張複本：桌面唔顯示 */
+  html.dt .home-type-reel .hub-type-card:hover:not(.is-on){transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.22)}
+  html.dt .home-type-reel .hub-type-card:hover .hub-type-go{opacity:1;pointer-events:auto}
+  html.dt .home-type-reel .hub-type-code{font-size:clamp(22px,2.1vw,32px)}
+  html.dt .home-type-reel .hub-type-cn{font-size:13.5px}
+  html.dt .home-type-reel .hub-type-go{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);margin:0;
+    font-size:12px;padding:3px 10px;cursor:pointer;white-space:nowrap}
 
-  /* ③ 版本卡 3 欄 */
-  html.dt #homeBelow{grid-column:1/-1;background:none;border:0;box-shadow:none;padding:0;margin:0}
+  /* ── ③ 測試版本：獨立一段；4 張等高（1024–1279 2×2） ── */
+  html.dt #homeBelow{width:var(--dt-w);margin:0 auto;padding:0 0 96px;background:none;border-radius:0;box-shadow:none;
+    scroll-margin-top:88px}
   html.dt #versionList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
-  html.dt #versionList > *{width:auto}
+  html.dt #versionList > *{margin:0 !important;width:auto}
+  html.dt .ver-btn{min-height:112px;padding:24px 24px;border-radius:16px}
+  html.dt .ver-btn:not(.ver-lit):hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.08)}
+  html.dt #versionList .text-\[15px\]{font-size:18px}
+  html.dt #resumeBanner{width:var(--dt-w);margin:-72px auto 72px}
 
-  /* ④ 全闊場景帶（--sbw 由 script 寫入，修正 scrollbar 造成嘅偏移） */
-  html.dt .scenes-bleed{grid-column:1/-1;border-radius:0;background:var(--soft);
-    margin:64px calc(50% - 50vw + var(--sbw,0px)/2) 0;
-    padding:64px calc(50vw - 50% - var(--sbw,0px)/2)}
-  html.dt .scenes-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
-  html.dt .scene-cell{background:rgba(255,255,255,.72);border:1px solid #E7E0D2;border-radius:16px;padding:20px}
+  /* 三段標題（版本／情景／探索）：由細金字 kicker 改做大字標題 */
+  html.dt #app #homeBelow > .text-xs:first-child,
+  html.dt #app .scenes-head > .text-xs:first-child,
+  html.dt #app .home-acc-label{font-size:26px !important;line-height:1.3;letter-spacing:.01em;font-weight:900;
+    color:var(--ink);margin:0 0 28px;padding:0}
+  html.dt #app .scenes-head > .text-xs:first-child{margin-bottom:10px}
+  html.dt #homeBelow > .text-xs:first-child .scenes-title-ico,
+  html.dt .scenes-head .scenes-title-ico,
+  html.dt .home-acc-label .scenes-title-ico{width:24px;height:24px;margin-right:10px;color:var(--gold);vertical-align:-4px}
 
-  /* ⑤ 探索更多：桌面唔摺疊、2 欄、冇髮線 */
-  html.dt #home > div.mb-4{grid-column:1/-1;padding:62px 0 0}
-  html.dt .home-acc{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:64px;row-gap:32px}
-  html.dt .home-acc-head{pointer-events:none;cursor:default;padding:0;gap:0;background:none}
-  html.dt .home-acc-head:hover,html.dt .home-acc-head:active,
-  html.dt .home-acc-item.open .home-acc-head{background:none}
+  /* ── ④ 港式日常情景：真全闊 --soft 色帶（#app 已全闊，唔使 vw），4 欄 ── */
+  html.dt .scenes-bleed{margin:0;padding:88px 0 96px;background:var(--soft)}
+  html.dt .scenes-head{max-width:none;width:var(--dt-w);margin:0 auto 32px}
+  html.dt #app .scenes-head > .text-sm{font-size:17px !important;font-weight:400;color:#6b6560;margin:0}
+  html.dt .scenes-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;max-width:none;width:var(--dt-w);margin:0 auto}
+  html.dt .scene-cell{gap:10px;padding:26px 24px 28px;border-radius:16px;background:rgba(255,255,255,.78);
+    box-shadow:0 4px 24px rgba(0,0,0,.04)}
+  html.dt .scene-title{flex-direction:column;align-items:flex-start;gap:14px}
+  html.dt .scene-ico{width:32px;height:32px}
+  html.dt .scene-name{font-size:18px;font-weight:900}
+  html.dt .scene-sub{font-size:15px;line-height:1.75}
+
+  /* ── ⑤ 探索更多：4×2 方塊，等高，連結貼底；唔摺疊（手機風琴 JS 照留） ── */
+  html.dt #home > div.mb-4{width:var(--dt-w);margin:0 auto;padding:88px 0 8px}
+  html.dt .home-acc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;
+    background:none;border-radius:0;box-shadow:none;overflow:visible}
+  html.dt .home-acc-label{grid-column:1/-1}
+  html.dt #app .home-acc-label{margin-bottom:8px}
+  html.dt .home-acc-item{display:flex;flex-direction:column;border:0;border-radius:16px;background:#fff;
+    padding:24px 24px 22px;box-shadow:0 4px 24px rgba(0,0,0,.05)}
+  html.dt .home-acc-head{pointer-events:none;cursor:default;padding:0;gap:0;background:none !important}
   html.dt .home-acc-chev{display:none}
-  html.dt .home-acc-item{border:0;padding:0}
-  html.dt .home-acc-title{font-size:17.5px;font-weight:900;letter-spacing:-.01em}
-  html.dt .home-acc-body,html.dt .home-acc-item.open .home-acc-body{max-height:none;opacity:1;overflow:visible;padding:8px 0 0;transition:none}
-  html.dt .home-acc-desc{font-size:14.5px;line-height:1.8;margin:0 0 10px;max-width:46ch}
-  html.dt .home-acc-go{padding:0;border:0;border-bottom:1px solid var(--gold);border-radius:0;
-    background:none;color:var(--gold);font-size:13.5px;font-weight:900}
-  html.dt .home-more-up-wrap{grid-column:1/-1;padding:8px 0 40px}
+  html.dt .home-acc-title{font-size:18px;font-weight:900;letter-spacing:0}
+  html.dt .home-acc-item .home-acc-body{flex:1;display:flex;flex-direction:column;align-items:flex-start;
+    max-height:none;opacity:1;overflow:visible;padding:10px 0 0;transition:none}
+  html.dt .home-acc-desc{flex:1;font-size:15px;line-height:1.75;margin:0 0 18px}
+  html.dt .home-acc-go{margin-top:auto;padding:8px 16px;font-size:14px}
+  html.dt .home-more-up-wrap{display:none}                     /* ▲ Top：導覽 sticky，唔使 */
 
-  /* ⑥ 唔係主頁嘅畫面保持窄欄 */
-  html.dt #app > section:not(#home){max-width:640px;margin-left:auto;margin-right:auto}
+  /* ── ⑥ 頁尾（桌面限定） ── */
+  html.dt #dtFoot{display:block;border-top:1px solid #EDE6D8}
+  html.dt .dt-foot-in{width:var(--dt-w);margin:0 auto;height:72px;display:flex;align-items:center;justify-content:space-between;
+    font-size:14px;color:#8a8174}
+  html.dt .dt-foot-links{display:flex;gap:26px}
+  html.dt .dt-foot-links a,html.dt .dt-foot-links button{background:none;border:0;padding:0;font:inherit;color:#8a8174;
+    cursor:pointer;text-decoration:none}
+  html.dt .dt-foot-links a:hover,html.dt .dt-foot-links button:hover{color:var(--ink)}
+
+  /* ── ⑦ 其他畫面：720px 置中欄；深藍頁頭（margin:-24px -16px）剛好同欄一樣闊 ── */
+  html.dt #app > section:not(#home){max-width:720px;margin-left:auto;margin-right:auto;padding-left:16px;padding-right:16px}
+  html.dt #app > section:not(#home) .page-hero{border-radius:0 0 18px 18px}
 }
 
-/* ── 大螢幕 ≥1280px：版本卡 4 張一行 ── */
+/* ── 大螢幕 ≥1280px：版本卡一行 4 張；16 型左邊加氣質組別標籤 ── */
 @media (min-width:1280px){
   html.dt #versionList{grid-template-columns:repeat(4,minmax(0,1fr))}
+  html.dt .home-hero{column-gap:72px}
+  html.dt .home-type-reel-wrap{grid-template-columns:auto minmax(0,1fr);column-gap:20px}
+  html.dt .home-type-reel{grid-column:2}
+  html.dt .home-type-reel .hub-type-card{aspect-ratio:5/4}
+  html.dt #dtTypeRows{display:grid;grid-column:1;grid-row:1;grid-template-rows:repeat(4,minmax(0,1fr));row-gap:14px}
+  html.dt #dtTypeRows span{align-self:center;text-align:right;font-size:13px;font-weight:700;letter-spacing:.14em;color:#8a7a5a}
+}
+
+/* ── 超闊 ≥1440px：內容闊 1280 ── */
+@media (min-width:1440px){
+  html.dt{--dt-w:min(1280px,calc(100% - 96px))}
 }
 </style>
 
@@ -708,11 +787,11 @@ html.dm .home-hero-mbti{font-size:clamp(4.4rem, calc(var(--dm-vw) * 0.23), 6.6re
  <div class="dt-nav-in">
   <a href="./" class="dt-nav-brand" onclick="goHome();return false;"><img src="icon-192.png" alt="港MBTI"><span>港式 MBTI</span></a>
   <span class="dt-nav-links">
-   <button type="button" onclick="openHub()">16 型人格</button>
-   <button type="button" onclick="openSpectrum()">性格光譜</button>
-   <button type="button" onclick="openSocial()">相處攻略</button>
-   <a href="./stats.html">香港統計</a>
-   <a href="./record.html">我的紀錄</a>
+   <button type="button" data-nav="hub" onclick="openHub()">16 型人格</button>
+   <button type="button" data-nav="spectrum" onclick="openSpectrum()">性格光譜</button>
+   <button type="button" data-nav="social" onclick="openSocial()">相處攻略</button>
+   <a href="./stats.html" data-nav="stats">香港統計</a>
+   <a href="./record.html" data-nav="record">我的紀錄</a>
   </span>
   <button type="button" class="dt-nav-cta" onclick="goPickVersion()">開始測試</button>
  </div>
@@ -1573,6 +1652,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" class="home-type-nav is-l" data-dir="-1" aria-label="上一張"></button>
  <button type="button" class="home-type-nav is-r" data-dir="1" aria-label="下一張"></button>
  <div class="home-type-reel" id="homeTypeReel" aria-label="16型性格色牌"></div>
+ <div id="dtTypeRows" aria-hidden="true"><span>分析家</span><span>外交家</span><span>守護者</span><span>探索者</span></div>
  </div>
  <button type="button" class="home-more-down" onclick="scrollHomeBelow()" aria-label="睇下面內容">▼</button>
  </div>
@@ -1908,6 +1988,18 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </section>
 
 </div>
+
+<!-- 桌面頁尾（只喺 html.dt ≥1024px 顯示；手機係 display:none） -->
+<footer id="dtFoot" aria-label="頁尾">
+ <div class="dt-foot-in">
+  <span>港式 MBTI · 版本 v2.0</span>
+  <span class="dt-foot-links">
+   <button type="button" onclick="openPrivacy()">私隱聲明</button>
+   <a href="./stats.html">香港統計</a>
+   <a href="./record.html">我的紀錄</a>
+  </span>
+ </div>
+</footer>
 
 <!-- ====================== 廣告 + IAP 解鎖邏輯 ====================== -->
 <script>

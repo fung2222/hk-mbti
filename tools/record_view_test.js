@@ -15,7 +15,7 @@ const fs = require("fs");
 const path = require("path");
 const { JSDOM, VirtualConsole } = require("jsdom");   // 見檔頂 NODE_PATH 說明
 
-const REPO = "/opt/data/repos/hk-mbti";
+const REPO = require("path").join(__dirname, "..");
 function inlineLocal(html){
   return html
     .replace(/<script src="(https?:)?\/\/[^"]*"><\/script>/g, "")
