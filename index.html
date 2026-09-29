@@ -168,6 +168,19 @@ cursor:pointer;-webkit-appearance:none;appearance:none;
 .gender-btn{border:2px solid #e5e0d5;background:#fff;border-radius:16px;padding:18px 12px;font-size:19px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--ink);transition:all .15s;-webkit-appearance:none;appearance:none;}
 .gender-btn.on{border-color:var(--gold);background:rgba(212,169,95,.1);}
 .cd-overlay{position:fixed;inset:0;background:rgba(30,42,59,.96);z-index:200;display:flex;align-items:center;justify-content:center;}
+/* ===== 自訂 app 彈窗（取代原生 confirm／alert：原生會顯示「fung2222.github.io 顯示」網址 ✗）===== */
+.ad-overlay{position:fixed;inset:0;background:rgba(30,42,59,.62);z-index:300;display:flex;align-items:center;justify-content:center;padding:26px;}
+.ad-card{background:#1E2A3B;border:1px solid rgba(212,169,95,.28);border-radius:22px;width:100%;max-width:360px;padding:30px 26px 22px;box-shadow:0 24px 60px rgba(0,0,0,.45);animation:adIn .22s ease-out;}
+@keyframes adIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.ad-title{font-size:22px;font-weight:800;color:#fff;letter-spacing:.4px;line-height:1.35;}
+
+.ad-body{margin-top:14px;font-size:15px;line-height:1.85;color:rgba(255,255,255,.72);}
+.ad-body:empty{display:none;}
+.ad-acts{margin-top:26px;display:flex;gap:12px;}
+.ad-btn{flex:1;padding:15px 10px;border-radius:14px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;border:1px solid transparent;-webkit-appearance:none;appearance:none;transition:transform .12s;}
+.ad-btn:active{transform:scale(.985);}
+.ad-cancel{background:transparent;border-color:rgba(255,255,255,.22);color:rgba(255,255,255,.86);}
+.ad-ok{background:var(--gold);color:#1E2A3B;}
 .cd-number{font-size:130px;font-weight:900;color:#fff;font-family:Georgia,'Times New Roman',serif;line-height:1;}
 @keyframes cdPop{0%{transform:scale(.4);opacity:0}40%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
 .cd-pop{animation:cdPop .8s cubic-bezier(.34,1.56,.64,1);}
@@ -1893,6 +1906,18 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <!-- 倒數 overlay -->
  <div id="countdownOverlay" class="cd-overlay hidden">
  <div id="cdNumber" class="cd-number">3</div>
+ </div>
+
+ <!-- 通用 app 彈窗（取代原生 confirm／alert：原生會顯示「fung2222.github.io 顯示」網址 ✗）-->
+ <div id="appDialog" class="ad-overlay hidden" role="dialog" aria-modal="true">
+ <div class="ad-card">
+ <div class="ad-title" id="adTitle"></div>
+ <div class="ad-body" id="adBody"></div>
+ <div class="ad-acts">
+ <button type="button" class="ad-btn ad-cancel" id="adCancel">取消</button>
+ <button type="button" class="ad-btn ad-ok" id="adOk">確定</button>
+ </div>
+ </div>
  </div>
 
  <!-- ========== TEST ========== -->
@@ -3890,11 +3915,47 @@ renderQ();
  }
 };
 
+// ===== 自訂 app 彈窗（取代原生 confirm／alert：原生會顯示「fung2222.github.io 顯示」網址 ✗）=====
+window._adResolve = null;
+window.appDialog = function(opts){
+  return new Promise(function(resolve){
+    var ov = document.getElementById("appDialog");
+    var t = document.getElementById("adTitle");
+    var b = document.getElementById("adBody");
+    var c = document.getElementById("adCancel");
+    var o = document.getElementById("adOk");
+    if(!ov || !t || !b || !c || !o){ resolve(false); return; }
+    t.textContent = opts.title || "";
+    b.textContent = opts.body || "";
+    c.textContent = opts.cancelText || "取消";
+    o.textContent = opts.okText || "確定";
+    c.style.display = opts.hideCancel ? "none" : "";
+    ov.classList.remove("hidden");
+    window._adResolve = function(val){
+      window._adResolve = null;
+      ov.classList.add("hidden");
+      c.onclick = null; o.onclick = null; ov.onclick = null;
+      resolve(val);
+    };
+    c.onclick = function(){ if(window._adResolve) window._adResolve(false); };
+    o.onclick = function(){ if(window._adResolve) window._adResolve(true); };
+    ov.onclick = function(e){ if(e.target === ov && window._adResolve) window._adResolve(false); };
+  });
+};
+// 撳返回鍵時自動收埋彈窗（避免殘留）
+window.addEventListener("popstate", function(){
+  if(window._adResolve) window._adResolve(false);
+});
+
 window.confirmExit = function(){
-if(confirm("離開測試？\n\n下次入 app，主頁會出『上次未完成』卡，撳「開始」就續做。")){
-clearVersionUI();
-goHome();
- }
+  appDialog({
+    title: "離開測試？",
+    body: "下次入 app，主頁會出「上次未完成」卡，撳「開始」就續做。",
+    cancelText: "繼續測試",
+    okText: "離開"
+  }).then(function(ok){
+    if(ok){ clearVersionUI(); goHome(); }
+  });
 };
 
 // 按答案向量計分（唔再靠題序分段）— shuffle 後仍然準
