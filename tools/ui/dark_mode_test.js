@@ -65,6 +65,36 @@ function stubCanvas(w) {
     chk(f + ' dark layer 只改顏色（冇排版／尺寸／動畫）', bad.length === 0, bad.slice(0, 3).join(' | '));
   }
 
+  // ②b 淺底（白卡／淺米卡／白玻璃）全部要有 dark 覆蓋 —— 唔准漏（Roy 2026-09-29：仲見到白色位）
+  const normSel = s => s.trim().replace(/^html(?:\.d(?:k|t|m))*\s*/, '');
+  const lastBg = body => {
+    const vals = [...body.matchAll(/(?<!-)\bbackground(?:-color)?\s*:\s*([^;]+)/g)].map(m => m[1].trim()).filter(v => !/gradient/.test(v));
+    return vals.length ? vals[vals.length - 1] : null;
+  };
+  const isLightBg = v => {
+    if (!v) return false;
+    if (/^white$/i.test(v)) return true;
+    for (const hx of (v.match(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b/g) || [])) if (lum(hx) > 0.72) return true;
+    const m = v.match(/rgba?\(\s*255\s*,\s*255\s*,\s*255\s*,\s*([\d.]+)/);
+    return !!(m && parseFloat(m[1]) >= 0.45);
+  };
+  for (const f of PAGES) {
+    const src = read(f);
+    const mainCss = [...src.matchAll(/<style(?![^>]*id="dark-layer")[^>]*>([\s\S]*?)<\/style>/g)].map(m => m[1]).join('\n');
+    const drools = [...strip(dark[f]).matchAll(/([^{}@]+)\{([^{}]*)\}/g)].map(m => [m[1], m[2]]);
+    const hasCover = (sel) => drools.some(([dsel, body]) => dsel.split(',').some(one => normSel(one) === normSel(sel)) && lastBg(body));
+    const miss = [];
+    for (const [sel, body] of [...strip(mainCss).matchAll(/([^{}@]+)\{([^{}]*)\}/g)].map(m => [m[1], m[2]])) {
+      if (!isLightBg(lastBg(body))) continue;
+      for (const one of sel.split(',')) {
+        const s2 = one.trim();
+        if (!s2 || s2.includes('@')) continue;
+        if (!hasCover(s2)) miss.push(s2);
+      }
+    }
+    chk(f + ' 淺底（白卡／淺底）全部有 dark 覆蓋（冇漏網）', miss.length === 0, miss.slice(0, 3).join(' | '));
+  }
+
   // ③ 對比度：抽出 dark layer 真正用過嘅字色去計（唔靠硬編碼清單）
   const BG = ['#12161C', '#181E26', '#1B2129', '#1F262F'];
   const fgSet = new Set();
