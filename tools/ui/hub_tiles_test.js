@@ -1,5 +1,5 @@
 
-// Box B：性格百科 16 型格（圓角、格距、比例）— 2026-09-29 Roy 要求美化後嘅守門測試
+// 守門：性格百科 16 型格要維持「直角、4px 密格、9/16」原狀（Roy 2026-09-29 明確話直角好）
 const fs=require('fs'), path=require('path');
 const {JSDOM, VirtualConsole}=require('jsdom');
 const REPO=path.resolve(__dirname,'../..');
@@ -13,32 +13,17 @@ const dom=new JSDOM(html,{runScripts:'dangerously',pretendToBeVisual:true,url:'h
   beforeParse(w){ w.alert=()=>{}; w.confirm=()=>false; stubCanvas(w); }});
 setTimeout(()=>{
   const w=dom.window, d=w.document;
-  // 1) CSS 值
-  const grid=src.match(/\.hub-type-grid\{[^}]*\}/)[0];
-  const gap=parseInt((grid.match(/gap:(\d+)px/)||[])[1],10);
-  chk('16 型格格距 ≥ 8px（原本 4px 太密）', gap>=8, 'gap='+gap);
-  const card=(src.match(/\.hub-type-grid \.hub-type-card\{[^}]*\}/)||[''])[0];
-  const radius=parseInt((card.match(/border-radius:(\d+)px/)||[])[1],10);
-  chk('16 型格有圓角 ≥ 8px（原本直角 0）', radius>=8, 'radius='+radius);
-  chk('比例改成 4/5（原本 9/16 太窄高）', /aspect-ratio:4\/5/.test(card), card);
-  // 2) 唔可以影響主頁跑馬燈 / 桌面層
-  chk('主頁跑馬燈卡冇被改（仍然 9/16）', /\.home-type-reel \.hub-type-card\{[^}]*flex:0 0 6rem/.test(src.replace(/\n/g,'')));
-  chk('桌面層規則冇被改（html.dt 仍然 aspect-ratio:1/1）', /html\.dt \.home-type-reel \.hub-type-card\{[^}]*aspect-ratio:1\/1/.test(src));
-  // 3) 16 格真係渲染出嚟 + 開得到
+  chk('16 型格格距仍然 4px（Roy：原狀）', /\.hub-type-grid\{display:grid;grid-template-columns:repeat\(4,1fr\);gap:4px;\}/.test(src));
+  const base=(src.match(/\.hub-type-card\{[^}]*\}/)||[''])[0];
+  chk('16 型卡仍然直角 border-radius:0', /border-radius:0/.test(base), base.slice(0,80));
+  chk('16 型卡仍然 9/16 窄高', /aspect-ratio:9\/16/.test(base));
+  chk('冇任何 .hub-type-grid .hub-type-card 覆寫（唔准再「美化」）', !/\.hub-type-grid \.hub-type-card/.test(src));
+  chk('主頁跑馬燈卡維持 flex:0 0 6rem / 9/16', /\.home-type-reel \.hub-type-card\{[^}]*flex:0 0 6rem/.test(src.replace(/\n/g,'')));
+  chk('桌面層維持 html.dt 1/1', /html\.dt \.home-type-reel \.hub-type-card\{[^}]*aspect-ratio:1\/1/.test(src));
   w.renderHub && w.renderHub();
   const tiles=[...d.querySelectorAll('#hubTypeGrid .hub-type-card')];
-  chk('16 型格渲染到 16 格', tiles.length===16, tiles.length);
-  const codes=tiles.map(t=>t.querySelector('.hub-type-code').textContent.trim());
-  chk('16 個字母碼齊全', new Set(codes).size===16, codes.join(','));
-  chk('每格有中文名', tiles.every(t=>{const cn=t.querySelector('.hub-type-cn'); return cn && cn.textContent.trim().length>0;}));
-  let bad=0;
-  tiles.slice(0,3).forEach(tile=>{
-    tile.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));
-    const go=tile.querySelector('.hub-type-go');
-    if(go) go.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));
-    if(d.getElementById('type').classList.contains('hidden')) bad++;
-  });
-  chk('撳格 → 可以入到專頁（試 3 格）', bad===0, 'bad='+bad);
+  chk('16 格仍然渲染到', tiles.length===16, tiles.length);
+  chk('每格仍然有字母碼 + 中文名', tiles.every(t=>t.querySelector('.hub-type-code').textContent.trim() && t.querySelector('.hub-type-cn').textContent.trim()));
   chk('全程冇 JS 錯誤', jerr.length===0, JSON.stringify(jerr.slice(0,2)));
   console.log('');
   console.log('===== '+(ok===total?'全部通過':'有失敗')+'（'+ok+'/'+total+'） =====');

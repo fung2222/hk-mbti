@@ -167,11 +167,11 @@ cursor:pointer;-webkit-appearance:none;appearance:none;
 #nickGrid{justify-content:center;}
 .gender-btn{border:2px solid #e5e0d5;background:#fff;border-radius:16px;padding:18px 12px;font-size:19px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--ink);transition:all .15s;-webkit-appearance:none;appearance:none;}
 .gender-btn.on{border-color:var(--gold);background:rgba(212,169,95,.1);}
-/* 4 個維度入口：每個字母分開撳（2026-09-29）。原本一張卡只開到第一個字母 */
-.dim-pick{display:inline-flex;align-items:center;gap:7px;font-weight:900;font-size:15px;line-height:1.5}
-.dim-pick button{padding:1px 8px;border-radius:8px;border:1px solid rgba(212,169,95,.35);background:rgba(212,169,95,.12);color:var(--ink);font-weight:900;font-size:15px;font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;transition:transform .12s}
-.dim-pick button:active{transform:scale(.94)}
-.dim-pick .vs{font-size:11px;font-weight:700;color:#9aa0a6}
+/* 4 個維度入口：兩個字母分開撳得（2026-09-29）。大字、無框、基線對齊、各自用返字母本身嘅顏色 */
+.dim-pair{display:inline-flex;align-items:baseline;gap:6px;line-height:1.35}
+.dim-pair button{padding:0;margin:0;border:0;background:none;font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:900;font-size:21px;letter-spacing:.3px;cursor:pointer;-webkit-appearance:none;appearance:none;transition:transform .12s}
+.dim-pair button:active{transform:scale(.93)}
+.dim-pair .vs{font-size:11px;font-weight:700;color:#b0a795}
 .cd-overlay{position:fixed;inset:0;background:rgba(30,42,59,.96);z-index:200;display:flex;align-items:center;justify-content:center;}
 /* ===== 自訂 app 彈窗（取代原生 confirm／alert：原生會顯示「fung2222.github.io 顯示」網址 ✗）===== */
 .ad-overlay{position:fixed;inset:0;background:rgba(30,42,59,.62);z-index:300;display:flex;align-items:center;justify-content:center;padding:26px;}
@@ -284,7 +284,7 @@ color:var(--ink);
 .softbox-btn:active{transform:scale(.97)}
 .hub-bleed{margin:0 -16px 16px;padding:24px 14px 20px;background:linear-gradient(180deg,#fff,var(--paper));}
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
-.hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
 .hub-type-hint{font-size:11px;line-height:1.45;color:#8a8174;text-align:left;margin:0 0 8px;font-weight:400;}
 .article-type-stage{margin:0 -16px 22px;}
 .article-type-card{
@@ -351,10 +351,7 @@ font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:700;font
 font-size:1.5rem;letter-spacing:0;line-height:1;white-space:nowrap;
 }
 .hub-type-cn{font-size:12px;line-height:1.25;opacity:.9;white-space:nowrap;}
-/* 2026-09-29 Box B 美化（Roy）：原本直角 + 4px 密格 + 9/16 超窄高 → 圓角 12px、格距 10px、方格 4/5
-   只限性格百科嘅 16 型格；主頁跑馬燈（.home-type-reel）同桌面層（html.dt）完全唔受影響 */
-.hub-type-grid .hub-type-card{border-radius:12px;aspect-ratio:4/5;padding:8px 4px;}
-.hub-type-grid .hub-type-card.is-on{transform:scale(1.04);}
+
 .home-type-reel-wrap{
 position:relative;flex-shrink:0;margin:0 -20px 6px;
 }
@@ -1233,19 +1230,19 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <p class="text-xs text-gray-600 mb-3">每個人嘅性格由呢 4 個維度組成</p>
  <div class="grid grid-cols-2 gap-3">
   <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #E89A6B">
-  <div class="dim-pick"><button type="button" onclick="openLetter('E')">E</button><span class="vs">vs</span><button type="button" onclick="openLetter('I')">I</button></div>
+  <div class="dim-pair"><button type="button" style="color:#E89A6B" onclick="openLetter('E')">E</button><span class="vs">vs</span><button type="button" style="color:#7A6CA0" onclick="openLetter('I')">I</button></div>
   <div class="text-[10px] text-gray-500 mt-1">能量來源</div>
   </div>
   <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #A86B7C">
-  <div class="dim-pick"><button type="button" onclick="openLetter('S')">S</button><span class="vs">vs</span><button type="button" onclick="openLetter('N')">N</button></div>
+  <div class="dim-pair"><button type="button" style="color:#7A8F5A" onclick="openLetter('S')">S</button><span class="vs">vs</span><button type="button" style="color:#A86B7C" onclick="openLetter('N')">N</button></div>
   <div class="text-[10px] text-gray-500 mt-1">認知方式</div>
   </div>
   <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #3A4F6B">
-  <div class="dim-pick"><button type="button" onclick="openLetter('T')">T</button><span class="vs">vs</span><button type="button" onclick="openLetter('F')">F</button></div>
+  <div class="dim-pair"><button type="button" style="color:#3A4F6B" onclick="openLetter('T')">T</button><span class="vs">vs</span><button type="button" style="color:#C8786B" onclick="openLetter('F')">F</button></div>
   <div class="text-[10px] text-gray-500 mt-1">決策方式</div>
   </div>
   <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #6B5A8A">
-  <div class="dim-pick"><button type="button" onclick="openLetter('J')">J</button><span class="vs">vs</span><button type="button" onclick="openLetter('P')">P</button></div>
+  <div class="dim-pair"><button type="button" style="color:#6B5A8A" onclick="openLetter('J')">J</button><span class="vs">vs</span><button type="button" style="color:#A86B5A" onclick="openLetter('P')">P</button></div>
   <div class="text-[10px] text-gray-500 mt-1">生活態度</div>
   </div>
  </div>
