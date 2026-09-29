@@ -1671,11 +1671,11 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
 
- <!-- 版本選擇（撳一下即刻進入） -->
+ <!-- 版本選擇（一按著燈，再按進入） -->
  <div class="card p-5 mb-4" id="homeBelow">
  <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h6v6H4zM14 6h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>選擇 MBTI 測試版本</div>
  <div class="space-y-2.5" id="versionList">
- <div data-ver="life" onclick="goVersion('life')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+ <div data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
  <div class="text-[15px] font-black text-ink">生活版（完整測試）</div>
@@ -1685,7 +1685,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <span class="ver-chev" aria-hidden="true">▼</span>
  </div>
  </div>
- <div data-ver="advanced" onclick="goVersion('advanced')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+ <div data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
  <div class="text-[15px] font-black text-ink">進階版（快速版）</div>
@@ -1695,7 +1695,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <span class="ver-chev" aria-hidden="true">▼</span>
  </div>
  </div>
- <div data-ver="bb" onclick="goVersion('bb')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+ <div data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
  <div class="text-[15px] font-black text-ink">BB 版（極簡版）</div>
@@ -1705,7 +1705,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <span class="ver-chev" aria-hidden="true">▼</span>
  </div>
  </div>
- <div data-ver="record" onclick="goRecord()" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+ <div data-ver="record" onclick="selectRecord()" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
  <div class="text-[15px] font-black text-ink">我的記錄 <span id="homeRecordCount" class="text-gray-500 font-bold">（0/5）</span></div>
@@ -2823,7 +2823,7 @@ window._histWrite("push");
  }
 };
 
-// ===== 版本選擇（2026-09-29：改成撳一下即刻進入）=====
+// ===== 版本雙擊確認（著燈 → 再撳進入）=====
 window.clearVersionUI = function(){
 state.selectedVersion = null;
 document.querySelectorAll(".ver-btn").forEach(b => b.classList.remove("ver-lit"));
