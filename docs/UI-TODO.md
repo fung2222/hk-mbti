@@ -23,6 +23,8 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 | 12 | 維度入口 4 張卡寫「E vs I」但只開到**第一個**字母 → 改成兩個字母各自獨立撳得（`.dim-pick`） | `fecc582` |
 | 13 | 性格百科 16 型格曾被改（圓角/格距/比例）→ **Roy：直角係好嘅** → 已**逐字節還原**（`git diff` 證明一樣）＋加守門測試禁止再改 | `560c77e` → `5914890` |
 | 14 | **「4 個維度 8 個字母」卡美化**：字母 chip → 21px 粗黑體大字、每個字母用返自己嘅顏色、`vs` 基線對齊、無框（兩個字母照樣各自撳得） | `5914890` |
+| 15 | **4 個「網頁感」問題**：① sw.js offline fallback（新檔 `offline.html`，純內嵌 CSS 唔靠 CDN）② record/stats/tee app 感（tap-highlight 透明、`user-select:none`、`overscroll-behavior-y:contain`）③ 全 app 攔 `contextmenu` ④ index/privacy 移除 `target="_blank"`。**第二輪 Roy 決定**：全 app 一致鎖選字（連主頁／私隱頁）＋ **圖開例外**（長按圖仍可儲存／分享），輸入框照樣可以選字貼上 | `f39043a` `4e656c0` |
+| 16 | **黑夜模式 v1**：跟系統 `prefers-color-scheme`（Roy 選「方案 A：唔加手動掣」）；6 頁各加 `<style id="dark-layer">`，**只改顏色**；16 型 16 色／分享卡 canvas／場景 icon 設計色一律不變；字色對比全部 ≥4.5:1（WCAG AA）；金底按鈕字轉深色 | `39e30a3` |
 
 ## ⏳ 未做
 1. **C 組 3 個 HK$18 示範解鎖彈窗**（`index.html` L2056 / `record.html` L597 / `tee.html` L309）→ 留上架前連 Play Billing 一次過改（soft pitch「看完整分析」）
@@ -30,12 +32,9 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
    根因：`data.js` 用**中文**欄位 `事業`（8 個字母全部有內容），程式讀**英文** `career` ✗ → 永遠空白；未加保護前仲會 throw 令成版開唔到（＝Roy 報「撳落去冇反應」）
    修法：`$("letterCareer").innerText = ((L.事業 || L.career) || []).join("、")` ✓
    測試：`tools/ui/letter_career_test.js`（9 項，逐個字母核對內容）
-3. **4 個「網頁感」問題**：
-   - sw.js **冇 offline fallback** → 斷網出 Chrome 恐龍頁
-   - `record.html` / `stats.html` / `tee.html` 冇 app 感防護（可選字、藍色 flash、下拉重新載入）
-   - 長按彈「複製／搜尋」→ 應攔 `contextmenu`
-   - 2 個 `target="_blank"` 外開 → 應 app 內
-4. **13 項視覺風格微調**（Roy 2026-09-29 提出「一項一項做」）→ ⏸️ **2026-09-29 Roy：暫時唔改，維持現狀**（清單保留喺度，第日想改再開）
+3. ~~4 個「網頁感」問題~~ ✅ **2026-09-29 已做**（見下表第 15 項；`f39043a` `4e656c0`）
+4. **黑夜模式**：v1 已出（下表第 16 項，跟系統）。等 Roy 睇 live 執色；如要手動切換掣再開工。
+5. **13 項視覺風格微調**（Roy 2026-09-29 提出「一項一項做」）→ ⏸️ **2026-09-29 Roy：暫時唔改，維持現狀**（清單保留喺度，第日想改再開）
    清單（一次改一項，每次等 Roy 睇 live 確認）：
    1. 底色　2. 邊框　3. 圓角　4. 陰影　5. 遮罩（彈窗後面嗰層）　6. 標題字　7. 內文字
    8. 主掣（金色）　9. 次掣（透明金邊）　10. 尺寸（卡片／彈窗大細）　11. 間距　12. 動畫（彈入彈出）　13. 對齊
