@@ -26,6 +26,7 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 | 15 | **4 個「網頁感」問題**：① sw.js offline fallback（新檔 `offline.html`，純內嵌 CSS 唔靠 CDN）② record/stats/tee app 感（tap-highlight 透明、`user-select:none`、`overscroll-behavior-y:contain`）③ 全 app 攔 `contextmenu` ④ index/privacy 移除 `target="_blank"`。**第二輪 Roy 決定**：全 app 一致鎖選字（連主頁／私隱頁）＋ **圖開例外**（長按圖仍可儲存／分享），輸入框照樣可以選字貼上 | `f39043a` `4e656c0` |
 | 16 | **黑夜模式**：6 頁各加 `<style id="dark-layer">`，**只改顏色**；16 型 16 色／分享卡 canvas／場景 icon 設計色一律不變；字色對比全部 ≥4.5:1（WCAG AA）；金底按鈕字轉深色 | `39e30a3` |
 | 17 | **主題掣（日頭／黑夜手動切換）**：Roy「要有得揀」→ 主頁右上（**選單隔離**）加線條 SVG 太陽／月亮掣；**未撳過 = 跟系統**，撳過記入 `localStorage hkmbti_theme`（之後唔再跟系統）；dark layer 改由 **`html.dk` 主導**（6 頁）＋ `head` 最早期加防閃 script；順手同步 `meta theme-color`。另修 2 個桌面測試嘅脆弱 script regex（唔可以跨越 `</script>`） | `2a6ae00` |
+| 18 | **黑夜模式補漏 v3**（Roy：仲有白色位）：`.card`（版本選擇大面板）、`.option`（答題選項）、`.glass` / `.hub-type-go` / `html.dt .scene-cell`（白玻璃）、`tee .tee-card` / `.filter-bar` 全部轉深；hover 暗金 `#8B6F3D` → `#D8C69E`；`.mth-l` / `.hub-type-hint` / `.stat-pill .count` 深灰字轉淺；金底白字（`option-letter`）轉深字。**新增守門：每頁淺底 selector 一定要有 dark 覆蓋**（`dark_mode_test` 43 → 60 項） | `2744add` |
 
 ## ⏳ 未做
 1. **C 組 3 個 HK$18 示範解鎖彈窗**（`index.html` L2056 / `record.html` L597 / `tee.html` L309）→ 留上架前連 Play Billing 一次過改（soft pitch「看完整分析」）
