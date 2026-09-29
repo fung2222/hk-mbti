@@ -31,7 +31,9 @@ border:1px solid #E0D6BE;font-family:inherit;cursor:pointer;text-decoration:none
 }
 .softbox-btn:hover{border-color:var(--gold);color:#8B6F3D;}
 .softbox-btn:active{transform:scale(.97);}
-*{box-sizing:border-box;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{overscroll-behavior-y:contain;}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei",sans-serif;background:var(--soft);color:var(--ink);margin:0;}
 .brand-gold{color:var(--gold);}
 .bg-soft{background:rgba(212,169,95,0.06);}
@@ -210,6 +212,14 @@ const label = TYPE_CN[code] ? (code + " " + TYPE_CN[code]) : code;
 return '<div class="bg-soft rounded-lg p-2.5"><div class="flex justify-between items-baseline gap-2 mb-1"><span class="text-xs font-bold">'+medal+label+'</span><span class="text-xs brand-gold font-black">'+pct.toFixed(1)+'%</span></div><div class="stat-bar mb-1"><div class="stat-fill" style="width:'+bar+'%"></div></div><div class="flex justify-between text-xs text-gray-600"><span>'+n.toLocaleString("en-HK")+' 人</span><span>約香港 '+hkEst.toLocaleString("en-HK")+' 人</span></div></div>';
  }).join("");
 })();
+</script>
+<script>
+// 長按唔彈瀏覽器「複製／搜尋」選單（輸入框例外）
+document.addEventListener("contextmenu", function(e){
+  var t = e.target;
+  if(t && t.closest && t.closest("input,textarea,[contenteditable]")) return;
+  e.preventDefault();
+});
 </script>
 </body>
 </html>

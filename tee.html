@@ -18,7 +18,9 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap');
 :root{--gold:#D4A95F;--gold-dim:#B8A878;--ink:#0a0a1a;--soft:#FAF8F3;}
-*{box-sizing:border-box;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{overscroll-behavior-y:contain;}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei",sans-serif;background:var(--soft);color:var(--ink);margin:0;padding-bottom:80px;}
 .brand-gold{color:var(--gold);}
 .bg-soft{background:rgba(212,169,95,0.06);}
@@ -314,6 +316,14 @@ applyNoAd();
 window.restoreAds = function(){ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); };
 if(hasNoAd()) applyNoAd();
 })();
+</script>
+<script>
+// 長按唔彈瀏覽器「複製／搜尋」選單（輸入框例外）
+document.addEventListener("contextmenu", function(e){
+  var t = e.target;
+  if(t && t.closest && t.closest("input,textarea,[contenteditable]")) return;
+  e.preventDefault();
+});
 </script>
 
 </body>

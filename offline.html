@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>連唔到網絡 · 港式 MBTI</title>
+<meta name="theme-color" content="#1E2A3B">
+<meta name="robots" content="noindex">
+<style>
+:root{--gold:#D4A95F;--ink:#0a0a1a;--soft:#FAF8F3;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overscroll-behavior-y:contain;}
+body{margin:0;padding:30px;background:var(--soft);color:var(--ink);display:flex;align-items:center;justify-content:center;
+  font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei",sans-serif;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.wrap{width:100%;max-width:22rem;}
+.mark{width:46px;height:46px;stroke:var(--gold);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-bottom:22px;}
+h1{font-size:26px;font-weight:900;letter-spacing:-.02em;line-height:1.25;margin:0 0 10px;}
+p{font-size:15.5px;line-height:1.85;color:#4a4640;margin:0 0 14px;}
+ul{margin:0;padding-left:18px;}
+li{font-size:14.5px;line-height:1.85;color:#4a4640;margin-bottom:5px;}
+button{margin-top:26px;width:100%;border:0;border-radius:12px;padding:15px 18px;background:var(--ink);color:#fff;
+  font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;}
+button:active{opacity:.85;}
+.mark-foot{margin-top:16px;text-align:center;font-size:12.5px;letter-spacing:.02em;color:#8b857c;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 8.8a16 16 0 0 1 20 0"/><path d="M5.5 12.4a11 11 0 0 1 13 0"/><path d="M9 16a6 6 0 0 1 6 0"/><circle cx="12" cy="19.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+  <h1>而家連唔到網絡</h1>
+  <p>攞唔到最新內容，通常係部機嘅連線斷咗。</p>
+  <ul>
+    <li>檢查 Wi-Fi 或流動數據有冇開</li>
+    <li>行去訊號好啲嘅位置再試</li>
+    <li>連返線之後，撳下面個掣重新載入</li>
+  </ul>
+  <button type="button" onclick="reloadPage()">重新載入</button>
+  <div class="mark-foot">港式 MBTI</div>
+</div>
+<script>
+function reloadPage(){ location.reload(); }
+// 長按唔彈瀏覽器「複製／搜尋」選單
+document.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+</script>
+</body>
+</html>

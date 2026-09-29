@@ -7,7 +7,8 @@ const ASSETS = [
   "/hk-mbti/voice-data.js",
   "/hk-mbti/manifest.json",
   "/hk-mbti/icon-192.png",
-  "/hk-mbti/icon-512.png"
+  "/hk-mbti/icon-512.png",
+  "/hk-mbti/offline.html"
 ];
 
 self.addEventListener("install", e => {
@@ -47,7 +48,11 @@ self.addEventListener("fetch", e => {
           caches.open(CACHE).then(c => c.put(e.request, clone));
         }
         return net;
-      }).catch(() => caches.match(e.request).then(c => c || new Response("", {status:503})))
+      }).catch(() =>
+        caches.match(e.request, {ignoreSearch:true})
+          .then(c => c || caches.match("/hk-mbti/offline.html"))
+          .then(c => c || new Response("暫時連唔到網絡，請檢查連線後再試。", {status:503, headers:{"Content-Type":"text/html;charset=utf-8"}}))
+      )
     );
     return;
   }
