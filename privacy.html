@@ -26,7 +26,8 @@
  --soft:#F2EDE0;
 }
 *{font-family:"PingFang HK","PingFang TC","Noto Sans HK",sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px;margin:0}
+body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px;margin:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 .brand-gold{color:var(--gold)}
 .bg-soft{background:var(--soft)}
 .text-ink{color:var(--ink)}
@@ -262,6 +263,14 @@ const h = String(a.getAttribute("href") || "").replace(/^\.\//, "");
 if(h) sessionStorage.setItem("hkmbti_pending_screen", JSON.stringify({ h: h, t: Date.now() }));
  }catch(err){}
 }, true);
+</script>
+<script>
+// 長按唔彈瀏覽器「複製／搜尋」選單（輸入框同圖例外）
+document.addEventListener("contextmenu", function(e){
+  var t = e.target;
+  if(t && t.closest && t.closest("input,textarea,[contenteditable],img")) return;
+  e.preventDefault();
+});
 </script>
 </body>
 </html>

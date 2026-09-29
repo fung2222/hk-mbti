@@ -21,6 +21,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{overscroll-behavior-y:contain;}
 body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei",sans-serif;background:var(--soft);color:var(--ink);margin:0;padding-bottom:80px;}
 .brand-gold{color:var(--gold);}
 .bg-soft{background:rgba(212,169,95,0.06);}
@@ -321,7 +322,7 @@ if(hasNoAd()) applyNoAd();
 // 長按唔彈瀏覽器「複製／搜尋」選單（輸入框例外）
 document.addEventListener("contextmenu", function(e){
   var t = e.target;
-  if(t && t.closest && t.closest("input,textarea,[contenteditable]")) return;
+  if(t && t.closest && t.closest("input,textarea,[contenteditable],img")) return;
   e.preventDefault();
 });
 </script>

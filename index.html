@@ -30,7 +30,8 @@
  --soft:#F2EDE0;
 }
 *{font-family:"PingFang HK","PingFang TC","Noto Sans HK",sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px}
+body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 /* reload 還原時隱藏 #app，避免主頁閃一閃 */
 body.js-boot #app{opacity:0}
 body.js-boot #app.js-ready{opacity:1;transition:opacity .12s}
@@ -5771,5 +5772,13 @@ let html = `
 
 
  
+<script>
+// 長按唔彈瀏覽器「複製／搜尋」選單（輸入框同圖例外：圖要可以長按儲存／分享）
+document.addEventListener("contextmenu", function(e){
+  var t = e.target;
+  if(t && t.closest && t.closest("input,textarea,[contenteditable],img")) return;
+  e.preventDefault();
+});
+</script>
 </body>
 </html>

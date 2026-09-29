@@ -40,8 +40,12 @@ button:active{opacity:.85;}
 </div>
 <script>
 function reloadPage(){ location.reload(); }
-// 長按唔彈瀏覽器「複製／搜尋」選單
-document.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+// 長按唔彈瀏覽器「複製／搜尋」選單（輸入框同圖例外）
+document.addEventListener("contextmenu", function(e){
+  var t = e.target;
+  if(t && t.closest && t.closest("input,textarea,[contenteditable],img")) return;
+  e.preventDefault();
+});
 </script>
 </body>
 </html>
