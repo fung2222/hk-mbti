@@ -5074,33 +5074,8 @@ if(wrap) wrap.classList.add("hidden");
 window._deleteArmTimer = null;
 
 window.armDeleteHistory = function(idx){
-try{
-const btn = document.getElementById("delBtn_" + idx);
-if(!btn) return;
-if(btn.dataset.armed === "1"){
- // 第二次撳：詢問確認
-window._deleteArmTimer && clearTimeout(window._deleteArmTimer);
-window._deleteArmTimer = null;
-btn.dataset.armed = "0";
-btn.classList.remove("bg-gold","text-ink","border-gold");
-btn.classList.add("bg-white","text-gray-500","border-gray-300");
-btn.innerText = "";
-window.deleteHistoryConfirm(idx);
-return;
- }
- // 第一次撳：著燈
-btn.dataset.armed = "1";
-btn.classList.remove("bg-white","text-gray-500","border-gray-300");
-btn.classList.add("bg-gold","text-ink","border-gold","border-2");
-btn.innerText = " 再撳";
-window._deleteArmTimer && clearTimeout(window._deleteArmTimer);
-window._deleteArmTimer = setTimeout(function(){
-btn.dataset.armed = "0";
-btn.classList.remove("bg-gold","text-ink","border-gold","border-2");
-btn.classList.add("bg-white","text-gray-500","border-gray-300");
-btn.innerText = "";
- }, 5000);
- }catch(e){ console.error(e); }
+  // 2026-09-29：取消「兩段確認（再撳一次）」—— 撳一次即出確認彈窗
+  window.deleteHistoryConfirm(idx);
 };
 
 window.deleteHistoryConfirm = async function(idx){

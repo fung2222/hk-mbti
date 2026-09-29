@@ -507,23 +507,7 @@ toast("分享失敗，請長按縮圖儲存");
  }
 }
 
-let _delArmTimer = null;
 async function delRec(i){
- // 兩段確認（armed 模式）
-const btn = event.target;
-if(btn.dataset.armed !== "1"){
-btn.dataset.armed = "1";
-btn.textContent = " 再撳一次";
-btn.style.background = "#fdd";
-clearTimeout(_delArmTimer);
- _delArmTimer = setTimeout(() => {
-btn.dataset.armed = "";
-btn.textContent = " 刪除";
-btn.style.background = "";
- }, 5000);
-return;
- }
-clearTimeout(_delArmTimer);
 if(!(await appDialog({ title: "刪除這筆紀錄？", body: "刪除後無法復原。", cancelText: "取消", okText: "刪除" }))) return;
  
 let arr = loadHistory();
