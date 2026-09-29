@@ -5502,7 +5502,7 @@ window._lastLetter = letter;
  $("letterDesc").innerText = L.desc;
  $("letterStrength").innerHTML = L.strength.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
  $("letterWeakness").innerHTML = L.weakness.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
- $("letterCareer").innerText = L.career.join("、");
+ $("letterCareer").innerText = ((L.career) || []).join("、");
  $("letterFriends").innerText = L.friends.join("、");
 show("letter");
 window.scrollTo(0,0);

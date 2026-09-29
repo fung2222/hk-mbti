@@ -557,22 +557,7 @@ URL.revokeObjectURL(url);
 toast(" 已匯出 JSON");
 }
 
-let _clearArmTimer = null;
 async function clearAllRecords(){
-const btn = event.target;
-if(btn.dataset.armed !== "1"){
-btn.dataset.armed = "1";
-btn.textContent = "再撳一次";
-btn.style.background = "#fcc";
-clearTimeout(_clearArmTimer);
- _clearArmTimer = setTimeout(() => {
-btn.dataset.armed = "";
-btn.textContent = "全部刪除";
-btn.style.background = "";
- }, 5000);
-return;
- }
-clearTimeout(_clearArmTimer);
 if(!(await appDialog({ title: "清除所有紀錄？", body: "將刪除全部測試紀錄與 16 型統計資料，且無法復原。", cancelText: "取消", okText: "全部清除" }))) return;
  
 localStorage.removeItem("hkmbti_history");
