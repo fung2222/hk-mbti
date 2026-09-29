@@ -822,8 +822,8 @@ html.dm .home-hero-mbti{font-size:clamp(4.4rem, calc(var(--dm-vw) * 0.23), 6.6re
  <div class="font-black text-sm">加到主畫面</div>
  <div class="text-xs text-gray-500 truncate">港MBTI · 隨時玩 60 題測試</div>
  </div>
- <button id="installBtn" class="btn-gold px-4 py-2 rounded-lg text-sm font-bold flex-shrink-0">安裝</button>
- <button id="installDismiss" class="text-gray-400 text-[19px] px-2 flex-shrink-0"></button>
+ <button type="button" id="installBtn" class="btn-gold px-4 py-2 rounded-lg text-sm font-bold flex-shrink-0">安裝</button>
+ <button type="button" id="installDismiss" class="text-gray-400 text-[19px] px-2 flex-shrink-0"></button>
  </div>
  </div>
 
@@ -1223,19 +1223,19 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <h3 class="font-bold mb-3 text-sm">4 個維度（8 個字母）</h3>
  <p class="text-xs text-gray-600 mb-3">每個人嘅性格由呢 4 個維度組成</p>
  <div class="grid grid-cols-2 gap-3">
- <button onclick="openLetter('E')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #E89A6B">
+ <button type="button" onclick="openLetter('E')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #E89A6B">
  <div class="font-bold text-sm">E vs I</div>
  <div class="text-[10px] text-gray-500 mt-1">能量來源</div>
  </button>
- <button onclick="openLetter('S')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #A86B7C">
+ <button type="button" onclick="openLetter('S')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #A86B7C">
  <div class="font-bold text-sm">S vs N</div>
  <div class="text-[10px] text-gray-500 mt-1">認知方式</div>
  </button>
- <button onclick="openLetter('T')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #3A4F6B">
+ <button type="button" onclick="openLetter('T')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #3A4F6B">
  <div class="font-bold text-sm">T vs F</div>
  <div class="text-[10px] text-gray-500 mt-1">決策方式</div>
  </button>
- <button onclick="openLetter('J')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #6B5A8A">
+ <button type="button" onclick="openLetter('J')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #6B5A8A">
  <div class="font-bold text-sm">J vs P</div>
  <div class="text-[10px] text-gray-500 mt-1">生活態度</div>
  </button>
@@ -1278,7 +1278,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <option value="ESTP">ESTP</option><option value="ESFP">ESFP</option>
  </select>
  </div>
- <button onclick="compareTypes()" class="btn-gold w-full py-2.5 rounded-lg text-sm">比較</button>
+ <button type="button" onclick="compareTypes()" class="btn-gold w-full py-2.5 rounded-lg text-sm">比較</button>
  <div id="compareResult" class="mt-4"></div>
  </div>
  <div class="card mb-4 softbox">
@@ -1671,11 +1671,11 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
 
- <!-- 版本選擇（一按著燈，再按進入） -->
+ <!-- 版本選擇（撳一下即刻進入） -->
  <div class="card p-5 mb-4" id="homeBelow">
  <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h6v6H4zM14 6h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>選擇 MBTI 測試版本</div>
  <div class="space-y-2.5" id="versionList">
- <div data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+ <div data-ver="life" onclick="goVersion('life')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
  <div class="text-[15px] font-black text-ink">生活版（完整測試）</div>
@@ -1685,7 +1685,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <span class="ver-chev" aria-hidden="true">▼</span>
  </div>
  </div>
- <div data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+ <div data-ver="advanced" onclick="goVersion('advanced')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
  <div class="text-[15px] font-black text-ink">進階版（快速版）</div>
@@ -1695,7 +1695,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <span class="ver-chev" aria-hidden="true">▼</span>
  </div>
  </div>
- <div data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+ <div data-ver="bb" onclick="goVersion('bb')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
  <div class="text-[15px] font-black text-ink">BB 版（極簡版）</div>
@@ -1705,7 +1705,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <span class="ver-chev" aria-hidden="true">▼</span>
  </div>
  </div>
- <div data-ver="record" onclick="selectRecord()" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
+ <div data-ver="record" onclick="goRecord()" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
  <div class="text-[15px] font-black text-ink">我的記錄 <span id="homeRecordCount" class="text-gray-500 font-bold">（0/5）</span></div>
@@ -1862,8 +1862,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <h2 class="text-[19px] font-black mb-1">你叫咩名？</h2>
  <p class="text-xs text-gray-500 mb-4 wiz-sub">姓名會印喺分享卡同紀錄入面</p>
  <input id="profileName" type="text" maxlength="12" placeholder="例如：阿明、KaKa" class="w-full mb-4 px-3 py-3 rounded-xl border-2 border-gray-200 focus:border-gold outline-none text-[15px] bg-white">
- <button onclick="wizNext(1)" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">下一頁</button>
- <button onclick="wizSkip()" class="wiz-ghost">匿名港人 · 跳過</button>
+ <button type="button" onclick="wizNext(1)" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">下一頁</button>
+ <button type="button" onclick="wizSkip()" class="wiz-ghost">匿名港人 · 跳過</button>
  </div>
 
  <!-- 第 2 步：港式稱呼 -->
@@ -1872,8 +1872,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <h2 class="text-[19px] font-black mb-1">揀個港式稱呼</h2>
  <p class="text-xs text-gray-500 mb-4 wiz-sub">揀一個啱你嘅稱呼（會印喺分享卡）</p>
  <div id="nickGrid" class="flex flex-wrap gap-2 mb-4"></div>
- <button onclick="wizNext(2)" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">下一頁</button>
- <button onclick="wizPrev(2)" class="wiz-ghost">上一步</button>
+ <button type="button" onclick="wizNext(2)" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">下一頁</button>
+ <button type="button" onclick="wizPrev(2)" class="wiz-ghost">上一步</button>
  </div>
 
  <!-- 第 3 步：性別 -->
@@ -1885,8 +1885,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" onclick="pickGender('男')" id="genderM" class="gender-btn">男</button>
  <button type="button" onclick="pickGender('女')" id="genderF" class="gender-btn">女</button>
  </div>
- <button onclick="wizNext(3)" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">下一頁</button>
- <button onclick="wizPrev(3)" class="wiz-ghost">上一步</button>
+ <button type="button" onclick="wizNext(3)" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">下一頁</button>
+ <button type="button" onclick="wizPrev(3)" class="wiz-ghost">上一步</button>
  </div>
 
  <!-- 第 4 步：說明 + 開始 -->
@@ -1898,8 +1898,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="flex items-start gap-2 text-sm text-gray-600"><span class="brand-gold font-black flex-shrink-0">·</span><span>多個版本結果互通</span></div>
  <div class="flex items-start gap-2 text-sm text-gray-600"><span class="brand-gold font-black flex-shrink-0">·</span><span>測完會得到一張人格分享卡</span></div>
  </div>
- <button onclick="wizStart()" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">正式開始</button>
- <button onclick="wizPrev(4)" class="wiz-ghost">上一步</button>
+ <button type="button" onclick="wizStart()" class="btn-gold w-full py-3.5 rounded-xl text-[15px] font-black">正式開始</button>
+ <button type="button" onclick="wizPrev(4)" class="wiz-ghost">上一步</button>
  </div>
  </section>
 
@@ -1928,7 +1928,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" id="voiceBtn" onclick="toggleVoice()" class="q-ctrl">
  <svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><g id="voiceOnIco"><path d="M4.6 9.4h3.4L12.4 6v12l-4.4-3.4H4.6z"/><path d="M15.2 9.7a3.5 3.5 0 010 4.6"/><path d="M17.6 7.5a6.8 6.8 0 010 9"/></g><g id="voiceOffIco" style="display:none"><path d="M4.6 9.4h3.4L12.4 6v12l-4.4-3.4H4.6z"/><path d="M15.4 10.2l3.6 3.6"/><path d="M19 10.2l-3.6 3.6"/></g></svg><span id="voiceLabel">朗讀開</span>
  </button>
- <button onclick="confirmExit()" class="q-ctrl">
+ <button type="button" onclick="confirmExit()" class="q-ctrl">
  <svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.6 5.6H6.4a1.8 1.8 0 00-1.8 1.8v9.2a1.8 1.8 0 001.8 1.8h3.2"/><path d="M14.2 8.6L17.6 12l-3.4 3.4"/><path d="M10.4 12h7"/></svg>退出
  </button>
  </div>
@@ -1944,7 +1944,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="flex gap-2">
- <button onclick="prev()" id="prevBtn" class="text-sm py-2.5 px-4 rounded-lg bg-soft font-bold">上一題</button>
+ <button type="button" onclick="prev()" id="prevBtn" class="text-sm py-2.5 px-4 rounded-lg bg-soft font-bold">上一題</button>
  <div class="text-[10px] text-gray-400 ml-auto self-center">用廣東話情境題</div>
  </div>
  </section>
@@ -1968,9 +1968,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  <div class="mb-2 px-1">
  <div class="grid grid-cols-3 gap-2 max-w-sm mx-auto">
- <button onclick="downloadCard()" class="btn-gold py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v11"/><path d="M7.5 10l4.5 4.5L16.5 10"/><path d="M4.5 19.5h15"/></svg>儲存圖片</button>
- <button onclick="shareResult()" class="bg-soft py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5V4"/><path d="M8.5 7.5L12 4l3.5 3.5"/><path d="M5.5 12.5v7h13v-7"/></svg>分享圖片</button>
- <button onclick="shareLinkOnly()" class="bg-soft py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.2 13.8a3.6 3.6 0 005.4.4l2.6-2.6a3.7 3.7 0 10-5.2-5.2l-1.2 1.2"/><path d="M13.8 10.2a3.6 3.6 0 00-5.4-.4l-2.6 2.6a3.7 3.7 0 105.2 5.2l1.2-1.2"/></svg>分享網址</button>
+ <button type="button" onclick="downloadCard()" class="btn-gold py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v11"/><path d="M7.5 10l4.5 4.5L16.5 10"/><path d="M4.5 19.5h15"/></svg>儲存圖片</button>
+ <button type="button" onclick="shareResult()" class="bg-soft py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5V4"/><path d="M8.5 7.5L12 4l3.5 3.5"/><path d="M5.5 12.5v7h13v-7"/></svg>分享圖片</button>
+ <button type="button" onclick="shareLinkOnly()" class="bg-soft py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.2 13.8a3.6 3.6 0 005.4.4l2.6-2.6a3.7 3.7 0 10-5.2-5.2l-1.2 1.2"/><path d="M13.8 10.2a3.6 3.6 0 00-5.4-.4l-2.6 2.6a3.7 3.7 0 105.2 5.2l1.2-1.2"/></svg>分享網址</button>
  </div>
  </div>
  <div id="shareStatus" class="text-[10px] text-gray-500 mt-1 text-center px-2"></div>
@@ -1981,11 +1981,11 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="result-bleed-inner">
  <div class="flex items-center justify-between mb-3">
  <h3 class="text-xs tracking-widest brand-gold font-bold"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"/><path d="M6 19V9l6-5 6 5v10"/><path d="M10 19v-6h4v6"/></svg>你的性格分析</h3>
- <button onclick="goTypeFromResult()" class="text-xs text-accent font-bold" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">看完整分析</button>
+ <button type="button" onclick="goTypeFromResult()" class="text-xs text-accent font-bold" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">看完整分析</button>
  </div>
  <div class="flex gap-3 text-xs text-gray-600 mb-4 -mt-1">
- <button onclick="openSocial()" class="underline hover:text-accent" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">點同人相處</button>
- <button onclick="openRomance()" class="underline hover:text-accent" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">點同人拍拖</button>
+ <button type="button" onclick="openSocial()" class="underline hover:text-accent" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">點同人相處</button>
+ <button type="button" onclick="openRomance()" class="underline hover:text-accent" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">點同人拍拖</button>
  </div>
  <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
 
@@ -2823,7 +2823,7 @@ window._histWrite("push");
  }
 };
 
-// ===== 版本雙擊確認（著燈 → 再撳進入）=====
+// ===== 版本選擇（2026-09-29：改成撳一下即刻進入）=====
 window.clearVersionUI = function(){
 state.selectedVersion = null;
 document.querySelectorAll(".ver-btn").forEach(b => b.classList.remove("ver-lit"));
