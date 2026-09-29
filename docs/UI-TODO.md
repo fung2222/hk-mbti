@@ -24,7 +24,8 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 | 13 | 性格百科 16 型格曾被改（圓角/格距/比例）→ **Roy：直角係好嘅** → 已**逐字節還原**（`git diff` 證明一樣）＋加守門測試禁止再改 | `560c77e` → `5914890` |
 | 14 | **「4 個維度 8 個字母」卡美化**：字母 chip → 21px 粗黑體大字、每個字母用返自己嘅顏色、`vs` 基線對齊、無框（兩個字母照樣各自撳得） | `5914890` |
 | 15 | **4 個「網頁感」問題**：① sw.js offline fallback（新檔 `offline.html`，純內嵌 CSS 唔靠 CDN）② record/stats/tee app 感（tap-highlight 透明、`user-select:none`、`overscroll-behavior-y:contain`）③ 全 app 攔 `contextmenu` ④ index/privacy 移除 `target="_blank"`。**第二輪 Roy 決定**：全 app 一致鎖選字（連主頁／私隱頁）＋ **圖開例外**（長按圖仍可儲存／分享），輸入框照樣可以選字貼上 | `f39043a` `4e656c0` |
-| 16 | **黑夜模式 v1**：跟系統 `prefers-color-scheme`（Roy 選「方案 A：唔加手動掣」）；6 頁各加 `<style id="dark-layer">`，**只改顏色**；16 型 16 色／分享卡 canvas／場景 icon 設計色一律不變；字色對比全部 ≥4.5:1（WCAG AA）；金底按鈕字轉深色 | `39e30a3` |
+| 16 | **黑夜模式**：6 頁各加 `<style id="dark-layer">`，**只改顏色**；16 型 16 色／分享卡 canvas／場景 icon 設計色一律不變；字色對比全部 ≥4.5:1（WCAG AA）；金底按鈕字轉深色 | `39e30a3` |
+| 17 | **主題掣（日頭／黑夜手動切換）**：Roy「要有得揀」→ 主頁右上（**選單隔離**）加線條 SVG 太陽／月亮掣；**未撳過 = 跟系統**，撳過記入 `localStorage hkmbti_theme`（之後唔再跟系統）；dark layer 改由 **`html.dk` 主導**（6 頁）＋ `head` 最早期加防閃 script；順手同步 `meta theme-color`。另修 2 個桌面測試嘅脆弱 script regex（唔可以跨越 `</script>`） | `2a6ae00` |
 
 ## ⏳ 未做
 1. **C 組 3 個 HK$18 示範解鎖彈窗**（`index.html` L2056 / `record.html` L597 / `tee.html` L309）→ 留上架前連 Play Billing 一次過改（soft pitch「看完整分析」）
@@ -33,7 +34,7 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
    修法：`$("letterCareer").innerText = ((L.事業 || L.career) || []).join("、")` ✓
    測試：`tools/ui/letter_career_test.js`（9 項，逐個字母核對內容）
 3. ~~4 個「網頁感」問題~~ ✅ **2026-09-29 已做**（見下表第 15 項；`f39043a` `4e656c0`）
-4. **黑夜模式**：v1 已出（下表第 16 項，跟系統）。等 Roy 睇 live 執色；如要手動切換掣再開工。
+4. **黑夜模式／主題掣**：已出（下表第 16、17 項）。等 Roy 睇 live 執色。
 5. **13 項視覺風格微調**（Roy 2026-09-29 提出「一項一項做」）→ ⏸️ **2026-09-29 Roy：暫時唔改，維持現狀**（清單保留喺度，第日想改再開）
    清單（一次改一項，每次等 Roy 睇 live 確認）：
    1. 底色　2. 邊框　3. 圓角　4. 陰影　5. 遮罩（彈窗後面嗰層）　6. 標題字　7. 內文字
