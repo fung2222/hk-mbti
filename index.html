@@ -3942,8 +3942,18 @@ window.appDialog = function(opts){
     ov.onclick = function(e){ if(e.target === ov && window._adResolve) window._adResolve(false); };
   });
 };
-// 撳返回鍵時自動收埋彈窗（避免殘留）
-window.addEventListener("popstate", function(){
+// 返回鍵處理：測試中撳返回鍵 → 唔可以直接彈出去（防誤觸），要出同一個確認彈窗
+window.addEventListener("popstate", function(e){
+  if(window._showing === "test"){
+    // 還原歷史狀態（唔加新 entry，等於冇離開過），令用戶仍然留喺測試畫面
+    try{ history.replaceState({hk:true, id:"test"}, ""); }catch(err){}
+    // 阻止後面嘅 popstate handler 執行（唔好換畫面）
+    if(e && e.stopImmediatePropagation) e.stopImmediatePropagation();
+    // 已經有彈窗就唔重複開（連續撳返回鍵）
+    if(!window._adResolve) window.confirmExit();
+    return;
+  }
+  // 非測試畫面：收埋任何殘留彈窗
   if(window._adResolve) window._adResolve(false);
 });
 
