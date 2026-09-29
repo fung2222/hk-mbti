@@ -3533,13 +3533,13 @@ if(sub) sub.innerText = "第 " + n + " 步 · 共 4 步";
 window.wizNext = function(n){
 if(n === 1){
 const name = ($("profileName") && $("profileName").value || "").trim();
-if(!name){ alert("請輸入姓名，或者撳「匿名港人 · 跳過」"); return; }
+if(!name){ appNotice("請輸入姓名", "或按「匿名港人 · 跳過」繼續。"); return; }
  }
 if(n === 2){
-if(!state.nickname){ alert("請揀一個稱呼"); return; }
+appNotice("請選擇一個稱呼");
  }
 if(n === 3){
-if(!state.gender){ alert("請揀男或女"); return; }
+appNotice("請選擇性別");
  }
 wizGo(n + 1);
 };
@@ -3611,8 +3611,8 @@ if(anon){
 name = name || "匿名港人";
 nick = nick || "神秘人";
  } else {
-if(!name){ alert("請輸入姓名，或者撳「匿名港人」"); return; }
-if(!nick){ alert("請揀一個稱呼"); return; }
+if(!name){ appNotice("請輸入姓名", "或按「匿名港人」繼續。"); return; }
+appNotice("請選擇一個稱呼");
  }
 if(name.length > 12) name = name.slice(0,12);
 state.displayName = name;
@@ -3942,6 +3942,11 @@ window.appDialog = function(opts){
     ov.onclick = function(e){ if(e.target === ov && window._adResolve) window._adResolve(false); };
   });
 };
+// 單掣提示框（取代原生 alert：原生會顯示「fung2222.github.io 顯示」網址 ✗）
+window.appNotice = function(title, body){
+  return appDialog({ title: title || "", body: body || "", hideCancel: true, okText: "知道了" });
+};
+
 // 返回鍵處理：測試中撳返回鍵 → 唔可以直接彈出去（防誤觸），要出同一個確認彈窗
 window.addEventListener("popstate", function(e){
   if(window._showing === "test"){
@@ -4247,7 +4252,7 @@ await generateCardImage();
  }
 const img2 = $("shareCardImg");
 if(!img2 || !img2.src || !img2.src.startsWith("data:")){
-alert("生成圖片失敗，請再試一次");
+appNotice("圖片生成失敗", "請稍後再試一次。");
 return;
  }
 const a = document.createElement("a");
@@ -4595,7 +4600,7 @@ ${location.origin}${location.pathname}`;
 
 window.downloadResult = async function(){
 const text = generateResultText();
-if(!text){ alert("冇結果可以下載"); return; }
+if(!text){ appNotice("目前沒有可下載的結果"); return; }
  // 確保 share card img 已生成
 const img = $("shareCardImg");
 if(!img || !img.src || !img.src.startsWith("data:")){
@@ -4603,7 +4608,7 @@ await generateCardImage();
  }
 const img2 = $("shareCardImg");
 if(!img2 || !img2.src || !img2.src.startsWith("data:")){
-alert("生成圖片失敗");
+appNotice("圖片生成失敗", "請稍後再試一次。");
 return;
  }
  // 從 dataURL → blob → 下載
@@ -4685,7 +4690,7 @@ fallbackCopy(text);
 };
 
 window.shareResult = async function(){
-if(!window.lastResult){ alert("冇結果可以分享"); return; }
+if(!window.lastResult){ appNotice("目前沒有可分享的結果"); return; }
 
 let img = $("shareCardImg");
 if(!img || !img.src || !img.src.startsWith("data:")){
@@ -4764,7 +4769,7 @@ fallbackCopy(caption);
  }
 setShareStatus(" 已嘗試儲存圖片 + copy 文案。iPhone 若無下載，請長按圖片 → 儲存圖像");
  }catch(e2){
-alert("分享失敗。請長按結果圖片 → 儲存圖像，再開 WhatsApp 傳送相片。");
+appNotice("分享失敗", "請長按結果圖片儲存，再以 WhatsApp 傳送。");
  }
 };
 
@@ -5098,8 +5103,8 @@ btn.innerText = "";
  }catch(e){ console.error(e); }
 };
 
-window.deleteHistoryConfirm = function(idx){
-if(!confirm("確定要刪除呢個紀錄？\n刪咗就返唔到。" + (idx!=null?("\n（第 " + (idx+1) + " 筆）"):""))){
+window.deleteHistoryConfirm = async function(idx){
+  if(!(await appDialog({ title: "刪除這筆紀錄？", body: "刪除後無法復原。" + (idx!=null ? ("（第 " + (idx+1) + " 筆）") : ""), cancelText: "取消", okText: "刪除" }))){
 return;
  }
 window.deleteHistoryItem(idx);
@@ -5150,7 +5155,7 @@ realIdx = list.findIndex(function(r){ return r && r.id === raw; });
  }
 if(realIdx < 0 || realIdx >= list.length){
 // 以前係 `if(!rec) return;` → 用戶淨係見到主頁，完全唔知發生咩事
-alert("搵唔到呢筆記錄（可能已經清除）。\n\n搵緊：" + raw + "\n現有紀錄：" + list.length + " 條");
+appNotice("找不到這筆紀錄", "可能已被清除。（搜尋代號：" + raw + "，現有紀錄：" + list.length + " 條）");
 return;
  }
 const rec = list[realIdx];
@@ -5158,7 +5163,7 @@ try{ sessionStorage.setItem("hkmbti_last_record_idx", realIdx); }catch(e){}
 // 舊／壞紀錄可能有 TYPES 冇嘅類型代號 → renderResult 會 throw → 睇唔到結果
 const code4 = String(rec.mbti || "").substring(0, 4).toUpperCase();
 if(!window.TYPES || !window.TYPES[code4]){
-alert("呢筆記錄嘅類型代號（" + String(rec.mbti || "空") + "）唔完整，開唔到結果。");
+appNotice("無法開啟結果", "這筆紀錄的類型代號（" + String(rec.mbti || "空") + "）不完整。");
 return;
  }
 window.lastResult = rec.mbti;
@@ -5175,15 +5180,15 @@ try{ show("result"); }catch(e){}
 try{ generateCardImage(); }catch(e){}
 try{ $("finishTime").innerText = formatTimeAgo(rec.timestamp); }catch(e){}
 try{ if($("versionBadge")) $("versionBadge").innerText = ver === "bb" ? "BB版" : ver === "advanced" ? "進階版" : "生活版"; }catch(e){}
-if(!rendered){ alert("呢筆記錄開唔到（資料唔完整）"); }
+if(!rendered){ appNotice("無法開啟這筆紀錄", "資料不完整。"); }
  } catch(e){
 try{ show("result"); }catch(_){}
-alert("載入失敗（呢筆記錄資料唔完整）");
+appNotice("載入失敗", "這筆紀錄的資料不完整。");
  }
 };
 
-window.clearHistory = function(){
-if(confirm("確定要清除全部測試記錄？")){
+window.clearHistory = async function(){
+  if(await appDialog({ title: "清除全部紀錄？", body: "所有測試紀錄與統計資料將一併刪除，且無法復原。", cancelText: "取消", okText: "全部清除" })){
 localStorage.removeItem("hkmbti_last_result");
 localStorage.removeItem("hkmbti_history");
 const wrap = $("userHistory");
@@ -5226,8 +5231,8 @@ if(prof.nickname) state.nickname = prof.nickname;
 state.pendingVersion = r.version;
 startTestWithVersion(r.version, { idx: r.idx, answers: r.answers, startedAt: r.startedAt, deck: r.deck });
  };
-if(drop) drop.onclick = () => {
-if(confirm("放棄上次進度？")){
+  if(drop) drop.onclick = async () => {
+  if(await appDialog({ title: "放棄上次進度？", body: "未完成的作答進度將被刪除，無法復原。", cancelText: "保留", okText: "放棄" })){
 clearProgress();
 refreshResumeBanner();
  }
@@ -5532,7 +5537,7 @@ window.openType = function(type, from){
 const T = window.TYPES && window.TYPES[type];
 // 以前係 `if(!T) return;` → 用戶淨係見到主頁，完全唔知咩事。而家一定講清楚。
 if(!T){
-alert("呢個類型代號（" + type + "）暫時未有資料。\n可能係舊版快取，請完全閂咗分頁再開一次。");
+appNotice("暫時沒有資料", "類型代號（" + type + "）未有資料，可能是舊版快取，請完全關閉分頁後重新開啟。");
 return;
  }
 const F = (window.TYPES_FULL && window.TYPES_FULL[type]) || null;

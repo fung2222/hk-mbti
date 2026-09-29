@@ -171,8 +171,35 @@ body.no-ad{padding-bottom:0!important;}
    把 app 自己用咗 viewport 單位嘅規則還原成裝置真實值（--dm-vw／--dm-vh 由 script 寫入），
    其他一律唔動 → 還原出嚟同正常手機版一模一樣。 */
 </style>
+<style>
+/* ===== 自訂 app 彈窗（取代原生 confirm／alert：原生會顯示「fung2222.github.io 顯示」網址 ✗）===== */
+.ad-overlay{position:fixed;inset:0;background:rgba(30,42,59,.62);z-index:300;display:flex;align-items:center;justify-content:center;padding:26px;}
+.ad-card{background:#1E2A3B;border:1px solid rgba(212,169,95,.28);border-radius:22px;width:100%;max-width:360px;padding:30px 26px 22px;box-shadow:0 24px 60px rgba(0,0,0,.45);animation:adIn .22s ease-out;}
+@keyframes adIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+.ad-title{font-size:22px;font-weight:800;color:#fff;letter-spacing:.4px;line-height:1.35;}
+.ad-body{margin-top:14px;font-size:15px;line-height:1.85;color:rgba(255,255,255,.72);}
+.ad-body:empty{display:none;}
+.ad-acts{margin-top:26px;display:flex;gap:12px;}
+.ad-btn{flex:1;padding:15px 10px;border-radius:14px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;border:1px solid transparent;-webkit-appearance:none;appearance:none;transition:transform .12s;}
+.ad-btn:active{transform:scale(.985);}
+.ad-cancel{background:transparent;border-color:rgba(255,255,255,.22);color:rgba(255,255,255,.86);}
+.ad-ok{background:var(--gold);color:#1E2A3B;}
+</style>
 </head>
 <body>
+
+<!-- 通用 app 彈窗（取代原生 confirm／alert）-->
+<div id="appDialog" class="ad-overlay hidden" role="dialog" aria-modal="true">
+<div class="ad-card">
+<div class="ad-title" id="adTitle"></div>
+<div class="ad-body" id="adBody"></div>
+<div class="ad-acts">
+<button type="button" class="ad-btn ad-cancel" id="adCancel">取消</button>
+<button type="button" class="ad-btn ad-ok" id="adOk">確定</button>
+</div>
+</div>
+</div>
+
 
 <div class="hero" style="position:relative;">
  <div class="hero-row">
@@ -481,7 +508,7 @@ toast("分享失敗，請長按縮圖儲存");
 }
 
 let _delArmTimer = null;
-function delRec(i){
+async function delRec(i){
  // 兩段確認（armed 模式）
 const btn = event.target;
 if(btn.dataset.armed !== "1"){
@@ -497,7 +524,7 @@ btn.style.background = "";
 return;
  }
 clearTimeout(_delArmTimer);
-if(!confirm("確定要刪除呢個紀錄？\n刪咗就返唔到。")) return;
+if(!(await appDialog({ title: "刪除這筆紀錄？", body: "刪除後無法復原。", cancelText: "取消", okText: "刪除" }))) return;
  
 let arr = loadHistory();
 const removed = arr.splice(i, 1)[0];
@@ -547,7 +574,7 @@ toast(" 已匯出 JSON");
 }
 
 let _clearArmTimer = null;
-function clearAllRecords(){
+async function clearAllRecords(){
 const btn = event.target;
 if(btn.dataset.armed !== "1"){
 btn.dataset.armed = "1";
@@ -562,7 +589,7 @@ btn.style.background = "";
 return;
  }
 clearTimeout(_clearArmTimer);
-if(!confirm("確定要清除所有紀錄？\n（包括歷史 + 16 型統計）\n清除後無法復原。")) return;
+if(!(await appDialog({ title: "清除所有紀錄？", body: "將刪除全部測試紀錄與 16 型統計資料，且無法復原。", cancelText: "取消", okText: "全部清除" }))) return;
  
 localStorage.removeItem("hkmbti_history");
 localStorage.removeItem("hkmbti_last_result");
@@ -604,5 +631,37 @@ if(hasNoAd()) applyNoAd();
 })();
 </script>
 
+<script>
+// ===== 自訂 app 彈窗（取代原生 confirm／alert）=====
+window._adResolve = null;
+window.appDialog = function(opts){
+  return new Promise(function(resolve){
+    var ov = document.getElementById("appDialog");
+    var t = document.getElementById("adTitle");
+    var b = document.getElementById("adBody");
+    var c = document.getElementById("adCancel");
+    var o = document.getElementById("adOk");
+    if(!ov || !t || !b || !c || !o){ resolve(false); return; }
+    t.textContent = opts.title || "";
+    b.textContent = opts.body || "";
+    c.textContent = opts.cancelText || "取消";
+    o.textContent = opts.okText || "確定";
+    c.style.display = opts.hideCancel ? "none" : "";
+    ov.classList.remove("hidden");
+    window._adResolve = function(val){
+      window._adResolve = null;
+      ov.classList.add("hidden");
+      c.onclick = null; o.onclick = null; ov.onclick = null;
+      resolve(val);
+    };
+    c.onclick = function(){ if(window._adResolve) window._adResolve(false); };
+    o.onclick = function(){ if(window._adResolve) window._adResolve(true); };
+    ov.onclick = function(e){ if(e.target === ov && window._adResolve) window._adResolve(false); };
+  });
+};
+window.appNotice = function(title, body){
+  return appDialog({ title: title || "", body: body || "", hideCancel: true, okText: "知道了" });
+};
+</script>
 </body>
 </html>

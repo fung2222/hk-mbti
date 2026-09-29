@@ -47,6 +47,15 @@ function load(opts){
       url: BASE + (opts.hash || ""), runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: vc,
       beforeParse(window){
         window.alert = m => alerts.push(String(m));
+        // 2026-09-29 起 app 嘅提示改用自訂彈窗 appNotice（唔再用原生 alert）→ 一樣要收集到
+        try{
+          Object.defineProperty(window, "appNotice", {
+            configurable: true,
+            get(){ return function(t, b){ alerts.push(String(t || "") + (b ? " — " + b : "")); }; },
+            set(fn){ /* app 自己嘅實作（測試唔會真開彈窗） */ }
+          });
+        }catch(e){}
+
         window.confirm = () => false;
         stubCanvas(window);
         try{ Object.defineProperty(window.document, "fonts", { value: { load: () => Promise.resolve([]) }, configurable: true }); }catch(e){}
@@ -171,7 +180,8 @@ const visible = w => ["home","type","about","spectrum","hub","social","romance",
   {
     // (c) 類型代號真係唔存在 → 一定要出聲，唔可以靜靜彈返主頁
     const { w, alerts } = await load({ hash: "#type=ZZZZ" });
-    const said = alerts.some(a => a.indexOf("暫時未有資料") >= 0);
+    // 2026-09-29：提示改用自訂彈窗 appNotice，文案亦改成書面語「暫時沒有資料」
+    const said = alerts.some(a => /暫時(沒有|未有)資料|未有資料/.test(a));
     const ok = said && w._showing === "home";
     if(!ok) bad++;
     console.log(`  #type=ZZZZ（冇 pending）→ 實際 ${w._showing}，有冇提示：${said ? "✓ 有" : "✗ 靜靜死"}`);

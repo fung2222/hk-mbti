@@ -52,6 +52,15 @@ function loadPage(html, store, opts){
       url: BASE + (opts.hash || ""), runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: vc,
       beforeParse(window){
         window.alert = m => alerts.push(String(m));
+        // 2026-09-29 起 app 嘅提示改用自訂彈窗 appNotice（唔再用原生 alert）→ 一樣要收集到
+        try{
+          Object.defineProperty(window, "appNotice", {
+            configurable: true,
+            get(){ return function(t, b){ alerts.push(String(t || "") + (b ? " — " + b : "")); }; },
+            set(fn){ /* app 自己嘅實作（測試唔會真開彈窗） */ }
+          });
+        }catch(e){}
+
         window.confirm = () => false;
         stubCanvas(window);
         try{ Object.defineProperty(window.document, "fonts", { value: { load: () => Promise.resolve([]) }, configurable: true }); }catch(e){}
