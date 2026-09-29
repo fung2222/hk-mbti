@@ -3536,10 +3536,10 @@ const name = ($("profileName") && $("profileName").value || "").trim();
 if(!name){ appNotice("請輸入姓名", "或按「匿名港人 · 跳過」繼續。"); return; }
  }
 if(n === 2){
-appNotice("請選擇一個稱呼");
+if(!state.nickname){ appNotice("請選擇一個稱呼"); return; }
  }
 if(n === 3){
-appNotice("請選擇性別");
+if(!state.gender){ appNotice("請選擇性別"); return; }
  }
 wizGo(n + 1);
 };
@@ -3612,7 +3612,7 @@ name = name || "匿名港人";
 nick = nick || "神秘人";
  } else {
 if(!name){ appNotice("請輸入姓名", "或按「匿名港人」繼續。"); return; }
-appNotice("請選擇一個稱呼");
+if(!nick){ appNotice("請選擇一個稱呼"); return; }
  }
 if(name.length > 12) name = name.slice(0,12);
 state.displayName = name;
