@@ -188,6 +188,30 @@ body.no-ad{padding-bottom:0!important;}
 .ad-cancel{background:transparent;border-color:rgba(255,255,255,.22);color:rgba(255,255,255,.86);}
 .ad-ok{background:var(--gold);color:#1E2A3B;}
 </style>
+<style id="dark-layer">
+/* 黑夜模式 v1（跟系統 prefers-color-scheme）。鐵律：只改顏色，唔郁排版／尺寸。 */
+@media (prefers-color-scheme: dark){
+html{color-scheme:dark}
+:root{--gold:#D9B26A;--gold-dim:#C9B489;--ink:#ECE7DE;--soft:#12161C;
+  --dk-card:#181E26;--dk-line:rgba(236,231,222,.13);}
+.hero{background:linear-gradient(135deg,#151C25 0%,#222B37 100%)}
+.bg-soft{background:rgba(217,178,106,.09)}
+.card,.softbox,.history-item,.stat-pill,.btn-ghost{background:var(--dk-card)}
+.btn-ghost{border-color:rgba(217,178,106,.34)}
+.history-item{border-color:var(--dk-line)}
+.softbox-sub,.softbox-btn{color:#A79E92}
+.rec-num{color:#C9B489}
+.act-del{background:#3A1F22;color:#F0A9A4}
+.act-del:hover{background:#4A2629}
+.ad-footer-sticky{background:var(--dk-card)}
+.ad-slot,.ad-close{color:#9A9388}
+.empty,.footer-note,.history-meta,.section-note{color:#A79E92}
+.history-mbti{color:#C2BAAD}
+.ad-unlock{color:#9A9388}
+html .text-gray-500{color:#A79E92}
+html .text-gray-600{color:#C2BAAD}
+}
+</style>
 </head>
 <body>
 

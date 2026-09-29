@@ -132,6 +132,23 @@ a{color:var(--accent)}
    其他一律唔動 → 還原出嚟同正常手機版一模一樣。 */
 html.dm body{min-height:var(--dm-vh)}
 </style>
+<style id="dark-layer">
+/* 黑夜模式 v1（跟系統 prefers-color-scheme）。鐵律：只改顏色，唔郁排版／尺寸。 */
+@media (prefers-color-scheme: dark){
+html{color-scheme:dark}
+:root{--gold:#D9B26A;--ink:#ECE7DE;--paper:#12161C;--accent:#F0736F;--soft:#1B2129;
+  --dk-card:#181E26;}
+.hero{background:linear-gradient(135deg,#151C25 0%,#222B37 100%)}
+.hero-popover{background:#1A2431}
+.card,.softbox{background:var(--dk-card)}
+.divider{border-top-color:#232A33}
+.callout{color:#C2BAAD}
+.softbox-sub,.softbox-btn{color:#A79E92}
+.btn-gold{color:#12161C}
+.btn-gold:hover{background:#C79E5C}
+.body{color:#C2BAAD}
+}
+</style>
 </head>
 <body>
 <div class="hero">

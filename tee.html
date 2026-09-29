@@ -148,6 +148,24 @@ body.no-ad{padding-bottom:0!important;}
    把 app 自己用咗 viewport 單位嘅規則還原成裝置真實值（--dm-vw／--dm-vh 由 script 寫入），
    其他一律唔動 → 還原出嚟同正常手機版一模一樣。 */
 </style>
+<style id="dark-layer">
+/* 黑夜模式 v1（跟系統 prefers-color-scheme）。鐵律：只改顏色，唔郁排版／尺寸。 */
+@media (prefers-color-scheme: dark){
+html{color-scheme:dark}
+:root{--gold:#D9B26A;--gold-dim:#C9B489;--ink:#ECE7DE;--soft:#12161C;--dk-card:#181E26;}
+.hero{background:linear-gradient(135deg,#151C25 0%,#222B37 100%)}
+.bg-soft{background:rgba(217,178,106,.09)}
+.softbox{background:var(--dk-card);border-color:rgba(217,178,106,.2)}
+.softbox-sub,.softbox-btn{color:#A79E92}
+.filter-chip{background:#1F262F;color:#C2BAAD}
+.filter-chip:hover:not(.active){background:#2A323C}
+.filter-chip.active{background:var(--gold);color:#12161C}
+.ad-footer-sticky{background:var(--dk-card)}
+.ad-slot,.ad-close{color:#9A9388}
+.footer-note,.tee-card .vibe{color:#A79E92}
+.ad-unlock{color:#9A9388}
+}
+</style>
 </head>
 <body>
 
