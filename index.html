@@ -2,6 +2,14 @@
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
+<script>
+/* 主題要喺 render 前決定，否則會閃一下：未揀過 = 跟系統；撳過掣 = 用 localStorage 記住嘅 */
+(function(){try{
+  var t = localStorage.getItem("hkmbti_theme");
+  var d = t ? (t === "dark") : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.classList.toggle("dk", !!d);
+}catch(e){}})();
+</script>
  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
  <meta http-equiv="Pragma" content="no-cache">
  <meta http-equiv="Expires" content="0">
@@ -246,6 +254,9 @@ letter-spacing:-.01em;
 color:var(--ink);
 }
 /* 主頁右上選單 */
+.home-top-actions{display:flex;align-items:center;gap:8px;}
+.theme-btn{padding:0;}
+.theme-btn svg{width:18px;height:18px;display:block;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
 .home-menu-wrap{position:relative;}
 .home-menu-btn{width:36px;height:36px;border-radius:50%;background:rgba(30,42,59,.06);border:1px solid rgba(30,42,59,.12);color:var(--ink);font-size:19px;line-height:1;cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:inherit;}
 .home-menu{display:none;position:absolute;top:44px;right:0;background:#1E2A3B;border:1px solid rgba(255,255,255,.18);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.25);min-width:200px;padding:6px;z-index:60;}
@@ -801,60 +812,57 @@ html.dm .home-hero{min-height:var(--dm-vh)}
 html.dm .home-hero-mbti{font-size:clamp(4.4rem, calc(var(--dm-vw) * 0.23), 6.6rem)}
 </style>
 <style id="dark-layer">
-/* 黑夜模式 v1（跟系統 prefers-color-scheme，冇手動掣）。
+/* 黑夜模式 v2：由 html.dk 主導（未揀過 = 跟系統；用戶撳掣揀過會記入 localStorage）。
    鐵律：只改顏色 → 唔准有 display / 尺寸 / 位置 / 動畫改動；
-   16 型 16 色、分享卡 canvas、金標 icon 一律不變。
-   代理睇唔到 render → 色值要 Roy 睇 live 執。 */
-@media (prefers-color-scheme: dark){
-html{color-scheme:dark}
-:root{
+   16 型 16 色、分享卡 canvas、金標 icon 一律不變。 */
+html.dk{color-scheme:dark}
+html.dk{
   --paper:#12161C;--soft:#1B2129;--ink:#ECE7DE;--gold:#D9B26A;--accent:#F0736F;
   --dk-card:#181E26;--dk-hover:#232B35;--dk-on:#2A323C;
   --dk-line:rgba(236,231,222,.13);--dk-line2:rgba(236,231,222,.22);
 }
 /* 白色卡／漸變 → 深卡 */
-.scenes-bleed,.result-bleed,.hub-bleed{background:linear-gradient(180deg,var(--dk-card),var(--paper))}
-.home-acc{background:var(--dk-card);box-shadow:0 4px 24px rgba(0,0,0,.42)}
-.home-acc-item.open .home-acc-head{background:linear-gradient(90deg,#212831,var(--dk-card))}
-.home-acc-head:hover{background:var(--dk-hover)}
-.home-acc-head:active{background:var(--dk-on)}
-html.dt .home-acc-item{background:var(--dk-card)}
-.gender-btn{background:var(--dk-card);border-color:var(--dk-line2)}
-.persona-sect .scenario-badge{background:var(--dk-card);border-color:var(--dk-line)}
-.option:hover{background:var(--dk-hover)}
-.option.selected{background:var(--dk-on)}
-.ad-footer-sticky{background:var(--dk-card);border-top-color:var(--dk-line)}
+html.dk .scenes-bleed,html.dk .result-bleed,html.dk .hub-bleed{background:linear-gradient(180deg,var(--dk-card),var(--paper))}
+html.dk .home-acc{background:var(--dk-card);box-shadow:0 4px 24px rgba(0,0,0,.42)}
+html.dk .home-acc-item.open .home-acc-head{background:linear-gradient(90deg,#212831,var(--dk-card))}
+html.dk .home-acc-head:hover{background:var(--dk-hover)}
+html.dk .home-acc-head:active{background:var(--dk-on)}
+html.dk.dt .home-acc-item{background:var(--dk-card)}
+html.dk .gender-btn{background:var(--dk-card);border-color:var(--dk-line2)}
+html.dk .persona-sect .scenario-badge{background:var(--dk-card);border-color:var(--dk-line)}
+html.dk .option:hover{background:var(--dk-hover)}
+html.dk .option.selected{background:var(--dk-on)}
+html.dk .ad-footer-sticky{background:var(--dk-card);border-top-color:var(--dk-line)}
 /* 版本卡：金／銀／銅／米 → 同色系深色版 */
-.ver-btn[data-ver="life"]{background:linear-gradient(135deg,#251F13,#312817)}
-.ver-btn[data-ver="life"].ver-lit{background:linear-gradient(135deg,#312817,#3E3219)}
-.ver-btn[data-ver="advanced"]{background:linear-gradient(135deg,#1C222A,#242B34)}
-.ver-btn[data-ver="advanced"].ver-lit{background:linear-gradient(135deg,#242B34,#2D353F)}
-.ver-btn[data-ver="bb"]{background:linear-gradient(135deg,#261D13,#33251A)}
-.ver-btn[data-ver="bb"].ver-lit{background:linear-gradient(135deg,#33251A,#412E1E)}
-.ver-btn[data-ver="record"]{background:linear-gradient(135deg,#221F16,#2B261B)}
-.ver-btn[data-ver="record"].ver-lit{background:linear-gradient(135deg,#2B261B,#362F20)}
-.ver-btn .ver-hint{background:rgba(217,178,106,.15);color:#D8C69E}
-.ver-btn.ver-lit .ver-chev{color:#12161C}
+html.dk .ver-btn[data-ver="life"]{background:linear-gradient(135deg,#251F13,#312817)}
+html.dk .ver-btn[data-ver="life"].ver-lit{background:linear-gradient(135deg,#312817,#3E3219)}
+html.dk .ver-btn[data-ver="advanced"]{background:linear-gradient(135deg,#1C222A,#242B34)}
+html.dk .ver-btn[data-ver="advanced"].ver-lit{background:linear-gradient(135deg,#242B34,#2D353F)}
+html.dk .ver-btn[data-ver="bb"]{background:linear-gradient(135deg,#261D13,#33251A)}
+html.dk .ver-btn[data-ver="bb"].ver-lit{background:linear-gradient(135deg,#33251A,#412E1E)}
+html.dk .ver-btn[data-ver="record"]{background:linear-gradient(135deg,#221F16,#2B261B)}
+html.dk .ver-btn[data-ver="record"].ver-lit{background:linear-gradient(135deg,#2B261B,#362F20)}
+html.dk .ver-btn .ver-hint{background:rgba(217,178,106,.15);color:#D8C69E}
+html.dk .ver-btn.ver-lit .ver-chev{color:#12161C}
 /* 灰字 → 深底上嘅淺灰 */
-.scene-sub,.wiz-ghost,.home-acc-desc,.home-acc-go,.softbox-sub,.softbox-btn,
-html.dt .dt-nav-links a,html.dt .dt-nav-links button{color:#A79E92}
-.mth-lead,.mth-axis p,.mth-step p,.mth-notes p,.mth-notes-p,.mth-limits p{color:#D9D2C6}
-.article-guide-body p,.article-guide-body li,.pros-item{color:#D9D2C6}
-.ad-unlock{color:#9A9388}
-.ver-chev,.home-acc-chev,.home-more-down,html.dt #dtTypeRows span{color:#B9A97F}
-.ad-slot,.ad-close{color:#9A9388}
-html .text-gray-400{color:#9A9388}
-html .text-gray-500{color:#A79E92}
-html .text-gray-600{color:#C2BAAD}
-html .text-gray-700{color:#D9D2C6}
-html .border-gray-100{border-color:#232A33}
-html .border-gray-200{border-color:#2B333D}
-html .border-gray-300{border-color:#38424D}
-html .bg-white{background:var(--dk-card)}
+html.dk .scene-sub,html.dk .wiz-ghost,html.dk .home-acc-desc,html.dk .home-acc-go,html.dk .softbox-sub,html.dk .softbox-btn,
+html.dk.dt .dt-nav-links a,html.dk.dt .dt-nav-links button{color:#A79E92}
+html.dk .mth-lead,html.dk .mth-axis p,html.dk .mth-step p,html.dk .mth-notes p,html.dk .mth-notes-p,html.dk .mth-limits p{color:#D9D2C6}
+html.dk .article-guide-body p,html.dk .article-guide-body li,html.dk .pros-item{color:#D9D2C6}
+html.dk .ad-unlock{color:#9A9388}
+html.dk .ver-chev,html.dk .home-acc-chev,html.dk .home-more-down,html.dk.dt #dtTypeRows span{color:#B9A97F}
+html.dk .ad-slot,html.dk .ad-close{color:#9A9388}
+html.dk .text-gray-400{color:#9A9388}
+html.dk .text-gray-500{color:#A79E92}
+html.dk .text-gray-600{color:#C2BAAD}
+html.dk .text-gray-700{color:#D9D2C6}
+html.dk .border-gray-100{border-color:#232A33}
+html.dk .border-gray-200{border-color:#2B333D}
+html.dk .border-gray-300{border-color:#38424D}
+html.dk .bg-white{background:var(--dk-card)}
 /* 深藍 hero／彈窗：深色底上略為收暗 */
-.page-hero{background:linear-gradient(135deg,#151C25 0%,#222B37 100%)}
-.ad-card{background:#1A2431}
-}
+html.dk .page-hero{background:linear-gradient(135deg,#151C25 0%,#222B37 100%)}
+html.dk .ad-card{background:#1A2431}
 </style>
 </head>
 <body class="js-boot">
@@ -1699,6 +1707,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <img src="icon-192.png" class="w-9 h-9 rounded-lg flex-shrink-0" alt="港MBTI">
  <div class="font-black text-[19px] tracking-tight">港式 MBTI</div>
  </a>
+ <div class="home-top-actions">
+ <button type="button" class="home-menu-btn theme-btn" id="themeBtn" onclick="toggleTheme()" aria-label="切換日頭 / 黑夜模式"></button>
  <div class="home-menu-wrap">
  <button type="button" class="home-menu-btn" onclick="toggleHomeMenu(event)" aria-label="選單">⋯</button>
  <div class="home-menu" id="homeMenu">
@@ -1712,6 +1722,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <a href="./stats.html" onclick="closeHomeMenu()">香港16型統計</a>
  <button type="button" onclick="openPrivacy();closeHomeMenu();">私隱聲明</button>
  <div class="home-menu-foot">版本 v2.0</div>
+ </div>
  </div>
  </div>
  </div>
@@ -5828,6 +5839,37 @@ let html = `
 
 
  
+<script>
+/* 主題掣（主頁右上，選單隔離）：撳一下切日頭／黑夜，揀過就記住（localStorage hkmbti_theme） */
+var THEME_SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.4 5.4l1.7 1.7M16.9 16.9l1.7 1.7M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7"/></svg>';
+var THEME_MOON = '<svg viewBox="0 0 24 24"><path d="M20.6 14.7A8.7 8.7 0 0 1 9.3 3.4a8.7 8.7 0 1 0 11.3 11.3z"/></svg>';
+function themeIsDark(){ return document.documentElement.classList.contains("dk"); }
+function syncThemeBtn(){
+  var b = document.getElementById("themeBtn");
+  var m = document.querySelector('meta[name="theme-color"]');
+  if(m) m.setAttribute("content", themeIsDark() ? "#12161C" : "#1E2A3B");
+  if(!b) return;
+  b.innerHTML = themeIsDark() ? THEME_SUN : THEME_MOON;
+  b.setAttribute("aria-label", themeIsDark() ? "轉日頭模式" : "轉黑夜模式");
+}
+function toggleTheme(){
+  var d = !themeIsDark();
+  document.documentElement.classList.toggle("dk", d);
+  try{ localStorage.setItem("hkmbti_theme", d ? "dark" : "light"); }catch(e){}
+  syncThemeBtn();
+}
+syncThemeBtn();
+try{
+  var themeMq = window.matchMedia("(prefers-color-scheme: dark)");
+  var onSysTheme = function(e){
+    var picked = null; try{ picked = localStorage.getItem("hkmbti_theme"); }catch(err){}
+    if(picked) return;   // 用戶自己揀過就唔跟系統
+    document.documentElement.classList.toggle("dk", e.matches);
+    syncThemeBtn();
+  };
+  themeMq.addEventListener ? themeMq.addEventListener("change", onSysTheme) : themeMq.addListener(onSysTheme);
+}catch(e){}
+</script>
 <script>
 // 長按唔彈瀏覽器「複製／搜尋」選單（輸入框同圖例外：圖要可以長按儲存／分享）
 document.addEventListener("contextmenu", function(e){

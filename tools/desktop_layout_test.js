@@ -14,7 +14,7 @@ const { JSDOM, VirtualConsole } = require("jsdom");
 const REPO = path.join(__dirname, "..");
 const html = fs.readFileSync(path.join(REPO, "index.html"), "utf8");
 const layer = html.match(/<style id="desktop-layer">([\s\S]*?)<\/style>/)[1];
-const gate = html.match(/<script>([\s\S]*?classList\.add\("dt"\)[\s\S]*?)<\/script>/)[1];
+const gate = html.match(/<script>((?:(?!<\/script>)[\s\S])*?classList\.add\("dt"\)(?:(?!<\/script>)[\s\S])*?)<\/script>/)[1];
 
 function inlineLocal(h) {
   return h.replace(/<script src="(https?:)?\/\/[^"]*"><\/script>/g, "")

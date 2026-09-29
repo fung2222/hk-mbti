@@ -20,7 +20,7 @@ const { JSDOM } = require("jsdom");
 
 const REPO = path.join(__dirname, "..");
 const html = fs.readFileSync(path.join(REPO, "index.html"), "utf8");
-const gate = html.match(/<script>([\s\S]*?classList\.add\("dt"\)[\s\S]*?)<\/script>/)[1];
+const gate = html.match(/<script>((?:(?!<\/script>)[\s\S])*?classList\.add\("dt"\)(?:(?!<\/script>)[\s\S])*?)<\/script>/)[1];
 const dmCss = html.match(/<style id="desktop-mode-fix">([\s\S]*?)<\/style>/)[1];
 
 let pass = 0, total = 0;
@@ -30,7 +30,7 @@ console.log("=== 靜態不變式（5 版都要）===");
 // 每個 page：① 同一段 gate script（改一次要 5 版一致）② app 自己每條 viewport 單位規則
 // 都要喺 .dm 塊有對應還原（否則桌面版網站模式下會爆）
 const PAGES = ["index.html", "record.html", "stats.html", "tee.html", "privacy.html"];
-const gateOf = (h) => (h.match(/<script>([\s\S]*?classList\.add\("dt"\)[\s\S]*?)<\/script>/) || [])[1] || "";
+const gateOf = (h) => (h.match(/<script>((?:(?!<\/script>)[\s\S])*?classList\.add\("dt"\)(?:(?!<\/script>)[\s\S])*?)<\/script>/) || [])[1] || "";
 chk(PAGES.every((f) => gateOf(fs.readFileSync(path.join(REPO, f), "utf8")) === gate),
     "5 版 gate script 完全一致");
 for (const f of PAGES) {

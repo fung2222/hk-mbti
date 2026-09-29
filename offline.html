@@ -2,6 +2,14 @@
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
+<script>
+/* 主題要喺 render 前決定，否則會閃一下：未揀過 = 跟系統；撳過掣 = 用 localStorage 記住嘅 */
+(function(){try{
+  var t = localStorage.getItem("hkmbti_theme");
+  var d = t ? (t === "dark") : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.classList.toggle("dk", !!d);
+}catch(e){}})();
+</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>連唔到網絡 · 港式 MBTI</title>
 <meta name="theme-color" content="#1E2A3B">
@@ -25,14 +33,12 @@ button:active{opacity:.85;}
 .mark-foot{margin-top:16px;text-align:center;font-size:12.5px;letter-spacing:.02em;color:#8b857c;}
 </style>
 <style id="dark-layer">
-/* 黑夜模式 v1（跟系統 prefers-color-scheme）。鐵律：只改顏色，唔郁排版／尺寸。 */
-@media (prefers-color-scheme: dark){
-html{color-scheme:dark}
-:root{--gold:#D9B26A;--ink:#ECE7DE;--soft:#12161C;}
-p,li{color:#B4AC9F}
-button{background:#D9B26A;color:#12161C}
-.mark-foot{color:#9A9388}
-}
+/* 黑夜模式 v2：由 html.dk 主導（跟系統／用戶撳掣揀）。鐵律：只改顏色，唔郁排版／尺寸。 */
+html.dk{color-scheme:dark}
+html.dk{--gold:#D9B26A;--ink:#ECE7DE;--soft:#12161C;}
+html.dk p,html.dk li{color:#B4AC9F}
+html.dk button{background:#D9B26A;color:#12161C}
+html.dk .mark-foot{color:#9A9388}
 </style>
 </head>
 <body>

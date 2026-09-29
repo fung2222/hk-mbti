@@ -2,6 +2,14 @@
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
+<script>
+/* 主題要喺 render 前決定，否則會閃一下：未揀過 = 跟系統；撳過掣 = 用 localStorage 記住嘅 */
+(function(){try{
+  var t = localStorage.getItem("hkmbti_theme");
+  var d = t ? (t === "dark") : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  document.documentElement.classList.toggle("dk", !!d);
+}catch(e){}})();
+</script>
  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
  <meta http-equiv="Pragma" content="no-cache">
  <meta http-equiv="Expires" content="0">
@@ -149,22 +157,20 @@ body.no-ad{padding-bottom:0!important;}
    其他一律唔動 → 還原出嚟同正常手機版一模一樣。 */
 </style>
 <style id="dark-layer">
-/* 黑夜模式 v1（跟系統 prefers-color-scheme）。鐵律：只改顏色，唔郁排版／尺寸。 */
-@media (prefers-color-scheme: dark){
-html{color-scheme:dark}
-:root{--gold:#D9B26A;--gold-dim:#C9B489;--ink:#ECE7DE;--soft:#12161C;--dk-card:#181E26;}
-.hero{background:linear-gradient(135deg,#151C25 0%,#222B37 100%)}
-.bg-soft{background:rgba(217,178,106,.09)}
-.softbox{background:var(--dk-card);border-color:rgba(217,178,106,.2)}
-.softbox-sub,.softbox-btn{color:#A79E92}
-.filter-chip{background:#1F262F;color:#C2BAAD}
-.filter-chip:hover:not(.active){background:#2A323C}
-.filter-chip.active{background:var(--gold);color:#12161C}
-.ad-footer-sticky{background:var(--dk-card)}
-.ad-slot,.ad-close{color:#9A9388}
-.footer-note,.tee-card .vibe{color:#A79E92}
-.ad-unlock{color:#9A9388}
-}
+/* 黑夜模式 v2：由 html.dk 主導（跟系統／用戶撳掣揀）。鐵律：只改顏色，唔郁排版／尺寸。 */
+html.dk{color-scheme:dark}
+html.dk{--gold:#D9B26A;--gold-dim:#C9B489;--ink:#ECE7DE;--soft:#12161C;--dk-card:#181E26;}
+html.dk .hero{background:linear-gradient(135deg,#151C25 0%,#222B37 100%)}
+html.dk .bg-soft{background:rgba(217,178,106,.09)}
+html.dk .softbox{background:var(--dk-card);border-color:rgba(217,178,106,.2)}
+html.dk .softbox-sub,html.dk .softbox-btn{color:#A79E92}
+html.dk .filter-chip{background:#1F262F;color:#C2BAAD}
+html.dk .filter-chip:hover:not(.active){background:#2A323C}
+html.dk .filter-chip.active{background:var(--gold);color:#12161C}
+html.dk .ad-footer-sticky{background:var(--dk-card)}
+html.dk .ad-slot,html.dk .ad-close{color:#9A9388}
+html.dk .footer-note,html.dk .tee-card .vibe{color:#A79E92}
+html.dk .ad-unlock{color:#9A9388}
 </style>
 </head>
 <body>
