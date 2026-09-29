@@ -22,9 +22,10 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 
 ## ⏳ 未做
 1. **C 組 3 個 HK$18 示範解鎖彈窗**（`index.html` L2056 / `record.html` L597 / `tee.html` L309）→ 留上架前連 Play Billing 一次過改（soft pitch「看完整分析」）
-2. **`LETTERS` 欄位名唔一致（2026-09-29 查明根因）** —— 資料用**中文**欄位 `事業`（8 個字母全部都有內容：E 銷售/市場推廣/老師/公關/主持 …），程式卻讀**英文** `career` ✗（`data.js` 裏面 `career` 出現 0 次）
-   → 結果：維度頁「適合嘅工作」永遠空白；**未加保護前仲會 throw → 成版開唔到**（＝Roy 報「撳落去冇反應」）
-   → 修法只需一行：`(L.career || L.事業 || [])` ⏳ **等 Roy 決定要唔要修**
+2. ~~`LETTERS` 欄位名唔一致~~ ✅ **2026-09-29 已修**（commit `8ba75e1`）
+   根因：`data.js` 用**中文**欄位 `事業`（8 個字母全部有內容），程式讀**英文** `career` ✗ → 永遠空白；未加保護前仲會 throw 令成版開唔到（＝Roy 報「撳落去冇反應」）
+   修法：`$("letterCareer").innerText = ((L.事業 || L.career) || []).join("、")` ✓
+   測試：`tools/ui/letter_career_test.js`（9 項，逐個字母核對內容）
 3. **4 個「網頁感」問題**：
    - sw.js **冇 offline fallback** → 斷網出 Chrome 恐龍頁
    - `record.html` / `stats.html` / `tee.html` 冇 app 感防護（可選字、藍色 flash、下拉重新載入）
