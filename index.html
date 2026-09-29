@@ -167,6 +167,11 @@ cursor:pointer;-webkit-appearance:none;appearance:none;
 #nickGrid{justify-content:center;}
 .gender-btn{border:2px solid #e5e0d5;background:#fff;border-radius:16px;padding:18px 12px;font-size:19px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--ink);transition:all .15s;-webkit-appearance:none;appearance:none;}
 .gender-btn.on{border-color:var(--gold);background:rgba(212,169,95,.1);}
+/* 4 個維度入口：每個字母分開撳（2026-09-29）。原本一張卡只開到第一個字母 */
+.dim-pick{display:inline-flex;align-items:center;gap:7px;font-weight:900;font-size:15px;line-height:1.5}
+.dim-pick button{padding:1px 8px;border-radius:8px;border:1px solid rgba(212,169,95,.35);background:rgba(212,169,95,.12);color:var(--ink);font-weight:900;font-size:15px;font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;transition:transform .12s}
+.dim-pick button:active{transform:scale(.94)}
+.dim-pick .vs{font-size:11px;font-weight:700;color:#9aa0a6}
 .cd-overlay{position:fixed;inset:0;background:rgba(30,42,59,.96);z-index:200;display:flex;align-items:center;justify-content:center;}
 /* ===== 自訂 app 彈窗（取代原生 confirm／alert：原生會顯示「fung2222.github.io 顯示」網址 ✗）===== */
 .ad-overlay{position:fixed;inset:0;background:rgba(30,42,59,.62);z-index:300;display:flex;align-items:center;justify-content:center;padding:26px;}
@@ -1223,22 +1228,22 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <h3 class="font-bold mb-3 text-sm">4 個維度（8 個字母）</h3>
  <p class="text-xs text-gray-600 mb-3">每個人嘅性格由呢 4 個維度組成</p>
  <div class="grid grid-cols-2 gap-3">
- <button type="button" onclick="openLetter('E')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #E89A6B">
- <div class="font-bold text-sm">E vs I</div>
- <div class="text-[10px] text-gray-500 mt-1">能量來源</div>
- </button>
- <button type="button" onclick="openLetter('S')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #A86B7C">
- <div class="font-bold text-sm">S vs N</div>
- <div class="text-[10px] text-gray-500 mt-1">認知方式</div>
- </button>
- <button type="button" onclick="openLetter('T')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #3A4F6B">
- <div class="font-bold text-sm">T vs F</div>
- <div class="text-[10px] text-gray-500 mt-1">決策方式</div>
- </button>
- <button type="button" onclick="openLetter('J')" class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #6B5A8A">
- <div class="font-bold text-sm">J vs P</div>
- <div class="text-[10px] text-gray-500 mt-1">生活態度</div>
- </button>
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #E89A6B">
+  <div class="dim-pick"><button type="button" onclick="openLetter('E')">E</button><span class="vs">vs</span><button type="button" onclick="openLetter('I')">I</button></div>
+  <div class="text-[10px] text-gray-500 mt-1">能量來源</div>
+  </div>
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #A86B7C">
+  <div class="dim-pick"><button type="button" onclick="openLetter('S')">S</button><span class="vs">vs</span><button type="button" onclick="openLetter('N')">N</button></div>
+  <div class="text-[10px] text-gray-500 mt-1">認知方式</div>
+  </div>
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #3A4F6B">
+  <div class="dim-pick"><button type="button" onclick="openLetter('T')">T</button><span class="vs">vs</span><button type="button" onclick="openLetter('F')">F</button></div>
+  <div class="text-[10px] text-gray-500 mt-1">決策方式</div>
+  </div>
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #6B5A8A">
+  <div class="dim-pick"><button type="button" onclick="openLetter('J')">J</button><span class="vs">vs</span><button type="button" onclick="openLetter('P')">P</button></div>
+  <div class="text-[10px] text-gray-500 mt-1">生活態度</div>
+  </div>
  </div>
  </div>
 

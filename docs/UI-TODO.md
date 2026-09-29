@@ -19,6 +19,8 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 | 8 | 全 app 33 個 `<button>` 補 `type="button"` | `37e3312` |
 | 9 | wizard 三處漏掉 `if(...)` + `return`（`dc74bbc` 回歸）→ 修正 + 14 項回歸測試 | `eca6d84` |
 | 10 | 版本卡／紀錄卡曾改「單撳即入」→ Roy 要求還原 → 已還原（區塊與改前逐字節相同） | `8ddd669` |
+| 11 | 維度頁「適合嘅工作」永遠空白（`事業` vs `career` 欄位名唔一致，之前仲會 throw 令成版開唔到） | `8ba75e1` |
+| 12 | 維度入口 4 張卡寫「E vs I」但只開到**第一個**字母 → 改成兩個字母各自獨立撳得（`.dim-pick`） | 今次 |
 
 ## ⏳ 未做
 1. **C 組 3 個 HK$18 示範解鎖彈窗**（`index.html` L2056 / `record.html` L597 / `tee.html` L309）→ 留上架前連 Play Billing 一次過改（soft pitch「看完整分析」）
