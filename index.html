@@ -3945,8 +3945,10 @@ window.appDialog = function(opts){
 // 返回鍵處理：測試中撳返回鍵 → 唔可以直接彈出去（防誤觸），要出同一個確認彈窗
 window.addEventListener("popstate", function(e){
   if(window._showing === "test"){
-    // 還原歷史狀態（唔加新 entry，等於冇離開過），令用戶仍然留喺測試畫面
-    try{ history.replaceState({hk:true, id:"test"}, ""); }catch(err){}
+    // ⚠️ 一定要 pushState（唔可以 replaceState）：back 已經彈咗一個 entry 出嚟，
+    // 只有 push 返一個先可以令歷史長度保持不變 → 連續撳返回鍵都唔會耗盡歷史而退出 app。
+    // （2026-09-29 用過 replaceState，結果第二次撳返回鍵就直接退出 app ✗）
+    try{ history.pushState({hk:true, id:"test"}, ""); }catch(err){}
     // 阻止後面嘅 popstate handler 執行（唔好換畫面）
     if(e && e.stopImmediatePropagation) e.stopImmediatePropagation();
     // 已經有彈窗就唔重複開（連續撳返回鍵）
