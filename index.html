@@ -3960,7 +3960,7 @@ window.addEventListener("popstate", function(e){
 window.confirmExit = function(){
   appDialog({
     title: "離開測試？",
-    body: "下次入 app，主頁會出「上次未完成」卡，撳「開始」就續做。",
+    body: "測試進度會保留在主頁，下次可繼續作答；重新開始測試將覆蓋現有進度。",
     cancelText: "繼續測試",
     okText: "離開"
   }).then(function(ok){
