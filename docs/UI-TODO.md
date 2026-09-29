@@ -1,53 +1,43 @@
-# UI TODO — 原生對話框 → 自訂 app 彈窗
+# UI TODO — 自訂 app 彈窗 / 互動統一
 
-> 建立：2026-09-29（Roy 要求）｜狀態：**未開始**（等 Roy 逐項確認）
+> 最後更新：2026-09-29（Roy 要求整理）｜狀態：**主體完成 ✓**（A/B/C 之外仲有 4 個網頁感問題＋13 項風格）
 
-## 問題
-app 用咗瀏覽器**原生** `confirm()` / `alert()` ✗
-→ Android WebView 會自動喺彈窗加標題列「**`fung2222.github.io` 顯示**」✗
-→ ① 露咗網站網址 ✗ ② 完全唔似 app ✗（違反「app 感、唔係文件感」美學）
-→ **原生對話框嘅標題冇任何方法隱藏** ✗（唔係 CSS／JS 控制得到）→ 唯一解法＝唔用原生對話框 ✓
+## 背景（原本嘅問題）
+app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自動加標題「**fung2222.github.io 顯示**」✗
+→ ① 露網站網址 ✗ ② 完全唔似 app ✗。原生標題**冇任何方法隱藏** ✗ → 唯一解法＝自訂 HTML 彈窗 ✓
 
-## 目標
-全部換成**自訂彈窗**（HTML + CSS + JS）✓
-- 風格：深藍底、金掣、大字、留白、**冇 emoji** ✓
-- 唔會顯示任何網址 ✓
-- 做法參考現有元件：`index.html` `#countdownOverlay`（L1894）＋ CSS `.cd-overlay`（L170）
-- 新元件 `#appConfirm` **預設 `hidden`** → 手機排版零影響 ✓
+## ✅ 已完成（全部已上 live）
+| # | 項目 | commit |
+|---|------|--------|
+| 1 | 自訂彈窗元件 `#appDialog` + `appDialog()`（Promise）／`appNotice()` | `c121d74` |
+| 2 | 「離開測試」確認改用自訂彈窗（唔再露網址） | `c121d74` |
+| 3 | Android 返回鍵防誤觸：`popstate` → 彈窗 + **`pushState`**（唔可以 replaceState，否則第二次撳直接退出） | `1372e38` `9f05b31` |
+| 4 | A 組 5 個確認框 + B 組 15 個提示框 → 自訂彈窗（系統訊息用**書面語**，題目／性格內容保持廣東話） | `dc74bbc` |
+| 5 | 垃圾桶（單筆刪除）：取消「再撳一次」兩段式 + 修 `event.target` bug（撳到 icon 冇反應） | `b796ed3` |
+| 6 | 維度字母卡 E/S/T/J 撳落去冇反應 → `LETTERS` 缺 `career` 導致 throw → 加保護 | `94ad4de` |
+| 7 | 「清除全部紀錄」：撳一次即彈確認（同垃圾桶一致） | `94ad4de` |
+| 8 | 全 app 33 個 `<button>` 補 `type="button"` | `37e3312` |
+| 9 | wizard 三處漏掉 `if(...)` + `return`（`dc74bbc` 回歸）→ 修正 + 14 項回歸測試 | `eca6d84` |
+| 10 | 版本卡／紀錄卡曾改「單撳即入」→ Roy 要求還原 → 已還原（區塊與改前逐字節相同） | `8ddd669` |
 
-## 待改清單（一次做一項；每項改完等 Roy 睇 live 確認，才做下一項）
+## ⏳ 未做
+1. **C 組 3 個 HK$18 示範解鎖彈窗**（`index.html` L2056 / `record.html` L597 / `tee.html` L309）→ 留上架前連 Play Billing 一次過改（soft pitch「看完整分析」）
+2. **`LETTERS` 8 個字母都缺 `career`（適合嘅工作）** → 維度頁嗰行而家空白（已加保護唔會壞）→ 內容由邊個寫要 Roy 決定
+3. **4 個「網頁感」問題**：
+   - sw.js **冇 offline fallback** → 斷網出 Chrome 恐龍頁
+   - `record.html` / `stats.html` / `tee.html` 冇 app 感防護（可選字、藍色 flash、下拉重新載入）
+   - 長按彈「複製／搜尋」→ 應攔 `contextmenu`
+   - 2 個 `target="_blank"` 外開 → 應 app 內
+4. **13 項視覺風格微調**（Roy 2026-09-29 提出「一項一項做」）→ 未開始
 
-### 1. 離開測試確認 ← 最高優先（Roy 2026-09-29 提出）
-- 觸發：`index.html` L1906 `<button onclick="confirmExit()">`（畫面按鈕 ✓）
-- 現況：`window.confirmExit`（L3893）
-  ```js
-  if(confirm("離開測試？\n\n下次入 app，主頁會出『上次未完成』卡，撳「開始」就續做。"))
-  ```
-- 改成：自訂彈窗，兩粒掣「**繼續測試**」／「**離開**」✓
-- ✅ 技術上冇阻礙：呼叫點係畫面按鈕，**唔係** `beforeunload`／`popstate` → 可以用非同步 Promise 寫法 ✓
+## 鐵律
+- ❌ 唔可以改手機排版；desktop 規則只可放 `min-width` + `html.dt`
+- ❌ 新元素預設 `hidden`（.hidden），唔郁現有元素
+- ❌ 全站冇 emoji（preflight 會捉）；❌ 唔用「買／付費／移除廣告」字眼
+- ❌ **版本卡／紀錄卡唔可以改成「單撳即入」**（Roy 明確要求保留「著燈展開 → 撳立即進行」）
+- ❌ 改 `alert`／`confirm` → 自訂彈窗時，**必須保留原本 `if(...)` 條件同 `return`**（血淚教訓）
+- ✅ 改完必跑：`preflight.py`(21)、`desktop_layout_test.js`(37)、`desktop_gate_test.js`(34)、`deeplink_test.js`、`record_view_test.js`、`voice_test.js`(10)、`sh tools/ui/run.sh`
 
-### 2. 其他確認框（同類，一齊換）
-- `index.html` L5029（確定要刪除呢個紀錄？）
-- `index.html` L5113（確定要清除全部測試記錄？）
-- `index.html` L5157（放棄上次進度？）
-- `record.html` L500（確定要刪除呢個紀錄？）
-- `record.html` L565（確定要清除所有紀錄？）
-
-### 3. 表單提示（8 個 alert）
-- `index.html` L3511 / L3514 / L3517 / L3589 / L3590（請輸入姓名、請揀稱呼、請揀男或女…）
-- 建議改成**畫面內 inline 提示**（更 app 感）；改動較大，要另議 ✓
-
-### 4. 錯誤提示
-- `index.html` L4177（生成圖片失敗，請再試一次）
-- `index.html` L4525（冇結果可以下載）
-- `index.html` L4533（生成圖片失敗）
-
-### 5. HK$18 示範解鎖框（暫時唔動 ✗）
-- `index.html` L2031 ／ `record.html` L597 ／ `tee.html` L309
-- 留返上架前改 Google Play Billing（soft pitch「看完整分析」）時一次過搞 ✓
-
-## 鐵律（改嘅時候必須遵守）
-- ❌ **唔可以改手機排版**：新元素預設 `hidden`；overlay 用 `position:fixed` 全屏 → 唔佔 layout ✓
-- ❌ **唔郁桌面層**（`html.dt`／`#dtNav`／`#dtHeroCta`／`#dtTypeRows`／`#dtFoot`／`--dt-w`）
-- ✅ 改完一定要跑：`desktop_layout_test`（37）／`desktop_gate_test`（34）／`preflight.py`（20）／`deeplink_test`／`record_view_test`／`voice_test`
-- ❌ 唔加 emoji；❌ 唔用「買／付費／移除廣告」字眼
+## 測試（已永久保存入 repo）
+`sh tools/ui/run.sh` → 7 個 jsdom 回歸測試：wizard 14、版本卡 13、維度卡 13、垃圾桶 14、彈窗 28、返回鍵 24
+（首次需要：`npm i --prefix tools/ui jsdom`）＋ `tools/ui/start_flow_probe.js`（人手睇全流程）＋ `tools/ui/button_audit.js`（逐粒掣真撳捉 runtime 錯）

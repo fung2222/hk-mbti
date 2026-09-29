@@ -1,0 +1,52 @@
+
+// 版本卡：撳卡(著燈+展開) → 撳「立即進行」→ 入測試（2026-09-29 還原）
+const fs=require('fs'), path=require('path');
+const {JSDOM, VirtualConsole}=require('jsdom');
+const REPO=path.resolve(__dirname,'../..');
+let ok=0,total=0; function chk(n,c,x){total++; if(c)ok++; console.log((c?'✓':'✗')+' '+n+(c?'':'   <- '+(x||'')));}
+const src=fs.readFileSync(path.join(REPO,'index.html'),'utf8');
+function stubCanvas(w){ const ctx=new Proxy({}, { get(k){ if(k==="canvas") return {width:720,height:1280}; if(k==="measureText") return ()=>({width:10}); if(/Gradient/.test(String(k))) return ()=>({addColorStop(){}}); return ()=>{}; }, set(){return true;} });
+  w.HTMLCanvasElement.prototype.getContext=()=>ctx; w.HTMLCanvasElement.prototype.toDataURL=()=>"data:image/jpeg;base64,x"; w.Image=class{ set src(v){ setTimeout(()=>this.onload&&this.onload(),0); } }; }
+let html=src.replace(/<script src="(https?:)?\/\/[^"]*"><\/script>/g,'').replace(/<script src="([^"]+\.js)"><\/script>/g,(m,f)=>fs.existsSync(path.join(REPO,f))?'<script>'+String.fromCharCode(10)+fs.readFileSync(path.join(REPO,f),'utf8')+String.fromCharCode(10)+'</script>':'');
+const vc=new VirtualConsole(); const jerr=[]; vc.on('jsdomError',e=>{const m=String(e.message||e); if(!/scrollIntoView|scrollTo|Not implemented|Could not load/i.test(m)) jerr.push(m.slice(0,90));});
+const dom=new JSDOM(html,{runScripts:'dangerously',pretendToBeVisual:true,url:'https://fung2222.github.io/hk-mbti/',virtualConsole:vc,
+  beforeParse(w){ w.alert=()=>{}; w.confirm=()=>false; stubCanvas(w);
+    try{ Object.defineProperty(w,'appDialog',{configurable:true,get(){return ()=>Promise.resolve(true);},set(){}}); }catch(e){}
+    try{ Object.defineProperty(w,'appNotice',{configurable:true,get(){return ()=>Promise.resolve(true);},set(){}}); }catch(e){} }});
+setTimeout(()=>{
+  const w=dom.window, d=w.document;
+  const click=(el)=>el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));
+  const cards=[...d.querySelectorAll('.ver-btn[data-ver]')];
+  chk('主頁有 4 張卡（3 版本 + 我的記錄）', cards.length===4, cards.length);
+  ['life','advanced','bb'].forEach(v=>{
+    const c=cards.find(x=>x.getAttribute('data-ver')===v);
+    chk(`${v} 卡 onclick = selectVersion('${v}')（撳一下著燈展開）`, !!c && c.getAttribute('onclick')===`selectVersion('${v}')`, c&&c.getAttribute('onclick'));
+  });
+  const rc=cards.find(x=>x.getAttribute('data-ver')==='record');
+  chk('紀錄卡 onclick = selectRecord()', !!rc && rc.getAttribute('onclick')==='selectRecord()', rc&&rc.getAttribute('onclick'));
+  chk('卡入面 4 粒「立即進行／查看紀錄」掣仲喺度', d.querySelectorAll('.ver-hint').length===4, d.querySelectorAll('.ver-hint').length);
+
+  let opened=null; w.openProfile=function(v){ opened=v; };
+  const life=cards.find(x=>x.getAttribute('data-ver')==='life');
+  const lifeCta=d.querySelector('.ver-btn[data-ver="life"] .ver-hint');
+  click(life);
+  chk('撳「生活版」卡一下 → 只著燈（唔會即刻入）', life.classList.contains('ver-lit') && opened===null, 'lit='+life.classList.contains('ver-lit')+' opened='+opened);
+  chk('著燈後「立即進行」掣先會出現（CSS .ver-lit .ver-hint）', /\.ver-btn\.ver-lit \.ver-hint/.test(src));
+  click(lifeCta);
+  chk('★ 再撳「立即進行」→ 入 60 題流程（還原成功）', opened==='life', 'opened='+opened);
+  // 再撳同一張卡 = 收返（toggle）— 用未入過嘅 advanced 卡
+  const adv=cards.find(x=>x.getAttribute('data-ver')==='advanced');
+  click(adv); const lit1=adv.classList.contains('ver-lit');
+  click(adv); const lit2=adv.classList.contains('ver-lit');
+  chk('撳一下著燈、再撳一下收返燈', lit1===true && lit2===false, 'lit1='+lit1+' lit2='+lit2);
+
+  let recGo=0; w.goRecord=function(){ recGo++; };
+  click(rc);
+  chk('撳紀錄卡 → 著燈（唔會即刻跳）', rc.classList.contains('ver-lit') && recGo===0, 'lit='+rc.classList.contains('ver-lit'));
+  click(d.querySelector('.ver-btn[data-ver="record"] .ver-hint'));
+  chk('★ 再撳「查看紀錄」→ 去紀錄頁（還原成功）', recGo===1, 'recGo='+recGo);
+  chk('全程冇 JS 錯誤', jerr.length===0, JSON.stringify(jerr.slice(0,2)));
+  console.log('');
+  console.log('===== '+(ok===total?'全部通過':'有失敗')+'（'+ok+'/'+total+'） =====');
+  process.exit(ok===total?0:1);
+}, 1300);
