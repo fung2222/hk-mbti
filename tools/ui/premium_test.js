@@ -102,6 +102,9 @@ setTimeout(async ()=>{
   chk('★ icon 同 4 字母有留白（唔會貼實）', /margin:0 auto 5px/.test(src));
   chk('★ icon 喺 4 字母上面（.hub-type-code 內 DOM 次序）', (function(){ const h=cards[0].querySelector('.hub-type-code'); if(!h) return false; const k=h.querySelector('.type-ico'), t=h.querySelector('.type-code-txt'); return !!k && !!t && (k.compareDocumentPosition(t) & 4) > 0; })());
   chk('★ 4 字母文字冇壞（textContent 仍然係 4 個字母）', /^[A-Z]{4}$/.test(cards[0].querySelector('.hub-type-code').textContent.trim()), cards[0].querySelector('.hub-type-code').textContent.trim());
+  chk('★ 章節頁內文唔再咁迫（行高 1.9、段距 16px）', /#deepChapter \.article-guide-body p\{margin:0 0 16px;line-height:1\.9;\}/.test(src));
+  chk('★ 章節頁小標題上下留白加大（28/11）', /#deepChapter \.article-guide-body \.article-guide-kicker\{margin:28px 0 11px/.test(src));
+  chk('鬆排版只 scope #deepChapter（唔影響相處／拍拖攻略）', /\.article-guide-body p\{\s*\nmargin:0 0 12px;line-height:1\.6/.test(src));
 
   // ---------- icon 鋪晒所有「英文大字」位（Roy 要求）----------
   const _w=(ms)=>new Promise(r=>setTimeout(r,ms));
