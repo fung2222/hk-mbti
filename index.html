@@ -180,9 +180,12 @@ cursor:pointer;-webkit-appearance:none;appearance:none;
 .gender-btn.on{border-color:var(--gold);background:rgba(212,169,95,.1);}
 /* 4 個維度入口：兩個字母分開撳得（2026-09-29）。大字、無框、基線對齊、各自用返字母本身嘅顏色 */
 .dim-pair{display:inline-flex;align-items:baseline;gap:6px;line-height:1.35}
-.dim-pair button{padding:0;margin:0;border:0;background:none;font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:900;font-size:21px;letter-spacing:.3px;cursor:pointer;-webkit-appearance:none;appearance:none;transition:transform .12s}
+.dim-pair button{padding:0;margin:0;border:0;background:none;font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:900;font-size:21px;letter-spacing:.3px;cursor:pointer;-webkit-appearance:none;appearance:none;transition:transform .12s;color:var(--dc,#1a1a1a)}
+/* 黑暗模式：同一個深色維度色提亮（唔改色相） */
+html.dk .dim-pair button{filter:brightness(2.05) saturate(1.12)}
 .dim-pair button:active{transform:scale(.93)}
-.dim-pair .vs{font-size:11px;font-weight:700;color:#b0a795}
+.dim-pair .vs{font-size:11px;font-weight:700;color:#8A8272}
+html.dk .dim-pair .vs{color:#9E968A}
 .cd-overlay{position:fixed;inset:0;background:rgba(30,42,59,.96);z-index:200;display:flex;align-items:center;justify-content:center;}
 /* ===== 自訂 app 彈窗（取代原生 confirm／alert：原生會顯示「fung2222.github.io 顯示」網址 ✗）===== */
 .ad-overlay{position:fixed;inset:0;background:rgba(30,42,59,.62);z-index:300;display:flex;align-items:center;justify-content:center;padding:26px;}
@@ -1304,7 +1307,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <span class="font-bold text-accent">E（Extraverted 外向）</span>：能量嚟自外界同人相處。佢哋喺派對、傾偈、social 活動之後會覺得充滿電。
  <br><span class="font-bold text-accent">I（Introverted 內向）</span>：能量嚟自內在世界。佢哋喺獨處、閱讀、反思之後先會覺得充滿電。社交耐咗會攰。
  </div>
- <div class="text-[10px] text-gray-500 mt-1">唔係「內向 = 怕醜」— 內向只係「邊度攞能量」</div>
+ <div class="text-[11px] text-gray-600 font-semibold mt-1">唔係「內向 = 怕醜」— 內向只係「邊度攞能量」</div>
  </div>
 
  <div class="border-l-4 pl-3 py-1" style="border-color:#A86B7C">
@@ -1313,7 +1316,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <span class="font-bold text-accent">S（Observant 實感）</span>：睇重具體事實、實際經驗、當下發生嘅事。佢哋較務實，鍾意 step-by-step 處理問題。
  <br><span class="font-bold text-accent">N（Intuitive 直覺）</span>：睇重可能性、模式、未來趨勢。佢哋較抽象，鍾意諗大 picture 同可能性。
  </div>
- <div class="text-[10px] text-gray-500 mt-1">唔係「N 型 = 神秘」— N 只係「鍾意抽象概念」</div>
+ <div class="text-[11px] text-gray-600 font-semibold mt-1">唔係「N 型 = 神秘」— N 只係「鍾意抽象概念」</div>
  </div>
 
  <div class="border-l-4 pl-3 py-1" style="border-color:#3A4F6B">
@@ -1322,7 +1325,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <span class="font-bold text-accent">T（Thinking 思考）</span>：做決定用邏輯同原則，客觀分析利弊。佢哋可能俾人覺得「冷靜」、「理性」。
  <br><span class="font-bold text-accent">F（Feeling 情感）</span>：做決定用價值觀同人情，考慮對方感受。佢哋可能俾人覺得「暖」、「貼心」。
  </div>
- <div class="text-[10px] text-gray-500 mt-1">唔係「F 型 = 軟弱」— F 只係「做決定用感覺」</div>
+ <div class="text-[11px] text-gray-600 font-semibold mt-1">唔係「F 型 = 軟弱」— F 只係「做決定用感覺」</div>
  </div>
 
  <div class="border-l-4 pl-3 py-1" style="border-color:#6B5A8A">
@@ -1331,7 +1334,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <span class="font-bold text-accent">J（Judging 判斷）</span>：鍾意有計劃、有結構。佢哋 deadline 前一定做完，房間企理。
  <br><span class="font-bold text-accent">P（Prospecting 感知）</span>：鍾意彈性、即興。佢哋 deadline 前一晚先衝刺，房間「自己嘅秩序」。
  </div>
- <div class="text-[10px] text-gray-500 mt-1">唔係「P 型 = 散漫」— P 只係「鍾意拖到最後一刻先做」</div>
+ <div class="text-[11px] text-gray-600 font-semibold mt-1">唔係「P 型 = 散漫」— P 只係「鍾意拖到最後一刻先做」</div>
  </div>
 
  <div class="border-l-4 pl-3 py-1" style="border-color:#8A7A5A">
@@ -1340,7 +1343,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <span class="font-bold text-accent">T（Turbulent 敏感）</span>：情緒起伏較大，容易自省、對自己要求高，對壓力比較敏感。結果會寫「敏感型」。
  <br><span class="font-bold text-accent">A（Assertive 自信）</span>：情緒較穩定，對自己嘅決定有信心，抗壓能力較高。結果會寫「自信型」。
  </div>
- <div class="text-[10px] text-gray-500 mt-1">呢個係後加嘅第 5 個指標，唔屬於原本 4 個字母；同一型號都可以 T 或者 A</div>
+ <div class="text-[11px] text-gray-600 font-semibold mt-1">呢個係後加嘅第 5 個指標，唔屬於原本 4 個字母；同一型號都可以 T 或者 A</div>
  </div>
  </div>
 
@@ -1370,21 +1373,21 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <h3 class="font-bold mb-3 text-sm">4 個維度（8 個字母）</h3>
  <p class="text-xs text-gray-600 mb-3">每個人嘅性格由呢 4 個維度組成</p>
  <div class="grid grid-cols-2 gap-3">
-  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #E89A6B">
-  <div class="dim-pair"><button type="button" style="color:#E89A6B" onclick="openLetter('E')">E</button><span class="vs">vs</span><button type="button" style="color:#7A6CA0" onclick="openLetter('I')">I</button></div>
-  <div class="text-[10px] text-gray-500 mt-1">能量來源</div>
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #B4652E">
+  <div class="dim-pair"><button type="button" style="--dc:#B4652E" onclick="openLetter('E')">E</button><span class="vs">vs</span><button type="button" style="--dc:#5A4B80" onclick="openLetter('I')">I</button></div>
+  <div class="text-[11px] text-gray-600 font-semibold mt-1">能量來源</div>
   </div>
-  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #A86B7C">
-  <div class="dim-pair"><button type="button" style="color:#7A8F5A" onclick="openLetter('S')">S</button><span class="vs">vs</span><button type="button" style="color:#A86B7C" onclick="openLetter('N')">N</button></div>
-  <div class="text-[10px] text-gray-500 mt-1">認知方式</div>
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #84475A">
+  <div class="dim-pair"><button type="button" style="--dc:#556B33" onclick="openLetter('S')">S</button><span class="vs">vs</span><button type="button" style="--dc:#84475A" onclick="openLetter('N')">N</button></div>
+  <div class="text-[11px] text-gray-600 font-semibold mt-1">認知方式</div>
   </div>
-  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #3A4F6B">
-  <div class="dim-pair"><button type="button" style="color:#3A4F6B" onclick="openLetter('T')">T</button><span class="vs">vs</span><button type="button" style="color:#C8786B" onclick="openLetter('F')">F</button></div>
-  <div class="text-[10px] text-gray-500 mt-1">決策方式</div>
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #2C3E57">
+  <div class="dim-pair"><button type="button" style="--dc:#2C3E57" onclick="openLetter('T')">T</button><span class="vs">vs</span><button type="button" style="--dc:#9E4A3C" onclick="openLetter('F')">F</button></div>
+  <div class="text-[11px] text-gray-600 font-semibold mt-1">決策方式</div>
   </div>
-  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #6B5A8A">
-  <div class="dim-pair"><button type="button" style="color:#6B5A8A" onclick="openLetter('J')">J</button><span class="vs">vs</span><button type="button" style="color:#A86B5A" onclick="openLetter('P')">P</button></div>
-  <div class="text-[10px] text-gray-500 mt-1">生活態度</div>
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #4E3D6B">
+  <div class="dim-pair"><button type="button" style="--dc:#4E3D6B" onclick="openLetter('J')">J</button><span class="vs">vs</span><button type="button" style="--dc:#84462F" onclick="openLetter('P')">P</button></div>
+  <div class="text-[11px] text-gray-600 font-semibold mt-1">生活態度</div>
   </div>
  </div>
  </div>
@@ -1608,7 +1611,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="letterHero" class="card p-6 mb-4 text-center">
  <div class="text-6xl font-black mb-2" id="letterBig">E</div>
  <h2 class="text-2xl font-black mb-1" id="letterTitle">外向</h2>
- <p class="text-sm text-gray-500" id="letterShort">由外在世界獲得能量</p>
+ <p class="text-sm font-semibold text-gray-700" id="letterShort">由外在世界獲得能量</p>
  </div>
 
  <div class="card p-5 mb-4">
@@ -4471,7 +4474,7 @@ scenHtml += `
  ${isTop ? `<div class="text-[10px] font-black brand-gold mb-0.5">最似你</div>` : ``}
  ${(window.SCENARIO_ICONS[s.name] || null) ? `<div class="scn-ico-wrap"><svg class="scn-ico" viewBox="0 0 24 24" style="color:${window.SCENARIO_ICONS[s.name].color}" aria-hidden="true">${window.SCENARIO_ICONS[s.name].path}</svg></div>` : ``}
  <div class="text-xs font-bold">${s.name}</div>
- <div class="text-[10px] text-gray-500 mt-1">${s.desc}</div>
+ <div class="text-[11px] text-gray-600 font-semibold mt-1">${s.desc}</div>
  </div>
  `;
  });
@@ -5936,7 +5939,9 @@ window._lastLetter = letter;
  $("letterTitle").innerText = L.title;
  $("letterShort").innerText = L.short;
  $("letterBreadcrumb").innerText = "維度 / " + L.letter;
- $("letterHero").style.background = L.light;
+ // 維度 hero 底色：淺色模式用淺色版；黑暗模式用維度色低透明（否則淺底淺字睇唔到）
+ const _dk = document.documentElement.classList.contains("dk");
+  $("letterHero").style.background = _dk ? (L.color + "2E") : L.light;
  $("letterDesc").innerText = L.desc;
  $("letterStrength").innerHTML = L.strength.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
  $("letterWeakness").innerHTML = L.weakness.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");

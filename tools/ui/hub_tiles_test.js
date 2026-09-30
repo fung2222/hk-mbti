@@ -25,6 +25,15 @@ setTimeout(()=>{
   chk('16 格仍然渲染到', tiles.length===16, tiles.length);
   chk('每格仍然有字母碼 + 中文名', tiles.every(t=>t.querySelector('.hub-type-code').textContent.trim() && t.querySelector('.hub-type-cn').textContent.trim()));
   chk('全程冇 JS 錯誤', jerr.length===0, JSON.stringify(jerr.slice(0,2)));
+  // ---- 維度字母對比度（Roy 2026-10-01：性格百科「4 個維度（8 個字母）」大字母同細字太淺色）----
+  chk('★ 8 個維度字母改用深色 --dc（唔再用淺色 #E89A6B 等）', (src.match(/--dc:#[0-9A-Fa-f]{6}/g)||[]).length===8, (src.match(/--dc:#[0-9A-Fa-f]{6}/g)||[]).length);
+  chk('★ .dim-pair button 讀 --dc', /\.dim-pair button\{[^}]*color:var\(--dc/.test(src));
+  chk('★ 維度字母有黑暗模式提亮（唔會深底深字）', /html\.dk \.dim-pair button\{filter:brightness/.test(src));
+  chk('★ 「vs」字加深（原本 #b0a795 太淺）', /\.dim-pair \.vs\{[^}]*color:#8A8272/.test(src));
+  chk('★ 4 個維度細字（能量來源等）已加深', ['能量來源','認知方式','決策方式','生活態度'].every(t=>new RegExp('text-\\[11px\\] text-gray-600 font-semibold mt-1">'+t).test(src)), '');
+  const dimPairs=[...d.querySelectorAll('#hub .dim-pair')];
+  chk('★ 4 個維度入口仍然齊（每組 2 個字母）', dimPairs.length===4 && dimPairs.every(t=>t.querySelectorAll('button').length===2), dimPairs.length);
+  chk('★ 每組維度有深色左邊色條', (src.match(/border-left:4px solid #[0-9A-Fa-f]{6}/g)||[]).length>=4);
   console.log('');
   console.log('===== '+(ok===total?'全部通過':'有失敗')+'（'+ok+'/'+total+'） =====');
   process.exit(ok===total?0:1);
