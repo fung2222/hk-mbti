@@ -81,6 +81,8 @@ setTimeout(async ()=>{
   chk('★ 簡介列出 9 章類型', d.querySelectorAll('#deep .deep-chips span').length===9, d.querySelectorAll('#deep .deep-chips span').length);
   chk('★ 簡介有標題句（大字）', /請選擇其中一種人格深入了解/.test($('#deep .deep-intro-lead').textContent), $('#deep .deep-intro-lead').textContent);
   chk('簡介有黑暗模式覆蓋', /html\.dk \.deep-intro-sub/.test(src) && /html\.dk \.deep-chips span/.test(src));
+  chk('★ 簡介唔提「買斷」（Roy 指定：只講有咩睇、有咩用）', !/買斷/.test($('#deep .deep-intro').textContent), $('#deep .deep-intro-sub').textContent);
+  chk('★ 簡介講「有咩可以睇」同「有咩用」', /有 9 章/.test($('#deep .deep-intro-sub').textContent) && /明自己|知身邊|點相處/.test($('#deep .deep-intro-sub').textContent));
   chk('INTJ 卡顯示「9 章」', /9 章/.test(cards[0].textContent), cards[0].textContent.replace(/\n/g,' '));
   chk('未寫嘅型顯示「準備中」', /準備中/.test(cards[1].textContent), cards[1].textContent.replace(/\n/g,' '));
   chk('★ 卡有該型漸變色（唔係文字格）', /linear-gradient\(135deg,#6B4E9E/.test(cards[0].getAttribute('style')), cards[0].getAttribute('style'));
