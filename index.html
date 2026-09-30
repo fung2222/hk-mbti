@@ -5615,6 +5615,8 @@ return '<button type="button" class="hub-type-card" style="background:linear-gra
 window.renderDeepList = function(){
 // 返到「16 型選擇」層：清走型別，否則 history 快照會誤記住上一型
 window._deepType = null;
+// 呢層要顯示簡介
+try{ const _i = document.querySelector("#deep .deep-intro"); if(_i) _i.style.display = ""; }catch(e){}
 const box = document.getElementById("deepList");
 if(!box) return;
 box.innerHTML = '<div class="hub-type-grid" id="deepTypeGrid">' +
@@ -5627,6 +5629,8 @@ const d = (window.PREMIUM || {})[t];
 const box = document.getElementById("deepList");
 if(!box) return;
 if(!d || !d.chapters){ window.renderDeepList(); show("deep"); return; }
+// 型別 9 章目錄呢層唔需要簡介（淨係「16 型選擇」層要有）
+try{ const _i = document.querySelector("#deep .deep-intro"); if(_i) _i.style.display = "none"; }catch(e){}
 const T = (window.TYPES && window.TYPES[t]) || {};
 const PL = window.getPalette(t);
 box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]"><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span> · ' + (T.cn || "") + '</div>' +

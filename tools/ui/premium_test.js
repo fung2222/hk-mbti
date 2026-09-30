@@ -89,6 +89,8 @@ setTimeout(async ()=>{
 
   // ---------- 型別 9 章目錄 ----------
   w.openDeepType('INTJ');
+  chk('★ 型別目錄層：簡介要收埋（Roy 話章節目唔需要）', $('#deep .deep-intro').style.display==='none', $('#deep .deep-intro').style.display);
+  chk('★ 型別目錄內冇「請選擇其中一種人格」', !/請選擇其中一種人格/.test($('#deepList').textContent));
   const toc=[...d.querySelectorAll('#deepList .deep-item')];
   chk('INTJ 目錄有 9 章', toc.length===9, toc.length);
   chk('目錄每章有序號 1..9', toc[0].querySelector('.deep-num').textContent==='1' && toc[8].querySelector('.deep-num').textContent==='9');
@@ -138,6 +140,7 @@ setTimeout(async ()=>{
   chk('★ 返回 1：章節 → 返到 INTJ 9 章目錄', w._showing==='deep' && toc9()===9, 'showing='+w._showing+' toc='+toc9());
   w.goBack(); await sleep(160);                   // 返回 2
   chk('★ 返回 2：型別目錄 → 返到 16 型選擇（唔係跳去主頁！）', w._showing==='deep' && grid16()===16, 'showing='+w._showing+' 卡='+grid16());
+  chk('★ 返到 16 型選擇時簡介會出返', $('#deep .deep-intro').style.display!=='none', $('#deep .deep-intro').style.display);
   w.goBack(); await sleep(160);                   // 返回 3
   chk('★ 返回 3：16 型選擇 → 返到主頁', w._showing==='home', 'showing='+w._showing);
   chk('★ 返到主頁時主頁真係顯示', !d.getElementById('home').classList.contains('hidden'));
