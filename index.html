@@ -5973,6 +5973,8 @@ const reel = $("homeTypeReel");
 if(!wrap || !reel || wrap.dataset.bound === "1") return;
 wrap.dataset.bound = "1";
 let hideT, resumeT, paused = false;
+let spinV = 0;                    // 「俄羅斯輪盤」殘餘速度（撳箭嘴／flick 之後快速轉，再慢慢減速）
+const AUTO_V = 0.441;             // 自轉速度（原本 0.42，+5%）
 const show = () => { clearTimeout(hideT); wrap.classList.add("is-press"); };
 const hideSoon = () => {
 clearTimeout(hideT);
@@ -5980,6 +5982,7 @@ hideT = setTimeout(() => wrap.classList.remove("is-press"), 1400);
  };
 const pauseAuto = () => {
 paused = true;
+spinV = 0;
 reel.classList.remove("is-auto");
 clearTimeout(resumeT);
  };
@@ -5998,11 +6001,20 @@ return cards[mid].offsetLeft - cards[0].offsetLeft;
  };
 const wrapLoop = () => {
 const w = loopW();
-if(w > 0 && reel.scrollLeft >= w) reel.scrollLeft -= w;
+if(w > 0){
+  if(reel.scrollLeft >= w) reel.scrollLeft -= w;
+  else if(reel.scrollLeft <= 0) reel.scrollLeft += w;   // 向左轉都接得返（無限輪）
+}
  };
 const tick = () => {
 if(!paused && !window._homeReelHold){
-reel.scrollLeft += 0.42;
+let v = AUTO_V;
+if(Math.abs(spinV) > AUTO_V){
+  v = spinV;
+  spinV *= 0.955;                              // 快速轉之後慢慢減速 → 停返自轉速度
+  if(Math.abs(spinV) <= AUTO_V) spinV = 0;
+}
+reel.scrollLeft += v;
 wrapLoop();
  }
 requestAnimationFrame(tick);
@@ -6034,12 +6046,13 @@ btn.addEventListener("pointerdown", ev => { ev.preventDefault(); ev.stopPropagat
 btn.addEventListener("click", ev => {
 ev.preventDefault();
 ev.stopPropagation();
-const card = reel.querySelector(".hub-type-card");
-const step = (card ? card.getBoundingClientRect().width : 96) + 4;
 const dir = parseInt(btn.getAttribute("data-dir"), 10) || 1;
-reel.scrollBy({ left: dir * step, behavior: "smooth" });
+// 撳一下 = 即刻快速轉，之後慢慢減速返自轉速度（俄羅斯輪盤感）
+spinV = dir * 26;
+paused = false;
+clearTimeout(resumeT);
+reel.classList.add("is-auto");
 hideSoon();
-resumeAuto();
  });
  });
 document.addEventListener("visibilitychange", () => {
