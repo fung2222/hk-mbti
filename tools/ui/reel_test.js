@@ -21,11 +21,28 @@ setTimeout(()=>{
   chk('★ 有「殘餘速度」spinV 機制', /let spinV = 0;/.test(src));
   chk('★ 快速轉之後每 frame 減速（×0.955）', /spinV \*= 0\.955;/.test(src));
   chk('減到 ≤ 自轉速度就交返自動（唔會反方向）', /if\(Math\.abs\(spinV\) <= AUTO_V\) spinV = 0;/.test(src));
-  chk('★ 無限輪：向右溢出繞返（-= w）', /if\(reel\.scrollLeft >= w\) reel\.scrollLeft -= w;/.test(src));
-  chk('★ 無限輪：向左溢出繞返（+= w）', /else if\(reel\.scrollLeft <= 0\) reel\.scrollLeft \+= w;/.test(src));
   chk('★ 撳箭嘴 = 快速轉（spinV = dir * 26），唔再一格一格 scrollBy', /spinV = dir \* 26;/.test(src) && !/scrollBy\(\{ left: dir \* step/.test(src));
   chk('撳箭嘴即刻恢復自轉（唔等 1.8 秒）', /spinV = dir \* 26;\s*\npaused = false;/.test(src));
   chk('手動拖（pointerdown）會清走殘餘速度，唔會撞', /const pauseAuto = \(\) => \{\s*\npaused = true;\s*\nspinV = 0;/.test(src));
+
+  // ---------- ★ 左邊唔會露空位（Roy 2026-10-01 報）----------
+  chk('★ wrapLoop 用 [pad, pad+w] 做循環範圍（唔會退到 padding 之前）', /if\(reel\.scrollLeft >= pad \+ w\) reel\.scrollLeft -= w;/.test(src) && /else if\(reel\.scrollLeft < pad\) reel\.scrollLeft \+= w;/.test(src));
+  chk('★ 有 padPx() 讀返 reel 左邊 padding', /const padPx = \(\) =>/.test(src));
+  chk('★ 開頁時把第一張卡置中（用複本第 17 張）', /const _mid = _cards\[Math\.floor\(_cards\.length \/ 2\)\];/.test(src) && /reel\.scrollLeft = Math\.max\(0, _mid\.offsetLeft - \(reel\.clientWidth - _mid\.offsetWidth\) \/ 2\);/.test(src));
+  // 模擬真機 layout（390px 寬）驗算：初始位置左邊一定要有卡、第一張要置中
+  (function(){
+    const VW=390, CARD=96, GAP=4, STEP=CARD+GAP, N=32, HALF=N/2;
+    const PAD=VW/2-48;                       // padding: calc(50% - 3rem) = 165
+    const off=(i)=>PAD+i*STEP;               // 第 i 張卡嘅 offsetLeft
+    const sl=off(HALF)-(VW-CARD)/2;          // 我 code 嘅公式（第 17 張置中）
+    const leftEdge=sl, rightEdge=sl+VW;
+    const covers=(x)=>off(0)<=x && x<off(N-1)+CARD;
+    chk('★ 驗算：初始左邊界一定有卡（唔係 padding 空位）', covers(leftEdge), '左邊界='+Math.round(leftEdge)+' 第一張由 '+off(0)+' 開始');
+    chk('★ 驗算：第一張卡真係置中', Math.abs((off(HALF)+CARD/2)-(sl+VW/2))<1.5, '卡中心='+(off(HALF)+CARD/2)+' 畫面中心='+(sl+VW/2));
+    const w=HALF*STEP;
+    chk('★ 驗算：繞圈尺度 = 16 張（複本對齊，繞完畫面一樣）', w%STEP===0 && w/STEP===HALF);
+    chk('★ 驗算：繞圈後仍然左邊有卡', covers(sl-w>=PAD?sl-w:sl), '下限='+PAD);
+  })();
   chk('慢速／正常速度仍然係 requestAnimationFrame 驅動', /requestAnimationFrame\(tick\);/.test(src));
   chk('冇用 smooth scrollBy 做手動（避免同自轉打架）', !/behavior: "smooth"/.test(src));
 

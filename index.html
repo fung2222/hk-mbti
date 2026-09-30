@@ -6017,11 +6017,13 @@ const mid = cards.length / 2;
 if(mid < 1 || !cards[0] || !cards[mid]) return 0;
 return cards[mid].offsetLeft - cards[0].offsetLeft;
  };
+const padPx = () => { try{ return parseFloat(getComputedStyle(reel).paddingLeft) || 0; }catch(e){ return 0; } };
 const wrapLoop = () => {
-const w = loopW();
+const w = loopW(), pad = padPx();
 if(w > 0){
-  if(reel.scrollLeft >= w) reel.scrollLeft -= w;
-  else if(reel.scrollLeft <= 0) reel.scrollLeft += w;   // 向左轉都接得返（無限輪）
+  // 循環範圍係 [pad, pad + w]：唔會退到 pad 之前（否則左邊會露出空位）
+  if(reel.scrollLeft >= pad + w) reel.scrollLeft -= w;
+  else if(reel.scrollLeft < pad) reel.scrollLeft += w;
 }
  };
 const tick = () => {
@@ -6078,6 +6080,14 @@ if(document.hidden) pauseAuto();
 else resumeAuto();
  });
 reel.classList.add("is-auto");
+// 一開主頁就把第一張卡（用複本 = 第 17 張）置中：左邊即刻接住上一輪最尾幾張卡，唔會露空位
+try{
+const _cards = reel.querySelectorAll(".hub-type-card");
+const _mid = _cards[Math.floor(_cards.length / 2)];
+if(_mid && reel.clientWidth > 0){
+  reel.scrollLeft = Math.max(0, _mid.offsetLeft - (reel.clientWidth - _mid.offsetWidth) / 2);
+}
+ }catch(e){}
 requestAnimationFrame(tick);
 };
 
