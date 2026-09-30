@@ -89,16 +89,30 @@ setTimeout(async ()=>{
   // ---------- 港物件 icon（第一版 9 個，實心）----------
   const icons=fs.readFileSync(path.join(REPO,'type-icons.js'),'utf8');
   const iconCodes=(icons.match(/^\s*([A-Z]{4}):/gm)||[]).map(s=>s.trim().replace(':',''));
-  chk('★ type-icons.js 有 9 個 icon（第一版試風格）', iconCodes.length===9, iconCodes.join(','));
-  chk('★ icon 有齊四個組別（分析家／外交家／守護者／探索者）', ['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ISTJ','ESFP'].every(c=>iconCodes.includes(c)), iconCodes.join(','));
-  chk('★ 每個 icon 都係 24×24 SVG + currentColor（自動跟卡色）', (icons.match(/viewBox="0 0 24 24" fill="currentColor"/g)||[]).length===9);
-  chk('★ 全部實心（唔係淨線）—— 每個 icon 至少有 fill 形狀', (icons.match(/<(rect|circle|path|polygon)/g)||[]).length>=20);
+  chk('★ type-icons.js 有齊 16 個 icon', iconCodes.length===16, iconCodes.join(','));
+  chk('★ 16 個型齊（一個都唔少）', ['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'].every(c=>iconCodes.includes(c)), iconCodes.join(','));
+  chk('★ 每個 icon 都係 24×24 SVG + currentColor（自動跟卡色）', (icons.match(/viewBox="0 0 24 24"/g)||[]).length===16 && (icons.match(/fill="currentColor"/g)||[]).length>=16, 'viewBox='+(icons.match(/viewBox="0 0 24 24"/g)||[]).length+' currentColor='+(icons.match(/fill="currentColor"/g)||[]).length);
+  chk('★ 全部實心（唔係淨線）—— 每 icon 都有 fill 形狀', (icons.match(/<(rect|circle|path|polygon)/g)||[]).length>=30, (icons.match(/<(rect|circle|path|polygon)/g)||[]).length);
   chk('icon 冇用 emoji', !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(icons));
-  chk('已有 icon 嘅 9 張卡有 .type-ico（其餘 7 張冇，可以對比）', cards.filter(c=>c.querySelector('.type-ico')).length===9, cards.filter(c=>c.querySelector('.type-ico')).length);
-  chk('卡內 icon 真係 SVG 元素', cards.filter(c=>c.querySelector('.type-ico svg')).length===9);
+  chk('★ 16 張卡全部有 .type-ico', cards.filter(c=>c.querySelector('.type-ico')).length===16, cards.filter(c=>c.querySelector('.type-ico')).length);
+  chk('卡內 icon 真係 SVG 元素', cards.filter(c=>c.querySelector('.type-ico svg')).length===16, cards.filter(c=>c.querySelector('.type-ico svg')).length);
   chk('type-icons.js 已由 index.html 載入', /type-icons\.js/.test(src));
   chk('sw.js 有 cache type-icons.js', /type-icons\.js/.test(sw));
-  chk('icon 喺 4 字母上面（DOM 次序）', (function(){ const c=cards[0], k=c.querySelector('.type-ico'), t=c.querySelector('.hub-type-code'); return !!k && !!t && (k.compareDocumentPosition(t) & 4) > 0; })());
+  chk('★ icon 喺 4 字母上面（.hub-type-code 內 DOM 次序）', (function(){ const h=cards[0].querySelector('.hub-type-code'); if(!h) return false; const k=h.querySelector('.type-ico'), t=h.querySelector('.type-code-txt'); return !!k && !!t && (k.compareDocumentPosition(t) & 4) > 0; })());
+  chk('★ 4 字母文字冇壞（textContent 仍然係 4 個字母）', /^[A-Z]{4}$/.test(cards[0].querySelector('.hub-type-code').textContent.trim()), cards[0].querySelector('.hub-type-code').textContent.trim());
+
+  // ---------- icon 鋪晒所有「英文大字」位（Roy 要求）----------
+  const _w=(ms)=>new Promise(r=>setTimeout(r,ms));
+  await _w(30); w.show('hub'); await _w(60);
+  const hubCards=[...d.querySelectorAll('#hubTypeGrid .hub-type-card')];
+  chk('★ 性格百科：16 張卡都有 icon', hubCards.length===16 && hubCards.filter(c=>c.querySelector('.hub-type-code .type-ico svg')).length===16, hubCards.length+' / '+hubCards.filter(c=>c.querySelector('.hub-type-code .type-ico svg')).length);
+  chk('★ 主頁轉輪：32 張卡（16+16 複本）都有 icon', (function(){ const r=[...d.querySelectorAll('#homeTypeReel .hub-type-card')]; return r.length===32 && r.filter(c=>c.querySelector('.type-ico svg')).length===32; })(), (function(){ const r=[...d.querySelectorAll('#homeTypeReel .hub-type-card')]; return r.length+' / '+r.filter(c=>c.querySelector('.type-ico svg')).length; })());
+  w.openSocialArticle('WhatsAppGroup','INTJ'); await _w(70);
+  chk('★ 相處攻略：型別大字有 icon', !!d.querySelector('#socialArticleType .type-ico svg'));
+  chk('★ 相處攻略：仍然讀得返型別 code（唔會因為加 icon 而壞）', d.querySelector('#socialArticleType').dataset.code==='INTJ', d.querySelector('#socialArticleType').dataset.code);
+  w.openRomanceArticle('拍拖','INTJ'); await _w(70);
+  chk('★ 拍拖攻略：型別大字有 icon', !!d.querySelector('#romanceArticleType .type-ico svg'));
+  chk('★ 拍拖攻略：仍然讀得返型別 code', d.querySelector('#romanceArticleType').dataset.code==='INTJ', d.querySelector('#romanceArticleType').dataset.code);
   chk('卡撳落去開該型目錄', /openDeepType\('INTJ'\)/.test(cards[0].getAttribute('onclick')));
 
   // ---------- 型別 9 章目錄 ----------

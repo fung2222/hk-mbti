@@ -5607,8 +5607,7 @@ const d = (window.PREMIUM || {})[code];
 const n = (d && d.chapters) ? d.chapters.length : 0;
 const ic = (window.getTypeIcon ? window.getTypeIcon(code) : "");
 return '<button type="button" class="hub-type-card" style="background:linear-gradient(135deg,' + P.c1 + ',' + P.c2 + ');" onclick="openDeepType(\'' + code + '\')">' +
-(ic ? '<span class="type-ico">' + ic + '</span>' : '') +
-'<div class="hub-type-code">' + code + '</div>' +
+'<div class="hub-type-code">' + (window.typeIcoHtml ? window.typeIcoHtml(code) : code) + '</div>' +
 '<div class="hub-type-cn">' + T.cn + '</div>' +
 '<div class="deep-badge' + (n ? '' : ' is-soon') + '">' + (n ? (n + ' 章') : '準備中') + '</div>' +
 '</button>';
@@ -5674,7 +5673,8 @@ const T = (window.TYPES && window.TYPES[t]) || {};
 const ch = d.chapters[i];
 document.getElementById("deepChapterTitle").textContent = ch.t;
 document.getElementById("deepChapterCrumb").textContent = t + " · " + (i + 1) + " / " + d.chapters.length;
-document.getElementById("deepChapterType").textContent = t;
+document.getElementById("deepChapterType").innerHTML = (window.typeIcoHtml ? window.typeIcoHtml(t) : t);
+document.getElementById("deepChapterType").dataset.code = t;
 document.getElementById("deepChapterCn").textContent = T.cn || "";
 document.getElementById("deepChapterHead").textContent = "完整版 · 第 " + (i + 1) + " 章";
 document.getElementById("deepChapterBody").innerHTML = window.formatGuideHtml(ch.b);
@@ -5823,7 +5823,8 @@ window._lastSocialScenario = scenarioKey;
 window._lastArticleType = type;
  $("socialArticleTitle").innerText = s.name;
  $("socialArticleBreadcrumb").innerText = "社交 / " + s.name + " / " + type;
- $("socialArticleType").innerText = type;
+ $("socialArticleType").innerHTML = (window.typeIcoHtml ? window.typeIcoHtml(type) : type);
+ $("socialArticleType").dataset.code = type;
  $("socialArticleCn").innerText = T.cn;
  $("socialArticleScenario").innerText = s.name;
  $("socialArticleHero").style.background = "linear-gradient(135deg, " + T.color[0] + ", " + T.color[1] + ")";
@@ -5835,7 +5836,7 @@ window.scrollTo(0,0);
 window.goRomanceFromSocial = function(){
  // 跳到同一類型的拍拖攻略（默認「拍拖」場景）
 const scenarioKey = "拍拖";
-const type = $("socialArticleType").innerText;
+const type = $("socialArticleType").dataset.code || $("socialArticleType").textContent;
 openRomanceArticle(scenarioKey, type);
 };
 
@@ -5905,7 +5906,8 @@ window._lastRomanceScenario = scenarioKey;
 window._lastArticleType = type;
  $("romanceArticleTitle").innerText = s.name;
  $("romanceArticleBreadcrumb").innerText = "拍拖 / " + s.name + " / " + type;
- $("romanceArticleType").innerText = type;
+ $("romanceArticleType").innerHTML = (window.typeIcoHtml ? window.typeIcoHtml(type) : type);
+ $("romanceArticleType").dataset.code = type;
  $("romanceArticleCn").innerText = T.cn;
  $("romanceArticleScenario").innerText = s.name;
  $("romanceArticleHero").style.background = "linear-gradient(135deg, " + T.color[0] + ", " + T.color[1] + ")";
@@ -5916,7 +5918,7 @@ window.scrollTo(0,0);
 
 window.goSocialFromRomance = function(){
 const scenarioKey = "WhatsAppGroup";
-const type = $("romanceArticleType").innerText;
+const type = $("romanceArticleType").dataset.code || $("romanceArticleType").textContent;
 openSocialArticle(scenarioKey, type);
 };
 
@@ -5985,7 +5987,7 @@ const T = window.TYPES[code];
 const P = window.getPalette(code);
 if(!T) return "";
 return `<button type="button" class="hub-type-card" style="background:linear-gradient(135deg,${P.c1},${P.c2});" onclick="pickTypeTile(event)">
- <div class="hub-type-code">${code}</div>
+ <div class="hub-type-code">${(window.typeIcoHtml ? window.typeIcoHtml(code) : code)}</div>
  <div class="hub-type-cn">${T.cn}</div>
  <span class="hub-type-go" onclick="event.stopPropagation();${goCall}">進入</span>
  </button>`;
