@@ -37,8 +37,9 @@ setTimeout(async ()=>{
   chk('入口有上鎖標籤（免費用戶見到「完整版」）', !!$('#deepAccLock') && $('#deepAccLock').textContent==='完整版');
   chk('入口掣呼叫 openDeep()（免費用戶會轉去升級頁）', /openDeep\(\)/.test(d.querySelector('#homeAccordion .home-acc-item[data-acc="deep"] .home-acc-go').getAttribute('onclick')||''));
   chk('★ 目錄項已經冇「睇」字（Roy 話唔需要）', !/deep-go">睇/.test(src));
-  chk('★ 完整版頁面會鎖住下拉（no-pull）', /html\.no-pull,body\.no-pull\{overscroll-behavior/.test(src) && /_noPull/.test(src));
-  chk('html 有底色（避免下拉露白）', /html\{background:var\(--paper\)\}/.test(src));
+  chk('★ 開放下拉重整（Roy 要求；唔再鎖 no-pull）', !/html\.no-pull/.test(src) && !/_noPull/.test(src));
+  chk('html 有底色（下拉唔會露白，唔靠鎖 overscroll）', /html\{background:var\(--paper\)\}/.test(src));
+  chk('測試頁仍然鎖下拉（防誤觸清走 60 題進度）', /body\.in-test\{overscroll-behavior-y:contain/.test(src));
   chk('★ 型別代號放大到 19px', /\.deep-code\{color:var\(--tc\);font-size:19px/.test(src));
   chk('★ 章節標題放大（21px、可換行）', /#deepChapterTitle\{font-size:21px;white-space:normal/.test(src));
   chk('鎖標籤有黑暗模式覆蓋', /html\.dk \.home-acc-lock/.test(src));
@@ -70,8 +71,6 @@ setTimeout(async ()=>{
   chk('解鎖後自動去人格深入分析', vis('deep'), 'deep='+vis('deep'));
   chk('解鎖後「探索更多」鎖標籤收埋', $('#deepAccLock').style.display==='none', $('#deepAccLock').style.display);
   chk('解鎖後入口掣變「睇完整分析」', $('#deepAccGo').textContent==='睇完整分析', $('#deepAccGo').textContent);
-  chk('入 deep 時 body 加 no-pull（防下拉露白）', d.body.classList.contains('no-pull'));
-  chk('返主頁時 no-pull 會除返', (function(){ w.show('home'); return !d.body.classList.contains('no-pull'); })());
 
   // ---------- 16 型目錄（色卡版，參考性格百科排位）----------
   const cards=[...d.querySelectorAll('#deepTypeGrid .hub-type-card')];
@@ -146,7 +145,6 @@ setTimeout(async ()=>{
   w.goBack(); await sleep(160);                   // 返回 3
   chk('★ 返回 3：16 型選擇 → 返到主頁', w._showing==='home', 'showing='+w._showing);
   chk('★ 返到主頁時主頁真係顯示', !d.getElementById('home').classList.contains('hidden'));
-  chk('★ 返到主頁時 no-pull 已除', !d.body.classList.contains('no-pull'));
 
   // 「返全部 16 型」掣亦要行 history（唔係直接跳）
   w.openDeep(); await sleep(40); w.openDeepType('INTJ'); await sleep(40);

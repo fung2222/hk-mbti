@@ -45,9 +45,8 @@ body.js-boot #app{opacity:0}
 body.js-boot #app.js-ready{opacity:1;transition:opacity .12s}
 /* 淨係測試頁擋下拉刷新（做緊 60 題唔想誤觸 reload 彈走） */
 body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavior:contain}
-/* html 都上底色，避免 iOS 橡皮筋下拉露出白（完整版頁再鎖埋 overscroll） */
+/* html 都上底色：iOS 橡皮筋下拉唔會露出白（下拉重整保持開放，方便更新） */
 html{background:var(--paper)}
-html.no-pull,body.no-pull{overscroll-behavior-y:contain;overscroll-behavior:contain}
 /* 港式日常情景 · 滿板設計（無卡片） */
 .scenes-title-ico{display:inline-block;width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-right:6px;vertical-align:-2px;}
 .rbtn-ico{display:inline-block;width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-right:5px;vertical-align:-3px;}
@@ -3038,10 +3037,7 @@ if(window._navStack.length > 24) window._navStack.shift();
  }
  }
 window._showing = id;
-// 完整版相關頁（升級／深入分析／章節）：鎖住下拉，避免 iOS 橡皮筋露出白底
-const _noPull = (id === "upgrade" || id === "deep" || id === "deepChapter");
-try{ document.documentElement.classList.toggle("no-pull", _noPull); document.body.classList.toggle("no-pull", _noPull); }catch(e){}
- ["home","profile","test","result","about","spectrum","hub","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
+["home","profile","test","result","about","spectrum","hub","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
 window.scrollTo(0,0);
 if(id === "home"){
