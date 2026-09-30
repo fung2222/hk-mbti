@@ -32,6 +32,17 @@ setTimeout(async ()=>{
   chk('sw.js 有 cache premium-data.js', /premium-data\.js/.test(sw));
   chk('sw.js premium-data.js 走 network-first（內容更新即時生效）', /premium-data\.js";\s*\n?\s*if\(isHTML\)/.test(sw) || /endsWith\("premium-data\.js"\)/.test(sw));
 
+  // ---------- 探索更多入口 + 下拉鎖 + 字級（Roy 2026-10-01） ----------
+  chk('「探索更多」有「人格深入分析」入口', !!d.querySelector('#homeAccordion .home-acc-item[data-acc="deep"]'));
+  chk('入口有上鎖標籤（免費用戶見到「完整版」）', !!$('#deepAccLock') && $('#deepAccLock').textContent==='完整版');
+  chk('入口掣呼叫 openDeep()（免費用戶會轉去升級頁）', /openDeep\(\)/.test(d.querySelector('#homeAccordion .home-acc-item[data-acc="deep"] .home-acc-go').getAttribute('onclick')||''));
+  chk('★ 目錄項已經冇「睇」字（Roy 話唔需要）', !/deep-go">睇/.test(src));
+  chk('★ 完整版頁面會鎖住下拉（no-pull）', /html\.no-pull,body\.no-pull\{overscroll-behavior/.test(src) && /_noPull/.test(src));
+  chk('html 有底色（避免下拉露白）', /html\{background:var\(--paper\)\}/.test(src));
+  chk('★ 型別代號放大到 19px', /\.deep-code\{color:var\(--tc\);font-size:19px/.test(src));
+  chk('★ 章節標題放大（21px、可換行）', /#deepChapterTitle\{font-size:21px;white-space:normal/.test(src));
+  chk('鎖標籤有黑暗模式覆蓋', /html\.dk \.home-acc-lock/.test(src));
+
   // ---------- 初始狀態（免費） ----------
   chk('初始 label = 免費版', $('#tierLabel').textContent.trim()==='免費版', $('#tierLabel').textContent);
   chk('初始冇 is-full class', !$('#tierBtn').classList.contains('is-full'));
@@ -52,6 +63,10 @@ setTimeout(async ()=>{
   chk('解鎖後等級掣加 is-full（金色）', $('#tierBtn').classList.contains('is-full'));
   chk('解鎖後升級頁 CTA 文字改變', /已解鎖/.test($('#upgradeCta').textContent), $('#upgradeCta').textContent);
   chk('解鎖後自動去人格深入分析', vis('deep'), 'deep='+vis('deep'));
+  chk('解鎖後「探索更多」鎖標籤收埋', $('#deepAccLock').style.display==='none', $('#deepAccLock').style.display);
+  chk('解鎖後入口掣變「睇完整分析」', $('#deepAccGo').textContent==='睇完整分析', $('#deepAccGo').textContent);
+  chk('入 deep 時 body 加 no-pull（防下拉露白）', d.body.classList.contains('no-pull'));
+  chk('返主頁時 no-pull 會除返', (function(){ w.show('home'); return !d.body.classList.contains('no-pull'); })());
 
   // ---------- 16 型目錄 ----------
   const items=[...d.querySelectorAll('#deepList .deep-item')];
