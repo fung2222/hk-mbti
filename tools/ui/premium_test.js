@@ -58,6 +58,9 @@ setTimeout(async ()=>{
   chk('深入分析目錄有 16 個型別', items.length===16, items.length);
   chk('INTJ 項目顯示章數', /9 章/.test(items[0].textContent), items[0].textContent.replace(/\n/g,' '));
   chk('未寫嘅型顯示「準備中」', /準備中/.test(items[1].textContent), items[1].textContent.replace(/\n/g,' '));
+  chk('★ 目錄型別代號用返自己嘅顏色（--tc = PALETTE.c1）', /--tc:#6B4E9E/.test($('#deepList').innerHTML));
+  chk('★ 黑暗模式用 accent 淺色版本（--tc-dk）', /--tc-dk:#C9B2E8/.test($('#deepList').innerHTML));
+  chk('16 型目錄每型各有自己顏色（唔係單色）', (new Set((($('#deepList').innerHTML).match(/--tc:#[0-9A-Fa-f]{6}/g)||[]))).size >= 9);
 
   // ---------- 型別 9 章目錄 ----------
   w.openDeepType('INTJ');
@@ -74,6 +77,8 @@ setTimeout(async ()=>{
   chk('第 1 章：下一章可用', $('#deepNext').disabled===false);
   chk('章節標示係完整版內容', /完整版/.test($('#deepChapterHead').textContent), $('#deepChapterHead').textContent);
   chk('章節內文有渲染（<p> 段落）', /<p>/.test($('#deepChapterBody').innerHTML), $('#deepChapterBody').innerHTML.slice(0,50));
+  chk('★ 章節頁型別卡有該型漸變色（唔係淨灰）', /rgb\(107, 78, 158\)/.test($('#deepChapterHero').style.background), $('#deepChapterHero').style.background);
+  chk('型別目錄標題都有型色', /--tc:#6B4E9E/.test($('#deepList').innerHTML));
   w.deepStep(1);
   chk('撳下一章 → 2 / 9', $('#deepChapterCrumb').textContent==='INTJ · 2 / 9', $('#deepChapterCrumb').textContent);
   w.openDeepChapter(8);

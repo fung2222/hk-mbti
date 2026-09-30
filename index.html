@@ -292,6 +292,8 @@ html.dk .deep-nav-btn{border-color:rgba(255,255,255,.16);color:#C2BAAD}
 html.dk .deep-nav-btn.is-mid{color:#D8C69E;border-color:rgba(217,178,106,.45)}
 html.dk .deep-num{background:rgba(217,178,106,.18);color:#D8C69E}
 html.dk .deep-go{color:#D8C69E}
+.deep-code{color:var(--tc)}
+html.dk .deep-code{color:var(--tc-dk)}
 html.dk .up-cmp th,html.dk .up-cmp td{border-bottom-color:rgba(255,255,255,.1)}
 html.dk .up-cmp th{color:#D8C69E}
 html.dk .up-cmp .no{color:#6E675C}
@@ -5554,8 +5556,9 @@ const T = (window.TYPES && window.TYPES[t]) || {};
 const d = P[t];
 const n = (d && d.chapters) ? d.chapters.length : 0;
 const meta = n ? (n + " 章 · 約 " + (n * 120) + " 字") : "準備中";
+const PL = window.getPalette(t);
 return '<button type="button" class="card p-5 mb-3 w-full text-left deep-item" onclick="openDeepType(\'' + t + '\')">' +
-'<div class="flex items-center justify-between gap-3"><div class="min-w-0"><div class="font-black text-[15px]">' + t + ' · ' + (T.cn || "") + '</div>' +
+'<div class="flex items-center justify-between gap-3"><div class="min-w-0"><div class="font-black text-[15px]"><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span> · ' + (T.cn || "") + '</div>' +
 '<div class="text-xs text-gray-500 mt-1">' + meta + '</div></div>' +
 '<span class="deep-go">睇</span></div></button>';
 }).join("");
@@ -5566,7 +5569,8 @@ const box = document.getElementById("deepList");
 if(!box) return;
 if(!d || !d.chapters){ window.renderDeepList(); show("deep"); return; }
 const T = (window.TYPES && window.TYPES[t]) || {};
-box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]">' + t + ' · ' + (T.cn || "") + '</div>' +
+const PL = window.getPalette(t);
+box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]"><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span> · ' + (T.cn || "") + '</div>' +
 '<div class="text-xs text-gray-500 mt-1">' + d.chapters.length + ' 章 · 完整版內容</div></div>' +
 d.chapters.map(function(c, i){
 return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" onclick="openDeepChapter(' + i + ')">' +
@@ -5602,7 +5606,7 @@ document.getElementById("deepChapterCn").textContent = T.cn || "";
 document.getElementById("deepChapterHead").textContent = "完整版 · 第 " + (i + 1) + " 章";
 document.getElementById("deepChapterBody").innerHTML = window.formatGuideHtml(ch.b);
 const hero = document.getElementById("deepChapterHero");
-if(hero && T.color){ hero.style.background = "linear-gradient(135deg, " + T.color[0] + ", " + T.color[1] + ")"; }
+if(hero){ const PL = window.getPalette(t); hero.style.background = "linear-gradient(135deg, " + PL.c1 + ", " + PL.c2 + ")"; }
 const prev = document.getElementById("deepPrev"), next = document.getElementById("deepNext");
 if(prev) prev.disabled = (i === 0);
 if(next) next.disabled = (i === d.chapters.length - 1);
