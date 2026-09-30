@@ -5,6 +5,7 @@ const ASSETS = [
   "/hk-mbti/data.js",
   "/hk-mbti/social.js",
   "/hk-mbti/voice-data.js",
+  "/hk-mbti/premium-data.js",
   "/hk-mbti/manifest.json",
   "/hk-mbti/icon-192.png",
   "/hk-mbti/icon-512.png",
@@ -38,7 +39,8 @@ self.addEventListener("fetch", e => {
   const isHTML = e.request.mode === "navigate" ||
                  (e.request.headers.get("accept") || "").includes("text/html") ||
                  url.pathname.endsWith(".html") ||
-                 url.pathname.endsWith("voice-data.js");
+                 url.pathname.endsWith("voice-data.js") ||
+                 url.pathname.endsWith("premium-data.js");
 
   if(isHTML){
     e.respondWith(

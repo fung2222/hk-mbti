@@ -1,0 +1,95 @@
+
+// 完整版（星級）：主頁等級掣 → 升級頁 → 示範解鎖 → 人格深入分析（目錄／9 章導航）
+const fs=require('fs'), path=require('path');
+const {JSDOM, VirtualConsole}=require('jsdom');
+const REPO=path.resolve(__dirname,'../..');
+let ok=0,total=0; function chk(n,c,x){total++; if(c)ok++; console.log((c?'✓':'✗')+' '+n+(c?'':'   <- '+(x||'')));}
+const src=fs.readFileSync(path.join(REPO,'index.html'),'utf8');
+const sw=fs.readFileSync(path.join(REPO,'sw.js'),'utf8');
+const prem=fs.readFileSync(path.join(REPO,'premium-data.js'),'utf8');
+function stubCanvas(w){ const ctx=new Proxy({}, { get(k){ if(k==="canvas") return {width:720,height:1280}; if(k==="measureText") return ()=>({width:10}); if(/Gradient/.test(String(k))) return ()=>({addColorStop(){}}); return ()=>{}; }, set(){return true;} });
+  w.HTMLCanvasElement.prototype.getContext=()=>ctx; w.HTMLCanvasElement.prototype.toDataURL=()=>"data:image/jpeg;base64,x"; w.Image=class{ set src(v){ setTimeout(()=>this.onload&&this.onload(),0); } }; }
+let html=src.replace(/<script src="(https?:)?\/\/[^"]*"><\/script>/g,'').replace(/<script src="([^"]+\.js)"><\/script>/g,(m,f)=>fs.existsSync(path.join(REPO,f))?'<script>'+String.fromCharCode(10)+fs.readFileSync(path.join(REPO,f),'utf8')+String.fromCharCode(10)+'</script>':'');
+const vc=new VirtualConsole(); const jerr=[]; vc.on('jsdomError',e=>{const m=String(e.message||e); if(!/scrollIntoView|scrollTo|Not implemented|Could not load/i.test(m)) jerr.push(m.slice(0,90));});
+const dom=new JSDOM(html,{runScripts:'dangerously',pretendToBeVisual:true,url:'https://fung2222.github.io/hk-mbti/',virtualConsole:vc,
+  beforeParse(w){ w.alert=()=>{}; w.confirm=()=>true; stubCanvas(w);
+    try{ Object.defineProperty(w,'appDialog',{configurable:true,get(){return ()=>Promise.resolve(true);},set(){}}); }catch(e){}
+    try{ Object.defineProperty(w,'appNotice',{configurable:true,get(){return ()=>Promise.resolve(true);},set(){}}); }catch(e){} }});
+setTimeout(async ()=>{
+  const w=dom.window, d=w.document;
+  const $=(s)=>d.querySelector(s);
+  const vis=(id)=>{const el=d.getElementById(id); return el && !el.classList.contains('hidden');};
+
+  // ---------- 結構 ----------
+  chk('主頁頂有等級掣 #tierBtn', !!$('#tierBtn'));
+  chk('#tierBtn 撳落去呼叫 openUpgrade()', $('#tierBtn') && $('#tierBtn').getAttribute('onclick')==='openUpgrade()');
+  chk('等級掣喺 hero 右上（同主題掣同一組 .home-top-actions）', !!$('.home-top-actions #tierBtn') && !!$('.home-top-actions #themeBtn'));
+  chk('有升級頁 #upgrade 同解鎖掣 #upgradeCta', !!$('#upgrade') && !!$('#upgradeCta'));
+  chk('有人格深入分析頁 #deep 同章節頁 #deepChapter', !!$('#deep') && !!$('#deepChapter'));
+  chk('章節底部有 上一章 / 目錄 / 下一章', !!$('#deepPrev') && !!$('#deepToc') && !!$('#deepNext'));
+  chk('premium-data.js 有 PREMIUM.INTJ 9 章', /window\.PREMIUM\s*=/.test(prem) && (prem.match(/t:"/g)||[]).length>=9);
+  chk('premium-data.js 已由 index.html 載入', /premium-data\.js/.test(src));
+  chk('sw.js 有 cache premium-data.js', /premium-data\.js/.test(sw));
+  chk('sw.js premium-data.js 走 network-first（內容更新即時生效）', /premium-data\.js";\s*\n?\s*if\(isHTML\)/.test(sw) || /endsWith\("premium-data\.js"\)/.test(sw));
+
+  // ---------- 初始狀態（免費） ----------
+  chk('初始 label = 免費版', $('#tierLabel').textContent.trim()==='免費版', $('#tierLabel').textContent);
+  chk('初始冇 is-full class', !$('#tierBtn').classList.contains('is-full'));
+  chk('初始 show deep 之前 deep 係收埋', !vis('deep'));
+
+  // ---------- 撳等級掣 → 升級頁 ----------
+  w.openUpgrade();
+  chk('免費用戶撳等級掣 → 去 #upgrade', vis('upgrade') && !vis('home'), 'upgrade='+vis('upgrade'));
+  chk('升級頁有價錢 HK$18', /HK\$18/.test($('#upgrade .up-price').textContent));
+  chk('升級頁有免費／完整對比表', !!$('#upgrade table.up-cmp'));
+  chk('★ 免費用戶 openDeep() 會彈返升級頁（唔會偷入）', (function(){ w.openDeep(); return vis('upgrade') && !vis('deep'); })());
+
+  // ---------- 示範解鎖 ----------
+  await w.unlockFull();
+  await new Promise(r=>setTimeout(r,320));
+  chk('解鎖後 localStorage hkmbti_tier = full', w.localStorage.getItem('hkmbti_tier')==='full', w.localStorage.getItem('hkmbti_tier'));
+  chk('解鎖後等級掣變「完整版」', $('#tierLabel').textContent.trim()==='完整版', $('#tierLabel').textContent);
+  chk('解鎖後等級掣加 is-full（金色）', $('#tierBtn').classList.contains('is-full'));
+  chk('解鎖後升級頁 CTA 文字改變', /已解鎖/.test($('#upgradeCta').textContent), $('#upgradeCta').textContent);
+  chk('解鎖後自動去人格深入分析', vis('deep'), 'deep='+vis('deep'));
+
+  // ---------- 16 型目錄 ----------
+  const items=[...d.querySelectorAll('#deepList .deep-item')];
+  chk('深入分析目錄有 16 個型別', items.length===16, items.length);
+  chk('INTJ 項目顯示章數', /9 章/.test(items[0].textContent), items[0].textContent.replace(/\n/g,' '));
+  chk('未寫嘅型顯示「準備中」', /準備中/.test(items[1].textContent), items[1].textContent.replace(/\n/g,' '));
+
+  // ---------- 型別 9 章目錄 ----------
+  w.openDeepType('INTJ');
+  const toc=[...d.querySelectorAll('#deepList .deep-item')];
+  chk('INTJ 目錄有 9 章', toc.length===9, toc.length);
+  chk('目錄每章有序號 1..9', toc[0].querySelector('.deep-num').textContent==='1' && toc[8].querySelector('.deep-num').textContent==='9');
+  chk('目錄有「返全部 16 型」', /返全部 16 型/.test($('#deepList').textContent));
+
+  // ---------- 章節頁 + 上一章／下一章 ----------
+  w.openDeepChapter(0);
+  chk('第 1 章：crumb = INTJ · 1 / 9', $('#deepChapterCrumb').textContent==='INTJ · 1 / 9', $('#deepChapterCrumb').textContent);
+  chk('第 1 章：標題 = 你真正想要嘅嘢', $('#deepChapterTitle').textContent==='你真正想要嘅嘢', $('#deepChapterTitle').textContent);
+  chk('第 1 章：上一章 disabled', $('#deepPrev').disabled===true);
+  chk('第 1 章：下一章可用', $('#deepNext').disabled===false);
+  chk('章節標示係完整版內容', /完整版/.test($('#deepChapterHead').textContent), $('#deepChapterHead').textContent);
+  chk('章節內文有渲染（<p> 段落）', /<p>/.test($('#deepChapterBody').innerHTML), $('#deepChapterBody').innerHTML.slice(0,50));
+  w.deepStep(1);
+  chk('撳下一章 → 2 / 9', $('#deepChapterCrumb').textContent==='INTJ · 2 / 9', $('#deepChapterCrumb').textContent);
+  w.openDeepChapter(8);
+  chk('第 9 章：下一章 disabled', $('#deepNext').disabled===true);
+  chk('第 9 章 crumb = INTJ · 9 / 9', $('#deepChapterCrumb').textContent==='INTJ · 9 / 9', $('#deepChapterCrumb').textContent);
+  w.backToDeepToc();
+  chk('撳「返回」回目錄（9 章）', vis('deep') && d.querySelectorAll('#deepList .deep-item').length===9);
+  chk('章節頁有免責聲明（MBTI 係性格參考）', /MBTI 係性格參考/.test(prem));
+
+  // ---------- 鐵律 ----------
+  chk('新內容冇 emoji', !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test($('#upgrade').textContent + $('#deepChapter').textContent + prem.replace(/\/\/[^\n]*/g,'')));
+  chk('等級掣有黑暗模式覆蓋（html.dk .tier-btn）', /html\.dk \.tier-btn/.test(src));
+  chk('升級頁／深入分析走 dark 覆蓋（html.dk .up-cmp / .deep-num）', /html\.dk \.up-cmp/.test(src) && /html\.dk \.deep-num/.test(src));
+  chk('冇改動版本號（仍然 2.0.0）', /"version":\s*"2\.0\.0"/.test(fs.readFileSync(path.join(REPO,'manifest.json'),'utf8')));
+  chk('頁面零 JS error', jerr.length===0, jerr.slice(0,2).join(' | '));
+
+  console.log(`\n${ok===total?'===== 全部通過':'===== 有失敗'}（${ok}/${total}）=====`);
+  process.exit(ok===total?0:1);
+},600);

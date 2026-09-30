@@ -257,6 +257,44 @@ color:var(--ink);
 .home-top-actions{display:flex;align-items:center;gap:8px;}
 .theme-btn{padding:0;}
 .theme-btn svg{width:18px;height:18px;display:block;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+/* 用戶等級掣（免費版 / 完整版） */
+.tier-btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:999px;background:rgba(30,42,59,.06);border:1px solid rgba(30,42,59,.12);color:var(--ink);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;-webkit-appearance:none;appearance:none;letter-spacing:.02em}
+.tier-btn:active{transform:scale(.96)}
+.tier-btn .tier-dot{width:6px;height:6px;border-radius:50%;background:#B9B2A6;flex-shrink:0}
+.tier-btn.is-full{background:rgba(212,169,95,.16);border-color:rgba(212,169,95,.5);color:#8B6F3D}
+.tier-btn.is-full .tier-dot{background:var(--gold)}
+html.dk .tier-btn{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);color:#C2BAAD}
+html.dk .tier-btn .tier-dot{background:#6E675C}
+html.dk .tier-btn.is-full{background:rgba(217,178,106,.18);border-color:rgba(217,178,106,.5);color:#D8C69E}
+html.dk .tier-btn.is-full .tier-dot{background:#D9B26A}
+/* 完整版：對比表 */
+.up-cmp{width:100%;border-collapse:collapse;font-size:13px}
+.up-cmp th,.up-cmp td{padding:9px 8px;text-align:left;border-bottom:1px solid rgba(30,42,59,.1);vertical-align:top}
+.up-cmp th{font-weight:700;font-size:11px;letter-spacing:.08em;color:#8B6F3D}
+.up-cmp td:last-child,.up-cmp th:last-child{text-align:center;width:70px}
+.up-cmp .yes{color:var(--gold);font-weight:800}
+.up-cmp .no{color:#B9B2A6}
+.up-price{font-size:30px;font-weight:900;letter-spacing:-.02em}
+.up-cta{width:100%;height:48px;border:0;border-radius:12px;background:var(--gold);color:#1E2A3B;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
+.up-cta:active{transform:scale(.985)}
+.up-cta[disabled]{opacity:.65;cursor:default}
+html.dk .up-cta{background:#D9B26A;color:#12161C}
+/* 人格深入分析：章節導航 + 目錄項 */
+.deep-nav{display:flex;gap:8px;margin:6px 0 4px}
+.deep-nav-btn{flex:1;height:42px;border:1px solid rgba(30,42,59,.14);border-radius:11px;background:transparent;color:var(--ink);font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
+.deep-nav-btn:active{transform:scale(.97)}
+.deep-nav-btn.is-mid{flex:.8;color:#8B6F3D;border-color:rgba(212,169,95,.45)}
+.deep-nav-btn[disabled]{opacity:.3;cursor:default}
+.deep-item{cursor:pointer}
+.deep-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:rgba(212,169,95,.16);color:#8B6F3D;font-size:11px;font-weight:800;flex-shrink:0}
+.deep-go{color:#8B6F3D;font-size:12px;font-weight:800;flex-shrink:0}
+html.dk .deep-nav-btn{border-color:rgba(255,255,255,.16);color:#C2BAAD}
+html.dk .deep-nav-btn.is-mid{color:#D8C69E;border-color:rgba(217,178,106,.45)}
+html.dk .deep-num{background:rgba(217,178,106,.18);color:#D8C69E}
+html.dk .deep-go{color:#D8C69E}
+html.dk .up-cmp th,html.dk .up-cmp td{border-bottom-color:rgba(255,255,255,.1)}
+html.dk .up-cmp th{color:#D8C69E}
+html.dk .up-cmp .no{color:#6E675C}
 .home-menu-wrap{position:relative;}
 .home-menu-btn{width:36px;height:36px;border-radius:50%;background:rgba(30,42,59,.06);border:1px solid rgba(30,42,59,.12);color:var(--ink);font-size:19px;line-height:1;cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:inherit;}
 .home-menu{display:none;position:absolute;top:44px;right:0;background:#1E2A3B;border:1px solid rgba(255,255,255,.18);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.25);min-width:200px;padding:6px;z-index:60;}
@@ -1375,8 +1413,85 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  </section>
 
- <!-- ========== PRIVACY（私隱聲明 · Play Store 強制） ========== -->
- <section id="privacy" class="hidden fade-up">
+<!-- ========== 人格深入分析（完整版） ========== -->
+<section id="deep" class="hidden fade-up">
+ <div class="page-hero">
+  <div class="page-hero-row">
+   <button type="button" class="page-back" onclick="goBack()">返回</button>
+   <h1>人格深入分析</h1>
+  </div>
+  <p class="page-hero-sub">完整版內容 · 16 種人格 × 9 章</p>
+ </div>
+ <div id="deepList"></div>
+</section>
+
+<section id="deepChapter" class="hidden">
+ <div class="page-hero">
+  <div class="page-hero-row">
+   <button type="button" class="page-back" onclick="backToDeepToc()">返回</button>
+   <h1 id="deepChapterTitle">第 1 章</h1>
+  </div>
+  <p class="page-hero-sub" id="deepChapterCrumb">INTJ · 1 / 9</p>
+ </div>
+
+ <div class="article-type-stage">
+  <div id="deepChapterHero" class="article-type-card">
+   <div class="hub-type-code" id="deepChapterType">INTJ</div>
+   <div class="hub-type-cn" id="deepChapterCn"></div>
+  </div>
+ </div>
+
+ <div class="article-guide">
+  <h3 class="text-xs tracking-widest brand-gold font-bold mb-3" id="deepChapterHead">完整版內容</h3>
+  <div id="deepChapterBody" class="article-guide-body"></div>
+ </div>
+
+ <div class="deep-nav">
+  <button type="button" class="deep-nav-btn" id="deepPrev" onclick="deepStep(-1)">上一章</button>
+  <button type="button" class="deep-nav-btn is-mid" id="deepToc" onclick="backToDeepToc()">目錄</button>
+  <button type="button" class="deep-nav-btn" id="deepNext" onclick="deepStep(1)">下一章</button>
+ </div>
+</section>
+
+<!-- ========== 完整版（人格深入分析） ========== -->
+<section id="upgrade" class="hidden fade-up">
+ <div class="page-hero">
+  <div class="page-hero-row">
+   <button type="button" class="page-back" onclick="goBack()">返回</button>
+   <h1 id="upgradeTitle">完整版</h1>
+  </div>
+  <p class="page-hero-sub">人格深入分析 · 16 種人格</p>
+ </div>
+
+ <div class="card p-5 mb-4">
+  <div class="text-xs tracking-widest brand-gold font-bold mb-3">完整版多咗啲咩</div>
+  <p class="text-sm leading-relaxed">免費版已經包括 60 題測試、16 型性格百科、個人相處同拍拖攻略。</p>
+  <p class="text-sm leading-relaxed mt-3">完整版加一個新項目：<b>人格深入分析</b>。16 種人格，每一種有 <b>9 章</b> —— 由核心動機、盲點、壓力反應，講到職場、愛情、友情，以及「唔好同佢講嘅 3 句」。</p>
+  <p class="text-sm leading-relaxed mt-3">一次買斷，之後新增嘅章節都包括在內。</p>
+ </div>
+
+ <div class="card p-5 mb-4">
+  <div class="text-xs tracking-widest brand-gold font-bold mb-3">免費版同完整版對比</div>
+  <table class="up-cmp">
+   <tr><th>內容</th><th>免費</th><th>完整</th></tr>
+   <tr><td>60 題廣東話測試<br><span class="text-[11px] text-gray-500">生活版 / 進階版 / BB 版</span></td><td class="yes">有</td><td class="yes">有</td></tr>
+   <tr><td>16 型性格百科</td><td class="yes">有</td><td class="yes">有</td></tr>
+   <tr><td>個人相處同拍拖攻略</td><td class="yes">有</td><td class="yes">有</td></tr>
+   <tr><td>香港 16 型統計</td><td class="yes">有</td><td class="yes">有</td></tr>
+   <tr><td><b>人格深入分析</b><br><span class="text-[11px] text-gray-500">16 種人格 × 9 章</span></td><td class="no">—</td><td class="yes">有</td></tr>
+  </table>
+ </div>
+
+ <div class="card p-5 mb-4" id="upgradeBuy">
+  <div class="up-price">HK$18</div>
+  <div class="text-xs text-gray-500 mt-1 mb-4">一次買斷 · 唔收月費 · 換機可以還原</div>
+  <button type="button" class="up-cta" id="upgradeCta" onclick="unlockFull()">解鎖完整版</button>
+  <p class="text-[11px] leading-relaxed text-gray-500 mt-3" id="upgradeNote">付款會經 Google Play 完成。購買後可以喺同一 Google 帳號還原。</p>
+ </div>
+</section>
+
+<!-- ========== PRIVACY ========== -->
+<section id="privacy" class="hidden fade-up">
  <div class="page-hero">
  <div class="page-hero-row">
  <button type="button" class="page-back" onclick="goBack()">返回</button>
@@ -1725,6 +1840,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="font-black text-[19px] tracking-tight">港式 MBTI</div>
  </a>
  <div class="home-top-actions">
+ <button type="button" class="tier-btn" id="tierBtn" onclick="openUpgrade()" aria-label="免費版"><span class="tier-dot"></span><span id="tierLabel">免費版</span></button>
  <button type="button" class="home-menu-btn theme-btn" id="themeBtn" onclick="toggleTheme()" aria-label="切換日頭 / 黑夜模式"></button>
  <div class="home-menu-wrap">
  <button type="button" class="home-menu-btn" onclick="toggleHomeMenu(event)" aria-label="選單">⋯</button>
@@ -2164,6 +2280,7 @@ if(hasNoAd()) applyNoAd();
 <script src="data.js"></script>
 <script src="social.js"></script>
 <script src="voice-data.js"></script>
+<script src="premium-data.js"></script>
 <script>
 window.QUESTIONS = [
  // E/I 軸 (12 題)
@@ -2882,7 +2999,7 @@ if(window._navStack.length > 24) window._navStack.shift();
  }
  }
 window._showing = id;
- ["home","profile","test","result","about","spectrum","hub","letter","type","social","socialArticle","romance","romanceArticle","method","privacy"].forEach(s => window.$(s).classList.add("hidden"));
+ ["home","profile","test","result","about","spectrum","hub","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
 window.scrollTo(0,0);
 if(id === "home"){
@@ -5359,10 +5476,158 @@ else el.classList.remove("open");
  });
 };
 
+// ====================== 完整版（星級）狀態 ======================
+window.TIER_KEY = "hkmbti_tier";
+window.getTier = function(){
+try{ return localStorage.getItem(window.TIER_KEY) === "full" ? "full" : "free"; }catch(e){ return "free"; }
+};
+window.renderTier = function(){
+const b = document.getElementById("tierBtn"), l = document.getElementById("tierLabel");
+if(!b || !l) return;
+const full = window.getTier() === "full";
+l.textContent = full ? "完整版" : "免費版";
+b.classList.toggle("is-full", full);
+b.setAttribute("aria-label", full ? "完整版 · 睇人格深入分析" : "免費版 · 睇完整版有咩");
+};
+window.renderUpgradeState = function(){
+const cta = document.getElementById("upgradeCta"), note = document.getElementById("upgradeNote");
+if(!cta) return;
+const full = window.getTier() === "full";
+if(full){
+cta.textContent = "已解鎖 · 睇人格深入分析";
+cta.onclick = function(){ openDeep(); };
+if(note) note.textContent = "你已經解鎖完整版，多謝支持。日後新增嘅章節都會自動包括。";
+ } else {
+cta.textContent = "解鎖完整版";
+cta.onclick = function(){ unlockFull(); };
+if(note) note.textContent = "付款會經 Google Play 完成。購買後可以喺同一 Google 帳號還原。";
+ }
+};
+window.openUpgrade = function(){
+try{ closeHomeMenu(); }catch(e){}
+if(window.getTier() === "full"){ window.openDeep(); return; }
+window.renderUpgradeState();
+show("upgrade");
+};
+window.unlockFull = async function(){
+const cta = document.getElementById("upgradeCta");
+// 示範模式（未接 Play Billing）：唔會收錢，即時解鎖
+const ok = await appDialog({
+title: "解鎖完整版",
+body: "示範版本：即刻解鎖全部「人格深入分析」。\n\n正式上架之後，呢一步會改為經 Google Play 付款（HK$18，一次買斷）。",
+cancelText: "暫時唔要",
+okText: "即時解鎖"
+ });
+if(!ok) return;
+if(cta){ cta.disabled = true; cta.textContent = "解鎖中…"; }
+try{ localStorage.setItem(window.TIER_KEY, "full"); }catch(e){}
+window.renderTier();
+window.renderUpgradeState();
+if(cta) cta.disabled = false;
+setTimeout(function(){ window.openDeep(); }, 260);
+};
+window.restoreFull = async function(){
+const full = window.getTier() === "full";
+await appDialog(full ? {
+title: "已還原",
+body: "喺呢部裝置搵到完整版記錄，已經幫你開返。"
+ } : {
+title: "未搵到記錄",
+body: "喺呢個 Google 帳號搵唔到完整版購買記錄。\n\n如果你喺另一部機買過，請確認用同一個 Google 帳號登入。"
+ });
+return full;
+};
+// ====================== 人格深入分析（完整版） ======================
+window.DEEP_ORDER = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
+window.openDeep = function(){
+if(window.getTier() !== "full"){ window.openUpgrade(); return; }
+window.renderDeepList();
+show("deep");
+window.scrollTo(0,0);
+};
+window.renderDeepList = function(){
+const box = document.getElementById("deepList");
+if(!box) return;
+const P = window.PREMIUM || {};
+box.innerHTML = window.DEEP_ORDER.map(function(t){
+const T = (window.TYPES && window.TYPES[t]) || {};
+const d = P[t];
+const n = (d && d.chapters) ? d.chapters.length : 0;
+const meta = n ? (n + " 章 · 約 " + (n * 120) + " 字") : "準備中";
+return '<button type="button" class="card p-5 mb-3 w-full text-left deep-item" onclick="openDeepType(\'' + t + '\')">' +
+'<div class="flex items-center justify-between gap-3"><div class="min-w-0"><div class="font-black text-[15px]">' + t + ' · ' + (T.cn || "") + '</div>' +
+'<div class="text-xs text-gray-500 mt-1">' + meta + '</div></div>' +
+'<span class="deep-go">睇</span></div></button>';
+}).join("");
+};
+window.renderDeepTypeToc = function(t){
+const d = (window.PREMIUM || {})[t];
+const box = document.getElementById("deepList");
+if(!box) return;
+if(!d || !d.chapters){ window.renderDeepList(); show("deep"); return; }
+const T = (window.TYPES && window.TYPES[t]) || {};
+box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]">' + t + ' · ' + (T.cn || "") + '</div>' +
+'<div class="text-xs text-gray-500 mt-1">' + d.chapters.length + ' 章 · 完整版內容</div></div>' +
+d.chapters.map(function(c, i){
+return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" onclick="openDeepChapter(' + i + ')">' +
+'<div class="flex items-start gap-3"><span class="deep-num">' + (i + 1) + '</span>' +
+'<div class="min-w-0 flex-1"><div class="font-bold text-[14px]">' + c.t + '</div>' +
+'<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div>' +
+'<span class="deep-go">睇</span></div></button>';
+}).join("") +
+'<button type="button" class="softbox-btn mt-2" onclick="renderDeepList()">返全部 16 型</button>';
+show("deep");
+window.scrollTo(0,0);
+};
+window.openDeepType = function(t){
+window._deepType = t;
+window.renderDeepTypeToc(t);
+};
+window.openDeepChapter = function(i){
+const t = window._deepType;
+const d = (window.PREMIUM || {})[t];
+if(!d || !d.chapters || !d.chapters.length){
+appDialog({ title: "準備中", body: t + " 嘅深入分析仲喺度寫，好快會有。", okText: "明白" });
+return;
+}
+if(i < 0) i = 0;
+if(i > d.chapters.length - 1) i = d.chapters.length - 1;
+window._deepCh = i;
+const T = (window.TYPES && window.TYPES[t]) || {};
+const ch = d.chapters[i];
+document.getElementById("deepChapterTitle").textContent = ch.t;
+document.getElementById("deepChapterCrumb").textContent = t + " · " + (i + 1) + " / " + d.chapters.length;
+document.getElementById("deepChapterType").textContent = t;
+document.getElementById("deepChapterCn").textContent = T.cn || "";
+document.getElementById("deepChapterHead").textContent = "完整版 · 第 " + (i + 1) + " 章";
+document.getElementById("deepChapterBody").innerHTML = window.formatGuideHtml(ch.b);
+const hero = document.getElementById("deepChapterHero");
+if(hero && T.color){ hero.style.background = "linear-gradient(135deg, " + T.color[0] + ", " + T.color[1] + ")"; }
+const prev = document.getElementById("deepPrev"), next = document.getElementById("deepNext");
+if(prev) prev.disabled = (i === 0);
+if(next) next.disabled = (i === d.chapters.length - 1);
+show("deepChapter");
+window.scrollTo(0,0);
+};
+window.deepStep = function(dir){
+const t = window._deepType;
+const d = (window.PREMIUM || {})[t];
+if(!d || !d.chapters) return;
+const n = (window._deepCh || 0) + dir;
+if(n < 0 || n > d.chapters.length - 1) return;
+window.openDeepChapter(n);
+};
+window.backToDeepToc = function(){
+if(window._deepType && (window.PREMIUM || {})[window._deepType]){ window.renderDeepTypeToc(window._deepType); return; }
+window.renderDeepList();
+show("deep");
+window.scrollTo(0,0);
+};
+// 啟動時同步等級掣（所有函數定義好之後才跑）
+setTimeout(function(){ try{ window.renderTier(); }catch(e){} }, 0);
 window.openHub = function(){
 show("hub");
 };
-
 // ====================== Social Guide Functions ======================
 window.openSocial = function(){
 window._lastSocialScenario = null;
