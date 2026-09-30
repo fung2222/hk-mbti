@@ -3,6 +3,7 @@
 > 查證日期：**2026-09-29**（今日）
 > 官方來源：Apple App Review Guidelines（Last Updated: **2026-06-08**）、Apple Developer Program 報名／會員頁、App Store Connect Help、Apple News（年齡分級更新）
 > ⚠️ 呢份文件係「準備功課」，**未開工**。每一步做之前會再同你確認。
+> 👉 **要跟住做嘅逐步清單喺 `APPLE-STORE-CHECKLIST.md`**（資料清單 + 7 個 Phase + 素材硬性規格）
 
 ---
 
