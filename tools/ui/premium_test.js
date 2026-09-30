@@ -116,31 +116,34 @@ setTimeout(async ()=>{
   chk('升級頁／深入分析走 dark 覆蓋（html.dk .up-cmp / .deep-num）', /html\.dk \.up-cmp/.test(src) && /html\.dk \.deep-num/.test(src));
   chk('冇改動版本號（仍然 2.0.0）', /"version":\s*"2\.0\.0"/.test(fs.readFileSync(path.join(REPO,'manifest.json'),'utf8')));
 
-  // ---------- 真跑：完整返回鏈 主頁 → 升級 → 深入分析 → 章節 → 返回×N ----------
+  // ---------- 真跑：完整返回鏈（4 層）----------
   const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
-  // 重新做一次「免費用戶」情境（前面測試已經解鎖）
-  w.localStorage.removeItem('hkmbti_tier');
+  const grid16=()=>d.querySelectorAll('#deepTypeGrid .hub-type-card').length;
+  const toc9=()=>d.querySelectorAll('#deepList .deep-item').length;
+  w.localStorage.setItem('hkmbti_tier','full');   // 已解鎖情境
   w.renderTier();
-  w.show('home');
-  await sleep(30);
-  const chain=[];
-  chain.push(w._showing);
-  w.openUpgrade();                                            // 免費 → 升級頁
-  chain.push(w._showing);
-  await w.unlockFull();                                       // 示範解鎖 → 深入分析
-  await sleep(420);                                            // unlockFull 有 260ms 延遲才轉頁
-  chain.push(w._showing);
-  w.openDeepType('INTJ');                                     // 型別 9 章目錄
-  chain.push(w._showing);
-  w.openDeepChapter(2);                                       // 入章節
-  chain.push(w._showing);
-  chk('★ 鏈：主頁→升級→深入分析→型別目錄→章節', chain.join('>')==='home>upgrade>deep>deep>deepChapter', chain.join('>'));
+  w.show('home'); await sleep(40);
+  w.openDeep(); await sleep(40);                  // 16 型選擇
+  chk('層 1：主頁 → 16 型選擇（16 張色卡）', w._showing==='deep' && grid16()===16, 'showing='+w._showing+' 卡='+grid16());
+  w.openDeepType('INTJ'); await sleep(40);        // 型別 9 章目錄
+  chk('層 2：16 型選擇 → INTJ 9 章目錄', w._showing==='deep' && toc9()===9, 'toc='+toc9());
+  w.openDeepChapter(2); await sleep(40);          // 章節
+  chk('層 3：→ 章節 3 / 9', w._showing==='deepChapter' && $('#deepChapterCrumb').textContent==='INTJ · 3 / 9');
 
-  // 一直按返回（最多 6 次）→ 一定要返到主頁
-  for(let i=0;i<6 && w._showing!=='home';i++){ w.goBack(); await sleep(90); }
-  chk('★ 按返回鍵最終返得返主頁（修好前會卡住）', w._showing==='home', '最後停喺：'+w._showing);
+  w.goBack(); await sleep(160);                   // 返回 1
+  chk('★ 返回 1：章節 → 返到 INTJ 9 章目錄', w._showing==='deep' && toc9()===9, 'showing='+w._showing+' toc='+toc9());
+  w.goBack(); await sleep(160);                   // 返回 2
+  chk('★ 返回 2：型別目錄 → 返到 16 型選擇（唔係跳去主頁！）', w._showing==='deep' && grid16()===16, 'showing='+w._showing+' 卡='+grid16());
+  w.goBack(); await sleep(160);                   // 返回 3
+  chk('★ 返回 3：16 型選擇 → 返到主頁', w._showing==='home', 'showing='+w._showing);
   chk('★ 返到主頁時主頁真係顯示', !d.getElementById('home').classList.contains('hidden'));
   chk('★ 返到主頁時 no-pull 已除', !d.body.classList.contains('no-pull'));
+
+  // 「返全部 16 型」掣亦要行 history（唔係直接跳）
+  w.openDeep(); await sleep(40); w.openDeepType('INTJ'); await sleep(40);
+  chk('「返全部 16 型」掣用 deepBackToTypes（行 history）', /onclick="deepBackToTypes\(\)"/.test(src));
+  w.deepBackToTypes(); await sleep(160);
+  chk('★ 撳「返全部 16 型」真係返到 16 型選擇', w._showing==='deep' && grid16()===16, 'card='+grid16());
   chk('頁面零 JS error', jerr.length===0, jerr.slice(0,2).join(' | '));
 
   console.log(`\n${ok===total?'===== 全部通過':'===== 有失敗'}（${ok}/${total}）=====`);

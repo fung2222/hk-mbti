@@ -5598,6 +5598,8 @@ return '<button type="button" class="hub-type-card" style="background:linear-gra
 '</button>';
 };
 window.renderDeepList = function(){
+// 返到「16 型選擇」層：清走型別，否則 history 快照會誤記住上一型
+window._deepType = null;
 const box = document.getElementById("deepList");
 if(!box) return;
 box.innerHTML = '<div class="hub-type-grid" id="deepTypeGrid">' +
@@ -5621,13 +5623,22 @@ return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" o
 '<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div>' +
 '</div></button>';
 }).join("") +
-'<button type="button" class="softbox-btn mt-2" onclick="renderDeepList()">返全部 16 型</button>';
+'<button type="button" class="softbox-btn mt-2" onclick="deepBackToTypes()">返全部 16 型</button>';
 show("deep");
 window.scrollTo(0,0);
 };
 window.openDeepType = function(t){
 window._deepType = t;
 window.renderDeepTypeToc(t);
+// 16 型目錄 → 型別 9 章目錄：section 冇變但狀態變，要自己入一層 history，先返得返上一層
+if(!window._fromPop && !window._navSilent){ try{ window._histWrite("push"); }catch(e){} }
+};
+window.deepBackToTypes = function(){
+// 型別目錄 → 返全部 16 型：有 history 層照行（同系統返回鍵一致）
+if((window._histDepth || 0) > 0){ window.goBack(); return; }
+window.renderDeepList();
+show("deep");
+window.scrollTo(0,0);
 };
 window.openDeepChapter = function(i){
 const t = window._deepType;
