@@ -86,6 +86,19 @@ setTimeout(async ()=>{
   chk('未寫嘅型顯示「準備中」', /準備中/.test(cards[1].textContent), cards[1].textContent.replace(/\n/g,' '));
   chk('★ 卡有該型漸變色（唔係文字格）', /linear-gradient\(135deg,#6B4E9E/.test(cards[0].getAttribute('style')), cards[0].getAttribute('style'));
   chk('★ 16 張卡各有自己顏色', (new Set(cards.map(c=>(c.getAttribute('style')||'').match(/#[0-9A-Fa-f]{6}/g)?.join()))).size === 16);
+  // ---------- 港物件 icon（第一版 9 個，實心）----------
+  const icons=fs.readFileSync(path.join(REPO,'type-icons.js'),'utf8');
+  const iconCodes=(icons.match(/^\s*([A-Z]{4}):/gm)||[]).map(s=>s.trim().replace(':',''));
+  chk('★ type-icons.js 有 9 個 icon（第一版試風格）', iconCodes.length===9, iconCodes.join(','));
+  chk('★ icon 有齊四個組別（分析家／外交家／守護者／探索者）', ['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ISTJ','ESFP'].every(c=>iconCodes.includes(c)), iconCodes.join(','));
+  chk('★ 每個 icon 都係 24×24 SVG + currentColor（自動跟卡色）', (icons.match(/viewBox="0 0 24 24" fill="currentColor"/g)||[]).length===9);
+  chk('★ 全部實心（唔係淨線）—— 每個 icon 至少有 fill 形狀', (icons.match(/<(rect|circle|path|polygon)/g)||[]).length>=20);
+  chk('icon 冇用 emoji', !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(icons));
+  chk('已有 icon 嘅 9 張卡有 .type-ico（其餘 7 張冇，可以對比）', cards.filter(c=>c.querySelector('.type-ico')).length===9, cards.filter(c=>c.querySelector('.type-ico')).length);
+  chk('卡內 icon 真係 SVG 元素', cards.filter(c=>c.querySelector('.type-ico svg')).length===9);
+  chk('type-icons.js 已由 index.html 載入', /type-icons\.js/.test(src));
+  chk('sw.js 有 cache type-icons.js', /type-icons\.js/.test(sw));
+  chk('icon 喺 4 字母上面（DOM 次序）', (function(){ const c=cards[0], k=c.querySelector('.type-ico'), t=c.querySelector('.hub-type-code'); return !!k && !!t && (k.compareDocumentPosition(t) & 4) > 0; })());
   chk('卡撳落去開該型目錄', /openDeepType\('INTJ'\)/.test(cards[0].getAttribute('onclick')));
 
   // ---------- 型別 9 章目錄 ----------
