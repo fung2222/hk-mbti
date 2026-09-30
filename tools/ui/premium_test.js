@@ -98,7 +98,8 @@ setTimeout(async ()=>{
   chk('卡內 icon 真係 SVG 元素', cards.filter(c=>c.querySelector('.type-ico svg')).length===16, cards.filter(c=>c.querySelector('.type-ico svg')).length);
   chk('type-icons.js 已由 index.html 載入', /type-icons\.js/.test(src));
   chk('sw.js 有 cache type-icons.js', /type-icons\.js/.test(sw));
-  chk('★ icon 水平置中（唔會貼左邊）', /\.type-ico\{display:block;width:22px;height:22px;margin:0 auto/.test(src));
+  chk('★ icon 水平置中（唔會貼左邊）', /\.type-ico\{display:block;width:22px;height:22px;margin:0 auto 5px/.test(src));
+  chk('★ icon 同 4 字母有留白（唔會貼實）', /margin:0 auto 5px/.test(src));
   chk('★ icon 喺 4 字母上面（.hub-type-code 內 DOM 次序）', (function(){ const h=cards[0].querySelector('.hub-type-code'); if(!h) return false; const k=h.querySelector('.type-ico'), t=h.querySelector('.type-code-txt'); return !!k && !!t && (k.compareDocumentPosition(t) & 4) > 0; })());
   chk('★ 4 字母文字冇壞（textContent 仍然係 4 個字母）', /^[A-Z]{4}$/.test(cards[0].querySelector('.hub-type-code').textContent.trim()), cards[0].querySelector('.hub-type-code').textContent.trim());
 
