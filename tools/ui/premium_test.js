@@ -43,6 +43,11 @@ setTimeout(async ()=>{
   chk('★ 章節標題放大（21px、可換行）', /#deepChapterTitle\{font-size:21px;white-space:normal/.test(src));
   chk('鎖標籤有黑暗模式覆蓋', /html\.dk \.home-acc-lock/.test(src));
 
+  // ---------- 返回鍵鏈（Roy 2026-10-01 報：完整版入到章節按返回返唔到主頁）----------
+  chk('★ 返回還原認識 upgrade／deep／deepChapter', /if\(id === "upgrade"\)\{ show\("upgrade"\); return; \}/.test(src) && /if\(id === "deepChapter"\)\{/.test(src));
+  chk('★ 導航快照記住 deepType / deepCh（還原得返邊一型邊一章）', /deepType: window\._deepType \|\| null,/.test(src) && /deepCh: \(typeof window\._deepCh === "number"/.test(src));
+  chk('★ 章節頁「返回」用 goBack()（同系統返回鍵一致）', /window\.backToDeepToc = function\(\)\{\s*\n\/\/[^\n]*\nif\(\(window\._histDepth \|\| 0\) > 0\)\{ window\.goBack\(\); return; \}/.test(src));
+
   // ---------- 初始狀態（免費） ----------
   chk('初始 label = 免費版', $('#tierLabel').textContent.trim()==='免費版', $('#tierLabel').textContent);
   chk('初始冇 is-full class', !$('#tierBtn').classList.contains('is-full'));
@@ -100,7 +105,8 @@ setTimeout(async ()=>{
   chk('第 9 章：下一章 disabled', $('#deepNext').disabled===true);
   chk('第 9 章 crumb = INTJ · 9 / 9', $('#deepChapterCrumb').textContent==='INTJ · 9 / 9', $('#deepChapterCrumb').textContent);
   w.backToDeepToc();
-  chk('撳「返回」回目錄（9 章）', vis('deep') && d.querySelectorAll('#deepList .deep-item').length===9);
+  await new Promise(r=>setTimeout(r,120));
+  chk('撳「返回」回目錄（9 章）', vis('deep') && d.querySelectorAll('#deepList .deep-item').length===9, 'showing='+w._showing);
   chk('章節頁有免責聲明（MBTI 係性格參考）', /MBTI 係性格參考/.test(prem));
 
   // ---------- 鐵律 ----------
@@ -108,6 +114,32 @@ setTimeout(async ()=>{
   chk('等級掣有黑暗模式覆蓋（html.dk .tier-btn）', /html\.dk \.tier-btn/.test(src));
   chk('升級頁／深入分析走 dark 覆蓋（html.dk .up-cmp / .deep-num）', /html\.dk \.up-cmp/.test(src) && /html\.dk \.deep-num/.test(src));
   chk('冇改動版本號（仍然 2.0.0）', /"version":\s*"2\.0\.0"/.test(fs.readFileSync(path.join(REPO,'manifest.json'),'utf8')));
+
+  // ---------- 真跑：完整返回鏈 主頁 → 升級 → 深入分析 → 章節 → 返回×N ----------
+  const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
+  // 重新做一次「免費用戶」情境（前面測試已經解鎖）
+  w.localStorage.removeItem('hkmbti_tier');
+  w.renderTier();
+  w.show('home');
+  await sleep(30);
+  const chain=[];
+  chain.push(w._showing);
+  w.openUpgrade();                                            // 免費 → 升級頁
+  chain.push(w._showing);
+  await w.unlockFull();                                       // 示範解鎖 → 深入分析
+  await sleep(420);                                            // unlockFull 有 260ms 延遲才轉頁
+  chain.push(w._showing);
+  w.openDeepType('INTJ');                                     // 型別 9 章目錄
+  chain.push(w._showing);
+  w.openDeepChapter(2);                                       // 入章節
+  chain.push(w._showing);
+  chk('★ 鏈：主頁→升級→深入分析→型別目錄→章節', chain.join('>')==='home>upgrade>deep>deep>deepChapter', chain.join('>'));
+
+  // 一直按返回（最多 6 次）→ 一定要返到主頁
+  for(let i=0;i<6 && w._showing!=='home';i++){ w.goBack(); await sleep(90); }
+  chk('★ 按返回鍵最終返得返主頁（修好前會卡住）', w._showing==='home', '最後停喺：'+w._showing);
+  chk('★ 返到主頁時主頁真係顯示', !d.getElementById('home').classList.contains('hidden'));
+  chk('★ 返到主頁時 no-pull 已除', !d.body.classList.contains('no-pull'));
   chk('頁面零 JS error', jerr.length===0, jerr.slice(0,2).join(' | '));
 
   console.log(`\n${ok===total?'===== 全部通過':'===== 有失敗'}（${ok}/${total}）=====`);

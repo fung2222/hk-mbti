@@ -3005,6 +3005,8 @@ type: window._lastType,
 typeFrom: window._typeFrom || null,
 letter: window._lastLetter,
 articleType: window._lastArticleType,
+deepType: window._deepType || null,
+deepCh: (typeof window._deepCh === "number" ? window._deepCh : 0),
 pendingVersion: (window.state && window.state.pendingVersion) || null
  };
 };
@@ -5124,6 +5126,15 @@ if(id === "letter"){
 if(prev && prev.letter){ openLetter(prev.letter); return; }
 if(typeof window.openHub === "function"){ openHub(); return; }
  }
+if(id === "upgrade"){ show("upgrade"); return; }
+if(id === "deep"){
+if(prev && prev.deepType && (window.PREMIUM || {})[prev.deepType]){ window.renderDeepTypeToc(prev.deepType); return; }
+window.renderDeepList(); show("deep"); return;
+ }
+if(id === "deepChapter"){
+if(prev && prev.deepType){ window._deepType = prev.deepType; window.openDeepChapter(prev.deepCh || 0); return; }
+show("deep"); return;
+ }
 if(id === "about"){ openAbout(); return; }
 if(id === "method"){ if(typeof window.openMethod === "function"){ openMethod(); return; } }
 if(id === "privacy"){ openPrivacy(); return; }
@@ -5648,6 +5659,8 @@ if(n < 0 || n > d.chapters.length - 1) return;
 window.openDeepChapter(n);
 };
 window.backToDeepToc = function(){
+// 有 history 層就照行（保持同系統返回鍵一致）；冇嘅話直接還原目錄
+if((window._histDepth || 0) > 0){ window.goBack(); return; }
 if(window._deepType && (window.PREMIUM || {})[window._deepType]){ window.renderDeepTypeToc(window._deepType); return; }
 window.renderDeepList();
 show("deep");
