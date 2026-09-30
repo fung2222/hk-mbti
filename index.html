@@ -404,6 +404,8 @@ margin-top:1px;font-size:11px;font-weight:700;font-family:inherit;line-height:1.
 color:var(--ink);background:rgba(255,255,255,.92);border-radius:999px;padding:3px 8px;
 }
 .hub-type-card.is-on .hub-type-go{opacity:1;pointer-events:auto;}
+.deep-badge{margin-top:1px;font-size:10px;font-weight:800;line-height:1.2;font-family:inherit;color:rgba(255,255,255,.92);background:rgba(0,0,0,.24);border-radius:999px;padding:2px 7px;}
+.deep-badge.is-soon{color:rgba(255,255,255,.7);background:rgba(0,0,0,.16);font-weight:700;}
 .hub-type-code{
 font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:700;font-style:normal;
 font-size:1.5rem;letter-spacing:0;line-height:1;white-space:nowrap;
@@ -5584,21 +5586,24 @@ window.renderDeepList();
 show("deep");
 window.scrollTo(0,0);
 };
+window.deepTypeCardHtml = function(code){
+const T = window.TYPES[code], P = window.getPalette(code);
+if(!T) return "";
+const d = (window.PREMIUM || {})[code];
+const n = (d && d.chapters) ? d.chapters.length : 0;
+return '<button type="button" class="hub-type-card" style="background:linear-gradient(135deg,' + P.c1 + ',' + P.c2 + ');" onclick="openDeepType(\'' + code + '\')">' +
+'<div class="hub-type-code">' + code + '</div>' +
+'<div class="hub-type-cn">' + T.cn + '</div>' +
+'<div class="deep-badge' + (n ? '' : ' is-soon') + '">' + (n ? (n + ' 章') : '準備中') + '</div>' +
+'</button>';
+};
 window.renderDeepList = function(){
 const box = document.getElementById("deepList");
 if(!box) return;
-const P = window.PREMIUM || {};
-box.innerHTML = window.DEEP_ORDER.map(function(t){
-const T = (window.TYPES && window.TYPES[t]) || {};
-const d = P[t];
-const n = (d && d.chapters) ? d.chapters.length : 0;
-const meta = n ? (n + " 章 · 約 " + (n * 120) + " 字") : "準備中";
-const PL = window.getPalette(t);
-return '<button type="button" class="card p-5 mb-3 w-full text-left deep-item" onclick="openDeepType(\'' + t + '\')">' +
-'<div class="flex items-center justify-between gap-3"><div class="min-w-0"><div class="font-black text-[15px]"><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span> · ' + (T.cn || "") + '</div>' +
-'<div class="text-xs text-gray-500 mt-1">' + meta + '</div></div>' +
-'</div></button>';
-}).join("");
+box.innerHTML = '<div class="hub-type-grid" id="deepTypeGrid">' +
+window.DEEP_ORDER.map(function(t){ return window.deepTypeCardHtml(t); }).join("") +
+'</div>' +
+'<p class="hub-type-hint">撳入去可以睇該型嘅 9 章深入分析</p>';
 };
 window.renderDeepTypeToc = function(t){
 const d = (window.PREMIUM || {})[t];

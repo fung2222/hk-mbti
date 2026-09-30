@@ -73,14 +73,15 @@ setTimeout(async ()=>{
   chk('入 deep 時 body 加 no-pull（防下拉露白）', d.body.classList.contains('no-pull'));
   chk('返主頁時 no-pull 會除返', (function(){ w.show('home'); return !d.body.classList.contains('no-pull'); })());
 
-  // ---------- 16 型目錄 ----------
-  const items=[...d.querySelectorAll('#deepList .deep-item')];
-  chk('深入分析目錄有 16 個型別', items.length===16, items.length);
-  chk('INTJ 項目顯示章數', /9 章/.test(items[0].textContent), items[0].textContent.replace(/\n/g,' '));
-  chk('未寫嘅型顯示「準備中」', /準備中/.test(items[1].textContent), items[1].textContent.replace(/\n/g,' '));
-  chk('★ 目錄型別代號用返自己嘅顏色（--tc = PALETTE.c1）', /--tc:#6B4E9E/.test($('#deepList').innerHTML));
-  chk('★ 黑暗模式用 accent 淺色版本（--tc-dk）', /--tc-dk:#C9B2E8/.test($('#deepList').innerHTML));
-  chk('16 型目錄每型各有自己顏色（唔係單色）', (new Set((($('#deepList').innerHTML).match(/--tc:#[0-9A-Fa-f]{6}/g)||[]))).size >= 9);
+  // ---------- 16 型目錄（色卡版，參考性格百科排位）----------
+  const cards=[...d.querySelectorAll('#deepTypeGrid .hub-type-card')];
+  chk('★ 深入分析目錄用 16 張色卡（同性格百科同一款）', cards.length===16, cards.length);
+  chk('★ 用返同一套 4 欄密格（hub-type-grid）', !!d.querySelector('#deepList .hub-type-grid'));
+  chk('INTJ 卡顯示「9 章」', /9 章/.test(cards[0].textContent), cards[0].textContent.replace(/\n/g,' '));
+  chk('未寫嘅型顯示「準備中」', /準備中/.test(cards[1].textContent), cards[1].textContent.replace(/\n/g,' '));
+  chk('★ 卡有該型漸變色（唔係文字格）', /linear-gradient\(135deg,#6B4E9E/.test(cards[0].getAttribute('style')), cards[0].getAttribute('style'));
+  chk('★ 16 張卡各有自己顏色', (new Set(cards.map(c=>(c.getAttribute('style')||'').match(/#[0-9A-Fa-f]{6}/g)?.join()))).size === 16);
+  chk('卡撳落去開該型目錄', /openDeepType\('INTJ'\)/.test(cards[0].getAttribute('onclick')));
 
   // ---------- 型別 9 章目錄 ----------
   w.openDeepType('INTJ');
