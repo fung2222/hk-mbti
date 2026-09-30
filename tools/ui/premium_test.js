@@ -80,7 +80,11 @@ setTimeout(async ()=>{
   chk('★ 簡介列出 9 章類型', d.querySelectorAll('#deep .deep-chips span').length===9, d.querySelectorAll('#deep .deep-chips span').length);
   chk('★ 簡介有標題句（大字）', /請選擇其中一種人格深入了解/.test($('#deep .deep-intro-lead').textContent), $('#deep .deep-intro-lead').textContent);
   chk('簡介有黑暗模式覆蓋', /html\.dk \.deep-intro-sub/.test(src) && /html\.dk \.deep-chips span/.test(src));
-  chk('★ 簡介唔提「買斷」（Roy 指定：只講有咩睇、有咩用）', !/買斷/.test($('#deep .deep-intro').textContent), $('#deep .deep-intro-sub').textContent);
+  chk('★ 深入分析介紹文字放鬆（14px / 行高 1.9 / 段距 17px）', /\.deep-intro-sub\{font-size:14px;line-height:1\.9;[^}]*margin:0 0 17px\}/.test(src));
+  chk('★ 介紹標題句同下面留 13px', /\.deep-intro-lead\{[^}]*margin:0 0 13px\}/.test(src));
+  chk('★ 章節標籤 chips 有足夠間距（gap 8px）', /\.deep-chips\{display:flex;flex-wrap:wrap;gap:8px\}/.test(src));
+  chk('★ 冇重複嘅 .deep-chips span 定義', (src.match(/\.deep-chips span\{/g)||[]).length===1, (src.match(/\.deep-chips span\{/g)||[]).length);
+  chk('★ 簡介唔提「買斷」（Roy 指定：只講有咩睇、有咩用）', !/買斷/.test($('#deep .deep-intro').textContent), '');
   chk('★ 簡介講「有咩可以睇」同「有咩用」', /有 9 章/.test($('#deep .deep-intro-sub').textContent) && /明自己|知身邊|點相處/.test($('#deep .deep-intro-sub').textContent));
   chk('INTJ 卡顯示「9 章」', /9 章/.test(cards[0].textContent), cards[0].textContent.replace(/\n/g,' '));
   chk('未寫嘅型顯示「準備中」', /準備中/.test(cards[1].textContent), cards[1].textContent.replace(/\n/g,' '));
