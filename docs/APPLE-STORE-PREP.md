@@ -86,6 +86,28 @@ Step 6  送審 → 等審核（通常 1–3 日）→ 通過 → 上架
 
 ---
 
+## 四之二、⚠️ 冇 Apple 裝置有冇影響？（2026-09-29 查官方 · Roy 情況：只有 Android + Windows，可以問朋友借 Mac）
+
+**答：技術上做到，但有 2 個位會痛。**
+
+| 步驟 | 冇 iPhone／iPad／Mac 得唔得？ | 官方講法 |
+|------|--------------------------|---------|
+| 開 Apple ID（雙重認證） | ✅ 得（網頁 appleid.apple.com，Windows 都可以） | — |
+| 報名 Apple Developer Program | ✅ **網頁路線**可以（官方：*「Enrollment ... is available through the Apple Developer app and on the web」*） | 要**自己嘅信用卡**（唔可以用別人張卡，用咗會延遲） |
+| **身份驗證（影身份證／護照）** | ⚠️ **可能要 Apple 裝置** | 官方：*「Identity verification in the app is required for certain processes, including those that are started and completed on the web」*；用 Apple Developer app 要 iPhone／iPad／有 T2＋Apple Silicon 嘅 Mac，**全程要同一部裝置**。如果唔想畀證件相 → 官方講可以**聯絡 Apple 攞替代驗證方法** |
+| 出 build（.ipa） | ✅ 得（雲端 Codemagic／Bitrise／GitHub Actions）**唔需要 Mac** | — |
+| 上傳 App Store Connect | ✅ 得（雲端／網頁） | — |
+| **TestFlight 自己試 app** | ❌ **要 iPhone／iPad** | TestFlight 只有 iOS／iPadOS app |
+| **IAP 真實付款測試** | ❌ 要 iPhone（Sandbox 帳號） | 唔試都可以，但上架後有問題風險 |
+| 借朋友 Mac 有冇用？ | 有用但**唔係必須** | 好處：可以裝 Xcode 本地 build／Debug；壞處：Xcode 要 40GB+，朋友未必想裝 |
+
+**結論（我建議）**：
+1. **可以照做**：用 Windows 網頁報名 + 雲端 build。
+2. **最好借到一部 iPhone（唔係 Mac）** —— 因為要（a）可能做身份驗證（b）TestFlight 自測（c）IAP 真付款測試。借朋友 iPhone 登入你自己 Apple ID 就得，唔會影響朋友帳號。
+3. 借 Mac 嘅價值遠低於借 iPhone（Xcode 可以唔用；雲端 build 反而乾淨）。
+
+---
+
 ## 五、4.2 過關策略（最關鍵嘅一節）
 
 Apple 審核員會問一句：**「呢個 app 有咩係 Safari 做唔到？」** 我哋要答得出 3 樣。
@@ -157,11 +179,15 @@ Play 正式版申請（10-12/13）
 
 ---
 
-## 九、仲有 3 個問題要你答（答完我才開始做）
+## 九、你已答嘅（2026-09-29）
 
-1. **你而家／將來有冇 iPhone？**（影響可唔可以自己試 IAP 真實付款、TestFlight 自測）
-2. **有冇 Mac 電腦？**（有就簡單啲；冇就用雲端 build，一樣得）
-3. **接唔接受「App Store 開發者名顯示你嘅法定姓名」？**（個人帳號冇得改；想顯示品牌名要開公司）
+| 問題 | 你嘅答案 | 影響 |
+|------|---------|------|
+| 有咩 Apple 裝置？ | 只有 **Android + Windows**；可以問朋友借 Mac | → 見第四之二節。**建議借 iPhone 多過借 Mac** |
+| 接受 App Store 顯示法定姓名？ | ✅ **接受** | → 可以用個人帳號，最簡單，唔需要開公司／D-U-N-S |
+| 幾時開始做？ | ⏸️ **暫時只睇資料，遲啲再決定** | → 我唔會開始動工；呢份文件留住睇。你想開工就講一句 |
+
+**未決定嘅**：上唔上中國區（我建議 **唔上**，避開 ICP 備案）；要唔要 IAP（如果要，iOS 要另寫 StoreKit 一套）。
 
 ---
 
