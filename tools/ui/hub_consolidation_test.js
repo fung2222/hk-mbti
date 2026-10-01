@@ -14,7 +14,8 @@ function chk(name, ok, got) {
 }
 
 // ── 靜態檢查 ──
-chk("★ 百科有「4 個維度」撳入掣（去維度詳解分頁）", /id="hubDims" onclick="openDims\(\)"/.test(src));
+chk("★ 百科首頁維度卡有 8 個字母掣（E/I、S/N、T/F、J/P）", (function(){ const s = src.slice(src.indexOf('id="hubDims"'), src.indexOf('<!-- 16 種性格入口') > 0 ? src.indexOf('<!-- 16 種性格入口') : src.indexOf('hub-bleed')); return (s.match(/openLetter\('/g) || []).length === 8; })(), (function(){ const s = src.slice(src.indexOf('id="hubDims"'), src.indexOf('hub-bleed')); return "字母掣 " + ((s.match(/openLetter\('/g) || []).length) + " 個"; })());
+chk("★ 百科卡底有「撳入去睇」link → #dims", /class="hub-more-link" onclick="openDims\(\)"/.test(src));
 chk("★ 維度詳解分頁（#dims）有「4 個英文字母代表咩」卡（光譜整合入嚟）", /<section id="dims"/.test(src) && /id="dimsLetters"/.test(src) && /class="hub-letter-list"/.test(src));
 chk("★ 維度詳解分頁有 8 個字母掣 → #letter", (function(){ const s = src.slice(src.indexOf('<section id="dims"'), src.indexOf('<!-- ========== 人格深入分析')); return (s.match(/openLetter\('/g) || []).length === 8; })());
 chk("★ show() 清單有 dims 同 scenes", /"hub","dims"/.test(src) && /"dims","scenes","letter"/.test(src));
@@ -44,7 +45,7 @@ setTimeout(() => {
 
   // ① 百科：維度掣撳入 → 維度詳解分頁
   w.openHub();
-  chk("★ 百科維度卡撳入會去維度詳解", (function(){ $("#hubDims").click(); return !$("#dims").classList.contains("hidden") && $("#hub").classList.contains("hidden"); })());
+  chk("★ 百科維度卡底 link 撳入會去維度詳解", (function(){ $("#hubDims .hub-more-link").click(); return !$("#dims").classList.contains("hidden") && $("#hub").classList.contains("hidden"); })());
   const letters = d.querySelectorAll("#dims .hub-letter-list > div");
   chk("★ 維度詳解 render 出 5 段 + 底註", letters.length === 6, "render 出 " + letters.length + " 段（預期 6＝5 段＋1 底註）");
   chk("★ 字母卡第一段係 E vs I", /E vs I/.test($("#dims .hub-letter-list").textContent));

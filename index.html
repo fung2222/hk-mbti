@@ -436,6 +436,10 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 .scene-for-banner b{font-weight:800}
 .scene-for-clear{border:0;background:#fff;color:#8a6a1f;font-size:11px;font-weight:700;border-radius:7px;padding:4px 9px;cursor:pointer;font-family:inherit;margin-left:auto}
 
+/* 百科維度卡底「睇字母代表咩」link */
+.hub-more-link{display:block;width:100%;text-align:left;border:0;background:transparent;padding:11px 0 0;margin:0;font-family:inherit;font-size:12px;font-weight:700;color:#8a6a1f;cursor:pointer;}
+.hub-more-link:before{content:"› ";font-weight:800}
+
 /* 人格頁「深入睇吓呢一型」入口列 */
 .type-more-row{display:block;width:100%;text-align:left;border:0;background:#faf7f2;border-radius:12px;padding:12px 14px;margin:0 0 8px;cursor:pointer;font-family:inherit;}
 .type-more-row:last-child{margin-bottom:0}
@@ -959,6 +963,7 @@ html.dk .option.selected .option-letter{background:var(--gold);color:#12161C}
 html.dk .glass{background:rgba(24,30,38,.72)}
 html.dk .hub-type-go{background:rgba(18,22,28,.92);color:#ECE7DE}
 html.dk .hub-type-hint{color:#A79E92}
+html.dk .hub-more-link{color:#E8C989}
 html.dk .type-more-row{background:#222A34}
 html.dk .type-more-row:hover{background:#28313C}
 html.dk .type-more-d{color:#A79E92}
@@ -1405,14 +1410,29 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <p class="page-hero-sub">四個維度、十六種性格完整介紹、性格比較工具</p>
  </div>
 
- <!-- 4 個維度入口（撳入去睇 8 個字母詳解）-->
- <div class="card p-5 mb-4 cursor-pointer" id="hubDims" onclick="openDims()">
- <div class="hub-row">
- <div class="hub-row-body">
- <div class="hub-row-title"><h3 class="font-bold text-sm">4 個維度（8 個字母）</h3><span class="hub-row-chev">▼</span></div>
- <p class="text-xs text-gray-500 mt-1">每個人嘅性格由呢 4 個維度組成 — 撳入去睇 8 個字母詳解</p>
+ <!-- 4 個維度入口：8 個字母掣 ＋ 撳入去睇詳解 -->
+ <div class="card p-5 mb-4" id="hubDims">
+ <h3 class="font-bold mb-1 text-sm">4 個維度（8 個字母）</h3>
+ <p class="text-xs text-gray-600 mb-3">每個人嘅性格由呢 4 個維度組成</p>
+ <div class="grid grid-cols-2 gap-3">
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #B4652E">
+  <div class="dim-pair"><button type="button" style="--dc:#B4652E" onclick="openLetter('E')">E</button><span class="vs">vs</span><button type="button" style="--dc:#5A4B80" onclick="openLetter('I')">I</button></div>
+  <div class="text-[11px] text-gray-600 font-semibold mt-1">能量來源</div>
+  </div>
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #84475A">
+  <div class="dim-pair"><button type="button" style="--dc:#556B33" onclick="openLetter('S')">S</button><span class="vs">vs</span><button type="button" style="--dc:#84475A" onclick="openLetter('N')">N</button></div>
+  <div class="text-[11px] text-gray-600 font-semibold mt-1">認知方式</div>
+  </div>
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #2C3E57">
+  <div class="dim-pair"><button type="button" style="--dc:#2C3E57" onclick="openLetter('T')">T</button><span class="vs">vs</span><button type="button" style="--dc:#9E4A3C" onclick="openLetter('F')">F</button></div>
+  <div class="text-[11px] text-gray-600 font-semibold mt-1">決策方式</div>
+  </div>
+  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #4E3D6B">
+  <div class="dim-pair"><button type="button" style="--dc:#4E3D6B" onclick="openLetter('J')">J</button><span class="vs">vs</span><button type="button" style="--dc:#84462F" onclick="openLetter('P')">P</button></div>
+  <div class="text-[11px] text-gray-600 font-semibold mt-1">生活態度</div>
+  </div>
  </div>
- </div>
+ <button type="button" class="hub-more-link" onclick="openDims()">4 個英文字母代表咩？撳入去睇</button>
  </div>
 
  <!-- 16 種性格入口 · 滿版 -->

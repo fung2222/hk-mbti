@@ -13,11 +13,11 @@ const dom=new JSDOM(html,{runScripts:'dangerously',pretendToBeVisual:true,url:'h
   beforeParse(w){ w.alert=()=>{}; w.confirm=()=>false; stubCanvas(w); }});
 setTimeout(()=>{
   const w=dom.window, d=w.document;
-  const boxes=[...d.querySelectorAll('.dim-pair')];
-  chk('4 個維度入口卡都有 .dim-pair', boxes.length===4, boxes.length);
+  const boxes=[...d.querySelectorAll('#hubDims .dim-pair')];
+  chk('百科首頁 4 個維度卡都有 .dim-pair', boxes.length===4, boxes.length);
   const all=[];
   boxes.forEach(b=>[...b.querySelectorAll('button')].forEach(x=>all.push(x)));
-  chk('8 個字母全部有獨立掣（原本只有 4 個）', all.length===8, all.length);
+  chk('8 個字母全部有獨立掣（百科首頁，原本只有 4 個）', all.length===8, all.length);
   const letters=all.map(b=>b.textContent.trim());
   chk('字母齊全 E/I/S/N/T/F/J/P', ['E','I','S','N','T','F','J','P'].every(x=>letters.includes(x)), letters.join(''));
   let bad=[];
