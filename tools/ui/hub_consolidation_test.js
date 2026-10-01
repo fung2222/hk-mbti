@@ -68,7 +68,7 @@ setTimeout(() => {
 
   // ①b 場景攻略
   w.SOCIAL = { WhatsAppGroup: { name: "WhatsApp 群組", desc: "d" }, FamilyGathering: { name: "親戚飯局", desc: "d" }, TeaFriend: { name: "飲茶吹水朋友", desc: "d" }, GroupProject: { name: "Group Project 隊友", desc: "d" }, Roommate: { name: "室友", desc: "d" }, Workplace: { name: "返工同事", desc: "d" }, 失戀陪: { name: "失戀時陪佢", desc: "d" } };
-  w.ROMANCE = { 拍拖: { name: "拍拖", desc: "d" }, 吵架: { name: "吵架", desc: "d" }, 分手: { name: "分手", desc: "d" } };
+  w.ROMANCE = { 拍拖: { name: "點同佢拍拖", desc: "d" }, 吵架: { name: "同佢點收科", desc: "d" }, 分手: { name: "點同佢分手", desc: "d" } };
   w.openScenes();
   const rowsS = d.querySelectorAll("#scenesSocial .scene-go-row");
   const rowsR = d.querySelectorAll("#scenesRomance .scene-go-row");
@@ -78,6 +78,14 @@ setTimeout(() => {
   chk("★ 相處場景卡呼叫 openSocialScenario", /openSocialScenario\(/.test(rowsS[0].getAttribute("onclick")), rowsS[0].getAttribute("onclick"));
   chk("★ 拍拖場景卡呼叫 openRomanceScenario", /openRomanceScenario\(/.test(rowsR[0].getAttribute("onclick")), rowsR[0].getAttribute("onclick"));
   chk("★ 場景攻略最底有測試入口", /id="scenes"[\s\S]{0,3000}選擇測試版本/.test(src));
+  const icoS = d.querySelectorAll("#scenesSocial .scene-go-row .scene-go-ico svg");
+  const icoR = d.querySelectorAll("#scenesRomance .scene-go-row .scene-go-ico svg");
+  chk("★ 每個場景前面都有 icon（相處 7）", icoS.length === 7, "有 icon 嘅卡 " + icoS.length);
+  chk("★ 每個場景前面都有 icon（拍拖 3）", icoR.length === 3, "有 icon 嘅卡 " + icoR.length);
+  const cols = [...icoS, ...icoR].map(sv => sv.getAttribute("style").match(/color:(#[0-9A-Fa-f]{6})/i)).filter(Boolean).map(m => m[1].toLowerCase());
+  chk("★ 10 個場景 10 種唔同顏色", cols.length >= 10 && new Set(cols).size >= 10, new Set(cols).size + " 種：" + [...new Set(cols)].join(" "));
+
+  // ①d 捲動位置記憶
 
   // ② 人格頁三個入口
   w.openType("ENFP", "test");
