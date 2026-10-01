@@ -101,14 +101,14 @@ setTimeout(async ()=>{
   chk('★ 測試入口文案同人格分頁一致（想確認自己 MBTI 人格？）', /想確認自己 MBTI 人格？/.test($('#deep #deepCta').textContent), $('#deep #deepCta').textContent.trim());
   chk('★ 16 型格同下面卡片有距離（hub-bleed 有 margin-bottom）', /\.hub-bleed\{margin:0 -16px 16px/.test(src) && !/id="deepCta">[\s\S]{0,10}<\/div>\s*<div class="card softbox" id="deepCta"/.test(src));
   chk('★ 上面卡片同 16 型格有距離（mb-4）', /<div class="card p-4 mb-4">/.test(src));
-  chk('★ 測試入口掣去揀版本頁（goPickVersion）', /onclick="goPickVersion\(\)">選擇測試版本/.test(src));
+  chk('★ 測試入口掣去揀版本頁（goPickVersion）', /onclick="goPickVersion\(\)">立即選擇測試版本/.test(src));
   chk('★ 入型別目錄時測試入口一齊收埋', /deepCta"[\s\S]{0,90}display = "none"/.test(src));
   chk('★ 返 16 型層時測試入口出返', /deepCta"[\s\S]{0,120}display = ""/.test(src));
   chk('★ 已清走舊 .deep-intro / .deep-chips CSS（唔留死碼）', !/\.deep-intro\{/.test(src) && !/\.deep-intro-sub\{/.test(src) && !/\.deep-chips\{/.test(src));
   // ---------- 人格分頁最底 CTA（Roy 2026-10-01）----------
   chk('★ 人格分頁最底文案改咗（想確認自己 MBTI 人格？）', /想確認自己 MBTI 人格？/.test(src));
-  chk('★ 副文案改為「選擇測試版本」', /<p class="softbox-sub">選擇測試版本<\/p>/.test(src));
-  chk('★ 立即開始掣改去主頁揀版本位（goPickVersion）', /onclick="goPickVersion\(\)">立即開始/.test(src));
+  chk('★ 測試入口文案全站統一（想確認自己 MBTI 人格？）', (src.match(/想確認自己 MBTI 人格？/g) || []).length >= 9 && !/睇完想試/.test(src));
+  chk('★ 測試入口按鈕全站統一（立即選擇測試版本）', (src.match(/立即選擇測試版本/g) || []).length >= 9 && !/返主頁開始測試/.test(src));
   chk('★ goPickVersion 存在（show home + 捲到 #homeBelow）', /window\.goPickVersion = function\(\)\{[\s\S]{0,260}show\("home"\)[\s\S]{0,200}homeBelow/.test(src));
   // ---------- 全站「大寫字母／型別碼」字型一致性（Roy 2026-10-01：檢查全站色卡用返 Archivo Black）----------
   chk('★ 色卡 4 字母 .hub-type-code 用 Archivo Black', /\.hub-type-code\{\s*\nfont-family:'Archivo Black'/.test(src));
