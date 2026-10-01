@@ -1,6 +1,6 @@
 # UI TODO — 自訂 app 彈窗 / 互動統一
 
-> 最後更新：2026-09-29（Roy 要求整理）｜狀態：**主體完成 ✓**（A/B/C 之外仲有 4 個網頁感問題＋13 項風格）
+> 最後更新：**2026-10-02**（新增第 19–22 項）｜狀態：**主體完成 ✓**（A/B/C 之外仲有 4 個網頁感問題＋13 項風格）
 
 ## 背景（原本嘅問題）
 app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自動加標題「**fung2222.github.io 顯示**」✗
@@ -23,10 +23,16 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 | 12 | 維度入口 4 張卡寫「E vs I」但只開到**第一個**字母 → 改成兩個字母各自獨立撳得（`.dim-pick`） | `fecc582` |
 | 13 | 性格百科 16 型格曾被改（圓角/格距/比例）→ **Roy：直角係好嘅** → 已**逐字節還原**（`git diff` 證明一樣）＋加守門測試禁止再改 | `560c77e` → `5914890` |
 | 14 | **「4 個維度 8 個字母」卡美化**：字母 chip → 21px 粗黑體大字、每個字母用返自己嘅顏色、`vs` 基線對齊、無框（兩個字母照樣各自撳得） | `5914890` |
-| 15 | **4 個「網頁感」問題**：① sw.js offline fallback（新檔 `offline.html`，純內嵌 CSS 唔靠 CDN）② record/stats/tee app 感（tap-highlight 透明、`user-select:none`、`overscroll-behavior-y:contain`）③ 全 app 攔 `contextmenu` ④ index/privacy 移除 `target="_blank"`。**第二輪 Roy 決定**：全 app 一致鎖選字（連主頁／私隱頁）＋ **圖開例外**（長按圖仍可儲存／分享），輸入框照樣可以選字貼上。**2026-09-29 Roy 確認**：內頁（record/stats/tee/離線）**下拉鎖住係啱嘅** —— 保持，唔好解鎖 | `f39043a` `4e656c0` |
+| 15 | **4 個「網頁感」問題**：① sw.js offline fallback（新檔 `offline.html`，純內嵌 CSS 唔靠 CDN）② record/stats/tee app 感（tap-highlight 透明、`user-select:none`、`overscroll-behavior-y:contain`）③ 全 app 攔 `contextmenu` ④ index/privacy 移除 `target="_blank"`。**第二輪 Roy 決定**：全 app 一致鎖選字（連主頁／私隱頁）＋ **圖開例外**（長按圖仍可儲存／分享），輸入框照樣可以選字貼上。**2026-09-29 Roy 確認**：內頁下拉鎖住係啱嘅 → ⚠️ **2026-10-02 Roy 推翻**：改為**全站開放**，只鎖測試期間（見第 22 項） | `f39043a` `4e656c0` |
 | 16 | **黑夜模式**：6 頁各加 `<style id="dark-layer">`，**只改顏色**；16 型 16 色／分享卡 canvas／場景 icon 設計色一律不變；字色對比全部 ≥4.5:1（WCAG AA）；金底按鈕字轉深色 | `39e30a3` |
 | 17 | **主題掣（日頭／黑夜手動切換）**：Roy「要有得揀」→ 主頁右上（**選單隔離**）加線條 SVG 太陽／月亮掣；**未撳過 = 跟系統**，撳過記入 `localStorage hkmbti_theme`（之後唔再跟系統）；dark layer 改由 **`html.dk` 主導**（6 頁）＋ `head` 最早期加防閃 script；順手同步 `meta theme-color`。另修 2 個桌面測試嘅脆弱 script regex（唔可以跨越 `</script>`） | `2a6ae00` |
 | 18 | **黑夜模式補漏 v3**（Roy：仲有白色位）：`.card`（版本選擇大面板）、`.option`（答題選項）、`.glass` / `.hub-type-go` / `html.dt .scene-cell`（白玻璃）、`tee .tee-card` / `.filter-bar` 全部轉深；hover 暗金 `#8B6F3D` → `#D8C69E`；`.mth-l` / `.hub-type-hint` / `.stat-pill .count` 深灰字轉淺；金底白字（`option-letter`）轉深字。**新增守門：每頁淺底 selector 一定要有 dark 覆蓋**（`dark_mode_test` 43 → 60 項）。**2026-09-29 Roy 完全閂 app 再開後確認：睇到 OK** ✅ | `2744add` |
+
+| 19 | **拆走三個已淘汰分頁**（Roy「整靚啲潔淨啲」）：`#spectrum`／`#social`／`#romance` section ＋ 7 個函數 ＋ hash 路由 ＋ `NAV` ＋ `restoreNav` case ＋ 專屬 CSS ＋ 桌面 dead selector。`index.html` **317KB → 261KB**。`#socialArticle`／`#romanceArticle` **保留**（場景模式撳「進入」會用） | `3c149dc` |
+| 20 | **修 2 個原有 bug**：① `window.isUnlocked` **從來冇定義過** → 已解鎖用戶撳「人格深入分析」永遠被彈去升級頁 → 加 `window.isUnlocked = function(){ return window.getTier() === "full"; }`（單一來源 = `hkmbti_tier`）② `show()` 開頭 section 清單仍列已刪嘅 `spectrum`/`social`/`romance` → `null.classList` throw → **成個 render 鏈中途爆**（＝用戶見空白） | `3c149dc` |
+| 21 | **頁底大白真兇**（Roy 報「我的紀錄」冇改善）：`record.html`／`tee.html` 各自有 `body{padding-bottom:80px}`，**獨立頁唔共用 index.html CSS** → 改 `calc(16px + env(safe-area-inset-bottom))`；「資料 100% 喺你部機（localStorage）／跨裝置唔同步」整句移入「匯出／全部刪除」卡片做標題（`.85rem`/700/`#6b6560`，另加 dark 覆蓋），底部 `footer-note` 刪走 | `3c149dc` `c72ecc1` `03b7572` `ee0fe2e` `0ad23e5` |
+| 22 | **下拉重新整理政策反轉**（Roy 2026-10-02）：**全站開放**，**只喺 `#test` 測驗進行中先鎖**。解除 `offline.html`／`record.html`／`stats.html`／`tee.html` 各自嘅 `html,body{overscroll-behavior-y:contain}`；`index.html` 嘅 `body.in-test` ＋ `documentElement.style.overscrollBehaviorY` 保留（只測驗中生效） | `3c149dc` |
+| 23 | 百科「由場景睇」場景詳情：16 型卡 grid 同下面測試入口卡太貼（Roy 圖報）→ `#hubSceneDetail .hub-type-grid{margin-bottom:20px}`、`.hub-type-hint{margin-bottom:10px}`（**scope 住**，唔影響百科／深入分析嗰兩個 `.hub-type-grid`） | `3c149dc` |
 
 ## ⏳ 未做
 1. **C 組 3 個 HK$18 示範解鎖彈窗**（`index.html` L2056 / `record.html` L597 / `tee.html` L309）→ 留上架前連 Play Billing 一次過改（soft pitch「看完整分析」）
@@ -48,7 +54,11 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 - ❌ 全站冇 emoji（preflight 會捉）；❌ 唔用「買／付費／移除廣告」字眼
 - ❌ **版本卡／紀錄卡唔可以改成「單撳即入」**（Roy 明確要求保留「著燈展開 → 撳立即進行」）
 - ❌ 改 `alert`／`confirm` → 自訂彈窗時，**必須保留原本 `if(...)` 條件同 `return`**（血淚教訓）
-- ✅ 改完必跑：`preflight.py`(21)、`desktop_layout_test.js`(37)、`desktop_gate_test.js`(34)、`deeplink_test.js`、`record_view_test.js`、`voice_test.js`(10)、`sh tools/ui/run.sh`
+- ❌ **下拉重新整理：全站開放，只喺 `#test` 測驗進行中先鎖**（2026-10-02 Roy 定案，推翻 09-29 嘅「內頁鎖住」）→ sub-page 唔准再出現 `overscroll-behavior-y:contain`
+- ❌ **拆走一個 `section` 要一次過改 7 處**（本體／`show()` 清單／`window.openXxx`／hash `MAP`／`NAV`／`restoreNav` case／專屬 CSS＋dark＋test）；漏 `show()` 清單 → `null.classList` throw → **成個 render 鏈中途爆 = 用戶見空白**
+- ❌ **刪 `window.X = function` 區塊之前，一定要對比刪前刪後嘅函數清單**（`grep -o 'window\.[A-Za-z]\+ = function' | sort`）—— 共用 helper 會坐喺兩個頁面函數中間（`formatGuideHtml`／`formatTypeFullHtml` 就係咁被誤刪過）
+- ❌ **sub-page 唔共用 index.html 嘅 CSS** → 改全站性規則（頁底留白／overscroll／字型／間距）要 `grep -rn '<property>' *.html` 逐個檔改
+- ✅ 改完必跑：`sh tools/ui/run.sh`（15 檔 jsdom）、`python3 tools/preflight.py`(**35**)、`tools/desktop_layout_test.js`(**38**)、`tools/desktop_gate_test.js`(**34**)、`tools/deeplink_test.js`
 
 ## 測試（已永久保存入 repo）
 `sh tools/ui/run.sh` → 7 個 jsdom 回歸測試：wizard 14、版本卡 13、維度卡 13、垃圾桶 14、彈窗 28、返回鍵 24
