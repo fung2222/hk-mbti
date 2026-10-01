@@ -14,7 +14,10 @@ function chk(name, ok, got) {
 }
 
 // ── 靜態檢查 ──
-chk("★ 百科有「4 個英文字母代表咩」卡（光譜整合入嚟）", /id="hubLetters"/.test(src) && /class="hub-letter-list"/.test(src));
+chk("★ 百科有「4 個維度」撳入掣（去維度詳解分頁）", /id="hubDims" onclick="openDims\(\)"/.test(src));
+chk("★ 維度詳解分頁（#dims）有「4 個英文字母代表咩」卡（光譜整合入嚟）", /<section id="dims"/.test(src) && /id="dimsLetters"/.test(src) && /class="hub-letter-list"/.test(src));
+chk("★ 維度詳解分頁有 8 個字母掣 → #letter", (function(){ const s = src.slice(src.indexOf('<section id="dims"'), src.indexOf('<!-- ========== 人格深入分析')); return (s.match(/openLetter\('/g) || []).length === 8; })());
+chk("★ show() 清單有 dims", /"hub","dims","letter"/.test(src));
 chk("★ 光譜 5 段齊（E/I、S/N、T/F、J/P、T/A）", (function(){ const m = src.match(/window\.HUB_LETTERS = \[[\s\S]*?\n\];/); if(!m) return false; const t = m[0]; return ["E vs I","S vs N","T vs F","J vs P","T vs A"].every(x => t.includes(x)); })());
 chk("★ 光譜段有「唔係…」澄清句", /唔係「內向 = 怕醜」/.test(src) && /唔係「P 型 = 散漫」/.test(src));
 chk("★ 16 型卡下面直接係測試入口（hubCta + 選擇測試版本）", /id="hubCta"[\s\S]{0,160}選擇測試版本/.test(src));
@@ -39,11 +42,13 @@ setTimeout(() => {
   if (!w.ROMANCE) w.ROMANCE = { 拍拖: { name: "拍拖", desc: "d" }, 吵架: { name: "吵架", desc: "d" } };
   if (!w.TYPES) w.TYPES = { ENFP: { name: "調停者" }, INTJ: { name: "建築師" } };
 
-  // ① 百科字母卡有 5 段
+  // ① 百科：維度掣撳入 → 維度詳解分頁
   w.openHub();
-  const letters = d.querySelectorAll("#hub .hub-letter-list > div");
-  chk("★ 百科字母卡 render 出 5 段 + 底註", letters.length === 6, "render 出 " + letters.length + " 段（預期 6＝5 段＋1 底註）");
-  chk("★ 字母卡第一段係 E vs I", /E vs I/.test($("#hub .hub-letter-list").textContent));
+  chk("★ 百科維度卡撳入會去維度詳解", (function(){ $("#hubDims").click(); return !$("#dims").classList.contains("hidden") && $("#hub").classList.contains("hidden"); })());
+  const letters = d.querySelectorAll("#dims .hub-letter-list > div");
+  chk("★ 維度詳解 render 出 5 段 + 底註", letters.length === 6, "render 出 " + letters.length + " 段（預期 6＝5 段＋1 底註）");
+  chk("★ 字母卡第一段係 E vs I", /E vs I/.test($("#dims .hub-letter-list").textContent));
+  w.goBack();
 
   // ② 人格頁三個入口
   w.openType("ENFP", "test");

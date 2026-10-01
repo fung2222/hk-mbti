@@ -31,8 +31,9 @@ setTimeout(()=>{
   chk('★ 維度字母有黑暗模式提亮（唔會深底深字）', /html\.dk \.dim-pair button\{filter:brightness/.test(src));
   chk('★ 「vs」字加深（原本 #b0a795 太淺）', /\.dim-pair \.vs\{[^}]*color:#8A8272/.test(src));
   chk('★ 4 個維度細字（能量來源等）已加深', ['能量來源','認知方式','決策方式','生活態度'].every(t=>new RegExp('text-\\[11px\\] text-gray-600 font-semibold mt-1">'+t).test(src)), '');
-  const dimPairs=[...d.querySelectorAll('#hub .dim-pair')];
-  chk('★ 4 個維度入口仍然齊（每組 2 個字母）', dimPairs.length===4 && dimPairs.every(t=>t.querySelectorAll('button').length===2), dimPairs.length);
+  const dimPairs=[...d.querySelectorAll('#dims .dim-pair')];
+  chk('★ 4 個維度入口仍然齊（喺維度詳解分頁，每組 2 個字母）', dimPairs.length===4 && dimPairs.every(t=>t.querySelectorAll('button').length===2), dimPairs.length);
+  chk('★ 百科有「4 個維度（8 個字母）」撳入掣', /id="hubDims" onclick="openDims\(\)"/.test(src));
   chk('★ 每組維度有深色左邊色條', (src.match(/border-left:4px solid #[0-9A-Fa-f]{6}/g)||[]).length>=4);
   console.log('');
   console.log('===== '+(ok===total?'全部通過':'有失敗')+'（'+ok+'/'+total+'） =====');

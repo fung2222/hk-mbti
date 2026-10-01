@@ -1394,34 +1394,13 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <p class="page-hero-sub">四個維度、十六種性格完整介紹、性格比較工具</p>
  </div>
 
- <!-- 4 個英文字母代表咩（由「性格光譜」整合入嚟） -->
- <div class="card p-5 mb-4" id="hubLetters">
- <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>4 個英文字母代表咩？</div>
- <p class="text-xs text-gray-600 mb-3">每個人嘅性格由 4 個維度組成，每個維度有 2 個極端。你喺中間某個位置，唔係 100% 一邊。</p>
- <div class="hub-letter-list"></div>
+ <!-- 4 個維度入口（撳入去睇 8 個字母詳解）-->
+ <div class="card p-5 mb-4 cursor-pointer" id="hubDims" onclick="openDims()">
+ <div class="hub-row">
+ <div class="hub-row-body">
+ <div class="hub-row-title"><h3 class="font-bold text-sm">4 個維度（8 個字母）</h3><span class="hub-row-chev">▼</span></div>
+ <p class="text-xs text-gray-500 mt-1">每個人嘅性格由呢 4 個維度組成 — 撳入去睇 8 個字母詳解</p>
  </div>
-
- <!-- 4 個維度入口 -->
- <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">4 個維度（8 個字母）</h3>
- <p class="text-xs text-gray-600 mb-3">每個人嘅性格由呢 4 個維度組成</p>
- <div class="grid grid-cols-2 gap-3">
-  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #B4652E">
-  <div class="dim-pair"><button type="button" style="--dc:#B4652E" onclick="openLetter('E')">E</button><span class="vs">vs</span><button type="button" style="--dc:#5A4B80" onclick="openLetter('I')">I</button></div>
-  <div class="text-[11px] text-gray-600 font-semibold mt-1">能量來源</div>
-  </div>
-  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #84475A">
-  <div class="dim-pair"><button type="button" style="--dc:#556B33" onclick="openLetter('S')">S</button><span class="vs">vs</span><button type="button" style="--dc:#84475A" onclick="openLetter('N')">N</button></div>
-  <div class="text-[11px] text-gray-600 font-semibold mt-1">認知方式</div>
-  </div>
-  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #2C3E57">
-  <div class="dim-pair"><button type="button" style="--dc:#2C3E57" onclick="openLetter('T')">T</button><span class="vs">vs</span><button type="button" style="--dc:#9E4A3C" onclick="openLetter('F')">F</button></div>
-  <div class="text-[11px] text-gray-600 font-semibold mt-1">決策方式</div>
-  </div>
-  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #4E3D6B">
-  <div class="dim-pair"><button type="button" style="--dc:#4E3D6B" onclick="openLetter('J')">J</button><span class="vs">vs</span><button type="button" style="--dc:#84462F" onclick="openLetter('P')">P</button></div>
-  <div class="text-[11px] text-gray-600 font-semibold mt-1">生活態度</div>
-  </div>
  </div>
  </div>
 
@@ -1471,6 +1450,46 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="compareResult" class="mt-4"></div>
  </div>
  </section>
+
+<!-- ========== 維度詳解（由百科撳入） ========== -->
+<section id="dims" class="hidden fade-up">
+<div class="page-hero">
+<div class="page-hero-row">
+<button type="button" class="page-back" onclick="goBack()">返回</button>
+<h1>性格係點組成</h1>
+</div>
+<p class="page-hero-sub">4 個維度、8 個字母、仲有 T/A 情緒指標</p>
+</div>
+
+<div class="card p-5 mb-4">
+<div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>4 個英文字母代表咩？</div>
+<p class="text-xs text-gray-600 mb-3">每個人嘅性格由 4 個維度組成，每個維度有 2 個極端。你喺中間某個位置，唔係 100% 一邊。</p>
+<div class="hub-letter-list" id="dimsLetters"></div>
+</div>
+
+<div class="card p-5 mb-4">
+<h3 class="font-bold mb-3 text-sm">4 個維度（8 個字母）</h3>
+<p class="text-xs text-gray-600 mb-3">撳任何一個字母睇詳細解釋</p>
+<div class="grid grid-cols-2 gap-3">
+ <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #B4652E">
+ <div class="dim-pair"><button type="button" style="--dc:#B4652E" onclick="openLetter('E')">E</button><span class="vs">vs</span><button type="button" style="--dc:#5A4B80" onclick="openLetter('I')">I</button></div>
+ <div class="text-[11px] text-gray-600 font-semibold mt-1">能量來源</div>
+ </div>
+ <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #84475A">
+ <div class="dim-pair"><button type="button" style="--dc:#556B33" onclick="openLetter('S')">S</button><span class="vs">vs</span><button type="button" style="--dc:#84475A" onclick="openLetter('N')">N</button></div>
+ <div class="text-[11px] text-gray-600 font-semibold mt-1">認知方式</div>
+ </div>
+ <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #2C3E57">
+ <div class="dim-pair"><button type="button" style="--dc:#2C3E57" onclick="openLetter('T')">T</button><span class="vs">vs</span><button type="button" style="--dc:#9E4A3C" onclick="openLetter('F')">F</button></div>
+ <div class="text-[11px] text-gray-600 font-semibold mt-1">決策方式</div>
+ </div>
+ <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #4E3D6B">
+ <div class="dim-pair"><button type="button" style="--dc:#4E3D6B" onclick="openLetter('J')">J</button><span class="vs">vs</span><button type="button" style="--dc:#84462F" onclick="openLetter('P')">P</button></div>
+ <div class="text-[11px] text-gray-600 font-semibold mt-1">生活態度</div>
+ </div>
+</div>
+</div>
+</section>
 
 <!-- ========== 人格深入分析（完整版） ========== -->
 <section id="deep" class="hidden fade-up">
@@ -3092,7 +3111,7 @@ if(window._navStack.length > 24) window._navStack.shift();
  }
  }
 window._showing = id;
-["home","profile","test","result","about","spectrum","hub","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
+["home","profile","test","result","about","spectrum","hub","dims","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
 window.scrollTo(0,0);
 if(id === "home"){
@@ -5761,7 +5780,6 @@ window.scrollTo(0,0);
 setTimeout(function(){ try{ window.renderTier(); }catch(e){} }, 0);
 window.openHub = function(){
 show("hub");
-window.renderHubLetters();
 };
 // 人格頁「深入睇吓呢一型」：相處／拍拖／深入分析 三個入口
 window.renderTypeMore = function(){
@@ -5799,7 +5817,12 @@ window.openDeepFor = function(code){
  if(!window.isUnlocked || !window.isUnlocked()){ window.openUpgrade(); return; }
  window.openDeepType(String(code || "").toUpperCase());
 };
-// 百科入面嘅「4 個英文字母代表咩」（由性格光譜整合入嚟）
+// 由百科撳入「維度詳解」分頁
+window.openDims = function(){
+show("dims");
+window.renderDimsLetters();
+};
+// 維度詳解入面嘅「4 個英文字母代表咩」（由性格光譜整合入嚟）
 window.HUB_LETTERS = [
  {n:"第一個字母：E vs I",sub:"（能量來源）",a:"E（Extraverted 外向）",ad:"能量嚟自外界同人相處。喺派對、傾偈、social 活動之後會覺得充滿電。",b:"I（Introverted 內向）",bd:"能量嚟自內在世界。喺獨處、閱讀、反思之後先會覺得充滿電。社交耐咗會攰。",note:"唔係「內向 = 怕醜」— 內向只係「邊度攞能量」",c:"#E89A6B"},
  {n:"第二個字母：S vs N",sub:"（認知方式）",a:"S（Observant 實感）",ad:"睇重具體事實、實際經驗、當下發生嘅事。較務實，鍾意 step-by-step 處理問題。",b:"N（Intuitive 直覺）",bd:"睇重可能性、模式、未來趨勢。較抽象，鍾意諗大 picture 同可能性。",note:"唔係「N 型 = 神秘」— N 只係「鍾意抽象概念」",c:"#A86B7C"},
@@ -5807,8 +5830,8 @@ window.HUB_LETTERS = [
  {n:"第四個字母：J vs P",sub:"（生活態度）",a:"J（Judging 判斷）",ad:"鍾意有計劃、有結構。deadline 前一定做完，房間企理。",b:"P（Prospecting 感知）",bd:"鍾意彈性、即興。deadline 前一晚先衝刺，房間「自己嘅秩序」。",note:"唔係「P 型 = 散漫」— P 只係「鍾意拖到最後一刻先做」",c:"#6B5A8A"},
  {n:"額外指標：T vs A",sub:"（情緒反應）",a:"T（Turbulent 敏感）",ad:"情緒起伏較大，容易自省、對自己要求高，對壓力比較敏感。結果會寫「敏感型」。",b:"A（Assertive 自信）",bd:"情緒較穩定，對自己嘅決定有信心，抗壓能力較高。結果會寫「自信型」。",note:"呢個係後加嘅第 5 個指標，唔屬於原本 4 個字母；同一型號都可以 T 或者 A",c:"#8A7A5A"}
 ];
-window.renderHubLetters = function(){
- const box = document.querySelector("#hub .hub-letter-list");
+window.renderDimsLetters = function(){
+ const box = document.querySelector("#dims .hub-letter-list") || document.querySelector("#dimsLetters");
  if(!box) return;
  box.innerHTML = window.HUB_LETTERS.map(function(L){
   return '<div class="border-l-4 pl-3 py-1" style="border-color:'+L.c+'">'
