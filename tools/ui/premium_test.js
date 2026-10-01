@@ -90,6 +90,9 @@ setTimeout(async ()=>{
   chk('★ 版頭金標同性格百科一致（brand-gold + 場景 icon）', (function(){ const c=$('#deep #deepIntro'); return !!c && !!c.querySelector('h3.brand-gold') && !!c.querySelector('h3 .scenes-title-ico') && !!c.querySelector('p.text-gray-600'); })());
   chk('★ hub-bleed 內有提示 + 16 型格（同百科排位一樣）', (function(){ const b=$('#deep .hub-bleed-inner'); return !!b && !!b.querySelector('.hub-type-hint') && !!b.querySelector('#deepTypeGrid'); })());
   chk('★ 版頭簡介做成卡片（.card）', (function(){ const b=$('#deep #deepIntro'); return !!b && !!b.querySelector('.card h3.brand-gold') && !!b.querySelector('.card p.text-gray-600'); })());
+  chk('★ 金標下面有一行黑大字（深入自我探索）', (function(){ const c=$('#deep #deepIntro'); return !!c && !!c.querySelector('.deep-lead') && c.querySelector('.deep-lead').textContent.includes('深入'); })(), (function(){ const e=$('#deep #deepIntro .deep-lead'); return e ? e.textContent : '(冇)'; })());
+  chk('★ 黑大字喺金標下面、說明文字上面（DOM 次序）', (function(){ const c=$('#deep #deepIntro'); const h=c.querySelector('h3.brand-gold'), l=c.querySelector('.deep-lead'); return !!h && !!l && (h.compareDocumentPosition(l) & 4) > 0; })());
+  chk('★ 黑大字係深色大字（19px / 900 / var(--ink)）', /\.deep-lead\{font-size:19px;font-weight:900;[^}]*color:var\(--ink\)/.test(src));
   chk('★ 版頭卡片有「有咩睇」同「有咩用」兩句', /核心動機/.test($('#deep #deepIntro').textContent) && /點相處/.test($('#deep #deepIntro').textContent));
   chk('★ 16 型格下面有測試入口卡', (function(){ const c=$('#deep #deepCta'), g=$('#deepTypeGrid'); return !!c && !!g && (g.compareDocumentPosition(c) & 4) > 0; })());
   chk('★ 測試入口文案同人格分頁一致（想確認自己 MBTI 人格？）', /想確認自己 MBTI 人格？/.test($('#deep #deepCta').textContent), $('#deep #deepCta').textContent.trim());
