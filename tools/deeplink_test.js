@@ -92,7 +92,7 @@ function loadOther(file){
   return dom.window;
 }
 
-const visible = w => ["home","type","about","spectrum","hub","social","romance","method","privacy","result"]
+const visible = w => ["home","type","about","hub","method","privacy","result"]
   .filter(s => w.document.getElementById(s) && !w.document.getElementById(s).classList.contains("hidden"));
 
 (async () => {
@@ -100,8 +100,8 @@ const visible = w => ["home","type","about","spectrum","hub","social","romance",
 
   console.log("【1】load 時嘅深層連結");
   const CASES = [["#type=INFP","type"],["#type=ESTJ","type"],["#type=isfp","type"],
-    ["#about","about"],["#spectrum","spectrum"],["#hub","hub"],["#social","social"],
-    ["#romance","romance"],["#method","method"],["#privacy","privacy"],["(冇 hash)","home"]];
+    ["#about","about"],["#hub","hub"],["#typeScenes","typeScenes"],
+    ["#method","method"],["#privacy","privacy"],["(冇 hash)","home"]];
   for(const [hash, expect] of CASES){
     const { w } = await load({ hash: hash === "(冇 hash)" ? "" : hash });
     const ok = w._showing === expect;

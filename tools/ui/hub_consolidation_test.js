@@ -67,10 +67,9 @@ chk("★ 人格頁有「深入睇吓呢一型」入口卡", /id="typeMore"[\s\S]
 chk("★ 人格頁入口合併為「X × N 個場景」＋「人格深入分析」（Roy 2026-10-01 方案 A）", (function(){ const i = src.indexOf("window.renderTypeMore"); const fn = src.slice(i, src.indexOf("window.openDeepFor", i)); return /openTypeScenes\('/.test(fn) && /"人格深入分析"/.test(fn) && !/"個人相處"/.test(fn) && !/"個人拍拖"/.test(fn); })());
 chk("★ 入口函數都有定義", ["openTypeScenes","openDeepFor","renderTypeScenes"].every(f => new RegExp("window\\." + f + " = function").test(src)));
 chk("★ typeScenes 分頁存在且有返回掣", /<section id="typeScenes"/.test(src) && /id="typeScenesList"/.test(src));
-chk("★ 深入分析入口要解鎖（未解鎖跳升級頁）", /window\.openDeepFor = function\(code\)\{\s*\n?\s*if\(!window\.isUnlocked \|\| !window\.isUnlocked\(\)\)\{ window\.openUpgrade\(\); return; \}/.test(src));
-chk("★ 相處／拍拖有「正在睇 XX」提示條", /scene-for-banner/.test(src) && /_socialForType/.test(src) && /_romanceForType/.test(src));
-chk("★ 提示條有「睇全部 16 型」清除掣", /scene-for-clear/.test(src) && /window\._socialForType=null/.test(src));
-chk("★ 新元素有黑暗模式覆蓋", /html\.dk \.type-more-row\{/.test(src) && /html\.dk \.scene-for-banner\{/.test(src));
+chk("★ 深入分析入口要解鎖（未解鎖跳升級頁）", /if\(!window\.isUnlocked \|\| !window\.isUnlocked\(\)\)\{ window\.openUpgrade\(\); return; \}/.test(src) && /window\.isUnlocked = function\(\)\{ return window\.getTier\(\) === "full"; \};/.test(src));
+  chk("★ 舊「正在睇 XX」提示條已隨分頁拆走", !src.includes("scene-for-banner") && !src.includes("_socialForType") && !src.includes("_romanceForType"));
+  chk("★ 人格頁入口 row 有黑暗模式覆蓋", /html\.dk \.type-more-row\{/.test(src));
 
 // ── jsdom 真跑 ──
 const dom = new JSDOM(src, { runScripts: "dangerously", pretendToBeVisual: true, url: "https://example.com/" });
@@ -82,6 +81,7 @@ setTimeout(() => {
   if (!w.SOCIAL) w.SOCIAL = { WhatsAppGroup: { name: "WhatsApp 群", desc: "d" }, TeaFriend: { name: "飲茶朋友", desc: "d" } };
   if (!w.ROMANCE) w.ROMANCE = { 拍拖: { name: "拍拖", desc: "d" }, 吵架: { name: "吵架", desc: "d" } };
   if (!w.TYPES) w.TYPES = { ENFP: { name: "調停者" }, INTJ: { name: "建築師" } };
+  if (!w.PREMIUM) w.PREMIUM = { INTJ: { chapters: [{ t: "第一章", b: "測試內容一。\n\n- 點一\n- 點二" }] } };
 
   // ① 百科：維度掣撳入 → 維度詳解分頁
   w.openHub();
@@ -107,7 +107,7 @@ setTimeout(() => {
   w.goBack();
 
   // ①b 百科「由場景睇」模式（Roy 2026-10-01 方案 A：場景入口收埋入百科）
-  const _A = { INTJ: "a", ENFP: "b" };
+  const _A = { INTJ: "測試內文一。**最忌**：測試內文二。", ENFP: "測試內文一。**最忌**：測試內文二。" };
   w.SOCIAL = { WhatsAppGroup: { name: "WhatsApp 群組", desc: "d", articles: _A }, FamilyGathering: { name: "親戚飯局", desc: "d", articles: _A }, TeaFriend: { name: "飲茶吹水朋友", desc: "d", articles: _A }, GroupProject: { name: "Group Project 隊友", desc: "d", articles: _A }, Roommate: { name: "室友", desc: "d", articles: _A }, Workplace: { name: "返工同事", desc: "d", articles: _A }, 失戀陪: { name: "失戀時陪佢", desc: "d", articles: _A } };
   w.ROMANCE = { 拍拖: { name: "點同佢拍拖", desc: "d", articles: _A }, 吵架: { name: "同佢點收科", desc: "d", articles: _A }, 分手: { name: "點同佢分手", desc: "d", articles: _A } };
   // jsdom 唔 load data.js → 補返 hubTypeCardHtml 需要嘅 palette
@@ -131,6 +131,8 @@ setTimeout(() => {
   const gridInHub = d.querySelector("#hubSceneDetail .hub-type-grid");
   chk("★ 場景詳情 render 出 16 型卡 grid", !!gridInHub, gridInHub ? "有" : "冇");
   chk("★ 場景詳情有「全部場景」返回掣", !!d.querySelector("#hubSceneDetail .hub-scene-back"));
+  chk("★ 場景詳情 16 型卡 grid 有下距（唔會貼住測試入口卡）", /#hubSceneDetail \.hub-type-grid\{margin-bottom:20px\}/.test(src));
+  chk("★ 場景詳情提示同 16 型卡之間有距離", /#hubSceneDetail \.hub-type-hint\{margin-bottom:10px\}/.test(src));
   w.closeHubScene();
   chk("★ 撳「全部場景」返到場景清單", !$("#hubSceneList").classList.contains("hidden") && $("#hubSceneDetail").classList.contains("hidden"));
 
@@ -141,40 +143,41 @@ setTimeout(() => {
   chk("★ 該型場景頁標題帶型別碼", /ENFP/.test($("#typeScenesTitle").textContent), $("#typeScenesTitle").textContent);
   chk("★ 該型場景卡呼叫 typeScenesOpenSocial／Romance", /typeScenesOpen(Social|Romance)\(/.test(tsRows[0].getAttribute("onclick")), tsRows[0].getAttribute("onclick"));
 
-  // ①d 相處／拍拖場景頁（#social 仍保留，由文章返回用）
-  w.openSocial();
-  w.openSocialScenario("WhatsAppGroup");
-  const gridInSocial = d.querySelector("#socialScenarios .hub-type-grid");
-  chk("★ 相處場景頁 render 出 16 型卡 grid", !!gridInSocial, gridInSocial ? "有" : "冇");
-  chk("★ 相處／拍拖場景頁：16 型卡 grid 有下距（唔會貼住入口卡）", /#socialScenarios \.hub-type-grid,#romanceScenarios \.hub-type-grid\{margin-bottom:20px\}/.test(src));
-  chk("★ 提示同 16 型卡 grid 之間有距離", /#socialScenarios \.hub-type-hint,#romanceScenarios \.hub-type-hint\{margin-bottom:10px\}/.test(src));
+  // ①d 舊相處／拍拖／光譜分頁已拆走（Roy 2026-10-01「整靚啲潔淨啲」）
+  chk("★ 舊分頁已拆走：#spectrum／#social／#romance 都唔存在", !w.$("spectrum") && !w.$("social") && !w.$("romance"));
+  chk("★ 舊分頁函數已清走", typeof w.openSpectrum !== "function" && typeof w.openSocial !== "function" && typeof w.openSocialScenario !== "function" && typeof w.openRomance !== "function" && typeof w.openRomanceScenario !== "function");
+  chk("★ show() 清單唔會再撞已刪 section", !/"about","spectrum"/.test(src) && !/"type","social"/.test(src));
+  chk("★ 舊 CSS 已清（scene-for-banner／#socialScenarios）", !/scene-for-banner/.test(src) && !/socialScenarios/.test(src) && !/scene-for-clear/.test(src));
 
-  // ①d 捲動位置記憶
+  // ①e 拆頁面時唔可以連共用 helper 一齊刪（2026-10-01 真實教訓：formatGuideHtml／formatTypeFullHtml 被誤刪）
+  chk("★ 共用排版 helper 仍在（formatGuideHtml）", typeof w.formatGuideHtml === "function");
+  chk("★ 共用排版 helper 仍在（formatTypeFullHtml）", typeof w.formatTypeFullHtml === "function");
+  chk("★ 每個 window.X(...) 呼叫點都有定義（跨 index.html + 所有 .js）", (function(){
+    const files = ["data.js","social.js","premium-data.js","type-icons.js","voice-data.js"].filter(f => fs.existsSync(path.join(root, f)));
+    const all = src + files.map(f => fs.readFileSync(path.join(root, f), "utf8")).join("\n");
+    const defined = new Set([...all.matchAll(/window\.([A-Za-z_$][\w$]*)\s*=\s*(?:function|\{|\(|async)/g)].map(m=>m[1]));
+    const called = new Set([...src.matchAll(/window\.([A-Za-z_$][\w$]*)\s*\(/g)].map(m=>m[1]));
+    const BROWSER = ["scrollTo","addEventListener","matchMedia","open","print","getComputedStyle"];
+    const bad = [...called].filter(x => !defined.has(x) && !BROWSER.includes(x));
+    if(bad.length) console.log("      未定義：", bad.join(", "));
+    return bad.length === 0;
+  })());
 
-  // ② 人格頁兩個入口（相處＋拍拖已合併成「X × 10 個場景」）
-  w.openType("ENFP", "test");
-  const rows = d.querySelectorAll("#typeMoreList .type-more-row");
-  chk("★ 人格頁 render 出 2 個入口", rows.length === 2, "render 出 " + rows.length + " 個");
-  chk("★ 入口 1 係「ENFP × 10 個場景」", /openTypeScenes\('ENFP'\)/.test(rows[0].getAttribute("onclick")), rows[0].getAttribute("onclick"));
-  chk("★ 入口 1 標題有 N 個場景（動態）", /個場景/.test(rows[0].textContent), rows[0].textContent.trim().slice(0, 40));
-  chk("★ 入口 2 係深入分析、帶住 ENFP", /ENFP/.test(rows[1].getAttribute("onclick")), rows[1].getAttribute("onclick"));
-  chk("★ 深入分析入口有「完整版」標記", /type-more-lock/.test(rows[1].innerHTML) && /完整版/.test(rows[1].textContent));
-  chk("★ 入口副標顯示呢一型（ENFP · 調停者）", /ENFP/.test($("#typeMoreSub").textContent), $("#typeMoreSub").textContent);
+  // ③ 相處／拍拖文章頁仍然開到（helper 還原後）
+  w.openSocialArticle("WhatsAppGroup", "ENFP");
+  chk("★ 相處文章仍開到（排版正常）", !w.$("socialArticle").classList.contains("hidden") && /article-guide-kicker/.test(w.$("socialArticleBody").innerHTML) && /測試內文一/.test(w.$("socialArticleBody").innerHTML), "內文 " + w.$("socialArticleBody").innerHTML.length);
+  const rk = Object.keys(w.ROMANCE || {})[0];
+  w.openRomanceArticle(rk, "ENFP");
+  chk("★ 拍拖文章仍開到（排版正常）", !w.$("romanceArticle").classList.contains("hidden") && /article-guide-kicker/.test(w.$("romanceArticleBody").innerHTML) && /測試內文一/.test(w.$("romanceArticleBody").innerHTML), "內文 " + w.$("romanceArticleBody").innerHTML.length);
+  // 文章頁底 softbox 已換成合法入口
+  const sBox = w.$("socialArticle").querySelector(".article-more-list");
+  chk("★ 文章頁底已冇「個人相處／個人拍拖」", sBox && !/個人相處|個人拍拖/.test(sBox.textContent), sBox ? sBox.textContent.trim().replace(/\s+/g," ") : "(冇)");
+  chk("★ 文章頁底換成「性格百科」＋「呢一型其他場景」", sBox && /性格百科/.test(sBox.textContent) && /其他場景/.test(sBox.textContent));
 
-  // ③ 型優先：相處 banner
-  w.openSocialFor("ENFP");
-  const banner = $("#socialScenarios .scene-for-banner");
-  chk("★ 由人格頁跳相處：有「正在睇 ENFP」提示條", !!banner, banner ? banner.textContent.trim() : "(冇)");
-  chk("★ 提示條顯示型名", !!banner && /ENFP/.test(banner.textContent), banner ? banner.textContent.trim() : "");
-
-  // ④ 清除 → 返全部 16 型
-  if (banner) banner.querySelector(".scene-for-clear").click();
-  chk("★ 撳「睇全部 16 型」後提示條消失", !$("#socialScenarios .scene-for-banner"));
-
-  // ⑤ 拍拖 banner
-  w.openRomanceFor("INTJ");
-  const rb = $("#romanceScenarios .scene-for-banner");
-  chk("★ 由人格頁跳拍拖：有「正在睇 INTJ」提示條", !!rb && /INTJ/.test(rb.textContent));
+  // ③b 深入分析章節頁仍然開到（formatGuideHtml）
+  w.openDeepType("INTJ");
+  w.openDeepChapter(0);
+  chk("★ 深入分析章節頁仍 render 到內文", w.$("deepChapterBody").innerHTML.length > 20, "內文 " + w.$("deepChapterBody").innerHTML.length);
 
   // ⑥ 未解鎖：深入分析入口會跳升級頁
   w.openDeepFor("ENFP");

@@ -44,7 +44,7 @@ const bad = selectors.filter(s => !/^html\.dt[\s:.]/.test(s) && s !== "html.dt")
 check("@media 入面每個 selector 都以 html.dt 開頭（" + selectors.length + " 個）", bad.length === 0, bad.slice(0, 3).join(" | "));
 check("冇 calc(50% - 50vw) 全闊色帶／冇 vw 負 margin", !/50vw/.test(noComments));
 check("冇無條件 zoom", !/zoom\s*:/.test(noComments));
-const SECTIONS = ["home","profile","test","result","about","spectrum","hub","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"];
+const SECTIONS = ["home","profile","test","result","about","hub","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter"];
 const hiddenBreakers = [];
 for (const m of mediaBlocks) for (const r of m[2].matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
   if (!/(^|;)\s*display\s*:/.test(r[2])) continue;

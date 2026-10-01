@@ -86,7 +86,11 @@ function open(file) {
     chk(f + ' 輸入框仍然可以選字（user-select:text）', /input,textarea,\[contenteditable\]\{[^}]*user-select:text/.test(s));
   }
   for (const f of NO_PULL) {
-    chk(f + ' 唔會下拉重新載入（overscroll-behavior-y:contain）', /overscroll-behavior-y:contain/.test(read(f)));
+    chk(f + ' 下拉重新整理開放（Roy 2026-10-01：只鎖測試期間）', !/overscroll-behavior-y:contain/.test(read(f)));
+chk('index.html 只喺測試期間鎖下拉（body.in-test）', (function(){
+  const h = read('index.html');
+  return /body\.in-test\{overscroll-behavior-y:contain/.test(h) && !/^body\{[^}]*overscroll-behavior/m.test(h) && !/html,body\{[^}]*overscroll-behavior-y:contain/.test(h);
+})());
   }
 
   // ---------- ④ 冇外開 ----------

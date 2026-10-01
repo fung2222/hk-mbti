@@ -348,6 +348,9 @@ html.dk .up-cmp .no{color:#6E675C}
 .hub-bleed{margin:0 -16px 26px;padding:24px 14px 20px;background:linear-gradient(180deg,#fff,var(--paper));}
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
 .hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
+/* 百科「由場景睇」→ 場景詳情：16 型卡 grid 同下面測試入口卡要有距離（Roy 2026-10-01 報貼住） */
+#hubSceneDetail .hub-type-hint{margin-bottom:10px}
+#hubSceneDetail .hub-type-grid{margin-bottom:20px}
 .hub-type-hint{font-size:11px;line-height:1.45;color:#8a8174;text-align:left;margin:0 0 8px;font-weight:400;}
 .article-type-stage{margin:0 -16px 26px;}
 .article-type-card{
@@ -437,9 +440,6 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 .hub-scene-n{font-weight:600;letter-spacing:0;color:#9a9086}
 .hub-scene-back{display:inline-block;border:0;background:transparent;color:#8A7A5A;font-size:12px;font-weight:800;padding:2px 0 12px;cursor:pointer;font-family:inherit}
 
-/* 相處／拍拖場景頁：16 型卡 grid 同下面測試入口卡要有距離（Roy 2026-10-01 圖報貼住） */
-#socialScenarios .hub-type-grid,#romanceScenarios .hub-type-grid{margin-bottom:20px}
-#socialScenarios .hub-type-hint,#romanceScenarios .hub-type-hint{margin-bottom:10px}
 
 /* 場景攻略列 */
 .scene-go-row{display:flex;align-items:center;gap:13px;width:100%;text-align:left;border:0;background:#faf7f2;border-radius:12px;padding:13px 14px;margin:0 0 8px;cursor:pointer;font-family:inherit;}
@@ -451,10 +451,6 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 .scene-go-t{display:block;font-size:14px;font-weight:800;color:var(--ink);margin:0 0 3px}
 .scene-go-d{display:block;font-size:11px;color:#8a8174;line-height:1.5}
 
-/* 「正在睇 XX」提示條（由人格頁跳入相處／拍拖用） */
-.scene-for-banner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--ink);background:#f6e7c4;border-radius:10px;padding:9px 12px;margin:0 0 12px;line-height:1.5}
-.scene-for-banner b{font-weight:800}
-.scene-for-clear{border:0;background:#fff;color:#8a6a1f;font-size:11px;font-weight:700;border-radius:7px;padding:4px 9px;cursor:pointer;font-family:inherit;margin-left:auto}
 
 /* 百科維度卡底「睇字母代表咩」link */
 .hub-more-link{display:block;width:100%;text-align:left;border:0;background:transparent;padding:11px 0 0;margin:0;font-family:inherit;font-size:12px;font-weight:700;color:#8a6a1f;cursor:pointer;}
@@ -990,8 +986,6 @@ html.dk .type-more-lock{color:#E8C989;background:#3A3324}
 html.dk .scene-go-row{background:#222A34}
 html.dk .scene-go-row:hover{background:#28313C}
 html.dk .scene-go-d{color:#A79E92}
-html.dk .scene-for-banner{background:#3A3324;color:#ECE7DE}
-html.dk .scene-for-clear{background:#222A34;color:#E8C989}
 html.dk .mth-l{color:#B9A97F}
 html.dk .home-acc-go:hover{color:#D8C69E}
 html.dk .softbox-btn:hover{color:#D8C69E}
@@ -1143,11 +1137,8 @@ if(window._showing === "type") return true;
 }
 const MAP = {
  "#about": "openAbout",
- "#spectrum": "openSpectrum",
  "#typeScenes": "openTypeScenes",
  "#hub": "openHub",
- "#social": "openSocial",
- "#romance": "openRomance",
  "#method": "openMethod",
  "#privacy": "openPrivacy"
  };
@@ -1316,7 +1307,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <ul class="list-disc pl-4 text-gray-700 space-y-0.5">
  <li><b>情境題</b>：多種港式日常（茶餐廳、港鐵、便利店、返工、相處…）</li>
  <li><b>廣東話</b>提問同解讀，唔使先譯英文</li>
- <li>測完有 <b>港式 slogan</b>、場景配對、「點同人相處 / 拍拖」攻略</li>
+ <li>測完有 <b>港式 slogan</b>、場景配對，仲有 16 型百科同埋每個類型嘅場景攻略</li>
  <li>3 個長度（BB / 進階 / 生活）+ 可寫姓名稱呼、存最近 5 次</li>
  </ul>
  </div>
@@ -1332,7 +1323,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <li class="flex gap-2"><span class="brand-gold font-black flex-shrink-0">·</span><span><b>邊種港人場景最似你</b>（凍檸茶 / 港鐵戰士等）會著燈標示</span></li>
  <li class="flex gap-2"><span class="brand-gold font-black flex-shrink-0">·</span><span><b>較夾嘅類型建議</b>（邊啲 4 字母可能好傾）</span></li>
  <li class="flex gap-2"><span class="brand-gold font-black flex-shrink-0">·</span><span><b>完整分析</b>：戀愛、工作、衝突等更深內容（性格百科）</span></li>
- <li class="flex gap-2"><span class="brand-gold font-black flex-shrink-0">·</span><span><b>相處 / 拍拖攻略</b>：點同每種人傾偈、拍拖時注意咩</span></li>
+ <li class="flex gap-2"><span class="brand-gold font-black flex-shrink-0">·</span><span><b>場景攻略</b>：每個類型 10 個場景 — 點同人相處、拍拖時注意咩（喺性格百科入面）</span></li>
  <li class="flex gap-2"><span class="brand-gold font-black flex-shrink-0">·</span><span><b>分享卡圖片</b>：可下載 / Share 去 WhatsApp（連網址）</span></li>
  </ul>
  <p class="text-[11px] text-gray-500 mt-3 bg-soft rounded-lg p-2.5">
@@ -1350,77 +1341,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </section>
 
  <!-- ========== SPECTRUM ========== -->
- <section id="spectrum" class="hidden fade-up">
- <div class="page-hero">
- <div class="page-hero-row">
- <button type="button" class="page-back" onclick="goBack()">返回</button>
- <h1>MBTI 性格光譜</h1>
- </div>
- <p class="page-hero-sub">E/I · S/N · T/F · J/P 四個維度 + T/A 情緒指標</p>
- </div>
-
- <div class="card p-5 mb-4">
- <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>4 個英文字母代表咩？</div>
- <p class="text-xs text-gray-600 mb-3">每個人嘅性格由 4 個維度組成，每個維度有 2 個極端。你喺中間某個位置，唔係 100% 一邊。</p>
-
- <div class="space-y-3 mt-3">
- <div class="border-l-4 pl-3 py-1" style="border-color:#E89A6B">
- <div class="text-xs font-bold mb-1">第一個字母：E vs I <span class="text-gray-400">（能量來源）</span></div>
- <div class="text-[11px] text-gray-700 leading-relaxed">
- <span class="font-bold text-accent">E（Extraverted 外向）</span>：能量嚟自外界同人相處。佢哋喺派對、傾偈、social 活動之後會覺得充滿電。
- <br><span class="font-bold text-accent">I（Introverted 內向）</span>：能量嚟自內在世界。佢哋喺獨處、閱讀、反思之後先會覺得充滿電。社交耐咗會攰。
- </div>
- <div class="text-[11px] text-gray-600 font-semibold mt-1">唔係「內向 = 怕醜」— 內向只係「邊度攞能量」</div>
- </div>
-
- <div class="border-l-4 pl-3 py-1" style="border-color:#A86B7C">
- <div class="text-xs font-bold mb-1">第二個字母：S vs N <span class="text-gray-400">（認知方式）</span></div>
- <div class="text-[11px] text-gray-700 leading-relaxed">
- <span class="font-bold text-accent">S（Observant 實感）</span>：睇重具體事實、實際經驗、當下發生嘅事。佢哋較務實，鍾意 step-by-step 處理問題。
- <br><span class="font-bold text-accent">N（Intuitive 直覺）</span>：睇重可能性、模式、未來趨勢。佢哋較抽象，鍾意諗大 picture 同可能性。
- </div>
- <div class="text-[11px] text-gray-600 font-semibold mt-1">唔係「N 型 = 神秘」— N 只係「鍾意抽象概念」</div>
- </div>
-
- <div class="border-l-4 pl-3 py-1" style="border-color:#3A4F6B">
- <div class="text-xs font-bold mb-1">第三個字母：T vs F <span class="text-gray-400">（決策方式）</span></div>
- <div class="text-[11px] text-gray-700 leading-relaxed">
- <span class="font-bold text-accent">T（Thinking 思考）</span>：做決定用邏輯同原則，客觀分析利弊。佢哋可能俾人覺得「冷靜」、「理性」。
- <br><span class="font-bold text-accent">F（Feeling 情感）</span>：做決定用價值觀同人情，考慮對方感受。佢哋可能俾人覺得「暖」、「貼心」。
- </div>
- <div class="text-[11px] text-gray-600 font-semibold mt-1">唔係「F 型 = 軟弱」— F 只係「做決定用感覺」</div>
- </div>
-
- <div class="border-l-4 pl-3 py-1" style="border-color:#6B5A8A">
- <div class="text-xs font-bold mb-1">第四個字母：J vs P <span class="text-gray-400">（生活態度）</span></div>
- <div class="text-[11px] text-gray-700 leading-relaxed">
- <span class="font-bold text-accent">J（Judging 判斷）</span>：鍾意有計劃、有結構。佢哋 deadline 前一定做完，房間企理。
- <br><span class="font-bold text-accent">P（Prospecting 感知）</span>：鍾意彈性、即興。佢哋 deadline 前一晚先衝刺，房間「自己嘅秩序」。
- </div>
- <div class="text-[11px] text-gray-600 font-semibold mt-1">唔係「P 型 = 散漫」— P 只係「鍾意拖到最後一刻先做」</div>
- </div>
-
- <div class="border-l-4 pl-3 py-1" style="border-color:#8A7A5A">
- <div class="text-xs font-bold mb-1">額外指標：T vs A <span class="text-gray-400">（情緒反應）</span></div>
- <div class="text-[11px] text-gray-700 leading-relaxed">
- <span class="font-bold text-accent">T（Turbulent 敏感）</span>：情緒起伏較大，容易自省、對自己要求高，對壓力比較敏感。結果會寫「敏感型」。
- <br><span class="font-bold text-accent">A（Assertive 自信）</span>：情緒較穩定，對自己嘅決定有信心，抗壓能力較高。結果會寫「自信型」。
- </div>
- <div class="text-[11px] text-gray-600 font-semibold mt-1">呢個係後加嘅第 5 個指標，唔屬於原本 4 個字母；同一型號都可以 T 或者 A</div>
- </div>
- </div>
-
- <div class="text-[10px] text-gray-500 mt-4 pt-3 border-t border-gray-200">
- 16 種性格 = 4 個維度組合，例如 <span class="font-bold">INTJ</span> = 內向 + 直覺 + 思考 + 判斷
- </div>
- </div>
-
- <div class="card mb-4 softbox">
- <p class="softbox-sub">想睇 16 種詳細介紹？去性格百科</p>
- <button type="button" class="softbox-btn" onclick="openHub()">去性格百科</button>
- </div>
- </section>
-
+ 
  <!-- ========== KNOWLEDGE HUB ========== -->
  <section id="hub" class="hidden">
  <div class="page-hero">
@@ -1783,22 +1704,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </section>
 
  <!-- ========== SOCIAL HUB ========== -->
- <section id="social" class="hidden">
- <div class="page-hero">
- <div class="page-hero-row">
- <button type="button" class="page-back" onclick="goBack()">返回</button>
- <h1>個人相處</h1>
- </div>
- <p class="page-hero-sub">點同每種人傾偈、共事、做朋友 · 7 場景 16 型</p>
- </div>
-
- <div id="socialScenarios"></div>
- <div class="card mb-4 softbox">
- <p class="softbox-sub">想確認自己 MBTI 人格？</p>
- <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
- </div>
- </section>
-
+ 
  <!-- ========== SOCIAL ARTICLE ========== -->
  <section id="socialArticle" class="hidden">
  <div class="page-hero">
@@ -1832,22 +1738,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </section>
 
  <!-- ========== ROMANCE HUB ========== -->
- <section id="romance" class="hidden">
- <div class="page-hero">
- <div class="page-hero-row">
- <button type="button" class="page-back" onclick="goBack()">返回</button>
- <h1>個人拍拖</h1>
- </div>
- <p class="page-hero-sub">點同每種人拍拖、吵架、分手 · 3 場景 16 型</p>
- </div>
-
- <div id="romanceScenarios"></div>
- <div class="card mb-4 softbox">
- <p class="softbox-sub">想確認自己 MBTI 人格？</p>
- <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
- </div>
- </section>
-
+ 
  <!-- ========== ROMANCE ARTICLE ========== -->
  <section id="romanceArticle" class="hidden">
  <div class="page-hero">
@@ -3164,7 +3055,7 @@ window._showing = id;
 if(prevId === "home" && id !== "home"){
 try{ window._homeScrollY = window.scrollY || window.pageYOffset || 0; }catch(e){ window._homeScrollY = 0; }
  }
-["home","profile","test","result","about","spectrum","hub","dims","typeScenes","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
+["home","profile","test","result","about","hub","dims","typeScenes","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
 if(id === "home" && (window._homeScrollY || 0) > 0){
 // 返主頁：還原原本停留位置（唔彈返頂）
@@ -3280,10 +3171,7 @@ const LINKS = [
 const NAV = {
 home: function(){ window.goHome(); },
 about: function(){ window.openAbout(); },
-spectrum: function(){ window.openSpectrum(); },
 hub: function(){ window.openHub(); },
-social: function(){ window.openSocial(); },
-romance: function(){ window.openRomance(); },
 method: function(){ window.openMethod(); },
 privacy: function(){ window.openPrivacy(); }
  };
@@ -5261,16 +5149,6 @@ openSocialArticle(prev.sKey, prev.articleType); return;
 if(id === "romanceArticle" && prev.rKey && prev.articleType){
 openRomanceArticle(prev.rKey, prev.articleType); return;
  }
-if(id === "social"){
-if(prev.sKey) openSocialScenario(prev.sKey);
-else openSocial();
-return;
- }
-if(id === "romance"){
-if(prev.rKey) openRomanceScenario(prev.rKey);
-else openRomance();
-return;
- }
 if(id === "typeScenes"){
 if(prev && prev.type){ window._typeScenesCode = String(prev.type).toUpperCase(); window._lastType = window._typeScenesCode; show("typeScenes"); return; }
 show("hub"); return;
@@ -5295,7 +5173,6 @@ show("deep"); return;
 if(id === "about"){ openAbout(); return; }
 if(id === "method"){ if(typeof window.openMethod === "function"){ openMethod(); return; } }
 if(id === "privacy"){ openPrivacy(); return; }
-if(id === "spectrum"){ openSpectrum(); return; }
 if(id === "hub"){ openHub(); return; }
 if(id === "result"){
 try{
@@ -5636,10 +5513,6 @@ window.openPrivacy = function(){
 show("privacy");
 };
 
-window.openSpectrum = function(){
-show("spectrum");
-};
-
 window.openMethod = function(){
 // 記住由邊一頁入嚟，返回時確定性返去（唔靠 history.back()，避免彈出 app）
 try{
@@ -5672,6 +5545,9 @@ window.TIER_KEY = "hkmbti_tier";
 window.getTier = function(){
 try{ return localStorage.getItem(window.TIER_KEY) === "full" ? "full" : "free"; }catch(e){ return "free"; }
 };
+// 解鎖判斷（單一來源 = getTier）。2026-10-01 修：openDeepFor 一直叫 window.isUnlocked，
+// 但呢個函數從來冇定義過 → 已解鎖嘅用戶撳「人格深入分析」仍然會被彈去升級頁。
+window.isUnlocked = function(){ return window.getTier() === "full"; };
 window.renderTier = function(){
 const b = document.getElementById("tierBtn"), l = document.getElementById("tierLabel");
 if(!b || !l) return;
@@ -5868,17 +5744,6 @@ window.renderTypeMore = function(){
    + '</button>';
  }).join("");
 };
-// 由人格頁跳去「相處／拍拖／深入分析」，記住呢一型
-window._socialForType = null;
-window._romanceForType = null;
-window.openSocialFor = function(code){
- window._socialForType = String(code || "").toUpperCase();
- window.openSocial();
-};
-window.openRomanceFor = function(code){
- window._romanceForType = String(code || "").toUpperCase();
- window.openRomance();
-};
 window.openDeepFor = function(code){
  if(!window.isUnlocked || !window.isUnlocked()){ window.openUpgrade(); return; }
  window.openDeepType(String(code || "").toUpperCase());
@@ -6037,70 +5902,7 @@ if(el && el.scrollIntoView) el.scrollIntoView({block:"center"});
 }, 60);
 };
 // ====================== Social Guide Functions ======================
-window.openSocial = function(){
-window._lastSocialScenario = null;
- // 渲染社交場景到 container
-const container = $("socialScenarios");
-if(!container) return;
-let html = "";
-const _forT = window._socialForType;
-if(_forT){
- const _T = (window.TYPES && window.TYPES[_forT]) || {};
- html += '<div class="scene-for-banner">正在睇 <b>' + _forT + (_T.name ? ' · ' + _T.name : '') + '</b> 喺以下場景嘅表現'
-  + '<button type="button" class="scene-for-clear" onclick="window._socialForType=null;window.openSocial()">睇全部 16 型</button></div>';
-}
-Object.keys(window.SOCIAL).forEach(key => {
-const s = window.SOCIAL[key];
-html += `
- <div class="card p-5 mb-4 cursor-pointer" onclick="openSocialScenario('${key}')">
- <div class="hub-row">
- ${window.hubSceneIconHtml(s.name, 28)}
- <div class="hub-row-body">
- <div class="hub-row-title"><h3 class="font-bold text-sm">${s.name}</h3><span class="hub-row-chev">▼</span></div>
- <p class="text-xs text-gray-500 mt-1">${s.desc}</p>
- </div>
- </div>
- </div>
- `;
- });
-container.innerHTML = html;
-show("social");
-window.scrollTo(0,0);
-};
-
-window.openSocialScenario = function(scenarioKey){
-const s = window.SOCIAL[scenarioKey];
-if(!s) return;
-const was = window._showing;
-const prevKey = window._lastSocialScenario;
-window._lastSocialScenario = scenarioKey;
- // 渲染 16 個類型 grid — 寫入 container 而唔係整個 section
-const container = $("socialScenarios");
-if(!container) return;
-const html = `
- <div class="card p-5 mb-4">
- <div class="hub-detail-head">
- ${window.hubSceneIconHtml(s.name, 30)}
- <h3 class="text-[19px] font-black">${s.name}</h3>
- </div>
- <p class="text-sm text-gray-600">${s.desc}</p>
- </div>
- <p class="hub-type-hint">請選擇其中一種人格</p>
- <div class="hub-type-grid">
- ${["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"].map(type => {
-if(!s.articles[type]) return "";
-return window.hubTypeCardHtml(type, `openSocialArticle('${scenarioKey}','${type}')`);
- }).join("")}
- </div>
- `;
-container.innerHTML = html;
-show("social");
-if(!window._fromPop && !window._navSilent && was === "social" && prevKey !== scenarioKey){
-window._histWrite("push");
- }
-window.scrollTo(0,0);
-};
-
+// 純文字 → HTML 排版（共用 helper；相處／拍拖文章、深入分析章節、人格深入分析都用）
 window.formatGuideHtml = function(raw){
 if(!raw) return "";
 const esc = function(s){
@@ -6119,6 +5921,7 @@ html += paras((chunks[i + 1] || "").trim());
  }
 return html;
 };
+
 window.formatTypeFullHtml = function(raw){
 if(!raw) return "";
 const esc = function(s){
@@ -6149,6 +5952,7 @@ html += "<p>" + esc(s) + "</p>";
 closeList();
 return html;
 };
+
 window.openSocialArticle = function(scenarioKey, type){
 const article = window.SOCIAL[scenarioKey].articles[type];
 const T = window.TYPES[type];
@@ -6176,68 +5980,6 @@ openRomanceArticle(scenarioKey, type);
 };
 
 // ====================== Romance Guide Functions ======================
-window.openRomance = function(){
-window._lastRomanceScenario = null;
-const container = $("romanceScenarios");
-if(!container) return;
-let html = "";
-const _forT = window._romanceForType;
-if(_forT){
- const _T = (window.TYPES && window.TYPES[_forT]) || {};
- html += '<div class="scene-for-banner">正在睇 <b>' + _forT + (_T.name ? ' · ' + _T.name : '') + '</b> 嘅拍拖表現'
-  + '<button type="button" class="scene-for-clear" onclick="window._romanceForType=null;window.openRomance()">睇全部 16 型</button></div>';
-}
-Object.keys(window.ROMANCE).forEach(key => {
-const s = window.ROMANCE[key];
-html += `
- <div class="card p-5 mb-4 cursor-pointer" onclick="openRomanceScenario('${key}')">
- <div class="hub-row">
- ${window.hubSceneIconHtml(s.name, 28)}
- <div class="hub-row-body">
- <div class="hub-row-title"><h3 class="font-bold text-sm">${s.name}</h3><span class="hub-row-chev">▼</span></div>
- <p class="text-xs text-gray-500 mt-1">${s.desc}</p>
- </div>
- </div>
- </div>
- `;
- });
-container.innerHTML = html;
-show("romance");
-window.scrollTo(0,0);
-};
-
-window.openRomanceScenario = function(scenarioKey){
-const s = window.ROMANCE[scenarioKey];
-if(!s) return;
-const was = window._showing;
-const prevKey = window._lastRomanceScenario;
-window._lastRomanceScenario = scenarioKey;
-const container = $("romanceScenarios");
-if(!container) return;
-const html = `
- <div class="card p-5 mb-4">
- <div class="hub-detail-head">
- ${window.hubSceneIconHtml(s.name, 30)}
- <h3 class="text-[19px] font-black">${s.name}</h3>
- </div>
- <p class="text-sm text-gray-600">${s.desc}</p>
- </div>
- <p class="hub-type-hint">請選擇其中一種人格</p>
- <div class="hub-type-grid">
- ${["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"].map(type => {
-if(!s.articles[type]) return "";
-return window.hubTypeCardHtml(type, `openRomanceArticle('${scenarioKey}','${type}')`);
- }).join("")}
- </div>
- `;
-container.innerHTML = html;
-show("romance");
-if(!window._fromPop && !window._navSilent && was === "romance" && prevKey !== scenarioKey){
-window._histWrite("push");
- }
-window.scrollTo(0,0);
-};
-
 window.openRomanceArticle = function(scenarioKey, type){
 const article = window.ROMANCE[scenarioKey].articles[type];
 const T = window.TYPES[type];

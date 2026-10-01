@@ -27,10 +27,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap');
 :root{--gold:#D4A95F;--gold-dim:#B8A878;--ink:#0a0a1a;--soft:#FAF8F3;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{overscroll-behavior-y:contain;}
+/* 下拉重新整理開放（Roy 2026-10-01）：只喺測試進行中先鎖，內頁唔鎖 */
 body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
-body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei",sans-serif;background:var(--soft);color:var(--ink);margin:0;padding-bottom:80px;}
+body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei",sans-serif;background:var(--soft);color:var(--ink);margin:0;padding-bottom:calc(16px + env(safe-area-inset-bottom));}
 .brand-gold{color:var(--gold);}
 .bg-soft{background:rgba(212,169,95,0.06);}
 .btn-ghost{background:#fff;border:1px solid rgba(212,169,95,0.4);color:var(--ink);font-weight:700;padding:10px 16px;border-radius:10px;display:inline-block;text-align:center;cursor:pointer;font-size:14px;}
@@ -96,7 +96,9 @@ border:1px solid #E0D6BE;font-family:inherit;cursor:pointer;text-decoration:none
 }
 .softbox-btn:hover{border-color:var(--gold);color:#8B6F3D;}
 .softbox-btn:active{transform:scale(.97);}
-.record-actions{display:flex;gap:10px;justify-content:center;}
+.record-actions{display:block;}
+.record-actions-title{font-size:1rem;font-weight:900;letter-spacing:-.01em;line-height:1.5;color:var(--ink);margin:0 0 16px;}
+.record-actions-btns{display:flex;gap:10px;justify-content:center;}
 .record-actions .softbox-btn.mini{flex:0 1 auto;min-width:0;padding:8px 16px;font-size:.85rem;font-weight:700;gap:0;}
 .record-actions .softbox-btn.mini svg{margin-right:5px;}
 .record-actions .softbox-btn{flex:1;min-width:0;margin-top:0;padding:13px 10px;}
@@ -287,12 +289,11 @@ html.dk .softbox-btn.danger:hover{color:#F5BDB9}
 </div>
 
 <div class="softbox record-actions">
+  <p class="softbox-title record-actions-title">資料 100% 喺你部機（localStorage）· 跨裝置唔同步</p>
+  <div class="record-actions-btns">
   <button type="button" class="softbox-btn mini" onclick="exportRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M12 4v11"/><path d="M8 8l4-4 4 4"/><path d="M6 14v5h12v-5"/></svg>匯出資料</button>
   <button type="button" class="softbox-btn mini danger" onclick="clearAllRecords()"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;margin-right:6px;flex-shrink:0;"><path d="M5 7h14"/><path d="M10 7V5h4v2"/><path d="M8 7l1 12h6l1-12"/></svg>全部刪除</button>
-</div>
-
-<div class="footer-note">
-資料 100% 喺你部機（localStorage）· 跨裝置唔同步
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>

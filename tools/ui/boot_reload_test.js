@@ -5,7 +5,7 @@ const { JSDOM } = require("jsdom");
 
 const root = path.resolve(__dirname, "../..");
 const src = fs.readFileSync(path.join(root, "index.html"), "utf8");
-const SECTIONS = ["home","profile","test","result","about","spectrum","hub","dims","typeScenes","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"];
+const SECTIONS = ["home","profile","test","result","about","hub","dims","typeScenes","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter"];
 
 let pass = 0, fail = 0;
 const chk = (n, ok, got) => { if (ok) pass++; else { fail++; console.log("✗ " + n + "   <- " + (got === undefined ? "" : got)); } };
