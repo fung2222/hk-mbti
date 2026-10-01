@@ -3135,9 +3135,20 @@ if(window._navStack.length > 24) window._navStack.shift();
  }
  }
 window._showing = id;
+// 主頁捲動位置記憶（Roy 2026-10-01）：由主頁去其他頁 → 記住位置；返主頁 → 停返原本位置
+if(prevId === "home" && id !== "home"){
+try{ window._homeScrollY = window.scrollY || window.pageYOffset || 0; }catch(e){ window._homeScrollY = 0; }
+ }
 ["home","profile","test","result","about","spectrum","hub","dims","scenes","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
+if(id === "home" && (window._homeScrollY || 0) > 0){
+// 返主頁：還原原本停留位置（唔彈返頂）
+const _ry = window._homeScrollY;
+try{ window.scrollTo(0, _ry); }catch(e){}
+setTimeout(function(){ try{ window.scrollTo(0, _ry); }catch(e){} }, 0);
+ } else {
 window.scrollTo(0,0);
+ }
 if(id === "home"){
 try{ loadHistory(); }catch(e){}
 try{ renderTypeStats(); }catch(e){}
@@ -5190,6 +5201,7 @@ break;
 requestAnimationFrame(function(){ requestAnimationFrame(go); });
 };
 window.goHome = function(){
+window._homeScrollY = 0;
 window._navStack = [];
 window._navSilent = true;
 show("home");
@@ -5277,7 +5289,7 @@ try{ history.back(); return; }catch(e){}
 if(window._cameFromOtherPage){
 try{ history.back(); return; }catch(e){}
  }
-if(window._showing !== "home"){ goHome(); }
+if(window._showing !== "home"){ show("home"); }
 };
 
 window.addEventListener("popstate", function(e){

@@ -45,6 +45,21 @@ setTimeout(() => {
 
   // ① 百科：維度掣撳入 → 維度詳解分頁
   w.openHub();
+  // ①c 捲動位置記憶（Roy 2026-10-01：返回要停返原本位置，唔彈返頂）
+  let _lastScrollY = null;
+  w.scrollTo = function(a, b){ _lastScrollY = (b === undefined ? a : b); };
+  Object.defineProperty(w, "scrollY", { configurable: true, get: function(){ return w._mockY || 0; } });
+  w.goHome();                        // 先返主頁（_showing === "home"）
+  w._mockY = 980;
+  w.openHub();                      // 由主頁去百科 → 應該記住 980
+  chk("★ 離開主頁會記住捲動位置", w._homeScrollY === 980, "記住 " + w._homeScrollY);
+  _lastScrollY = null;
+  w.show("home");                    // 返主頁 → 應該還原 980，唔係 0
+  chk("★ 返主頁會還原原本位置（唔彈返頂）", _lastScrollY === 980, "scrollTo → " + _lastScrollY);
+  w.goHome();                        // 主動撳主頁掣 → 去頂
+  chk("★ 主動撳主頁掣仍然去頂", _lastScrollY === 0, "scrollTo → " + _lastScrollY);
+  chk("★ 撳主頁掣會清記憶", w._homeScrollY === 0, w._homeScrollY);
+
   chk("★ 百科維度卡底 link 撳入會去維度詳解", (function(){ $("#hubDims .hub-more-link").click(); return !$("#dims").classList.contains("hidden") && $("#hub").classList.contains("hidden"); })());
   const letters = d.querySelectorAll("#dims .hub-letter-list > div");
   chk("★ 維度詳解 render 出 5 段 + 底註", letters.length === 6, "render 出 " + letters.length + " 段（預期 6＝5 段＋1 底註）");
