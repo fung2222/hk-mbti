@@ -346,6 +346,8 @@ html.dk .up-cmp .no{color:#6E675C}
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
 .hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
 .hub-type-hint{font-size:11px;line-height:1.45;color:#8a8174;text-align:left;margin:0 0 8px;font-weight:400;}
+/* 深入分析頁：提示搬去 16 型格上面（左上） */
+.deep-intro .hub-type-hint{margin:0 0 14px;font-weight:600;}
 .article-type-stage{margin:0 -16px 22px;}
 .article-type-card{
 width:100%;aspect-ratio:16/7;min-height:7.2rem;border-radius:0;color:#fff;
@@ -1458,12 +1460,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <p class="page-hero-sub">完整版內容 · 16 種人格 × 9 章</p>
  </div>
  <div class="deep-intro">
-  <p class="deep-intro-lead">請選擇其中一種人格深入了解</p>
-  <p class="deep-intro-sub">每一種人格有 9 章，由核心動機一路講到日常相處。睇完你會明自己點解會咁反應，亦知身邊嗰個人可以點相處。</p>
-  <div class="deep-chips">
-   <span>核心動機</span><span>3 個盲點</span><span>壓力反應</span><span>成長路徑</span>
-   <span>職場</span><span>愛情</span><span>友情</span><span>唔好講嘅 3 句</span><span>香港情境</span>
-  </div>
+  <p class="deep-intro-lead">揀一種人格，睇佢嘅 9 章深入分析</p>
+  <p class="deep-intro-sub">9 章由核心動機、3 個盲點、壓力反應，一路講到成長路徑、職場、愛情、友情，仲有唔好同佢講嘅 3 句，最後用香港情境對照。睇完你會明自己點解會咁反應，亦知身邊嗰個人可以點相處。</p>
+  <p class="hub-type-hint">撳入去揀一種人格</p>
  </div>
  <div id="deepList"></div>
 </section>
@@ -5636,8 +5635,7 @@ const box = document.getElementById("deepList");
 if(!box) return;
 box.innerHTML = '<div class="hub-type-grid" id="deepTypeGrid">' +
 window.DEEP_ORDER.map(function(t){ return window.deepTypeCardHtml(t); }).join("") +
-'</div>' +
-'<p class="hub-type-hint">撳入去可以睇該型嘅 9 章深入分析</p>';
+'</div>';
 };
 window.renderDeepTypeToc = function(t){
 const d = (window.PREMIUM || {})[t];

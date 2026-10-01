@@ -77,13 +77,14 @@ setTimeout(async ()=>{
   chk('★ 深入分析目錄用 16 張色卡（同性格百科同一款）', cards.length===16, cards.length);
   chk('★ 用返同一套 4 欄密格（hub-type-grid）', !!d.querySelector('#deepList .hub-type-grid'));
   chk('★ 分頁有簡介（唔再係空白頁只有卡）', !!d.querySelector('#deep .deep-intro'));
-  chk('★ 簡介列出 9 章類型', d.querySelectorAll('#deep .deep-chips span').length===9, d.querySelectorAll('#deep .deep-chips span').length);
-  chk('★ 簡介有標題句（大字）', /請選擇其中一種人格深入了解/.test($('#deep .deep-intro-lead').textContent), $('#deep .deep-intro-lead').textContent);
-  chk('簡介有黑暗模式覆蓋', /html\.dk \.deep-intro-sub/.test(src) && /html\.dk \.deep-chips span/.test(src));
+  chk('★ 9 章類型整合入介紹文字（唔再一堆獨立藥丸框）', d.querySelectorAll('#deep .deep-chips span').length===0 && /核心動機/.test($('#deep .deep-intro-sub').textContent) && /香港情境/.test($('#deep .deep-intro-sub').textContent), '藥丸數='+d.querySelectorAll('#deep .deep-chips span').length);
+  chk('★ 標題句改順口（Roy 指定）', /揀一種人格/.test($('#deep .deep-intro-lead').textContent), $('#deep .deep-intro-lead').textContent);
+  chk('★ 提示搬去 16 型格上面（左上，唔再喺左下）', (function(){ const h=$('#deep .deep-intro .hub-type-hint'), g=$('#deepTypeGrid'); return !!h && !!g && (h.compareDocumentPosition(g) & 4) > 0; })());
+  chk('★ 提示文字係「撳入去揀一種人格」', /撳入去揀一種人格/.test($('#deep .deep-intro .hub-type-hint').textContent), $('#deep .deep-intro .hub-type-hint').textContent);
+  chk('★ 提示靠左對齊（左上）', /\.hub-type-hint\{[^}]*text-align:left/.test(src));
+  chk('簡介有黑暗模式覆蓋', /html\.dk \.deep-intro-sub/.test(src));
   chk('★ 深入分析介紹文字放鬆（14px / 行高 1.9 / 段距 17px）', /\.deep-intro-sub\{font-size:14px;line-height:1\.9;[^}]*margin:0 0 17px\}/.test(src));
   chk('★ 介紹標題句同下面留 13px', /\.deep-intro-lead\{[^}]*margin:0 0 13px\}/.test(src));
-  chk('★ 章節標籤 chips 有足夠間距（gap 8px）', /\.deep-chips\{display:flex;flex-wrap:wrap;gap:8px\}/.test(src));
-  chk('★ 冇重複嘅 .deep-chips span 定義', (src.match(/^\.deep-chips span\{/gm)||[]).length===1, (src.match(/^\.deep-chips span\{/gm)||[]).length);
   // ---------- 全站「大寫字母／型別碼」字型一致性（Roy 2026-10-01：檢查全站色卡用返 Archivo Black）----------
   chk('★ 色卡 4 字母 .hub-type-code 用 Archivo Black', /\.hub-type-code\{\s*\nfont-family:'Archivo Black'/.test(src));
   chk('★ .type-code-txt 強制繼承字型（包咗 span 都唔會跌返 body 字型）', /\.type-code-txt\{display:block;font-family:inherit;font-weight:inherit;font-size:inherit/.test(src));
@@ -103,7 +104,7 @@ setTimeout(async ()=>{
   chk('★ 桌面轉輪基準移落 .hub-type-card', /html\.dt \.home-type-reel \.hub-type-card\{font-size:clamp/.test(src));
   chk('★ 冇任何色卡文字硬編 px（除基準 24px）', !/\.hub-type-code\{[^}]*font-size:\d+px/.test(src) && !/\.hub-type-cn\{[^}]*font-size:\d+px/.test(src) && !/\.article-type-card \.hub-type-code\{[^}]*font-size:\d+px/.test(src));
   chk('★ 簡介唔提「買斷」（Roy 指定：只講有咩睇、有咩用）', !/買斷/.test($('#deep .deep-intro').textContent), '');
-  chk('★ 簡介講「有咩可以睇」同「有咩用」', /有 9 章/.test($('#deep .deep-intro-sub').textContent) && /明自己|知身邊|點相處/.test($('#deep .deep-intro-sub').textContent));
+  chk('★ 簡介講「有咩可以睇」同「有咩用」', /9 章/.test($('#deep .deep-intro-sub').textContent) && /明自己|知身邊|點相處/.test($('#deep .deep-intro-sub').textContent), $('#deep .deep-intro-sub').textContent.slice(0, 40));
   chk('INTJ 卡顯示「9 章」', /9 章/.test(cards[0].textContent), cards[0].textContent.replace(/\n/g,' '));
   chk('未寫嘅型顯示「準備中」', /準備中/.test(cards[1].textContent), cards[1].textContent.replace(/\n/g,' '));
   chk('★ 卡有該型漸變色（唔係文字格）', /linear-gradient\(135deg,#6B4E9E/.test(cards[0].getAttribute('style')), cards[0].getAttribute('style'));
@@ -145,7 +146,8 @@ setTimeout(async ()=>{
   // ---------- 型別 9 章目錄 ----------
   w.openDeepType('INTJ');
   chk('★ 型別目錄層：簡介要收埋（Roy 話章節目唔需要）', $('#deep .deep-intro').style.display==='none', $('#deep .deep-intro').style.display);
-  chk('★ 型別目錄內冇「請選擇其中一種人格」', !/請選擇其中一種人格/.test($('#deepList').textContent));
+  chk('★ 型別目錄內冇簡介標題句', !/揀一種人格/.test($('#deepList').textContent));
+  chk('★ 型別目錄內冇提示（提示只喺 16 型選擇層）', !/撳入去/.test($('#deepList').textContent));
   const toc=[...d.querySelectorAll('#deepList .deep-item')];
   chk('INTJ 目錄有 9 章', toc.length===9, toc.length);
   chk('目錄每章有序號 1..9', toc[0].querySelector('.deep-num').textContent==='1' && toc[8].querySelector('.deep-num').textContent==='9');
