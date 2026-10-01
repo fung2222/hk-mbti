@@ -425,11 +425,11 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 }
 .hub-type-cn{font-size:.5em;line-height:1.25;opacity:.9;white-space:nowrap;}
 /* 場景攻略列 */
-.scene-go-row{display:flex;align-items:flex-start;gap:11px;width:100%;text-align:left;border:0;background:#faf7f2;border-radius:12px;padding:12px 14px;margin:0 0 8px;cursor:pointer;font-family:inherit;}
+.scene-go-row{display:flex;align-items:center;gap:13px;width:100%;text-align:left;border:0;background:#faf7f2;border-radius:12px;padding:13px 14px;margin:0 0 8px;cursor:pointer;font-family:inherit;}
 .scene-go-row:last-child{margin-bottom:0}
 .scene-go-row:hover{background:#f5efe6}
-.scene-go-ico{flex:0 0 auto;line-height:0;margin-top:1px}
-.scene-go-ico svg{width:24px;height:24px;display:block}
+.scene-go-ico{flex:0 0 auto;line-height:0;display:flex;align-items:center;justify-content:center}
+.scene-go-ico svg{width:30px;height:30px;display:block}
 .scene-go-body{flex:1 1 auto;min-width:0}
 .scene-go-t{display:block;font-size:14px;font-weight:800;color:var(--ink);margin:0 0 3px}
 .scene-go-d{display:block;font-size:11px;color:#8a8174;line-height:1.5}
@@ -1237,9 +1237,12 @@ fire();
  }
  }
 revealApp();
- }catch(e){
+}catch(e){
 revealApp();
- }
+}finally{
+// 就算前面 throw，都一定要顯示 app（否則 body.js-boot 留住 → #app opacity:0 → 睇落一片空白）
+try{ revealApp(); }catch(e2){}
+}
 if(typeof window.loadHistory === "function"){
 window.loadHistory();
  }
@@ -3138,6 +3141,9 @@ window._navStack.push(window._navSnap());
 if(window._navStack.length > 24) window._navStack.shift();
  }
  }
+// 防禦（Roy 2026-10-01 報「下拉重整變空白頁」）：
+// id 唔存在／唔喺已知清單 → 一律 fallback 主頁，否則全部 section hidden = 一片空白
+if(!id || !window.$(id)){ id = "home"; }
 window._showing = id;
 // 主頁捲動位置記憶（Roy 2026-10-01）：由主頁去其他頁 → 記住位置；返主頁 → 停返原本位置
 if(prevId === "home" && id !== "home"){
@@ -5863,7 +5869,7 @@ window.renderScenes = function(){
   return Object.keys(list || {}).map(function(k){
    const s = list[k];
    return '<button type="button" class="scene-go-row" onclick="' + fn + "( '" + k + "' )" + '">'
-    + '<span class="scene-go-ico">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 24) : '') + '</span>'
+    + '<span class="scene-go-ico">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 30) : '') + '</span>'
     + '<span class="scene-go-body">'
     + '<span class="scene-go-t">' + (s.name || k) + '</span>'
     + '<span class="scene-go-d">' + (s.desc || '') + '</span>'
