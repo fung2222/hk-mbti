@@ -3164,6 +3164,11 @@ try{ loadHistory(); }catch(e){}
 try{ renderTypeStats(); }catch(e){}
 try{ clearVersionUI(); }catch(e){}
  }
+// 下面幾頁嘅內容係 JS render 出嚟（唔喺 HTML 內）→ 一定要喺 show() 內重 render，
+// 否則下拉重整（直接 show(id)，唔會行 openXxx()）之後會見到空白（Roy 2026-10-01 報）
+if(id === "scenes"){ try{ window.renderScenes(); }catch(e){} }
+if(id === "dims"){ try{ window.renderDimsLetters(); }catch(e){} }
+if(id === "hub"){ try{ window.renderHubTypes(); }catch(e){} }
  // 淨係測試頁鎖下拉（防誤觸 reload 清走進度）
 document.body.classList.toggle("in-test", id === "test");
 // 測試期間連 html 都鎖 overscroll（body 鎖唔晒 Android Chrome 嘅下拉重新整理）
@@ -5862,7 +5867,6 @@ window.openDeepFor = function(code){
 // 場景攻略（相處 10 + 拍拖 10）
 window.openScenes = function(){
 show("scenes");
-window.renderScenes();
 };
 window.renderScenes = function(){
  const mk = function(list, fn){
@@ -5889,7 +5893,6 @@ window.renderScenes = function(){
 // 由百科撳入「維度詳解」分頁
 window.openDims = function(){
 show("dims");
-window.renderDimsLetters();
 };
 // 維度詳解入面嘅「4 個英文字母代表咩」（由性格光譜整合入嚟）
 window.HUB_LETTERS = [

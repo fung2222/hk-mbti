@@ -23,6 +23,10 @@ function boot(label, { lastSection, lastNav, navType = "reload" } = {}) {
       if (lastNav) { try { w.sessionStorage.setItem("hkmbti_last_nav", JSON.stringify(lastNav)); } catch (e) {} }
       w.performance.getEntriesByType = function (t) { return t === "navigation" ? [{ type: navType }] : []; };
       w.scrollTo = function () {};
+      // jsdom 唔會 load 外部 script → inject 場景資料（模擬真機已載入）
+      w.SOCIAL = { WhatsAppGroup: { name: "WhatsApp 群組", desc: "d" }, FamilyGathering: { name: "親戚飯局", desc: "d" }, TeaFriend: { name: "飲茶吹水朋友", desc: "d" }, GroupProject: { name: "Group Project 隊友", desc: "d" }, Roommate: { name: "室友", desc: "d" }, Workplace: { name: "返工同事", desc: "d" }, 失戀陪: { name: "失戀時陪佢", desc: "d" } };
+      w.ROMANCE = { 拍拖: { name: "點同佢拍拖", desc: "d" }, 吵架: { name: "同佢點收科", desc: "d" }, 分手: { name: "點同佢分手", desc: "d" } };
+      w.TYPES = { ENFP: { name: "調停者" }, INTJ: { name: "建築師" } };
     }
   });
   const d = dom.window.document;
@@ -60,6 +64,19 @@ setTimeout(() => {
     console.log("[" + c.label + "]  顯示中: " + (visible.join(", ") || "(冇！空白頁)") + "  | js-boot 已除: " + bootOff);
     if (visible.length > 0) p2++; else { f2++; console.log("  ✗ 呢個情況會空白！"); }
     if (bootOff) p2++; else { f2++; console.log("  ✗ js-boot 未除 → #app opacity:0 → 睇落空白！"); }
+    // JS render 嘅頁面：下拉重整後內容必須仲在（Roy 2026-10-01 報「場景攻略下拉後冇晒資料」）
+    if (c.label.includes("場景攻略")) {
+      const n = c.d.querySelectorAll("#scenesSocial .scene-go-row").length;
+      if (n === 7) p2++; else { f2++; console.log("  ✗ 場景攻略下拉後冇晒資料！場景卡 = " + n + "（預期 7）"); }
+      const ni = c.d.querySelectorAll("#scenesSocial .scene-go-ico svg").length;
+      if (ni === 7) p2++; else { f2++; console.log("  ✗ 場景 icon 唔見咗！= " + ni); }
+      const hasN = /（7 個場景）/.test((c.d.getElementById("scenesSocialN") || {}).textContent || "");
+      if (hasN) p2++; else { f2++; console.log("  ✗ 場景數目字冇 render"); }
+    }
+    if (c.label.includes("維度詳解")) {
+      const n = c.d.querySelectorAll("#dims .hub-letter-list > div").length;
+      if (n === 6) p2++; else { f2++; console.log("  ✗ 維度詳解下拉後內容冇晒！段落 = " + n + "（預期 6）"); }
+    }
   }
   console.log("\n" + (f2 === 0 ? "===== 全部通過（" + p2 + "/" + p2 + "）=====" : "===== 有失敗（" + p2 + "/" + (p2 + f2) + "）====="));
   process.exit(f2 === 0 ? 0 : 1);
