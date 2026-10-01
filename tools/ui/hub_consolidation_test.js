@@ -28,7 +28,24 @@ chk("★ 測試入口全部呼叫 goPickVersion()", (src.match(/goPickVersion\(\
 chk("★ show() 清單有 dims 同 typeScenes（scenes 已刪）", /"hub","dims"/.test(src) && /"dims","typeScenes","letter"/.test(src) && !/\bdims","scenes/.test(src));
 chk("★ 光譜 5 段齊（E/I、S/N、T/F、J/P、T/A）", (function(){ const m = src.match(/window\.HUB_LETTERS = \[[\s\S]*?\n\];/); if(!m) return false; const t = m[0]; return ["E vs I","S vs N","T vs F","J vs P","T vs A"].every(x => t.includes(x)); })());
 chk("★ 光譜段有「唔係…」澄清句", /唔係「內向 = 怕醜」/.test(src) && /唔係「P 型 = 散漫」/.test(src));
-chk("★ 16 型卡下面直接係測試入口（hubCta + 選擇測試版本）", /id="hubCta"[\s\S]{0,160}選擇測試版本/.test(src));
+chk("★ 測試入口卡有「選擇測試版本」掣", /id="hubCta"[\s\S]{0,160}選擇測試版本/.test(src));
+// Roy 2026-10-01：百科「由人格睇」次序 = 4 維度卡 → 16 型卡 → 比較工具 → 測試入口（最底）
+chk("★ 百科「由人格睇」次序：16 型卡 → 比較工具 → 測試入口（最底）", (function(){
+  const i = src.indexOf('<div id="hubTypeMode">'), j = src.indexOf('</div><!-- /hubTypeMode -->');
+  const seg = src.slice(i, j);
+  const at = s => seg.indexOf(s);
+  return at('id="hubDims"') < at('id="hubTypeGrid"') && at('id="hubTypeGrid"') < at('id="compareA"') && at('id="compareA"') < at('id="hubCta"');
+})());
+chk("★ 右上選單跟探索更多同一排序（冇光譜／相處／拍拖）", (function(){
+  const i = src.indexOf("const LINKS = [");
+  const seg = src.slice(i, src.indexOf("const NAV", i));
+  return JSON.stringify([...seg.matchAll(/\["(\w+)"/g)].map(m => m[1])) === JSON.stringify(["home","record","about","hub","stats","method","privacy"]) && !/spectrum|social|romance/.test(seg);
+})(), (function(){ const i = src.indexOf("const LINKS = ["); return ([...src.slice(i, src.indexOf("const NAV", i)).matchAll(/\["(\w+)"/g)].map(m => m[1]).join(" → ")); })());
+chk("★ 主頁 ⋯ 選單同右上一樣（補返計分方法、冇光譜／相處／拍拖）", (function(){
+  const i = src.indexOf('id="homeMenu"'), seg = src.slice(i, src.indexOf("home-menu-foot", i));
+  return /openAbout/.test(seg) && /openHub/.test(seg) && /stats\.html/.test(seg) && /openMethod/.test(seg) && /openPrivacy/.test(seg) && !/openSpectrum|openSocial|openRomance/.test(seg);
+})(), (function(){ const i = src.indexOf('id="homeMenu"'); return (src.slice(i, src.indexOf("home-menu-foot", i)).match(/>(主頁|我的紀錄|關於港式 MBTI|性格百科|香港16型統計|計分方法同限制|私隱聲明)</g) || []).join(" "); })());
+chk("★ 頁底唔再留 96px 大白（class 已冇 pb-24，改 16px + 安全區）", !/class="[^"]*pb-24/.test(src) && /#app\{padding-bottom:calc\(16px \+ env\(safe-area-inset-bottom\)\)\}/.test(src), (src.match(/id="app" class="[^"]*"/) || [""])[0]);
 chk("★ 測試入口用 goPickVersion（去主頁揀版本位）", /id="hubCta"[\s\S]{0,200}goPickVersion\(\)/.test(src));
 chk("★ 百科兩個模式各有測試入口，舊「返主頁開始測試」已清", (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return !/返主頁開始測試/.test(hub) && (hub.match(/選擇測試版本/g) || []).length === 2; })(), (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return "舊掣 " + ((hub.match(/返主頁開始測試/g) || []).length) + " 個、測試版本 " + ((hub.match(/選擇測試版本/g) || []).length) + " 個"; })());
 chk("★ 人格頁有「深入睇吓呢一型」入口卡", /id="typeMore"[\s\S]{0,200}id="typeMoreList"/.test(src));

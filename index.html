@@ -42,6 +42,9 @@ body{background:var(--paper);color:var(--ink);min-height:100vh;font-size:17px;-w
 input,textarea,[contenteditable]{-webkit-user-select:text;user-select:text}
 /* reload 還原時隱藏 #app，避免主頁閃一閃 */
 body.js-boot #app{opacity:0}
+/* 頁底唔好留大白（Roy 2026-10-01）：原本 pb-24 = 96px 空白，
+   改成 16px ＋ 裝置安全區 → 程式底部就係內容本身 */
+#app{padding-bottom:calc(16px + env(safe-area-inset-bottom))}
 body.js-boot #app.js-ready{opacity:1;transition:opacity .12s}
 /* 淨係測試頁擋下拉刷新（做緊 60 題唔想誤觸 reload 彈走） */
 body.in-test{overscroll-behavior-y:contain;touch-action:pan-y;overscroll-behavior:contain}
@@ -1025,7 +1028,7 @@ html.dk.dt .dt-cta-ghost:hover{color:#D8C69E}
 
 
 <!-- App container -->
-<div id="app" class="max-w-md mx-auto px-4 py-6 pb-24">
+<div id="app" class="max-w-md mx-auto px-4 py-6 pb-4">
 
  <!-- ========== PWA Install Banner ========== -->
  <div id="installBanner" class="hidden fixed bottom-0 left-0 right-0 z-50 p-3 bg-white border-t-2 border-gold shadow-2xl">
@@ -1478,12 +1481,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  </div>
 
- <!-- 測試入口（16 型卡下面）-->
- <div class="card mb-4 softbox" id="hubCta">
- <p class="softbox-sub">想確認自己 MBTI 人格？</p>
- <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
- </div>
-
  <!-- 性格比較工具 -->
  <div class="card p-5 mb-4">
  <h3 class="font-bold mb-3 text-sm">性格比較工具</h3>
@@ -1512,6 +1509,12 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  <button type="button" onclick="compareTypes()" class="btn-gold w-full py-2.5 rounded-lg text-sm">比較</button>
  <div id="compareResult" class="mt-4"></div>
+ </div>
+
+ <!-- 測試入口（最底，Roy 2026-10-01：16 型卡 → 比較工具 → 測試入口）-->
+ <div class="card mb-4 softbox" id="hubCta">
+ <p class="softbox-sub">想確認自己 MBTI 人格？</p>
+ <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
  </div>
 
  </div><!-- /hubTypeMode -->
@@ -2041,11 +2044,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" onclick="goHome();closeHomeMenu();">主頁</button>
  <a href="./record.html" onclick="closeHomeMenu()">我的紀錄</a>
  <button type="button" onclick="openAbout();closeHomeMenu();">關於港式 MBTI</button>
- <button type="button" onclick="openSpectrum();closeHomeMenu();">MBTI 性格光譜</button>
  <button type="button" onclick="openHub();closeHomeMenu();">性格百科</button>
- <button type="button" onclick="openSocial();closeHomeMenu();">個人相處</button>
- <button type="button" onclick="openRomance();closeHomeMenu();">個人拍拖</button>
  <a href="./stats.html" onclick="closeHomeMenu()">香港16型統計</a>
+ <button type="button" onclick="openMethod();closeHomeMenu();">計分方法同限制</button>
  <button type="button" onclick="openPrivacy();closeHomeMenu();">私隱聲明</button>
  <div class="home-menu-foot">版本 v2.0</div>
  </div>
@@ -3281,10 +3282,7 @@ const LINKS = [
  ["home", "主頁"],
  ["record", "我的紀錄", "./record.html"],
  ["about", "關於港式 MBTI"],
- ["spectrum", "MBTI 性格光譜"],
  ["hub", "性格百科"],
- ["social", "個人相處"],
- ["romance", "個人拍拖"],
  ["stats", "香港16型統計", "./stats.html"],
  ["method", "計分方法同限制"],
  ["privacy", "私隱聲明"]
