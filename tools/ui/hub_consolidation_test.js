@@ -84,6 +84,16 @@ setTimeout(() => {
   chk("★ 場景數係動態顯示（唔會寫死錯數字）", /scenesSocialN/.test(src) && !/（10 個場景）/.test(src));
   chk("★ 相處場景卡呼叫 openSocialScenario", /openSocialScenario\(/.test(rowsS[0].getAttribute("onclick")), rowsS[0].getAttribute("onclick"));
   chk("★ 拍拖場景卡呼叫 openRomanceScenario", /openRomanceScenario\(/.test(rowsR[0].getAttribute("onclick")), rowsR[0].getAttribute("onclick"));
+  // 場景頁內 16 型卡 grid 同下面測試入口卡要有距離（Roy 圖報貼住）
+  w.SOCIAL.WhatsAppGroup.articles = { INTJ: "a", ENFP: "b" };
+  // jsdom 唔 load data.js → 補返 hubTypeCardHtml 需要嘅 palette
+  if (typeof w.getPalette !== "function") w.getPalette = function () { return { c1: "#6B5B95", c2: "#4E4270", accent: "#F0EAF8" }; };
+  w.openSocial();
+  w.openSocialScenario("WhatsAppGroup");
+  const gridInSocial = d.querySelector("#socialScenarios .hub-type-grid");
+  chk("★ 相處場景頁 render 出 16 型卡 grid", !!gridInSocial, gridInSocial ? "有" : "冇");
+  chk("★ 相處／拍拖場景頁：16 型卡 grid 有下距（唔會貼住入口卡）", /#socialScenarios \.hub-type-grid,#romanceScenarios \.hub-type-grid\{margin-bottom:20px\}/.test(src));
+  chk("★ 提示同 16 型卡 grid 之間有距離", /#socialScenarios \.hub-type-hint,#romanceScenarios \.hub-type-hint\{margin-bottom:10px\}/.test(src));
   chk("★ 場景攻略最底有測試入口", /id="scenes"[\s\S]{0,3000}選擇測試版本/.test(src));
   const icoS = d.querySelectorAll("#scenesSocial .scene-go-row .scene-go-ico svg");
   const icoR = d.querySelectorAll("#scenesRomance .scene-go-row .scene-go-ico svg");
