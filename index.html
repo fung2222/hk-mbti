@@ -351,12 +351,13 @@ html.dk .up-cmp .no{color:#6E675C}
 width:100%;aspect-ratio:16/7;min-height:7.2rem;border-radius:0;color:#fff;
 display:flex;flex-direction:column;align-items:center;justify-content:center;
 gap:8px;box-shadow:none;pointer-events:none;
+font-size:2.8rem; /* 大卡文字基準：icon／中文／4 字母全部跟同一組比例，同色卡一致 */
 }
 .article-type-card .hub-type-code{
 font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:700;font-style:normal;
-font-size:2.8rem;letter-spacing:.01em;
+font-size:1em;letter-spacing:.01em;
 }
-.article-type-card .hub-type-cn{font-size:14px;}
+.article-type-card .hub-type-cn{font-size:.5em;}
 .article-guide{margin:0 4px 20px;}
 /* 人格分頁內容 grid：同結果頁一致（x=20 / 350px、行高 1.5、#374151） */
 .persona-sect{margin:0 4px 20px;}
@@ -392,6 +393,7 @@ display:flex;flex-direction:column;align-items:center;justify-content:center;
 gap:6px;padding:10px 4px;position:relative;
  -webkit-appearance:none;appearance:none;text-align:center;
 transition:box-shadow .25s ease,transform .25s ease,opacity .25s ease,filter .25s ease;
+font-size:24px; /* 色卡文字基準（Roy 定：主頁色卡比例）。4 字母 1em、中文 .5em、icon .92em、badge .42em */
 }
 .hub-type-grid.is-picking .hub-type-card,
 .home-type-reel.is-picking .hub-type-card{
@@ -406,14 +408,14 @@ box-shadow:0 10px 26px rgba(0,0,0,.32);
 }
 .hub-type-go{
 opacity:0;pointer-events:none;
-margin-top:1px;font-size:11px;font-weight:700;font-family:inherit;line-height:1.2;
-color:var(--ink);background:rgba(255,255,255,.92);border-radius:999px;padding:3px 8px;
+margin-top:1px;font-size:.46em;font-weight:700;font-family:inherit;line-height:1.2;
+color:var(--ink);background:rgba(255,255,255,.92);border-radius:999px;padding:.13em .36em;
 }
 .hub-type-card.is-on .hub-type-go{opacity:1;pointer-events:auto;}
-.deep-badge{margin-top:1px;font-size:10px;font-weight:800;line-height:1.2;font-family:inherit;color:rgba(255,255,255,.92);background:rgba(0,0,0,.24);border-radius:999px;padding:2px 7px;}
+.deep-badge{margin-top:1px;font-size:.42em;font-weight:800;line-height:1.2;font-family:inherit;color:rgba(255,255,255,.92);background:rgba(0,0,0,.24);border-radius:999px;padding:.08em .3em;}
 .deep-badge.is-soon{color:rgba(255,255,255,.7);background:rgba(0,0,0,.16);font-weight:700;}
-/* 港物件 icon：置中 + 同下面 4 字母留 5px（line-height:1 會貼實，所以要自己留位） */
-.type-ico{display:block;width:22px;height:22px;margin:0 auto 5px;opacity:1}
+/* 港物件 icon：置中 + 同下面 4 字母留 5px（全部用 em，跟色卡基準自動縮放） */
+.type-ico{display:block;width:.92em;height:.92em;margin:0 auto .21em;opacity:1}
 .type-ico svg{display:block;width:100%;height:100%;margin:0 auto}
 /* 4 字母（同 icon 同一個容器）：強制繼承 .hub-type-code 嘅 Archivo Black，唔會因為包咗 span 而跌返 body 字型 */
 .type-code-txt{display:block;font-family:inherit;font-weight:inherit;font-size:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;white-space:nowrap}
@@ -426,9 +428,9 @@ html.dk .deep-intro-sub{color:#9A9285}
 html.dk .deep-chips span{color:#C2BAAD;background:rgba(255,255,255,.07)}
 .hub-type-code{
 font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:700;font-style:normal;
-font-size:1.5rem;letter-spacing:0;line-height:1;white-space:nowrap;
+font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 }
-.hub-type-cn{font-size:12px;line-height:1.25;opacity:.9;white-space:nowrap;}
+.hub-type-cn{font-size:.5em;line-height:1.25;opacity:.9;white-space:nowrap;}
 
 .home-type-reel-wrap{
 position:relative;flex-shrink:0;margin:0 -20px 6px;
@@ -737,8 +739,9 @@ border-radius:10px;margin-left:6px;letter-spacing:0.04em;
   html.dt .home-type-reel .hub-type-card:nth-child(n+17){display:none}   /* 跑馬燈後 16 張複本：桌面唔顯示 */
   html.dt .home-type-reel .hub-type-card:hover:not(.is-on){transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.22)}
   html.dt .home-type-reel .hub-type-card:hover .hub-type-go{opacity:1;pointer-events:auto}
-  html.dt .home-type-reel .hub-type-code{font-size:clamp(22px,2.1vw,32px)}
-  html.dt .home-type-reel .hub-type-cn{font-size:13.5px}
+  html.dt .home-type-reel .hub-type-card{font-size:clamp(24px,2.1vw,32px)}
+  html.dt .home-type-reel .hub-type-code{font-size:1em}
+  html.dt .home-type-reel .hub-type-cn{font-size:.5em}
   html.dt .home-type-reel .hub-type-go{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);margin:0;
     font-size:12px;padding:3px 10px;cursor:pointer;white-space:nowrap}
 

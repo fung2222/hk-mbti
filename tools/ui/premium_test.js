@@ -92,6 +92,16 @@ setTimeout(async ()=>{
   chk('★ 維度字母 .dim-pair button 用 Archivo Black', /\.dim-pair button\{[^}]*Archivo Black/.test(src));
   chk('★ 文章型別卡 .article-type-card .hub-type-code 用 Archivo Black', /\.article-type-card \.hub-type-code\{[^}]*Archivo Black/.test(src));
   chk('★ 全部型別碼容器都係 .hub-type-code（5 個位）', ['deepChapterType','socialArticleType','romanceArticleType'].every(id=>new RegExp('class="hub-type-code" id="'+id+'"').test(src)));
+  // ---------- 全站色卡文字比例統一（Roy 2026-10-01：用主頁色卡比例）----------
+  chk('★ 色卡基準 font-size:24px 喺 .hub-type-card', /\.hub-type-card\{[^}]*font-size:24px/.test(src));
+  chk('★ 4 字母 = 1em（跟基準）', /\.hub-type-code\{\s*\nfont-family:'Archivo Black'[^}]*font-size:1em/.test(src));
+  chk('★ 中文 = .5em（= 12px）', /\.hub-type-cn\{font-size:\.5em/.test(src));
+  chk('★ icon = .92em（= 22px）', /\.type-ico\{display:block;width:\.92em;height:\.92em/.test(src));
+  chk('★ badge = .42em（= 10px）', /\.deep-badge\{[^}]*font-size:\.42em/.test(src));
+  chk('★ 「進入」= .46em（= 11px）', /\.hub-type-go\{[^}]*font-size:\.46em/.test(src));
+  chk('★ 文章型別卡用同一組比例（基準 2.8rem、4 字母 1em、中文 .5em）', /\.article-type-card\{[^}]*font-size:2\.8rem/.test(src) && /\.article-type-card \.hub-type-code\{[^}]*font-size:1em/.test(src) && /\.article-type-card \.hub-type-cn\{font-size:\.5em/.test(src));
+  chk('★ 桌面轉輪基準移落 .hub-type-card', /html\.dt \.home-type-reel \.hub-type-card\{font-size:clamp/.test(src));
+  chk('★ 冇任何色卡文字硬編 px（除基準 24px）', !/\.hub-type-code\{[^}]*font-size:\d+px/.test(src) && !/\.hub-type-cn\{[^}]*font-size:\d+px/.test(src) && !/\.article-type-card \.hub-type-code\{[^}]*font-size:\d+px/.test(src));
   chk('★ 簡介唔提「買斷」（Roy 指定：只講有咩睇、有咩用）', !/買斷/.test($('#deep .deep-intro').textContent), '');
   chk('★ 簡介講「有咩可以睇」同「有咩用」', /有 9 章/.test($('#deep .deep-intro-sub').textContent) && /明自己|知身邊|點相處/.test($('#deep .deep-intro-sub').textContent));
   chk('INTJ 卡顯示「9 章」', /9 章/.test(cards[0].textContent), cards[0].textContent.replace(/\n/g,' '));
@@ -110,8 +120,8 @@ setTimeout(async ()=>{
   chk('卡內 icon 真係 SVG 元素', cards.filter(c=>c.querySelector('.type-ico svg')).length===16, cards.filter(c=>c.querySelector('.type-ico svg')).length);
   chk('type-icons.js 已由 index.html 載入', /type-icons\.js/.test(src));
   chk('sw.js 有 cache type-icons.js', /type-icons\.js/.test(sw));
-  chk('★ icon 水平置中（唔會貼左邊）', /\.type-ico\{display:block;width:22px;height:22px;margin:0 auto 5px/.test(src));
-  chk('★ icon 同 4 字母有留白（唔會貼實）', /margin:0 auto 5px/.test(src));
+  chk('★ icon 水平置中（唔會貼左邊）', /\.type-ico\{display:block;width:\.92em;height:\.92em;margin:0 auto/.test(src));
+  chk('★ icon 同 4 字母有留白（唔會貼實）', /margin:0 auto \.21em/.test(src));
   chk('★ icon 喺 4 字母上面（.hub-type-code 內 DOM 次序）', (function(){ const h=cards[0].querySelector('.hub-type-code'); if(!h) return false; const k=h.querySelector('.type-ico'), t=h.querySelector('.type-code-txt'); return !!k && !!t && (k.compareDocumentPosition(t) & 4) > 0; })());
   chk('★ 4 字母文字冇壞（textContent 仍然係 4 個字母）', /^[A-Z]{4}$/.test(cards[0].querySelector('.hub-type-code').textContent.trim()), cards[0].querySelector('.hub-type-code').textContent.trim());
   chk('★ 章節頁內文唔再咁迫（行高 1.9、段距 16px）', /#deepChapter \.article-guide-body p\{margin:0 0 16px;line-height:1\.9;\}/.test(src));
