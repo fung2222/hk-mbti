@@ -107,7 +107,7 @@ setTimeout(() => {
     codes.slice(0, 16).join(",") === "INTJ,INTP,ENTJ,ENTP,INFJ,INFP,ENFJ,ENFP,ISTJ,ISFJ,ESTJ,ESFJ,ISTP,ISFP,ESTP,ESFP");
   check("版本卡 4 張", d.querySelectorAll("#versionList .ver-btn").length === 4);
   check("場景卡 4 張", d.querySelectorAll(".scenes-grid .scene-cell").length === 4);
-  check("探索更多 9 格（含新增「人格深入分析」）", d.querySelectorAll("#homeAccordion .home-acc-item").length === 9);
+  check("探索更多已收窄（2026-10-01 架構整合後：6 格）", d.querySelectorAll("#homeAccordion .home-acc-item").length === 6, d.querySelectorAll("#homeAccordion .home-acc-item").length);
   check("桌面維持 4×2：deep 格喺桌面層隱藏", /html\.dt \.home-acc-item\[data-acc="deep"\]\{display:none\}/.test(layer));
 
   // ---------- 3. 開關 ----------
