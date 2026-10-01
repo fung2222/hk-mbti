@@ -17,12 +17,12 @@ function chk(name, ok, got) {
 chk("★ 百科有「4 個維度」撳入掣（去維度詳解分頁）", /id="hubDims" onclick="openDims\(\)"/.test(src));
 chk("★ 維度詳解分頁（#dims）有「4 個英文字母代表咩」卡（光譜整合入嚟）", /<section id="dims"/.test(src) && /id="dimsLetters"/.test(src) && /class="hub-letter-list"/.test(src));
 chk("★ 維度詳解分頁有 8 個字母掣 → #letter", (function(){ const s = src.slice(src.indexOf('<section id="dims"'), src.indexOf('<!-- ========== 人格深入分析')); return (s.match(/openLetter\('/g) || []).length === 8; })());
-chk("★ show() 清單有 dims", /"hub","dims","letter"/.test(src));
+chk("★ show() 清單有 dims 同 scenes", /"hub","dims"/.test(src) && /"dims","scenes","letter"/.test(src));
 chk("★ 光譜 5 段齊（E/I、S/N、T/F、J/P、T/A）", (function(){ const m = src.match(/window\.HUB_LETTERS = \[[\s\S]*?\n\];/); if(!m) return false; const t = m[0]; return ["E vs I","S vs N","T vs F","J vs P","T vs A"].every(x => t.includes(x)); })());
 chk("★ 光譜段有「唔係…」澄清句", /唔係「內向 = 怕醜」/.test(src) && /唔係「P 型 = 散漫」/.test(src));
 chk("★ 16 型卡下面直接係測試入口（hubCta + 選擇測試版本）", /id="hubCta"[\s\S]{0,160}選擇測試版本/.test(src));
 chk("★ 測試入口用 goPickVersion（去主頁揀版本位）", /id="hubCta"[\s\S]{0,200}goPickVersion\(\)/.test(src));
-chk("★ 百科只留一個測試入口（舊「返主頁開始測試」已清）", (function(){ const hub = src.slice(src.indexOf('<section id="hub"'), src.indexOf('<section id="deep"')); return !/返主頁開始測試/.test(hub) && (hub.match(/選擇測試版本/g) || []).length === 1; })(), "#hub 內舊掣 " + ((src.slice(src.indexOf('<section id="hub"'), src.indexOf('<section id="deep"')).match(/返主頁開始測試/g) || []).length) + " 個");
+chk("★ 百科只留一個測試入口（舊「返主頁開始測試」已清）", (function(){ const i = src.indexOf('<section id="hub"'); const j = src.indexOf('<section id="scenes"'); const hub = src.slice(i, j > i ? j : src.indexOf('<section id="dims"')); return !/返主頁開始測試/.test(hub) && (hub.match(/選擇測試版本/g) || []).length === 1; })(), (function(){ const i = src.indexOf('<section id="hub"'); const j = src.indexOf('<section id="scenes"'); const hub = src.slice(i, j > i ? j : i + 9000); return "舊掣 " + ((hub.match(/返主頁開始測試/g) || []).length) + " 個、測試版本 " + ((hub.match(/選擇測試版本/g) || []).length) + " 個"; })());
 chk("★ 人格頁有「深入睇吓呢一型」入口卡", /id="typeMore"[\s\S]{0,200}id="typeMoreList"/.test(src));
 chk("★ 三個入口函數都有定義", ["openSocialFor","openRomanceFor","openDeepFor"].every(f => new RegExp("window\\." + f + " = function").test(src)));
 chk("★ 入口文案齊（個人相處／個人拍拖／人格深入分析）", /"個人相處"/.test(src) && /"個人拍拖"/.test(src) && /"人格深入分析"/.test(src));
@@ -49,6 +49,19 @@ setTimeout(() => {
   chk("★ 維度詳解 render 出 5 段 + 底註", letters.length === 6, "render 出 " + letters.length + " 段（預期 6＝5 段＋1 底註）");
   chk("★ 字母卡第一段係 E vs I", /E vs I/.test($("#dims .hub-letter-list").textContent));
   w.goBack();
+
+  // ①b 場景攻略
+  w.SOCIAL = { WhatsAppGroup: { name: "WhatsApp 群組", desc: "d" }, FamilyGathering: { name: "親戚飯局", desc: "d" }, TeaFriend: { name: "飲茶吹水朋友", desc: "d" }, GroupProject: { name: "Group Project 隊友", desc: "d" }, Roommate: { name: "室友", desc: "d" }, Workplace: { name: "返工同事", desc: "d" }, 失戀陪: { name: "失戀時陪佢", desc: "d" } };
+  w.ROMANCE = { 拍拖: { name: "拍拖", desc: "d" }, 吵架: { name: "吵架", desc: "d" }, 分手: { name: "分手", desc: "d" } };
+  w.openScenes();
+  const rowsS = d.querySelectorAll("#scenesSocial .scene-go-row");
+  const rowsR = d.querySelectorAll("#scenesRomance .scene-go-row");
+  chk("★ 場景攻略：相處 7 個", rowsS.length === 7, "render 出 " + rowsS.length);
+  chk("★ 場景攻略：拍拖 3 個", rowsR.length === 3, "render 出 " + rowsR.length);
+  chk("★ 場景數係動態顯示（唔會寫死錯數字）", /scenesSocialN/.test(src) && !/（10 個場景）/.test(src));
+  chk("★ 相處場景卡呼叫 openSocialScenario", /openSocialScenario\(/.test(rowsS[0].getAttribute("onclick")), rowsS[0].getAttribute("onclick"));
+  chk("★ 拍拖場景卡呼叫 openRomanceScenario", /openRomanceScenario\(/.test(rowsR[0].getAttribute("onclick")), rowsR[0].getAttribute("onclick"));
+  chk("★ 場景攻略最底有測試入口", /id="scenes"[\s\S]{0,3000}選擇測試版本/.test(src));
 
   // ② 人格頁三個入口
   w.openType("ENFP", "test");

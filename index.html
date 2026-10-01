@@ -424,6 +424,13 @@ font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:700;font
 font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 }
 .hub-type-cn{font-size:.5em;line-height:1.25;opacity:.9;white-space:nowrap;}
+/* 場景攻略列 */
+.scene-go-row{display:block;width:100%;text-align:left;border:0;background:#faf7f2;border-radius:12px;padding:12px 14px;margin:0 0 8px;cursor:pointer;font-family:inherit;}
+.scene-go-row:last-child{margin-bottom:0}
+.scene-go-row:hover{background:#f5efe6}
+.scene-go-t{display:block;font-size:14px;font-weight:800;color:var(--ink);margin:0 0 3px}
+.scene-go-d{display:block;font-size:11px;color:#8a8174;line-height:1.5}
+
 /* 「正在睇 XX」提示條（由人格頁跳入相處／拍拖用） */
 .scene-for-banner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--ink);background:#f6e7c4;border-radius:10px;padding:9px 12px;margin:0 0 12px;line-height:1.5}
 .scene-for-banner b{font-weight:800}
@@ -956,6 +963,9 @@ html.dk .type-more-row{background:#222A34}
 html.dk .type-more-row:hover{background:#28313C}
 html.dk .type-more-d{color:#A79E92}
 html.dk .type-more-lock{color:#E8C989;background:#3A3324}
+html.dk .scene-go-row{background:#222A34}
+html.dk .scene-go-row:hover{background:#28313C}
+html.dk .scene-go-d{color:#A79E92}
 html.dk .scene-for-banner{background:#3A3324;color:#ECE7DE}
 html.dk .scene-for-clear{background:#222A34;color:#E8C989}
 html.dk .mth-l{color:#B9A97F}
@@ -1111,6 +1121,7 @@ if(window._showing === "type") return true;
 const MAP = {
  "#about": "openAbout",
  "#spectrum": "openSpectrum",
+ "#scenes": "openScenes",
  "#hub": "openHub",
  "#social": "openSocial",
  "#romance": "openRomance",
@@ -1450,6 +1461,29 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="compareResult" class="mt-4"></div>
  </div>
  </section>
+
+<!-- ========== 場景攻略（相處 10 + 拍拖 10，由主頁入） ========== -->
+<section id="scenes" class="hidden fade-up">
+<div class="page-hero">
+<div class="page-hero-row">
+<button type="button" class="page-back" onclick="goBack()">返回</button>
+<h1>場景攻略</h1>
+</div>
+<p class="page-hero-sub">唔知對方係咩型？由場景入手 — 揀一個情境，睇 16 型會點反應</p>
+</div>
+<div class="card p-5 mb-4">
+<div class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.6c-4.6 0-8.4 3.05-8.4 6.8 0 2.1 1.15 3.98 2.95 5.18l-.85 3.42 3.55-1.88c.88.18 1.8.28 2.75.28 4.6 0 8.4-3.05 8.4-6.8S16.6 4.6 12 4.6z"/></svg>同人相處<span id="scenesSocialN"></span></div>
+<div id="scenesSocial"></div>
+</div>
+<div class="card p-5 mb-4">
+<div class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.4S4.2 15.7 4.2 10.4a4.2 4.2 0 017.8-2.3 4.2 4.2 0 017.8 2.3c0 5.3-7.8 10-7.8 10z"/></svg>拍拖關係<span id="scenesRomanceN"></span></div>
+<div id="scenesRomance"></div>
+</div>
+<div class="card mb-4 softbox">
+<p class="softbox-sub">想確認自己 MBTI 人格？</p>
+<button type="button" class="softbox-btn" onclick="goPickVersion()">選擇測試版本</button>
+</div>
+</section>
 
 <!-- ========== 維度詳解（由百科撳入） ========== -->
 <section id="dims" class="hidden fade-up">
@@ -2068,16 +2102,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" class="home-acc-go" onclick="event.stopPropagation();openAbout()">了解港式 MBTI</button>
  </div>
  </div>
- <div class="home-acc-item" data-acc="spectrum">
- <button type="button" class="home-acc-head" onclick="toggleHomeAcc('spectrum')">
- <span class="home-acc-title">MBTI 性格光譜</span>
- <span class="home-acc-chev">▼</span>
- </button>
- <div class="home-acc-body">
- <p class="home-acc-desc">E/I、S/N、T/F、J/P 四個維度，幫你讀明 4 個字母。</p>
- <button type="button" class="home-acc-go" onclick="event.stopPropagation();openSpectrum()">進入光譜</button>
- </div>
- </div>
  <div class="home-acc-item" data-acc="method">
  <button type="button" class="home-acc-head" onclick="toggleHomeAcc('method')">
  <span class="home-acc-title">計分方法同限制</span>
@@ -2098,34 +2122,14 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" class="home-acc-go" onclick="event.stopPropagation();openHub()">進入百科</button>
  </div>
  </div>
- <div class="home-acc-item" data-acc="deep">
- <button type="button" class="home-acc-head" onclick="toggleHomeAcc('deep')">
- <span class="home-acc-title">人格深入分析<span class="home-acc-lock" id="deepAccLock">完整版</span></span>
+ <div class="home-acc-item" data-acc="scenes">
+ <button type="button" class="home-acc-head" onclick="toggleHomeAcc('scenes')">
+ <span class="home-acc-title">場景攻略</span>
  <span class="home-acc-chev">▼</span>
  </button>
  <div class="home-acc-body">
- <p class="home-acc-desc">16 種人格，每種 9 章：核心動機、盲點、壓力反應、職場、愛情、友情、香港情境。</p>
- <button type="button" class="home-acc-go" id="deepAccGo" onclick="event.stopPropagation();openDeep()">睇完整版有咩</button>
- </div>
- </div>
- <div class="home-acc-item" data-acc="social">
- <button type="button" class="home-acc-head" onclick="toggleHomeAcc('social')">
- <span class="home-acc-title">個人相處</span>
- <span class="home-acc-chev">▼</span>
- </button>
- <div class="home-acc-body">
- <p class="home-acc-desc">點同每種人傾偈、共事、做朋友。7 個場景 16 型攻略。</p>
- <button type="button" class="home-acc-go" onclick="event.stopPropagation();openSocial()">進入相處攻略</button>
- </div>
- </div>
- <div class="home-acc-item" data-acc="romance">
- <button type="button" class="home-acc-head" onclick="toggleHomeAcc('romance')">
- <span class="home-acc-title">個人拍拖</span>
- <span class="home-acc-chev">▼</span>
- </button>
- <div class="home-acc-body">
- <p class="home-acc-desc">點同每種人拍拖、吵架、分手。3 個場景 16 型攻略。</p>
- <button type="button" class="home-acc-go" onclick="event.stopPropagation();openRomance()">進入拍拖攻略</button>
+ <p class="home-acc-desc">唔知對方係咩型？由場景入手 — 揀一個情境，睇 16 型會點反應。</p>
+ <button type="button" class="home-acc-go" onclick="event.stopPropagation();openScenes()">進入場景攻略</button>
  </div>
  </div>
  <div class="home-acc-item" data-acc="stats">
@@ -3111,7 +3115,7 @@ if(window._navStack.length > 24) window._navStack.shift();
  }
  }
 window._showing = id;
-["home","profile","test","result","about","spectrum","hub","dims","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
+["home","profile","test","result","about","spectrum","hub","dims","scenes","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
 window.scrollTo(0,0);
 if(id === "home"){
@@ -5610,10 +5614,6 @@ l.textContent = full ? "完整版" : "免費版";
 b.classList.toggle("is-full", full);
 b.setAttribute("aria-label", full ? "完整版 · 睇人格深入分析" : "免費版 · 睇完整版有咩");
 // 「探索更多」內嘅入口同步（免費用戶顯示「完整版」鎖標籤）
-const lk = document.getElementById("deepAccLock");
-if(lk) lk.style.display = full ? "none" : "";
-const dg = document.getElementById("deepAccGo");
-if(dg) dg.textContent = full ? "睇完整分析" : "睇完整版有咩";
 };
 window.renderUpgradeState = function(){
 const cta = document.getElementById("upgradeCta"), note = document.getElementById("upgradeNote");
@@ -5816,6 +5816,30 @@ window.openRomanceFor = function(code){
 window.openDeepFor = function(code){
  if(!window.isUnlocked || !window.isUnlocked()){ window.openUpgrade(); return; }
  window.openDeepType(String(code || "").toUpperCase());
+};
+// 場景攻略（相處 10 + 拍拖 10）
+window.openScenes = function(){
+show("scenes");
+window.renderScenes();
+};
+window.renderScenes = function(){
+ const mk = function(list, fn){
+  return Object.keys(list || {}).map(function(k){
+   const s = list[k];
+   return '<button type="button" class="scene-go-row" onclick="' + fn + "( '" + k + "' )" + '">'
+    + '<span class="scene-go-t">' + (s.name || k) + '</span>'
+    + '<span class="scene-go-d">' + (s.desc || '') + '</span>'
+    + '</button>';
+  }).join("");
+ };
+ const a = document.getElementById("scenesSocial");
+ if(a) a.innerHTML = mk(window.SOCIAL, "openSocialScenario");
+ const b = document.getElementById("scenesRomance");
+ if(b) b.innerHTML = mk(window.ROMANCE, "openRomanceScenario");
+ const na = document.getElementById("scenesSocialN");
+ if(na) na.textContent = "（" + Object.keys(window.SOCIAL || {}).length + " 個場景）";
+ const nb = document.getElementById("scenesRomanceN");
+ if(nb) nb.textContent = "（" + Object.keys(window.ROMANCE || {}).length + " 個場景）";
 };
 // 由百科撳入「維度詳解」分頁
 window.openDims = function(){

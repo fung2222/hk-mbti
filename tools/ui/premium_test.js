@@ -33,9 +33,11 @@ setTimeout(async ()=>{
   chk('sw.js premium-data.js 走 network-first（內容更新即時生效）', /premium-data\.js";\s*\n?\s*if\(isHTML\)/.test(sw) || /endsWith\("premium-data\.js"\)/.test(sw));
 
   // ---------- 探索更多入口 + 下拉鎖 + 字級（Roy 2026-10-01） ----------
-  chk('「探索更多」有「人格深入分析」入口', !!d.querySelector('#homeAccordion .home-acc-item[data-acc="deep"]'));
-  chk('入口有上鎖標籤（免費用戶見到「完整版」）', !!$('#deepAccLock') && $('#deepAccLock').textContent==='完整版');
-  chk('入口掣呼叫 openDeep()（免費用戶會轉去升級頁）', /openDeep\(\)/.test(d.querySelector('#homeAccordion .home-acc-item[data-acc="deep"] .home-acc-go').getAttribute('onclick')||''));
+  chk('★ 探索更多已收窄（冇 deep／social／romance／spectrum 入口）', !/class="home-acc-item" data-acc="(deep|social|romance|spectrum)"/.test(src), (src.match(/class="home-acc-item" data-acc="[a-z]+"/g) || []).join(" "));
+  chk('★ 探索更多有新增「場景攻略」入口（20 個場景）', /data-acc="scenes"/.test(src) && /openScenes\(\)/.test(src));
+  chk('★ 人格頁有深入分析入口（帶「完整版」標記）', /type-more-lock">完整版/.test(src) && /openDeepFor\(/.test(src));
+  chk('★ 未解鎖撳深入分析入口會轉去升級頁', /window\.openDeepFor = function\(code\)\{[\s\S]{0,80}openUpgrade\(\)/.test(src));
+  chk('★ 主頁頂仍有星級用戶入口', /id="tierBtn"/.test(src));
   chk('★ 目錄項已經冇「睇」字（Roy 話唔需要）', !/deep-go">睇/.test(src));
   chk('★ 開放下拉重整（Roy 要求；唔再鎖 no-pull）', !/html\.no-pull/.test(src) && !/_noPull/.test(src));
   chk('html 有底色（下拉唔會露白，唔靠鎖 overscroll）', /html\{background:var\(--paper\)\}/.test(src));
@@ -69,8 +71,8 @@ setTimeout(async ()=>{
   chk('解鎖後等級掣加 is-full（金色）', $('#tierBtn').classList.contains('is-full'));
   chk('解鎖後升級頁 CTA 文字改變', /已解鎖/.test($('#upgradeCta').textContent), $('#upgradeCta').textContent);
   chk('解鎖後自動去人格深入分析', vis('deep'), 'deep='+vis('deep'));
-  chk('解鎖後「探索更多」鎖標籤收埋', $('#deepAccLock').style.display==='none', $('#deepAccLock').style.display);
-  chk('解鎖後入口掣變「睇完整分析」', $('#deepAccGo').textContent==='睇完整分析', $('#deepAccGo').textContent);
+  chk('★ 解鎖後撳深入分析入口會直入（唔再彈升級頁）', (function(){ const before = vis('deep'); w.openType('ENFP','test'); w.openDeepFor('ENFP'); return vis('deep') && w._showing === 'deep'; })(), 'showing=' + w._showing);
+  chk('★ 解鎖後人格頁入口仍然帶「完整版」標記（內容已解鎖）', /type-more-lock/.test($('#typeMoreList').innerHTML) || $('#typeMoreList').innerHTML.length > 0);
 
   // ---------- 16 型目錄（色卡版，參考性格百科排位）----------
   const cards=[...d.querySelectorAll('#deepTypeGrid .hub-type-card')];
