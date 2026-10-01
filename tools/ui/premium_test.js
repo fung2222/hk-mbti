@@ -76,15 +76,20 @@ setTimeout(async ()=>{
   const cards=[...d.querySelectorAll('#deepTypeGrid .hub-type-card')];
   chk('★ 深入分析目錄用 16 張色卡（同性格百科同一款）', cards.length===16, cards.length);
   chk('★ 用返同一套 4 欄密格（hub-type-grid）', !!d.querySelector('#deepList .hub-type-grid'));
-  chk('★ 分頁有簡介（唔再係空白頁只有卡）', !!d.querySelector('#deep .deep-intro'));
-  chk('★ 9 章類型整合入介紹文字（唔再一堆獨立藥丸框）', d.querySelectorAll('#deep .deep-chips span').length===0 && /核心動機/.test($('#deep .deep-intro-sub').textContent) && /香港情境/.test($('#deep .deep-intro-sub').textContent), '藥丸數='+d.querySelectorAll('#deep .deep-chips span').length);
-  chk('★ 標題句改順口（Roy 指定）', /揀一種人格/.test($('#deep .deep-intro-lead').textContent), $('#deep .deep-intro-lead').textContent);
-  chk('★ 提示搬去 16 型格上面（左上，唔再喺左下）', (function(){ const h=$('#deep .deep-intro .hub-type-hint'), g=$('#deepTypeGrid'); return !!h && !!g && (h.compareDocumentPosition(g) & 4) > 0; })());
-  chk('★ 提示文字係「撳入去揀一種人格」', /撳入去揀一種人格/.test($('#deep .deep-intro .hub-type-hint').textContent), $('#deep .deep-intro .hub-type-hint').textContent);
+  chk('★ 分頁有標題組（金標＋說明＋提示，同性格百科同格式）', !!d.querySelector('#deep #deepHead'));
+  chk('★ 標題組用性格百科同款金標（16 種人格深入分析）', /16 種人格深入分析/.test($('#deep #deepHead h3').textContent), $('#deep #deepHead h3').textContent);
+  chk('★ 說明文字整合 9 章內容（核心動機→日常相處）', /核心動機/.test($('#deep #deepHead').textContent) && /日常相處/.test($('#deep #deepHead').textContent));
+  chk('★ 用性格百科同款滿版格式（hub-bleed）', !!d.querySelector('#deep .hub-bleed .hub-bleed-inner'));
+  chk('★ 提示喺 16 型格上面（左上，唔再喺左下）', (function(){ const h=$('#deep #deepHead .hub-type-hint'), g=$('#deepTypeGrid'); return !!h && !!g && (h.compareDocumentPosition(g) & 4) > 0; })());
+  chk('★ 提示文字係「撳入去揀一種人格」', /撳入去揀一種人格/.test($('#deep #deepHead .hub-type-hint').textContent), $('#deep #deepHead .hub-type-hint').textContent);
   chk('★ 提示靠左對齊（左上）', /\.hub-type-hint\{[^}]*text-align:left/.test(src));
-  chk('簡介有黑暗模式覆蓋', /html\.dk \.deep-intro-sub/.test(src));
-  chk('★ 深入分析介紹文字放鬆（14px / 行高 1.9 / 段距 17px）', /\.deep-intro-sub\{font-size:14px;line-height:1\.9;[^}]*margin:0 0 17px\}/.test(src));
-  chk('★ 介紹標題句同下面留 13px', /\.deep-intro-lead\{[^}]*margin:0 0 13px\}/.test(src));
+  chk('★ 深入分析版頭同性格百科完全一致（滿版＋金標＋場景 icon）', (function(){ const b=$('#deep .hub-bleed-inner'); return !!b && !!b.querySelector('h3.brand-gold') && !!b.querySelector('h3 .scenes-title-ico') && !!b.querySelector('p.text-gray-600') && !!b.querySelector('#deepTypeGrid'); })());
+  chk('★ 已清走舊 .deep-intro / .deep-chips CSS（唔留死碼）', !/\.deep-intro\{/.test(src) && !/\.deep-intro-sub\{/.test(src) && !/\.deep-chips\{/.test(src));
+  // ---------- 人格分頁最底 CTA（Roy 2026-10-01）----------
+  chk('★ 人格分頁最底文案改咗（想確認自己 MBTI 人格？）', /想確認自己 MBTI 人格？/.test(src));
+  chk('★ 副文案改為「選擇測試版本」', /<p class="softbox-sub">選擇測試版本<\/p>/.test(src));
+  chk('★ 立即開始掣改去主頁揀版本位（goPickVersion）', /onclick="goPickVersion\(\)">立即開始/.test(src));
+  chk('★ goPickVersion 存在（show home + 捲到 #homeBelow）', /window\.goPickVersion = function\(\)\{[\s\S]{0,260}show\("home"\)[\s\S]{0,200}homeBelow/.test(src));
   // ---------- 全站「大寫字母／型別碼」字型一致性（Roy 2026-10-01：檢查全站色卡用返 Archivo Black）----------
   chk('★ 色卡 4 字母 .hub-type-code 用 Archivo Black', /\.hub-type-code\{\s*\nfont-family:'Archivo Black'/.test(src));
   chk('★ .type-code-txt 強制繼承字型（包咗 span 都唔會跌返 body 字型）', /\.type-code-txt\{display:block;font-family:inherit;font-weight:inherit;font-size:inherit/.test(src));
@@ -103,8 +108,7 @@ setTimeout(async ()=>{
   chk('★ 文章型別卡用同一組比例（基準 2.8rem、4 字母 1em、中文 .5em）', /\.article-type-card\{[^}]*font-size:2\.8rem/.test(src) && /\.article-type-card \.hub-type-code\{[^}]*font-size:1em/.test(src) && /\.article-type-card \.hub-type-cn\{font-size:\.5em/.test(src));
   chk('★ 桌面轉輪基準移落 .hub-type-card', /html\.dt \.home-type-reel \.hub-type-card\{font-size:clamp/.test(src));
   chk('★ 冇任何色卡文字硬編 px（除基準 24px）', !/\.hub-type-code\{[^}]*font-size:\d+px/.test(src) && !/\.hub-type-cn\{[^}]*font-size:\d+px/.test(src) && !/\.article-type-card \.hub-type-code\{[^}]*font-size:\d+px/.test(src));
-  chk('★ 簡介唔提「買斷」（Roy 指定：只講有咩睇、有咩用）', !/買斷/.test($('#deep .deep-intro').textContent), '');
-  chk('★ 簡介講「有咩可以睇」同「有咩用」', /9 章/.test($('#deep .deep-intro-sub').textContent) && /明自己|知身邊|點相處/.test($('#deep .deep-intro-sub').textContent), $('#deep .deep-intro-sub').textContent.slice(0, 40));
+  chk('★ 簡介唔提「買斷」（Roy 指定：只講有咩睇、有咩用）', !/買斷/.test($('#deep #deepHead').textContent), '');
   chk('INTJ 卡顯示「9 章」', /9 章/.test(cards[0].textContent), cards[0].textContent.replace(/\n/g,' '));
   chk('未寫嘅型顯示「準備中」', /準備中/.test(cards[1].textContent), cards[1].textContent.replace(/\n/g,' '));
   chk('★ 卡有該型漸變色（唔係文字格）', /linear-gradient\(135deg,#6B4E9E/.test(cards[0].getAttribute('style')), cards[0].getAttribute('style'));
@@ -145,7 +149,7 @@ setTimeout(async ()=>{
 
   // ---------- 型別 9 章目錄 ----------
   w.openDeepType('INTJ');
-  chk('★ 型別目錄層：簡介要收埋（Roy 話章節目唔需要）', $('#deep .deep-intro').style.display==='none', $('#deep .deep-intro').style.display);
+  chk('★ 型別目錄層：標題組要收埋（Roy 話章節目唔需要）', $('#deep #deepHead').style.display==='none', $('#deep #deepHead').style.display);
   chk('★ 型別目錄內冇簡介標題句', !/揀一種人格/.test($('#deepList').textContent));
   chk('★ 型別目錄內冇提示（提示只喺 16 型選擇層）', !/撳入去/.test($('#deepList').textContent));
   const toc=[...d.querySelectorAll('#deepList .deep-item')];
@@ -197,7 +201,7 @@ setTimeout(async ()=>{
   chk('★ 返回 1：章節 → 返到 INTJ 9 章目錄', w._showing==='deep' && toc9()===9, 'showing='+w._showing+' toc='+toc9());
   w.goBack(); await sleep(160);                   // 返回 2
   chk('★ 返回 2：型別目錄 → 返到 16 型選擇（唔係跳去主頁！）', w._showing==='deep' && grid16()===16, 'showing='+w._showing+' 卡='+grid16());
-  chk('★ 返到 16 型選擇時簡介會出返', $('#deep .deep-intro').style.display!=='none', $('#deep .deep-intro').style.display);
+  chk('★ 返到 16 型選擇時標題組會出返', $('#deep #deepHead').style.display!=='none', $('#deep #deepHead').style.display);
   w.goBack(); await sleep(160);                   // 返回 3
   chk('★ 返回 3：16 型選擇 → 返到主頁', w._showing==='home', 'showing='+w._showing);
   chk('★ 返到主頁時主頁真係顯示', !d.getElementById('home').classList.contains('hidden'));

@@ -346,8 +346,8 @@ html.dk .up-cmp .no{color:#6E675C}
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
 .hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
 .hub-type-hint{font-size:11px;line-height:1.45;color:#8a8174;text-align:left;margin:0 0 8px;font-weight:400;}
-/* 深入分析頁：提示搬去 16 型格上面（左上） */
-.deep-intro .hub-type-hint{margin:0 0 14px;font-weight:600;}
+/* 深入分析頁：提示喺 16 型格上面（左上） */
+#deepHead .hub-type-hint{margin:0 0 12px;font-weight:600;}
 .article-type-stage{margin:0 -16px 22px;}
 .article-type-card{
 width:100%;aspect-ratio:16/7;min-height:7.2rem;border-radius:0;color:#fff;
@@ -421,13 +421,6 @@ color:var(--ink);background:rgba(255,255,255,.92);border-radius:999px;padding:.1
 .type-ico svg{display:block;width:100%;height:100%;margin:0 auto}
 /* 4 字母（同 icon 同一個容器）：強制繼承 .hub-type-code 嘅 Archivo Black，唔會因為包咗 span 而跌返 body 字型 */
 .type-code-txt{display:block;font-family:inherit;font-weight:inherit;font-size:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;white-space:nowrap}
-.deep-intro{margin:2px 0 24px}
-.deep-intro-lead{font-size:21px;font-weight:900;line-height:1.4;letter-spacing:-.01em;margin:0 0 13px}
-.deep-intro-sub{font-size:14px;line-height:1.9;color:#6B6558;margin:0 0 17px}
-.deep-chips{display:flex;flex-wrap:wrap;gap:8px}
-.deep-chips span{font-size:12px;font-weight:700;color:#5C5548;background:rgba(30,42,59,.06);border-radius:999px;padding:6px 11px}
-html.dk .deep-intro-sub{color:#9A9285}
-html.dk .deep-chips span{color:#C2BAAD;background:rgba(255,255,255,.07)}
 .hub-type-code{
 font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:700;font-style:normal;
 font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
@@ -1459,12 +1452,16 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   </div>
   <p class="page-hero-sub">完整版內容 · 16 種人格 × 9 章</p>
  </div>
- <div class="deep-intro">
-  <p class="deep-intro-lead">揀一種人格，睇佢嘅 9 章深入分析</p>
-  <p class="deep-intro-sub">9 章由核心動機、3 個盲點、壓力反應，一路講到成長路徑、職場、愛情、友情，仲有唔好同佢講嘅 3 句，最後用香港情境對照。睇完你會明自己點解會咁反應，亦知身邊嗰個人可以點相處。</p>
-  <p class="hub-type-hint">撳入去揀一種人格</p>
+ <div class="hub-bleed">
+  <div class="hub-bleed-inner">
+   <div id="deepHead">
+    <h3 class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h6v6H4zM14 6h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>16 種人格深入分析</h3>
+    <p class="text-xs text-gray-600 mb-3">每一種人格有 9 章，由核心動機講到日常相處</p>
+    <p class="hub-type-hint">撳入去揀一種人格</p>
+   </div>
+   <div id="deepList"></div>
+  </div>
  </div>
- <div id="deepList"></div>
 </section>
 
 <section id="deepChapter" class="hidden">
@@ -1805,9 +1802,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="card mb-4 softbox">
- <h3 class="softbox-title">想確認自己係咪呢個類型？</h3>
- <p class="softbox-sub">做返個 60 題測試</p>
- <button type="button" class="softbox-btn" onclick="openProfile('life')">立即開始</button>
+ <h3 class="softbox-title">想確認自己 MBTI 人格？</h3>
+ <p class="softbox-sub">選擇測試版本</p>
+ <button type="button" class="softbox-btn" onclick="goPickVersion()">立即開始</button>
  </div>
  </section>
 
@@ -5629,8 +5626,8 @@ return '<button type="button" class="hub-type-card" style="background:linear-gra
 window.renderDeepList = function(){
 // 返到「16 型選擇」層：清走型別，否則 history 快照會誤記住上一型
 window._deepType = null;
-// 呢層要顯示簡介
-try{ const _i = document.querySelector("#deep .deep-intro"); if(_i) _i.style.display = ""; }catch(e){}
+// 呢層要顯示標題組（金標 + 說明 + 提示）
+try{ const _h = document.getElementById("deepHead"); if(_h) _h.style.display = ""; }catch(e){}
 const box = document.getElementById("deepList");
 if(!box) return;
 box.innerHTML = '<div class="hub-type-grid" id="deepTypeGrid">' +
@@ -5642,8 +5639,8 @@ const d = (window.PREMIUM || {})[t];
 const box = document.getElementById("deepList");
 if(!box) return;
 if(!d || !d.chapters){ window.renderDeepList(); show("deep"); return; }
-// 型別 9 章目錄呢層唔需要簡介（淨係「16 型選擇」層要有）
-try{ const _i = document.querySelector("#deep .deep-intro"); if(_i) _i.style.display = "none"; }catch(e){}
+// 型別 9 章目錄呢層唔需要標題組（淨係「16 型選擇」層要有）
+try{ const _h = document.getElementById("deepHead"); if(_h) _h.style.display = "none"; }catch(e){}
 const T = (window.TYPES && window.TYPES[t]) || {};
 const PL = window.getPalette(t);
 box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]"><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span> · ' + (T.cn || "") + '</div>' +
@@ -5719,6 +5716,15 @@ window.scrollTo(0,0);
 setTimeout(function(){ try{ window.renderTier(); }catch(e){} }, 0);
 window.openHub = function(){
 show("hub");
+};
+
+// 由任何頁去主頁「選擇 MBTI 測試版本」嗰個位（人格分頁最底嗰個掣用）
+window.goPickVersion = function(){
+show("home");
+setTimeout(function(){
+const el = document.getElementById("homeBelow");
+if(el && el.scrollIntoView) el.scrollIntoView({block:"center"});
+}, 60);
 };
 // ====================== Social Guide Functions ======================
 window.openSocial = function(){
