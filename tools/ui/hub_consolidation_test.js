@@ -25,15 +25,16 @@ chk("★ 非主頁垂直間距統一 16px（卡片同非卡容器一致）", !/\
 chk("★ 全站測試入口文案統一：「想確認自己 MBTI 人格？」（唔准有舊文案）", !/睇完想試/.test(src) && (src.match(/想確認自己 MBTI 人格？/g) || []).length >= 9, (src.match(/想確認自己 MBTI 人格？/g) || []).length + " 處");
 chk("★ 全站測試入口按鈕統一：「立即選擇測試版本」（唔准有舊按鈕字）", !/返主頁開始測試/.test(src) && !/>選擇測試版本</.test(src) && !/>立即開始</.test(src) && (src.match(/立即選擇測試版本/g) || []).length >= 9, (src.match(/立即選擇測試版本/g) || []).length + " 處");
 chk("★ 測試入口全部呼叫 goPickVersion()", (src.match(/goPickVersion\(\)/g) || []).length >= 9, (src.match(/goPickVersion\(\)/g) || []).length + " 處");
-chk("★ show() 清單有 dims 同 scenes", /"hub","dims"/.test(src) && /"dims","scenes","letter"/.test(src));
+chk("★ show() 清單有 dims 同 typeScenes（scenes 已刪）", /"hub","dims"/.test(src) && /"dims","typeScenes","letter"/.test(src) && !/\bdims","scenes/.test(src));
 chk("★ 光譜 5 段齊（E/I、S/N、T/F、J/P、T/A）", (function(){ const m = src.match(/window\.HUB_LETTERS = \[[\s\S]*?\n\];/); if(!m) return false; const t = m[0]; return ["E vs I","S vs N","T vs F","J vs P","T vs A"].every(x => t.includes(x)); })());
 chk("★ 光譜段有「唔係…」澄清句", /唔係「內向 = 怕醜」/.test(src) && /唔係「P 型 = 散漫」/.test(src));
 chk("★ 16 型卡下面直接係測試入口（hubCta + 選擇測試版本）", /id="hubCta"[\s\S]{0,160}選擇測試版本/.test(src));
 chk("★ 測試入口用 goPickVersion（去主頁揀版本位）", /id="hubCta"[\s\S]{0,200}goPickVersion\(\)/.test(src));
-chk("★ 百科只留一個測試入口（舊「返主頁開始測試」已清）", (function(){ const i = src.indexOf('<section id="hub"'); const j = src.indexOf('<section id="scenes"'); const hub = src.slice(i, j > i ? j : src.indexOf('<section id="dims"')); return !/返主頁開始測試/.test(hub) && (hub.match(/選擇測試版本/g) || []).length === 1; })(), (function(){ const i = src.indexOf('<section id="hub"'); const j = src.indexOf('<section id="scenes"'); const hub = src.slice(i, j > i ? j : i + 9000); return "舊掣 " + ((hub.match(/返主頁開始測試/g) || []).length) + " 個、測試版本 " + ((hub.match(/選擇測試版本/g) || []).length) + " 個"; })());
+chk("★ 百科兩個模式各有測試入口，舊「返主頁開始測試」已清", (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return !/返主頁開始測試/.test(hub) && (hub.match(/選擇測試版本/g) || []).length === 2; })(), (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return "舊掣 " + ((hub.match(/返主頁開始測試/g) || []).length) + " 個、測試版本 " + ((hub.match(/選擇測試版本/g) || []).length) + " 個"; })());
 chk("★ 人格頁有「深入睇吓呢一型」入口卡", /id="typeMore"[\s\S]{0,200}id="typeMoreList"/.test(src));
-chk("★ 三個入口函數都有定義", ["openSocialFor","openRomanceFor","openDeepFor"].every(f => new RegExp("window\\." + f + " = function").test(src)));
-chk("★ 入口文案齊（個人相處／個人拍拖／人格深入分析）", /"個人相處"/.test(src) && /"個人拍拖"/.test(src) && /"人格深入分析"/.test(src));
+chk("★ 人格頁入口合併為「X × N 個場景」＋「人格深入分析」（Roy 2026-10-01 方案 A）", (function(){ const i = src.indexOf("window.renderTypeMore"); const fn = src.slice(i, src.indexOf("window.openDeepFor", i)); return /openTypeScenes\('/.test(fn) && /"人格深入分析"/.test(fn) && !/"個人相處"/.test(fn) && !/"個人拍拖"/.test(fn); })());
+chk("★ 入口函數都有定義", ["openTypeScenes","openDeepFor","renderTypeScenes"].every(f => new RegExp("window\\." + f + " = function").test(src)));
+chk("★ typeScenes 分頁存在且有返回掣", /<section id="typeScenes"/.test(src) && /id="typeScenesList"/.test(src));
 chk("★ 深入分析入口要解鎖（未解鎖跳升級頁）", /window\.openDeepFor = function\(code\)\{\s*\n?\s*if\(!window\.isUnlocked \|\| !window\.isUnlocked\(\)\)\{ window\.openUpgrade\(\); return; \}/.test(src));
 chk("★ 相處／拍拖有「正在睇 XX」提示條", /scene-for-banner/.test(src) && /_socialForType/.test(src) && /_romanceForType/.test(src));
 chk("★ 提示條有「睇全部 16 型」清除掣", /scene-for-clear/.test(src) && /window\._socialForType=null/.test(src));
@@ -73,45 +74,59 @@ setTimeout(() => {
   chk("★ 字母卡第一段係 E vs I", /E vs I/.test($("#dims .hub-letter-list").textContent));
   w.goBack();
 
-  // ①b 場景攻略
-  w.SOCIAL = { WhatsAppGroup: { name: "WhatsApp 群組", desc: "d" }, FamilyGathering: { name: "親戚飯局", desc: "d" }, TeaFriend: { name: "飲茶吹水朋友", desc: "d" }, GroupProject: { name: "Group Project 隊友", desc: "d" }, Roommate: { name: "室友", desc: "d" }, Workplace: { name: "返工同事", desc: "d" }, 失戀陪: { name: "失戀時陪佢", desc: "d" } };
-  w.ROMANCE = { 拍拖: { name: "點同佢拍拖", desc: "d" }, 吵架: { name: "同佢點收科", desc: "d" }, 分手: { name: "點同佢分手", desc: "d" } };
-  w.openScenes();
-  const rowsS = d.querySelectorAll("#scenesSocial .scene-go-row");
-  const rowsR = d.querySelectorAll("#scenesRomance .scene-go-row");
-  chk("★ 場景攻略：相處 7 個", rowsS.length === 7, "render 出 " + rowsS.length);
-  chk("★ 場景攻略：拍拖 3 個", rowsR.length === 3, "render 出 " + rowsR.length);
-  chk("★ 場景數係動態顯示（唔會寫死錯數字）", /scenesSocialN/.test(src) && !/（10 個場景）/.test(src));
-  chk("★ 相處場景卡呼叫 openSocialScenario", /openSocialScenario\(/.test(rowsS[0].getAttribute("onclick")), rowsS[0].getAttribute("onclick"));
-  chk("★ 拍拖場景卡呼叫 openRomanceScenario", /openRomanceScenario\(/.test(rowsR[0].getAttribute("onclick")), rowsR[0].getAttribute("onclick"));
-  // 場景頁內 16 型卡 grid 同下面測試入口卡要有距離（Roy 圖報貼住）
-  w.SOCIAL.WhatsAppGroup.articles = { INTJ: "a", ENFP: "b" };
+  // ①b 百科「由場景睇」模式（Roy 2026-10-01 方案 A：場景入口收埋入百科）
+  const _A = { INTJ: "a", ENFP: "b" };
+  w.SOCIAL = { WhatsAppGroup: { name: "WhatsApp 群組", desc: "d", articles: _A }, FamilyGathering: { name: "親戚飯局", desc: "d", articles: _A }, TeaFriend: { name: "飲茶吹水朋友", desc: "d", articles: _A }, GroupProject: { name: "Group Project 隊友", desc: "d", articles: _A }, Roommate: { name: "室友", desc: "d", articles: _A }, Workplace: { name: "返工同事", desc: "d", articles: _A }, 失戀陪: { name: "失戀時陪佢", desc: "d", articles: _A } };
+  w.ROMANCE = { 拍拖: { name: "點同佢拍拖", desc: "d", articles: _A }, 吵架: { name: "同佢點收科", desc: "d", articles: _A }, 分手: { name: "點同佢分手", desc: "d", articles: _A } };
   // jsdom 唔 load data.js → 補返 hubTypeCardHtml 需要嘅 palette
   if (typeof w.getPalette !== "function") w.getPalette = function () { return { c1: "#6B5B95", c2: "#4E4270", accent: "#F0EAF8" }; };
+  w.openHub();
+  chk("★ 百科預設「由人格睇」（type 模式）", !$("#hubTypeMode").classList.contains("hidden") && $("#hubSceneMode").classList.contains("hidden"));
+  w.setHubMode("scene");
+  chk("★ 撳「由場景睇」→ 切去場景模式", $("#hubTypeMode").classList.contains("hidden") && !$("#hubSceneMode").classList.contains("hidden"));
+  const rowsS = d.querySelectorAll("#hubSceneList .scene-go-row");
+  chk("★ 百科場景模式：10 個場景卡（相處 7 + 拍拖 3）", rowsS.length === 10, "render 出 " + rowsS.length);
+  chk("★ 場景數係動態顯示（唔會寫死錯數字）", /Object\.keys\(window\.SOCIAL \|\| \{\}\)\.length/.test(src) && !/（10 個場景）/.test(src));
+  chk("★ 場景卡呼叫 openHubScene", /openHubScene\(/.test(rowsS[0].getAttribute("onclick")), rowsS[0].getAttribute("onclick"));
+  const icoS = d.querySelectorAll("#hubSceneList .scene-go-row .scene-go-ico svg");
+  chk("★ 每個場景前面都有 icon（10 個）", icoS.length === 10, "有 icon 嘅卡 " + icoS.length);
+  const cols = [...icoS].map(sv => (sv.getAttribute("style") || "").match(/color:(#[0-9A-Fa-f]{6})/i)).filter(Boolean).map(m => m[1].toLowerCase());
+  chk("★ 10 個場景 10 種唔同顏色", cols.length >= 10 && new Set(cols).size >= 10, new Set(cols).size + " 種：" + [...new Set(cols)].join(" "));
+  // 撳場景 → 場景詳情 + 16 型卡（同一個 #hub 內，唔跳頁）
+  const sBtn = d.querySelector("#hubSceneList .scene-go-row");
+  sBtn.click();
+  chk("★ 撳場景後仲喺百科（冇跳頁）", w._showing === "hub", "showing=" + w._showing);
+  const gridInHub = d.querySelector("#hubSceneDetail .hub-type-grid");
+  chk("★ 場景詳情 render 出 16 型卡 grid", !!gridInHub, gridInHub ? "有" : "冇");
+  chk("★ 場景詳情有「全部場景」返回掣", !!d.querySelector("#hubSceneDetail .hub-scene-back"));
+  w.closeHubScene();
+  chk("★ 撳「全部場景」返到場景清單", !$("#hubSceneList").classList.contains("hidden") && $("#hubSceneDetail").classList.contains("hidden"));
+
+  // ①c 該型 × 場景頁（由人格頁入）
+  w.openTypeScenes("ENFP");
+  const tsRows = d.querySelectorAll("#typeScenesList .scene-go-row");
+  chk("★ 該型場景頁：10 個場景（ENFP）", tsRows.length === 10, "render 出 " + tsRows.length);
+  chk("★ 該型場景頁標題帶型別碼", /ENFP/.test($("#typeScenesTitle").textContent), $("#typeScenesTitle").textContent);
+  chk("★ 該型場景卡呼叫 typeScenesOpenSocial／Romance", /typeScenesOpen(Social|Romance)\(/.test(tsRows[0].getAttribute("onclick")), tsRows[0].getAttribute("onclick"));
+
+  // ①d 相處／拍拖場景頁（#social 仍保留，由文章返回用）
   w.openSocial();
   w.openSocialScenario("WhatsAppGroup");
   const gridInSocial = d.querySelector("#socialScenarios .hub-type-grid");
   chk("★ 相處場景頁 render 出 16 型卡 grid", !!gridInSocial, gridInSocial ? "有" : "冇");
   chk("★ 相處／拍拖場景頁：16 型卡 grid 有下距（唔會貼住入口卡）", /#socialScenarios \.hub-type-grid,#romanceScenarios \.hub-type-grid\{margin-bottom:20px\}/.test(src));
   chk("★ 提示同 16 型卡 grid 之間有距離", /#socialScenarios \.hub-type-hint,#romanceScenarios \.hub-type-hint\{margin-bottom:10px\}/.test(src));
-  chk("★ 場景攻略最底有測試入口", /id="scenes"[\s\S]{0,3000}選擇測試版本/.test(src));
-  const icoS = d.querySelectorAll("#scenesSocial .scene-go-row .scene-go-ico svg");
-  const icoR = d.querySelectorAll("#scenesRomance .scene-go-row .scene-go-ico svg");
-  chk("★ 每個場景前面都有 icon（相處 7）", icoS.length === 7, "有 icon 嘅卡 " + icoS.length);
-  chk("★ 每個場景前面都有 icon（拍拖 3）", icoR.length === 3, "有 icon 嘅卡 " + icoR.length);
-  const cols = [...icoS, ...icoR].map(sv => sv.getAttribute("style").match(/color:(#[0-9A-Fa-f]{6})/i)).filter(Boolean).map(m => m[1].toLowerCase());
-  chk("★ 10 個場景 10 種唔同顏色", cols.length >= 10 && new Set(cols).size >= 10, new Set(cols).size + " 種：" + [...new Set(cols)].join(" "));
 
   // ①d 捲動位置記憶
 
-  // ② 人格頁三個入口
+  // ② 人格頁兩個入口（相處＋拍拖已合併成「X × 10 個場景」）
   w.openType("ENFP", "test");
   const rows = d.querySelectorAll("#typeMoreList .type-more-row");
-  chk("★ 人格頁 render 出 3 個入口", rows.length === 3, "render 出 " + rows.length + " 個");
-  chk("★ 入口 1 係個人相處、帶住 ENFP", /ENFP/.test(rows[0].getAttribute("onclick")), rows[0].getAttribute("onclick"));
-  chk("★ 入口 2 係個人拍拖、帶住 ENFP", /ENFP/.test(rows[1].getAttribute("onclick")), rows[1].getAttribute("onclick"));
-  chk("★ 入口 3 係深入分析、帶住 ENFP", /ENFP/.test(rows[2].getAttribute("onclick")), rows[2].getAttribute("onclick"));
-  chk("★ 深入分析入口有「完整版」標記", /type-more-lock/.test(rows[2].innerHTML) && /完整版/.test(rows[2].textContent));
+  chk("★ 人格頁 render 出 2 個入口", rows.length === 2, "render 出 " + rows.length + " 個");
+  chk("★ 入口 1 係「ENFP × 10 個場景」", /openTypeScenes\('ENFP'\)/.test(rows[0].getAttribute("onclick")), rows[0].getAttribute("onclick"));
+  chk("★ 入口 1 標題有 N 個場景（動態）", /個場景/.test(rows[0].textContent), rows[0].textContent.trim().slice(0, 40));
+  chk("★ 入口 2 係深入分析、帶住 ENFP", /ENFP/.test(rows[1].getAttribute("onclick")), rows[1].getAttribute("onclick"));
+  chk("★ 深入分析入口有「完整版」標記", /type-more-lock/.test(rows[1].innerHTML) && /完整版/.test(rows[1].textContent));
   chk("★ 入口副標顯示呢一型（ENFP · 調停者）", /ENFP/.test($("#typeMoreSub").textContent), $("#typeMoreSub").textContent);
 
   // ③ 型優先：相處 banner

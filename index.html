@@ -427,6 +427,13 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 /* 場景文章頁（相處／拍拖）：最底入口卡同上內文唔好貼太近（Roy 2026-10-01） */
 #socialArticle .softbox-tight,#romanceArticle .softbox-tight{margin-top:9px}
 
+/* 百科雙模式切換（Roy 2026-10-01 方案 A）*/
+.hub-mode-switch{display:flex;gap:6px;background:#f1ece3;border-radius:999px;padding:4px;margin:0 12px 16px}
+.hub-mode-btn{flex:1 1 0;border:0;background:transparent;border-radius:999px;padding:9px 10px;font-size:13px;font-weight:800;color:#6b6257;cursor:pointer;font-family:inherit}
+.hub-mode-btn.is-on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(26,26,26,.1)}
+.hub-scene-n{font-weight:600;letter-spacing:0;color:#9a9086}
+.hub-scene-back{display:inline-block;border:0;background:transparent;color:#8A7A5A;font-size:12px;font-weight:800;padding:2px 0 12px;cursor:pointer;font-family:inherit}
+
 /* 相處／拍拖場景頁：16 型卡 grid 同下面測試入口卡要有距離（Roy 2026-10-01 圖報貼住） */
 #socialScenarios .hub-type-grid,#romanceScenarios .hub-type-grid{margin-bottom:20px}
 #socialScenarios .hub-type-hint,#romanceScenarios .hub-type-hint{margin-bottom:10px}
@@ -927,6 +934,11 @@ html.dk{
 /* 白色卡／漸變 → 深卡 */
 html.dk .scenes-bleed,html.dk .result-bleed,html.dk .hub-bleed{background:linear-gradient(180deg,var(--dk-card),var(--paper))}
 html.dk .home-acc{background:var(--dk-card);box-shadow:0 4px 24px rgba(0,0,0,.42)}
+html.dk .hub-mode-switch{background:#20272F}
+html.dk .hub-mode-btn{color:#9AA3AD}
+html.dk .hub-mode-btn.is-on{background:#2A323C;color:var(--ink)}
+html.dk .hub-scene-n{color:#78828C}
+html.dk .hub-scene-back{color:#C0A87A}
 html.dk .home-acc-item.open .home-acc-head{background:linear-gradient(90deg,#212831,var(--dk-card))}
 html.dk .home-acc-head:hover{background:var(--dk-hover)}
 html.dk .home-acc-head:active{background:var(--dk-on)}
@@ -1136,7 +1148,7 @@ if(window._showing === "type") return true;
 const MAP = {
  "#about": "openAbout",
  "#spectrum": "openSpectrum",
- "#scenes": "openScenes",
+ "#typeScenes": "openTypeScenes",
  "#hub": "openHub",
  "#social": "openSocial",
  "#romance": "openRomance",
@@ -1423,6 +1435,14 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <p class="page-hero-sub">四個維度、十六種性格完整介紹、性格比較工具</p>
  </div>
 
+ <!-- 雙模式：由人格睇／由場景睇（Roy 2026-10-01 方案 A：場景入口收埋入百科）-->
+ <div class="hub-mode-switch" role="tablist">
+ <button type="button" class="hub-mode-btn is-on" data-mode="type" onclick="setHubMode('type')">由人格睇</button>
+ <button type="button" class="hub-mode-btn" data-mode="scene" onclick="setHubMode('scene')">由場景睇</button>
+ </div>
+
+ <div id="hubTypeMode">
+
  <!-- 4 個維度入口：8 個字母掣 ＋ 撳入去睇詳解 -->
  <div class="card p-5 mb-4" id="hubDims">
  <h3 class="font-bold mb-1 text-sm">4 個維度（8 個字母）</h3>
@@ -1493,30 +1513,22 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" onclick="compareTypes()" class="btn-gold w-full py-2.5 rounded-lg text-sm">比較</button>
  <div id="compareResult" class="mt-4"></div>
  </div>
+
+ </div><!-- /hubTypeMode -->
+
+
+ <!-- 由場景睇：10 個場景 → 16 型卡 → 文章 -->
+ <div id="hubSceneMode" class="hidden">
+ <div id="hubSceneList"></div>
+ <div id="hubSceneDetail" class="hidden"></div>
+ <div class="card mb-4 softbox">
+ <p class="softbox-sub">想確認自己 MBTI 人格？</p>
+ <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
+ </div>
+ </div>
  </section>
 
 <!-- ========== 場景攻略（相處 10 + 拍拖 10，由主頁入） ========== -->
-<section id="scenes" class="hidden fade-up">
-<div class="page-hero">
-<div class="page-hero-row">
-<button type="button" class="page-back" onclick="goBack()">返回</button>
-<h1>場景攻略</h1>
-</div>
-<p class="page-hero-sub">唔知對方係咩型？由場景入手 — 揀一個情境，睇 16 型會點反應</p>
-</div>
-<div class="card p-5 mb-4">
-<div class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.6c-4.6 0-8.4 3.05-8.4 6.8 0 2.1 1.15 3.98 2.95 5.18l-.85 3.42 3.55-1.88c.88.18 1.8.28 2.75.28 4.6 0 8.4-3.05 8.4-6.8S16.6 4.6 12 4.6z"/></svg>同人相處<span id="scenesSocialN"></span></div>
-<div id="scenesSocial"></div>
-</div>
-<div class="card p-5 mb-4">
-<div class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.4S4.2 15.7 4.2 10.4a4.2 4.2 0 017.8-2.3 4.2 4.2 0 017.8 2.3c0 5.3-7.8 10-7.8 10z"/></svg>拍拖關係<span id="scenesRomanceN"></span></div>
-<div id="scenesRomance"></div>
-</div>
-<div class="card mb-4 softbox">
-<p class="softbox-sub">想確認自己 MBTI 人格？</p>
-<button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
-</div>
-</section>
 
 <!-- ========== 維度詳解（由百科撳入） ========== -->
 <section id="dims" class="hidden fade-up">
@@ -1935,6 +1947,22 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
  </div>
  </section>
+
+ <!-- 該型 × 場景（由人格頁入；Roy 2026-10-01 方案 A 歸一）-->
+ <section id="typeScenes" class="hidden fade-up">
+ <div class="page-hero">
+ <div class="page-hero-row">
+ <button type="button" class="page-back" onclick="goBack()">返回</button>
+ <h1 id="typeScenesTitle">場景攻略</h1>
+ </div>
+ <p class="page-hero-sub" id="typeScenesSub"></p>
+ </div>
+ <div id="typeScenesList"></div>
+ <div class="card mb-4 softbox">
+ <p class="softbox-sub">想確認自己 MBTI 人格？</p>
+ <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
+ </div>
+ </section>
  <section id="method" class="hidden fade-up">
  <div class="page-hero">
  <div class="page-hero-row">
@@ -2142,16 +2170,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="home-acc-body">
  <p class="home-acc-desc">4 個維度、16 種性格完整介紹、性格比較工具。</p>
  <button type="button" class="home-acc-go" onclick="event.stopPropagation();openHub()">進入百科</button>
- </div>
- </div>
- <div class="home-acc-item" data-acc="scenes">
- <button type="button" class="home-acc-head" onclick="toggleHomeAcc('scenes')">
- <span class="home-acc-title">場景攻略</span>
- <span class="home-acc-chev">▼</span>
- </button>
- <div class="home-acc-body">
- <p class="home-acc-desc">唔知對方係咩型？由場景入手 — 揀一個情境，睇 16 型會點反應。</p>
- <button type="button" class="home-acc-go" onclick="event.stopPropagation();openScenes()">進入場景攻略</button>
  </div>
  </div>
  <div class="home-acc-item" data-acc="stats">
@@ -3155,7 +3173,7 @@ window._showing = id;
 if(prevId === "home" && id !== "home"){
 try{ window._homeScrollY = window.scrollY || window.pageYOffset || 0; }catch(e){ window._homeScrollY = 0; }
  }
-["home","profile","test","result","about","spectrum","hub","dims","scenes","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
+["home","profile","test","result","about","spectrum","hub","dims","typeScenes","letter","type","social","socialArticle","romance","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
 if(id === "home" && (window._homeScrollY || 0) > 0){
 // 返主頁：還原原本停留位置（唔彈返頂）
@@ -3172,9 +3190,12 @@ try{ clearVersionUI(); }catch(e){}
  }
 // 下面幾頁嘅內容係 JS render 出嚟（唔喺 HTML 內）→ 一定要喺 show() 內重 render，
 // 否則下拉重整（直接 show(id)，唔會行 openXxx()）之後會見到空白（Roy 2026-10-01 報）
-if(id === "scenes"){ try{ window.renderScenes(); }catch(e){} }
+if(id === "typeScenes"){ try{ window.renderTypeScenes(); }catch(e){} }
 if(id === "dims"){ try{ window.renderDimsLetters(); }catch(e){} }
-if(id === "hub"){ try{ window.renderHubTypes(); }catch(e){} }
+if(id === "hub"){
+ try{ window.renderHubTypes(); }catch(e){}
+ try{ window.setHubMode(sessionStorage.getItem("hkmbti_hub_mode") || "type"); }catch(e){}
+}
  // 淨係測試頁鎖下拉（防誤觸 reload 清走進度）
 document.body.classList.toggle("in-test", id === "test");
 // 測試期間連 html 都鎖 overscroll（body 鎖唔晒 Android Chrome 嘅下拉重新整理）
@@ -5262,6 +5283,10 @@ if(prev.rKey) openRomanceScenario(prev.rKey);
 else openRomance();
 return;
  }
+if(id === "typeScenes"){
+if(prev && prev.type){ window._typeScenesCode = String(prev.type).toUpperCase(); window._lastType = window._typeScenesCode; show("typeScenes"); return; }
+show("hub"); return;
+ }
 if(id === "type"){
 if(prev && prev.type){ openType(prev.type, prev.typeFrom); return; }
 if(typeof window.openHub === "function"){ openHub(); return; }
@@ -5842,10 +5867,10 @@ window.renderTypeMore = function(){
  const T = (window.TYPES && window.TYPES[code]) || {};
  const nm = T.name ? (code + " · " + T.name) : code;
  const sub = document.getElementById("typeMoreSub");
- if(sub) sub.textContent = nm + " — 同人相處、拍拖、9 章深入分析";
+ if(sub) sub.textContent = nm + " — 場景攻略同 9 章深入分析";
+ const _nS = Object.keys(window.SOCIAL || {}).length + Object.keys(window.ROMANCE || {}).length;
  const rows = [
-  {t:"個人相處", d:"10 個場景：WhatsApp 群、屋企人、同事、室友、吵架…", oc:"openSocialFor('" + code + "')"},
-  {t:"個人拍拖", d:"10 個場景：曖昧、拍拖、吵架、分手、見家長…", oc:"openRomanceFor('" + code + "')"},
+  {t:code + " × " + _nS + " 個場景", d:"同人相處 7 個 + 拍拖關係 3 個：WhatsApp 群、屋企人、同事、室友、曖昧、分手、見家長…", oc:"openTypeScenes('" + code + "')"},
   {t:"人格深入分析", d:"9 章：核心動機、3 個盲點、壓力反應、職場、愛情、友情…", oc:"openDeepFor('" + code + "')", lock:true}
  ];
  box.innerHTML = rows.map(function(r){
@@ -5870,14 +5895,31 @@ window.openDeepFor = function(code){
  if(!window.isUnlocked || !window.isUnlocked()){ window.openUpgrade(); return; }
  window.openDeepType(String(code || "").toUpperCase());
 };
-// 場景攻略（相處 10 + 拍拖 10）
-window.openScenes = function(){
-show("scenes");
+// ===== 百科雙模式：由人格睇／由場景睇（Roy 2026-10-01 方案 A）=====
+window._hubMode = "type";
+window.setHubMode = function(mode){
+ mode = (mode === "scene") ? "scene" : "type";
+ window._hubMode = mode;
+ try{
+  const btns = document.querySelectorAll(".hub-mode-btn");
+  for(let i=0;i<btns.length;i++) btns[i].classList.toggle("is-on", btns[i].dataset.mode === mode);
+ }catch(e){}
+ const t = $("hubTypeMode"), sc = $("hubSceneMode");
+ if(t) t.classList.toggle("hidden", mode !== "type");
+ if(sc) sc.classList.toggle("hidden", mode !== "scene");
+ if(mode === "scene"){
+  const d = $("hubSceneDetail"), l = $("hubSceneList");
+  if(d) d.classList.add("hidden");
+  if(l) l.classList.remove("hidden");
+  window.renderHubSceneList();
+ }
+ try{ sessionStorage.setItem("hkmbti_hub_mode", mode); }catch(e){}
 };
-window.renderScenes = function(){
+window.renderHubSceneList = function(){
+ const c = $("hubSceneList"); if(!c) return;
  const mk = function(list, fn){
   return Object.keys(list || {}).map(function(k){
-   const s = list[k];
+   const s = list[k] || {};
    return '<button type="button" class="scene-go-row" onclick="' + fn + "( '" + k + "' )" + '">'
     + '<span class="scene-go-ico">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 30) : '') + '</span>'
     + '<span class="scene-go-body">'
@@ -5887,14 +5929,47 @@ window.renderScenes = function(){
     + '</button>';
   }).join("");
  };
- const a = document.getElementById("scenesSocial");
- if(a) a.innerHTML = mk(window.SOCIAL, "openSocialScenario");
- const b = document.getElementById("scenesRomance");
- if(b) b.innerHTML = mk(window.ROMANCE, "openRomanceScenario");
- const na = document.getElementById("scenesSocialN");
- if(na) na.textContent = "（" + Object.keys(window.SOCIAL || {}).length + " 個場景）";
- const nb = document.getElementById("scenesRomanceN");
- if(nb) nb.textContent = "（" + Object.keys(window.ROMANCE || {}).length + " 個場景）";
+ c.innerHTML = '<div class="card p-5 mb-4">'
+  + '<div class="text-xs tracking-widest brand-gold font-bold mb-3">同人相處<span class="hub-scene-n">（' + Object.keys(window.SOCIAL || {}).length + ' 個場景）</span></div>'
+  + mk(window.SOCIAL, "openHubScene")
+  + '</div>'
+  + '<div class="card p-5 mb-4">'
+  + '<div class="text-xs tracking-widest brand-gold font-bold mb-3">拍拖關係<span class="hub-scene-n">（' + Object.keys(window.ROMANCE || {}).length + ' 個場景）</span></div>'
+  + mk(window.ROMANCE, "openHubScene")
+  + '</div>';
+};
+window.openHubScene = function(key){
+ const isR = !!(window.ROMANCE && window.ROMANCE[key]);
+ const s = isR ? window.ROMANCE[key] : ((window.SOCIAL && window.SOCIAL[key]) || null);
+ if(!s) return;
+ const d = $("hubSceneDetail"), l = $("hubSceneList");
+ if(l) l.classList.add("hidden");
+ if(!d) return;
+ d.classList.remove("hidden");
+ d.innerHTML = '<button type="button" class="hub-scene-back" onclick="closeHubScene()">全部場景</button>'
+  + '<div class="card p-5 mb-4">'
+  + '<div class="hub-detail-head">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 30) : '') + '<h3 class="text-[19px] font-black">' + s.name + '</h3></div>'
+  + '<p class="text-sm text-gray-600">' + (s.desc || '') + '</p>'
+  + '</div>'
+  + '<p class="hub-type-hint">請選擇其中一種人格</p>'
+  + '<div class="hub-type-grid">'
+  + ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"].map(function(type){
+     if(!s.articles || !s.articles[type]) return "";
+     return window.hubTypeCardHtml(type, "openHubSceneArticle('" + key + "','" + type + "')");
+    }).join("")
+  + '</div>';
+ if(d.classList.contains("hidden")) return;
+ try{ window.scrollTo(0,0); }catch(e){}
+};
+window.closeHubScene = function(){
+ const l = $("hubSceneList"), d = $("hubSceneDetail");
+ if(d) d.classList.add("hidden");
+ if(l) l.classList.remove("hidden");
+ try{ window.scrollTo(0,0); }catch(e){}
+};
+window.openHubSceneArticle = function(key, type){
+ if(window.ROMANCE && window.ROMANCE[key]){ window.openRomanceArticle(key, type); }
+ else { window.openSocialArticle(key, type); }
 };
 // 由百科撳入「維度詳解」分頁
 window.openDims = function(){
@@ -5922,6 +5997,48 @@ window.renderDimsLetters = function(){
    +'</div>';
  }).join("") + '<div class="text-[10px] text-gray-500 mt-4 pt-3 border-t border-gray-200">16 種性格 = 4 個維度組合，例如 <span class="font-bold">INTJ</span> = 內向 + 直覺 + 思考 + 判斷</div>';
 };
+
+// 該型 × 場景：一個人格睇齊佢喺 10 個場景嘅表現（Roy 2026-10-01 方案 A）
+window._typeScenesCode = null;
+window.openTypeScenes = function(code){
+ window._typeScenesCode = String(code || "").toUpperCase();
+ window._lastType = window._typeScenesCode;
+ show("typeScenes");
+};
+window.renderTypeScenes = function(){
+ const code = String(window._typeScenesCode || window._lastType || "INTJ").toUpperCase();
+ const T = (window.TYPES && window.TYPES[code]) || {};
+ const h1 = $("typeScenesTitle");
+ if(h1) h1.textContent = code + (T.name ? " · " + T.name : "") + " 場景攻略";
+ const box = $("typeScenesList");
+ if(!box) return;
+ const mk = function(list, fn){
+  return Object.keys(list || {}).filter(function(k){
+   return list[k] && list[k].articles && list[k].articles[code];
+  }).map(function(k){
+   const s = list[k];
+   return '<button type="button" class="scene-go-row" onclick="' + fn + "( '" + k + "' )" + '">'
+    + '<span class="scene-go-ico">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 30) : '') + '</span>'
+    + '<span class="scene-go-body">'
+    + '<span class="scene-go-t">' + (s.name || k) + '</span>'
+    + '<span class="scene-go-d">' + (s.desc || '') + '</span>'
+    + '</span>'
+    + '</button>';
+  }).join("");
+ };
+ const soc = mk(window.SOCIAL, "typeScenesOpenSocial");
+ const rom = mk(window.ROMANCE, "typeScenesOpenRomance");
+ const nS = (soc.match(/scene-go-row/g) || []).length;
+ const nR = (rom.match(/scene-go-row/g) || []).length;
+ const sub = $("typeScenesSub");
+ if(sub) sub.textContent = "睇吓 " + code + " 喺 " + (nS + nR) + " 個場景會點反應";
+ let html = "";
+ if(nS) html += '<div class="card p-5 mb-4"><div class="text-xs tracking-widest brand-gold font-bold mb-3">同人相處<span class="hub-scene-n">（' + nS + ' 個場景）</span></div>' + soc + '</div>';
+ if(nR) html += '<div class="card p-5 mb-4"><div class="text-xs tracking-widest brand-gold font-bold mb-3">拍拖關係<span class="hub-scene-n">（' + nR + ' 個場景）</span></div>' + rom + '</div>';
+ box.innerHTML = html;
+};
+window.typeScenesOpenSocial = function(key){ window.openSocialArticle(key, window._typeScenesCode); };
+window.typeScenesOpenRomance = function(key){ window.openRomanceArticle(key, window._typeScenesCode); };
 
 // 由任何頁去主頁「選擇 MBTI 測試版本」嗰個位（人格分頁最底嗰個掣用）
 window.goPickVersion = function(){

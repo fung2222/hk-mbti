@@ -34,8 +34,9 @@ setTimeout(async ()=>{
 
   // ---------- 探索更多入口 + 下拉鎖 + 字級（Roy 2026-10-01） ----------
   chk('★ 探索更多已收窄（冇 deep／social／romance／spectrum 入口）', !/class="home-acc-item" data-acc="(deep|social|romance|spectrum)"/.test(src), (src.match(/class="home-acc-item" data-acc="[a-z]+"/g) || []).join(" "));
-  chk('★ 探索更多有「場景攻略」入口', /data-acc="scenes"/.test(src) && /openScenes\(\)/.test(src));
-  chk('★ 探索更多順序：關於→百科→場景→統計→計分→私隱（Roy 指定）', (function(){ const b = src.slice(src.indexOf('id="homeAccordion"')); const got = [...b.matchAll(/class="home-acc-item" data-acc="([a-z]+)"/g)].map(m => m[1]); return JSON.stringify(got) === JSON.stringify(["about","hub","scenes","stats","method","privacy"]); })(), (function(){ const b = src.slice(src.indexOf('id="homeAccordion"')); return [...b.matchAll(/class="home-acc-item" data-acc="([a-z]+)"/g)].map(m => m[1]).join(" → "); })());
+  chk('★ 探索更多已冇「場景攻略」入口（Roy 2026-10-01：全部收埋入百科）', !/data-acc="scenes"/.test(src) && !/openScenes\(\)/.test(src));
+  chk('★ 百科有雙模式切換（由人格睇／由場景睇）', /class="hub-mode-btn is-on" data-mode="type"/.test(src) && /data-mode="scene"/.test(src) && /window\.setHubMode = function/.test(src));
+  chk('★ 探索更多順序：關於→百科→統計→計分→私隱（Roy 指定）', (function(){ const b = src.slice(src.indexOf('id="homeAccordion"')); const got = [...b.matchAll(/class="home-acc-item" data-acc="([a-z]+)"/g)].map(m => m[1]); return JSON.stringify(got) === JSON.stringify(["about","hub","stats","method","privacy"]); })(), (function(){ const b = src.slice(src.indexOf('id="homeAccordion"')); return [...b.matchAll(/class="home-acc-item" data-acc="([a-z]+)"/g)].map(m => m[1]).join(" → "); })());
   chk('★ 人格頁有深入分析入口（帶「完整版」標記）', /type-more-lock">完整版/.test(src) && /openDeepFor\(/.test(src));
   chk('★ 未解鎖撳深入分析入口會轉去升級頁', /window\.openDeepFor = function\(code\)\{[\s\S]{0,80}openUpgrade\(\)/.test(src));
   chk('★ 主頁頂仍有星級用戶入口', /id="tierBtn"/.test(src));
