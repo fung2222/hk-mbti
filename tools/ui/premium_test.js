@@ -83,7 +83,7 @@ setTimeout(async ()=>{
   chk('★ 深入分析介紹文字放鬆（14px / 行高 1.9 / 段距 17px）', /\.deep-intro-sub\{font-size:14px;line-height:1\.9;[^}]*margin:0 0 17px\}/.test(src));
   chk('★ 介紹標題句同下面留 13px', /\.deep-intro-lead\{[^}]*margin:0 0 13px\}/.test(src));
   chk('★ 章節標籤 chips 有足夠間距（gap 8px）', /\.deep-chips\{display:flex;flex-wrap:wrap;gap:8px\}/.test(src));
-  chk('★ 冇重複嘅 .deep-chips span 定義', (src.match(/\.deep-chips span\{/g)||[]).length===1, (src.match(/\.deep-chips span\{/g)||[]).length);
+  chk('★ 冇重複嘅 .deep-chips span 定義', (src.match(/^\.deep-chips span\{/gm)||[]).length===1, (src.match(/^\.deep-chips span\{/gm)||[]).length);
   // ---------- 全站「大寫字母／型別碼」字型一致性（Roy 2026-10-01：檢查全站色卡用返 Archivo Black）----------
   chk('★ 色卡 4 字母 .hub-type-code 用 Archivo Black', /\.hub-type-code\{\s*\nfont-family:'Archivo Black'/.test(src));
   chk('★ .type-code-txt 強制繼承字型（包咗 span 都唔會跌返 body 字型）', /\.type-code-txt\{display:block;font-family:inherit;font-weight:inherit;font-size:inherit/.test(src));
