@@ -18,6 +18,7 @@ chk("★ 百科首頁維度卡有 8 個字母掣（E/I、S/N、T/F、J/P）", (f
 chk("★ 百科卡底有「撳入去睇」link → #dims", /class="hub-more-link" onclick="openDims\(\)"/.test(src));
 chk("★ 維度詳解分頁（#dims）有「4 個英文字母代表咩」卡（光譜整合入嚟）", /<section id="dims"/.test(src) && /id="dimsLetters"/.test(src) && /class="hub-letter-list"/.test(src));
 chk("★ 維度詳解分頁有 8 個字母掣 → #letter", (function(){ const s = src.slice(src.indexOf('<section id="dims"'), src.indexOf('<!-- ========== 人格深入分析')); return (s.match(/openLetter\('/g) || []).length === 8; })());
+chk("★ 16 型色卡（hub-bleed）同上內文距離夠（26px）→ 百科／深入分析入口卡唔會貼", /\.hub-bleed\{margin:0 -16px 26px/.test(src));
 chk("★ 場景文章頁：色卡同上內文距離夠（26px）", /\.article-type-stage\{margin:0 -16px 26px/.test(src));
 chk("★ 場景文章頁：最底入口卡同上內文唔貼（+9px）", /#socialArticle \.softbox-tight,#romanceArticle \.softbox-tight\{margin-top:9px\}/.test(src));
 chk("★ 非主頁垂直間距統一 16px（卡片同非卡容器一致）", !/\.(persona-sect|article-guide|wiz-facts)\{[^}]*margin:[^;}]*20px/.test(src) && /\.persona-sect\{margin:0 4px 16px/.test(src) && /\.article-guide\{margin:0 4px 16px/.test(src));
