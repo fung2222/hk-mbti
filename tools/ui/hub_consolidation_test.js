@@ -45,6 +45,21 @@ chk("★ 主頁 ⋯ 選單同右上一樣（補返計分方法、冇光譜／相
   const i = src.indexOf('id="homeMenu"'), seg = src.slice(i, src.indexOf("home-menu-foot", i));
   return /openAbout/.test(seg) && /openHub/.test(seg) && /stats\.html/.test(seg) && /openMethod/.test(seg) && /openPrivacy/.test(seg) && !/openSpectrum|openSocial|openRomance/.test(seg);
 })(), (function(){ const i = src.indexOf('id="homeMenu"'); return (src.slice(i, src.indexOf("home-menu-foot", i)).match(/>(主頁|我的紀錄|關於港式 MBTI|性格百科|香港16型統計|計分方法同限制|私隱聲明)</g) || []).join(" "); })());
+// Roy 2026-10-01：清走已淘汰嘅 UI 入口（光譜／個人相處／個人拍拖）
+chk("★ 全站已冇 UI 入口連去光譜／個人相處／個人拍拖", !/onclick="openSpectrum\(\)"/.test(src) && !/onclick="openSocial\(\)"/.test(src) && !/onclick="openRomance\(\)"/.test(src));
+chk("★ 文章頁底 softbox 換成「性格百科 + 呢一型其他場景」", (function(){
+  const seg = src.slice(src.indexOf('id="socialArticle"'), src.indexOf('id="type"'));
+  return !/softbox-btn" onclick="open(?:Social|Romance)\(\)/.test(seg) && /softbox-btn" onclick="openTypeScenes\(window\._lastArticleType\)"/.test(seg) && /softbox-btn" onclick="openHub\(\)"/.test(seg);
+})(), (function(){ const seg = src.slice(src.indexOf('id="socialArticle"'), src.indexOf('id="type"')); return (seg.match(/softbox-btn" onclick="(\w+)/g) || []).join(" | "); })());
+chk("★ 結果頁兩條 stale 連結換成性格百科", (function(){
+  const i = src.indexOf('id="personalityDetail"');
+  const seg = src.slice(Math.max(0, i - 1200), i);
+  return !/點同人相處|點同人拍拖/.test(seg) && /onclick="openHub\(\)"/.test(seg);
+})());
+chk("★ 桌面導覽列同右選單一致（冇光譜／相處攻略）", (function(){
+  const i = src.indexOf('id="dtNav"'), seg = src.slice(i, src.indexOf("</nav>", i));
+  return /性格百科/.test(seg) && /stats\.html/.test(seg) && /record\.html/.test(seg) && !/openSpectrum|openSocial\(/.test(seg);
+})());
 chk("★ 頁底唔再留 96px 大白（class 已冇 pb-24，改 16px + 安全區）", !/class="[^"]*pb-24/.test(src) && /#app\{padding-bottom:calc\(16px \+ env\(safe-area-inset-bottom\)\)\}/.test(src), (src.match(/id="app" class="[^"]*"/) || [""])[0]);
 chk("★ 測試入口用 goPickVersion（去主頁揀版本位）", /id="hubCta"[\s\S]{0,200}goPickVersion\(\)/.test(src));
 chk("★ 百科兩個模式各有測試入口，舊「返主頁開始測試」已清", (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return !/返主頁開始測試/.test(hub) && (hub.match(/選擇測試版本/g) || []).length === 2; })(), (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return "舊掣 " + ((hub.match(/返主頁開始測試/g) || []).length) + " 個、測試版本 " + ((hub.match(/選擇測試版本/g) || []).length) + " 個"; })());

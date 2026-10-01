@@ -1016,10 +1016,9 @@ html.dk.dt .dt-cta-ghost:hover{color:#D8C69E}
  <div class="dt-nav-in">
   <a href="./" class="dt-nav-brand" onclick="goHome();return false;"><img src="icon-192.png" alt="港MBTI"><span>港式 MBTI</span></a>
   <span class="dt-nav-links">
-   <button type="button" data-nav="hub" onclick="openHub()">16 型人格</button>
-   <button type="button" data-nav="spectrum" onclick="openSpectrum()">性格光譜</button>
-   <button type="button" data-nav="social" onclick="openSocial()">相處攻略</button>
-   <a href="./stats.html" data-nav="stats">香港統計</a>
+   <button type="button" data-nav="hub" onclick="openHub()">性格百科</button>
+   <button type="button" data-nav="about" onclick="openAbout()">關於港式 MBTI</button>
+   <a href="./stats.html" data-nav="stats">香港16型統計</a>
    <a href="./record.html" data-nav="record">我的紀錄</a>
   </span>
   <button type="button" class="dt-nav-cta" onclick="goPickVersion()">開始測試</button>
@@ -1833,8 +1832,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="softbox-title">立即睇睇其他攻略</div>
  <div class="article-more-list">
  <button type="button" class="softbox-btn" onclick="openHub()">性格百科</button>
- <button type="button" class="softbox-btn" onclick="openSocial()">個人相處</button>
- <button type="button" class="softbox-btn" onclick="openRomance()">個人拍拖</button>
+ <button type="button" class="softbox-btn" onclick="openTypeScenes(window._lastArticleType)">呢一型其他場景</button>
  </div>
  </div>
  </section>
@@ -1883,8 +1881,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="softbox-title">立即睇睇其他攻略</div>
  <div class="article-more-list">
  <button type="button" class="softbox-btn" onclick="openHub()">性格百科</button>
- <button type="button" class="softbox-btn" onclick="openSocial()">個人相處</button>
- <button type="button" class="softbox-btn" onclick="openRomance()">個人拍拖</button>
+ <button type="button" class="softbox-btn" onclick="openTypeScenes(window._lastArticleType)">呢一型其他場景</button>
  </div>
  </div>
  </section>
@@ -2355,8 +2352,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" onclick="goTypeFromResult()" class="text-xs text-accent font-bold" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">看完整分析</button>
  </div>
  <div class="flex gap-3 text-xs text-gray-600 mb-4 -mt-1">
- <button type="button" onclick="openSocial()" class="underline hover:text-accent" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">點同人相處</button>
- <button type="button" onclick="openRomance()" class="underline hover:text-accent" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">點同人拍拖</button>
+ <button type="button" onclick="openHub()" class="underline hover:text-accent" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">性格百科</button>
  </div>
  <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
 

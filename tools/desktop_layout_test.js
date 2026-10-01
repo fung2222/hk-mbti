@@ -91,10 +91,11 @@ setTimeout(() => {
   const nav = d.getElementById("dtNav");
   check("#dtNav 係 body 直系子女（sticky 全闊）", !!(nav && nav.parentElement === d.body));
   const links = nav ? nav.querySelectorAll(".dt-nav-links [data-nav]") : [];
-  check("#dtNav 5 個入口都有 data-nav", links.length === 5);
-  check("#dtNav 入口函數都存在",
-    ["openHub", "openSpectrum", "openSocial", "goPickVersion", "openPrivacy"].every(f => typeof dom.window[f] === "function") &&
-    !!nav.querySelector('a[href="./stats.html"]') && !!nav.querySelector('a[href="./record.html"]'));
+  check("#dtNav 4 個入口都有 data-nav（2026-10-01 清走光譜／相處攻略）", links.length === 4);
+  check("#dtNav 入口函數都存在（冇 stale 光譜／相處）",
+    ["openHub", "openAbout", "goPickVersion", "openPrivacy"].every(f => typeof dom.window[f] === "function") &&
+    !!nav.querySelector('a[href="./stats.html"]') && !!nav.querySelector('a[href="./record.html"]') &&
+    !nav.querySelector('[data-nav="spectrum"]') && !nav.querySelector('[data-nav="social"]'));
   check("#dtHeroCta 喺 .home-hero-copy 內（開始測試／性格百科）",
     !!d.querySelector(".home-hero-copy #dtHeroCta") &&
     !!d.querySelector('#dtHeroCta [onclick*="goPickVersion"]') && !!d.querySelector('#dtHeroCta [onclick*="openHub"]'));
