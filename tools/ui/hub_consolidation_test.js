@@ -1,0 +1,79 @@
+/* 百科整合測試（Roy 2026-10-01：性格百科做主入口）
+   驗證：#hub 光譜整合 + 16 型卡下面測試入口 + #type 三個深入入口 + 型優先 banner */
+const fs = require("fs");
+const path = require("path");
+const { JSDOM } = require("jsdom");
+
+const root = path.resolve(__dirname, "../..");
+const src = fs.readFileSync(path.join(root, "index.html"), "utf8");
+
+let pass = 0, fail = 0;
+function chk(name, ok, got) {
+  if (ok) { pass++; }
+  else { fail++; console.log("✗ " + name + "   <- " + (got === undefined ? "" : got)); }
+}
+
+// ── 靜態檢查 ──
+chk("★ 百科有「4 個英文字母代表咩」卡（光譜整合入嚟）", /id="hubLetters"/.test(src) && /class="hub-letter-list"/.test(src));
+chk("★ 光譜 5 段齊（E/I、S/N、T/F、J/P、T/A）", (function(){ const m = src.match(/window\.HUB_LETTERS = \[[\s\S]*?\n\];/); if(!m) return false; const t = m[0]; return ["E vs I","S vs N","T vs F","J vs P","T vs A"].every(x => t.includes(x)); })());
+chk("★ 光譜段有「唔係…」澄清句", /唔係「內向 = 怕醜」/.test(src) && /唔係「P 型 = 散漫」/.test(src));
+chk("★ 16 型卡下面直接係測試入口（hubCta + 選擇測試版本）", /id="hubCta"[\s\S]{0,160}選擇測試版本/.test(src));
+chk("★ 測試入口用 goPickVersion（去主頁揀版本位）", /id="hubCta"[\s\S]{0,200}goPickVersion\(\)/.test(src));
+chk("★ 百科只留一個測試入口（舊「返主頁開始測試」已清）", (function(){ const hub = src.slice(src.indexOf('<section id="hub"'), src.indexOf('<section id="deep"')); return !/返主頁開始測試/.test(hub) && (hub.match(/選擇測試版本/g) || []).length === 1; })(), "#hub 內舊掣 " + ((src.slice(src.indexOf('<section id="hub"'), src.indexOf('<section id="deep"')).match(/返主頁開始測試/g) || []).length) + " 個");
+chk("★ 人格頁有「深入睇吓呢一型」入口卡", /id="typeMore"[\s\S]{0,200}id="typeMoreList"/.test(src));
+chk("★ 三個入口函數都有定義", ["openSocialFor","openRomanceFor","openDeepFor"].every(f => new RegExp("window\\." + f + " = function").test(src)));
+chk("★ 入口文案齊（個人相處／個人拍拖／人格深入分析）", /"個人相處"/.test(src) && /"個人拍拖"/.test(src) && /"人格深入分析"/.test(src));
+chk("★ 深入分析入口要解鎖（未解鎖跳升級頁）", /window\.openDeepFor = function\(code\)\{\s*\n?\s*if\(!window\.isUnlocked \|\| !window\.isUnlocked\(\)\)\{ window\.openUpgrade\(\); return; \}/.test(src));
+chk("★ 相處／拍拖有「正在睇 XX」提示條", /scene-for-banner/.test(src) && /_socialForType/.test(src) && /_romanceForType/.test(src));
+chk("★ 提示條有「睇全部 16 型」清除掣", /scene-for-clear/.test(src) && /window\._socialForType=null/.test(src));
+chk("★ 新元素有黑暗模式覆蓋", /html\.dk \.type-more-row\{/.test(src) && /html\.dk \.scene-for-banner\{/.test(src));
+
+// ── jsdom 真跑 ──
+const dom = new JSDOM(src, { runScripts: "dangerously", pretendToBeVisual: true, url: "https://example.com/" });
+const w = dom.window, d = w.document;
+const $ = s => d.querySelector(s);
+
+setTimeout(() => {
+  // jsdom 唔會 load 外部 script → 手動注入必要資料
+  if (!w.SOCIAL) w.SOCIAL = { WhatsAppGroup: { name: "WhatsApp 群", desc: "d" }, TeaFriend: { name: "飲茶朋友", desc: "d" } };
+  if (!w.ROMANCE) w.ROMANCE = { 拍拖: { name: "拍拖", desc: "d" }, 吵架: { name: "吵架", desc: "d" } };
+  if (!w.TYPES) w.TYPES = { ENFP: { name: "調停者" }, INTJ: { name: "建築師" } };
+
+  // ① 百科字母卡有 5 段
+  w.openHub();
+  const letters = d.querySelectorAll("#hub .hub-letter-list > div");
+  chk("★ 百科字母卡 render 出 5 段 + 底註", letters.length === 6, "render 出 " + letters.length + " 段（預期 6＝5 段＋1 底註）");
+  chk("★ 字母卡第一段係 E vs I", /E vs I/.test($("#hub .hub-letter-list").textContent));
+
+  // ② 人格頁三個入口
+  w.openType("ENFP", "test");
+  const rows = d.querySelectorAll("#typeMoreList .type-more-row");
+  chk("★ 人格頁 render 出 3 個入口", rows.length === 3, "render 出 " + rows.length + " 個");
+  chk("★ 入口 1 係個人相處、帶住 ENFP", /ENFP/.test(rows[0].getAttribute("onclick")), rows[0].getAttribute("onclick"));
+  chk("★ 入口 2 係個人拍拖、帶住 ENFP", /ENFP/.test(rows[1].getAttribute("onclick")), rows[1].getAttribute("onclick"));
+  chk("★ 入口 3 係深入分析、帶住 ENFP", /ENFP/.test(rows[2].getAttribute("onclick")), rows[2].getAttribute("onclick"));
+  chk("★ 深入分析入口有「完整版」標記", /type-more-lock/.test(rows[2].innerHTML) && /完整版/.test(rows[2].textContent));
+  chk("★ 入口副標顯示呢一型（ENFP · 調停者）", /ENFP/.test($("#typeMoreSub").textContent), $("#typeMoreSub").textContent);
+
+  // ③ 型優先：相處 banner
+  w.openSocialFor("ENFP");
+  const banner = $("#socialScenarios .scene-for-banner");
+  chk("★ 由人格頁跳相處：有「正在睇 ENFP」提示條", !!banner, banner ? banner.textContent.trim() : "(冇)");
+  chk("★ 提示條顯示型名", !!banner && /ENFP/.test(banner.textContent), banner ? banner.textContent.trim() : "");
+
+  // ④ 清除 → 返全部 16 型
+  if (banner) banner.querySelector(".scene-for-clear").click();
+  chk("★ 撳「睇全部 16 型」後提示條消失", !$("#socialScenarios .scene-for-banner"));
+
+  // ⑤ 拍拖 banner
+  w.openRomanceFor("INTJ");
+  const rb = $("#romanceScenarios .scene-for-banner");
+  chk("★ 由人格頁跳拍拖：有「正在睇 INTJ」提示條", !!rb && /INTJ/.test(rb.textContent));
+
+  // ⑥ 未解鎖：深入分析入口會跳升級頁
+  w.openDeepFor("ENFP");
+  chk("★ 未解鎖撳深入分析 → 跳升級頁", !$("#upgrade").classList.contains("hidden") || w._showing === "upgrade", "showing=" + w._showing);
+
+  console.log(fail === 0 ? "\n===== 全部通過（" + pass + "/" + pass + "）=====" : "\n===== 有失敗（" + pass + "/" + (pass + fail) + "）=====");
+  process.exit(fail === 0 ? 0 : 1);
+}, 300);

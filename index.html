@@ -424,6 +424,19 @@ font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:700;font
 font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 }
 .hub-type-cn{font-size:.5em;line-height:1.25;opacity:.9;white-space:nowrap;}
+/* 「正在睇 XX」提示條（由人格頁跳入相處／拍拖用） */
+.scene-for-banner{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--ink);background:#f6e7c4;border-radius:10px;padding:9px 12px;margin:0 0 12px;line-height:1.5}
+.scene-for-banner b{font-weight:800}
+.scene-for-clear{border:0;background:#fff;color:#8a6a1f;font-size:11px;font-weight:700;border-radius:7px;padding:4px 9px;cursor:pointer;font-family:inherit;margin-left:auto}
+
+/* 人格頁「深入睇吓呢一型」入口列 */
+.type-more-row{display:block;width:100%;text-align:left;border:0;background:#faf7f2;border-radius:12px;padding:12px 14px;margin:0 0 8px;cursor:pointer;font-family:inherit;}
+.type-more-row:last-child{margin-bottom:0}
+.type-more-row:hover{background:#f5efe6}
+.type-more-t{display:block;font-size:14px;font-weight:800;color:var(--ink);margin:0 0 3px}
+.type-more-d{display:block;font-size:11px;color:#8a8174;line-height:1.5}
+.type-more-lock{display:inline-block;font-size:10px;font-weight:700;color:#8a6a1f;background:#f6e7c4;border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:1px}
+
 /* 深入分析版頭：金標下面嗰行黑大字 */
 .deep-lead{font-size:19px;font-weight:900;line-height:1.35;letter-spacing:-.01em;color:var(--ink);margin:0 0 9px}
 html.dk .deep-lead{color:var(--ink)}
@@ -939,6 +952,12 @@ html.dk .option.selected .option-letter{background:var(--gold);color:#12161C}
 html.dk .glass{background:rgba(24,30,38,.72)}
 html.dk .hub-type-go{background:rgba(18,22,28,.92);color:#ECE7DE}
 html.dk .hub-type-hint{color:#A79E92}
+html.dk .type-more-row{background:#222A34}
+html.dk .type-more-row:hover{background:#28313C}
+html.dk .type-more-d{color:#A79E92}
+html.dk .type-more-lock{color:#E8C989;background:#3A3324}
+html.dk .scene-for-banner{background:#3A3324;color:#ECE7DE}
+html.dk .scene-for-clear{background:#222A34;color:#E8C989}
 html.dk .mth-l{color:#B9A97F}
 html.dk .home-acc-go:hover{color:#D8C69E}
 html.dk .softbox-btn:hover{color:#D8C69E}
@@ -1375,6 +1394,13 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <p class="page-hero-sub">四個維度、十六種性格完整介紹、性格比較工具</p>
  </div>
 
+ <!-- 4 個英文字母代表咩（由「性格光譜」整合入嚟） -->
+ <div class="card p-5 mb-4" id="hubLetters">
+ <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>4 個英文字母代表咩？</div>
+ <p class="text-xs text-gray-600 mb-3">每個人嘅性格由 4 個維度組成，每個維度有 2 個極端。你喺中間某個位置，唔係 100% 一邊。</p>
+ <div class="hub-letter-list"></div>
+ </div>
+
  <!-- 4 個維度入口 -->
  <div class="card p-5 mb-4">
  <h3 class="font-bold mb-3 text-sm">4 個維度（8 個字母）</h3>
@@ -1409,6 +1435,12 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  </div>
 
+ <!-- 測試入口（16 型卡下面）-->
+ <div class="card mb-4 softbox" id="hubCta">
+ <p class="softbox-sub">想確認自己 MBTI 人格？</p>
+ <button type="button" class="softbox-btn" onclick="goPickVersion()">選擇測試版本</button>
+ </div>
+
  <!-- 性格比較工具 -->
  <div class="card p-5 mb-4">
  <h3 class="font-bold mb-3 text-sm">性格比較工具</h3>
@@ -1437,10 +1469,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  <button type="button" onclick="compareTypes()" class="btn-gold w-full py-2.5 rounded-lg text-sm">比較</button>
  <div id="compareResult" class="mt-4"></div>
- </div>
- <div class="card mb-4 softbox">
- <p class="softbox-sub">睇完想試？返主頁揀版本開始</p>
- <button type="button" class="softbox-btn" onclick="goPickVersion()">返主頁開始測試</button>
  </div>
  </section>
 
@@ -1810,14 +1838,18 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="typeConflict" class="text-sm text-gray-700 leading-relaxed"></div>
  </div>
 
+ <div class="card p-5 mb-4" id="typeMore">
+ <h3 class="font-bold mb-1 text-sm">深入睇吓呢一型</h3>
+ <p class="text-xs text-gray-600 mb-3" id="typeMoreSub">同人相處、拍拖、9 章深入分析</p>
+ <div id="typeMoreList"></div>
+ </div>
+
  <div class="card mb-4 softbox">
  <h3 class="softbox-title">想確認自己 MBTI 人格？</h3>
  <p class="softbox-sub">選擇測試版本</p>
  <button type="button" class="softbox-btn" onclick="goPickVersion()">立即開始</button>
  </div>
  </section>
-
- <!-- ========== HOME ========== -->
  <section id="method" class="hidden fade-up">
  <div class="page-hero">
  <div class="page-hero-row">
@@ -5729,6 +5761,65 @@ window.scrollTo(0,0);
 setTimeout(function(){ try{ window.renderTier(); }catch(e){} }, 0);
 window.openHub = function(){
 show("hub");
+window.renderHubLetters();
+};
+// 人格頁「深入睇吓呢一型」：相處／拍拖／深入分析 三個入口
+window.renderTypeMore = function(){
+ const code = String(window._lastType || "INTJ").toUpperCase();
+ const box = document.getElementById("typeMoreList");
+ if(!box) return;
+ const T = (window.TYPES && window.TYPES[code]) || {};
+ const nm = T.name ? (code + " · " + T.name) : code;
+ const sub = document.getElementById("typeMoreSub");
+ if(sub) sub.textContent = nm + " — 同人相處、拍拖、9 章深入分析";
+ const rows = [
+  {t:"個人相處", d:"10 個場景：WhatsApp 群、屋企人、同事、室友、吵架…", oc:"openSocialFor('" + code + "')"},
+  {t:"個人拍拖", d:"10 個場景：曖昧、拍拖、吵架、分手、見家長…", oc:"openRomanceFor('" + code + "')"},
+  {t:"人格深入分析", d:"9 章：核心動機、3 個盲點、壓力反應、職場、愛情、友情…", oc:"openDeepFor('" + code + "')", lock:true}
+ ];
+ box.innerHTML = rows.map(function(r){
+  return '<button type="button" class="type-more-row" data-more="' + r.t + '" onclick="' + r.oc + '">'
+   + '<span class="type-more-t">' + r.t + (r.lock ? '<span class="type-more-lock">完整版</span>' : '') + '</span>'
+   + '<span class="type-more-d">' + r.d + '</span>'
+   + '</button>';
+ }).join("");
+};
+// 由人格頁跳去「相處／拍拖／深入分析」，記住呢一型
+window._socialForType = null;
+window._romanceForType = null;
+window.openSocialFor = function(code){
+ window._socialForType = String(code || "").toUpperCase();
+ window.openSocial();
+};
+window.openRomanceFor = function(code){
+ window._romanceForType = String(code || "").toUpperCase();
+ window.openRomance();
+};
+window.openDeepFor = function(code){
+ if(!window.isUnlocked || !window.isUnlocked()){ window.openUpgrade(); return; }
+ window.openDeepType(String(code || "").toUpperCase());
+};
+// 百科入面嘅「4 個英文字母代表咩」（由性格光譜整合入嚟）
+window.HUB_LETTERS = [
+ {n:"第一個字母：E vs I",sub:"（能量來源）",a:"E（Extraverted 外向）",ad:"能量嚟自外界同人相處。喺派對、傾偈、social 活動之後會覺得充滿電。",b:"I（Introverted 內向）",bd:"能量嚟自內在世界。喺獨處、閱讀、反思之後先會覺得充滿電。社交耐咗會攰。",note:"唔係「內向 = 怕醜」— 內向只係「邊度攞能量」",c:"#E89A6B"},
+ {n:"第二個字母：S vs N",sub:"（認知方式）",a:"S（Observant 實感）",ad:"睇重具體事實、實際經驗、當下發生嘅事。較務實，鍾意 step-by-step 處理問題。",b:"N（Intuitive 直覺）",bd:"睇重可能性、模式、未來趨勢。較抽象，鍾意諗大 picture 同可能性。",note:"唔係「N 型 = 神秘」— N 只係「鍾意抽象概念」",c:"#A86B7C"},
+ {n:"第三個字母：T vs F",sub:"（決策方式）",a:"T（Thinking 思考）",ad:"做決定用邏輯同原則，客觀分析利弊。可能俾人覺得「冷靜」、「理性」。",b:"F（Feeling 情感）",bd:"做決定用價值觀同人情，考慮對方感受。可能俾人覺得「暖」、「貼心」。",note:"唔係「F 型 = 軟弱」— F 只係「做決定用感覺」",c:"#3A4F6B"},
+ {n:"第四個字母：J vs P",sub:"（生活態度）",a:"J（Judging 判斷）",ad:"鍾意有計劃、有結構。deadline 前一定做完，房間企理。",b:"P（Prospecting 感知）",bd:"鍾意彈性、即興。deadline 前一晚先衝刺，房間「自己嘅秩序」。",note:"唔係「P 型 = 散漫」— P 只係「鍾意拖到最後一刻先做」",c:"#6B5A8A"},
+ {n:"額外指標：T vs A",sub:"（情緒反應）",a:"T（Turbulent 敏感）",ad:"情緒起伏較大，容易自省、對自己要求高，對壓力比較敏感。結果會寫「敏感型」。",b:"A（Assertive 自信）",bd:"情緒較穩定，對自己嘅決定有信心，抗壓能力較高。結果會寫「自信型」。",note:"呢個係後加嘅第 5 個指標，唔屬於原本 4 個字母；同一型號都可以 T 或者 A",c:"#8A7A5A"}
+];
+window.renderHubLetters = function(){
+ const box = document.querySelector("#hub .hub-letter-list");
+ if(!box) return;
+ box.innerHTML = window.HUB_LETTERS.map(function(L){
+  return '<div class="border-l-4 pl-3 py-1" style="border-color:'+L.c+'">'
+   +'<div class="text-xs font-bold mb-1">'+L.n+' <span class="text-gray-400">'+L.sub+'</span></div>'
+   +'<div class="text-[11px] text-gray-700 leading-relaxed">'
+   +'<span class="font-bold text-accent">'+L.a+'</span>：'+L.ad
+   +'<br><span class="font-bold text-accent">'+L.b+'</span>：'+L.bd
+   +'</div>'
+   +'<div class="text-[11px] text-gray-600 font-semibold mt-1">'+L.note+'</div>'
+   +'</div>';
+ }).join("") + '<div class="text-[10px] text-gray-500 mt-4 pt-3 border-t border-gray-200">16 種性格 = 4 個維度組合，例如 <span class="font-bold">INTJ</span> = 內向 + 直覺 + 思考 + 判斷</div>';
 };
 
 // 由任何頁去主頁「選擇 MBTI 測試版本」嗰個位（人格分頁最底嗰個掣用）
@@ -5746,6 +5837,12 @@ window._lastSocialScenario = null;
 const container = $("socialScenarios");
 if(!container) return;
 let html = "";
+const _forT = window._socialForType;
+if(_forT){
+ const _T = (window.TYPES && window.TYPES[_forT]) || {};
+ html += '<div class="scene-for-banner">正在睇 <b>' + _forT + (_T.name ? ' · ' + _T.name : '') + '</b> 喺以下場景嘅表現'
+  + '<button type="button" class="scene-for-clear" onclick="window._socialForType=null;window.openSocial()">睇全部 16 型</button></div>';
+}
 Object.keys(window.SOCIAL).forEach(key => {
 const s = window.SOCIAL[key];
 html += `
@@ -5878,6 +5975,12 @@ window._lastRomanceScenario = null;
 const container = $("romanceScenarios");
 if(!container) return;
 let html = "";
+const _forT = window._romanceForType;
+if(_forT){
+ const _T = (window.TYPES && window.TYPES[_forT]) || {};
+ html += '<div class="scene-for-banner">正在睇 <b>' + _forT + (_T.name ? ' · ' + _T.name : '') + '</b> 嘅拍拖表現'
+  + '<button type="button" class="scene-for-clear" onclick="window._romanceForType=null;window.openRomance()">睇全部 16 型</button></div>';
+}
 Object.keys(window.ROMANCE).forEach(key => {
 const s = window.ROMANCE[key];
 html += `
@@ -5996,6 +6099,7 @@ reel.querySelectorAll(".hub-type-card.is-on").forEach(el => el.classList.remove(
  }
 window._lastType = type;
  $("typeBig").innerText = type;
+ try{ window.renderTypeMore(); }catch(e){}
  $("typeName").innerText = T.cn || T.name;
  $("typeSlogan").innerText = "「" + T.slogan + "」";
  $("typeBreadcrumb").innerText = "性格 / " + type;
