@@ -81,7 +81,9 @@ setTimeout(async ()=>{
   chk('★ 說明文字整合 9 章內容（核心動機→日常相處）', /核心動機/.test($('#deep #deepHead').textContent) && /日常相處/.test($('#deep #deepHead').textContent));
   chk('★ 用性格百科同款滿版格式（hub-bleed）', !!d.querySelector('#deep .hub-bleed .hub-bleed-inner'));
   chk('★ 提示喺 16 型格上面（左上，唔再喺左下）', (function(){ const h=$('#deep #deepHead .hub-type-hint'), g=$('#deepTypeGrid'); return !!h && !!g && (h.compareDocumentPosition(g) & 4) > 0; })());
-  chk('★ 提示文字係「撳入去揀一種人格」', /撳入去揀一種人格/.test($('#deep #deepHead .hub-type-hint').textContent), $('#deep #deepHead .hub-type-hint').textContent);
+  chk('★ 提示文字係「請選擇其中一種人格」', /請選擇其中一種人格/.test($('#deep #deepHead .hub-type-hint').textContent), $('#deep #deepHead .hub-type-hint').textContent);
+  chk('★ 提示唔喺卡片內（貼 16 種色牌上面，同性格百科排位一樣）', !$('#deep #deepHead .card .hub-type-hint'), 'càrd內='+!!$('#deep #deepHead .card .hub-type-hint'));
+  chk('★ 提示喺色牌上面（DOM 次序；同 #hub 一致）', (function(){ const a=$('#deep .hub-type-hint'), b=$('#hub .hub-type-hint'); return !!a && !!b && a.className===b.className && a.textContent===b.textContent; })());
   chk('★ 提示靠左對齊（左上）', /\.hub-type-hint\{[^}]*text-align:left/.test(src));
   chk('★ 深入分析版頭同性格百科完全一致（滿版＋金標＋場景 icon）', (function(){ const b=$('#deep .hub-bleed-inner'); return !!b && !!b.querySelector('h3.brand-gold') && !!b.querySelector('h3 .scenes-title-ico') && !!b.querySelector('p.text-gray-600') && !!b.querySelector('#deepTypeGrid'); })());
   chk('★ 版頭簡介做成卡片（.card）', (function(){ const b=$('#deep #deepHead'); return !!b && !!b.querySelector('.card h3.brand-gold') && !!b.querySelector('.card p.text-gray-600'); })());
