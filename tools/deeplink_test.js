@@ -211,6 +211,24 @@ const visible = w => ["home","type","about","hub","method","privacy","result"]
     }
     console.log(`  撳「性格百科」連結會唔會寫低意圖 → ${out.join("  ")}`);
   }
+  console.log("\n【6】四個 sub-page 選單：唔可以有死 hash／死頁、要跟 index.html 同一套 7 項");
+  {
+    const idxIds = new Set([...fs.readFileSync(REPO + "/index.html", "utf8").matchAll(/id="([\w-]+)"/g)].map(m => m[1]));
+    const EXPECT = ["主頁","我的紀錄","關於港式 MBTI","性格百科","香港16型統計","計分方法同限制","私隱聲明"];
+    for(const f of ["record.html","stats.html","tee.html","privacy.html"]){
+      const s = fs.readFileSync(REPO + "/" + f, "utf8");
+      const mm = s.match(/<div class="hero-popover"[\s\S]*?<div class="sep">/);
+      const pop = mm ? mm[0] : s;
+      const deadHash = [...pop.matchAll(/href="\.\/?#([\w-]+)"/g)].map(m => m[1]).filter(h => !/^type=/.test(h) && !idxIds.has(h));
+      const deadPage = [...pop.matchAll(/href="\.\/([\w.\-]+\.html)"/g)].map(m => m[1]).filter(x => !fs.existsSync(REPO + "/" + x));
+      const labels = [...pop.matchAll(/>([^<>]+)<\/a>/g)].map(m => m[1].trim());
+      const miss = EXPECT.filter(x => !labels.includes(x));
+      const ok = !deadHash.length && !deadPage.length && !miss.length;
+      if(!ok) bad++;
+      console.log(`  ${f}: 死hash=${deadHash.length ? deadHash.join(",") : "0"} 死頁=${deadPage.length || 0} 缺項=${miss.length ? miss.join(",") : "0"} ${ok ? "✓" : "✗"}`);
+    }
+  }
+
   console.log(bad ? `\n✗ ${bad} 項唔合格` : "\n✓ 全部深層連結都開到對應畫面");
   process.exit(bad ? 1 : 0);
 })();
