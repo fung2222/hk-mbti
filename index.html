@@ -415,6 +415,8 @@ color:var(--ink);background:rgba(255,255,255,.92);border-radius:999px;padding:3p
 /* 港物件 icon：置中 + 同下面 4 字母留 5px（line-height:1 會貼實，所以要自己留位） */
 .type-ico{display:block;width:22px;height:22px;margin:0 auto 5px;opacity:1}
 .type-ico svg{display:block;width:100%;height:100%;margin:0 auto}
+/* 4 字母（同 icon 同一個容器）：強制繼承 .hub-type-code 嘅 Archivo Black，唔會因為包咗 span 而跌返 body 字型 */
+.type-code-txt{display:block;font-family:inherit;font-weight:inherit;font-size:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;white-space:nowrap}
 .deep-intro{margin:2px 0 24px}
 .deep-intro-lead{font-size:21px;font-weight:900;line-height:1.4;letter-spacing:-.01em;margin:0 0 13px}
 .deep-intro-sub{font-size:14px;line-height:1.9;color:#6B6558;margin:0 0 17px}
@@ -489,6 +491,8 @@ border-color:transparent transparent transparent #fff;
 margin-right:11px;
 }
 #typeBig{font-family:'Archivo Black',Georgia,'Times New Roman',serif;letter-spacing:.01em;}
+/* 維度分頁大字母：同全站色卡同一隻字型（原本漏咗，會跌返 body 字型） */
+#letterBig{font-family:'Archivo Black',Georgia,'Times New Roman',serif;letter-spacing:.01em;}
 .home-hero h1{font-size:2.35rem;line-height:1.25;letter-spacing:-.02em}
 .bg-gold{background:var(--gold)}
 .bg-paper{background:var(--paper)}

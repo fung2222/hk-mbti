@@ -84,6 +84,14 @@ setTimeout(async ()=>{
   chk('★ 介紹標題句同下面留 13px', /\.deep-intro-lead\{[^}]*margin:0 0 13px\}/.test(src));
   chk('★ 章節標籤 chips 有足夠間距（gap 8px）', /\.deep-chips\{display:flex;flex-wrap:wrap;gap:8px\}/.test(src));
   chk('★ 冇重複嘅 .deep-chips span 定義', (src.match(/\.deep-chips span\{/g)||[]).length===1, (src.match(/\.deep-chips span\{/g)||[]).length);
+  // ---------- 全站「大寫字母／型別碼」字型一致性（Roy 2026-10-01：檢查全站色卡用返 Archivo Black）----------
+  chk('★ 色卡 4 字母 .hub-type-code 用 Archivo Black', /\.hub-type-code\{\s*\nfont-family:'Archivo Black'/.test(src));
+  chk('★ .type-code-txt 強制繼承字型（包咗 span 都唔會跌返 body 字型）', /\.type-code-txt\{display:block;font-family:inherit;font-weight:inherit;font-size:inherit/.test(src));
+  chk('★ 結果頁大字母 #typeBig 用 Archivo Black', /#typeBig\{font-family:'Archivo Black'/.test(src));
+  chk('★ 維度分頁大字母 #letterBig 都用 Archivo Black（原本漏咗）', /#letterBig\{font-family:'Archivo Black'/.test(src));
+  chk('★ 維度字母 .dim-pair button 用 Archivo Black', /\.dim-pair button\{[^}]*Archivo Black/.test(src));
+  chk('★ 文章型別卡 .article-type-card .hub-type-code 用 Archivo Black', /\.article-type-card \.hub-type-code\{[^}]*Archivo Black/.test(src));
+  chk('★ 全部型別碼容器都係 .hub-type-code（5 個位）', ['deepChapterType','socialArticleType','romanceArticleType'].every(id=>new RegExp('class="hub-type-code" id="'+id+'"').test(src)));
   chk('★ 簡介唔提「買斷」（Roy 指定：只講有咩睇、有咩用）', !/買斷/.test($('#deep .deep-intro').textContent), '');
   chk('★ 簡介講「有咩可以睇」同「有咩用」', /有 9 章/.test($('#deep .deep-intro-sub').textContent) && /明自己|知身邊|點相處/.test($('#deep .deep-intro-sub').textContent));
   chk('INTJ 卡顯示「9 章」', /9 章/.test(cards[0].textContent), cards[0].textContent.replace(/\n/g,' '));
