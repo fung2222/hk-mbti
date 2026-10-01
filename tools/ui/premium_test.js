@@ -84,6 +84,13 @@ setTimeout(async ()=>{
   chk('★ 提示文字係「撳入去揀一種人格」', /撳入去揀一種人格/.test($('#deep #deepHead .hub-type-hint').textContent), $('#deep #deepHead .hub-type-hint').textContent);
   chk('★ 提示靠左對齊（左上）', /\.hub-type-hint\{[^}]*text-align:left/.test(src));
   chk('★ 深入分析版頭同性格百科完全一致（滿版＋金標＋場景 icon）', (function(){ const b=$('#deep .hub-bleed-inner'); return !!b && !!b.querySelector('h3.brand-gold') && !!b.querySelector('h3 .scenes-title-ico') && !!b.querySelector('p.text-gray-600') && !!b.querySelector('#deepTypeGrid'); })());
+  chk('★ 版頭簡介做成卡片（.card）', (function(){ const b=$('#deep #deepHead'); return !!b && !!b.querySelector('.card h3.brand-gold') && !!b.querySelector('.card p.text-gray-600'); })());
+  chk('★ 版頭卡片有「有咩睇」同「有咩用」兩句', /核心動機/.test($('#deep #deepHead').textContent) && /點相處/.test($('#deep #deepHead').textContent));
+  chk('★ 16 型格下面有測試入口卡', (function(){ const c=$('#deep #deepCta'), g=$('#deepTypeGrid'); return !!c && !!g && (g.compareDocumentPosition(c) & 4) > 0; })());
+  chk('★ 測試入口文案（想知自己係邊一型？）', /想知自己係邊一型？/.test($('#deep #deepCta').textContent), $('#deep #deepCta').textContent.trim());
+  chk('★ 測試入口掣去揀版本頁（goPickVersion）', /onclick="goPickVersion\(\)">選擇測試版本/.test(src));
+  chk('★ 入型別目錄時測試入口一齊收埋', /deepCta"[\s\S]{0,90}display = "none"/.test(src));
+  chk('★ 返 16 型層時測試入口出返', /deepCta"[\s\S]{0,120}display = ""/.test(src));
   chk('★ 已清走舊 .deep-intro / .deep-chips CSS（唔留死碼）', !/\.deep-intro\{/.test(src) && !/\.deep-intro-sub\{/.test(src) && !/\.deep-chips\{/.test(src));
   // ---------- 人格分頁最底 CTA（Roy 2026-10-01）----------
   chk('★ 人格分頁最底文案改咗（想確認自己 MBTI 人格？）', /想確認自己 MBTI 人格？/.test(src));
