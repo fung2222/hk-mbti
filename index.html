@@ -1495,7 +1495,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 <section id="deepChapter" class="hidden">
  <div class="page-hero">
   <div class="page-hero-row">
-   <button type="button" class="page-back" onclick="backToDeepToc()">返回</button>
+   <button type="button" class="page-back" onclick="goBack()">返回</button>
    <h1 id="deepChapterTitle">第 1 章</h1>
   </div>
   <p class="page-hero-sub" id="deepChapterCrumb">INTJ · 1 / 9</p>
@@ -1816,7 +1816,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <section id="method" class="hidden fade-up">
  <div class="page-hero">
  <div class="page-hero-row">
- <button type="button" class="page-back" onclick="backFromMethod()">返回</button>
+ <button type="button" class="page-back" onclick="goBack()">返回</button>
  <h1>計分方法同限制</h1>
  </div>
  <p class="page-hero-sub">我哋點計分、點出題，同埋有咩做唔到</p>
@@ -2900,7 +2900,11 @@ const state = window.state; // local alias for handlers
 
 window.$ = function(id){return document.getElementById(id)};
 
-window._navStack = [];
+// 由 sessionStorage 載入（下拉重新整理之後仍然知「上一頁」係邊頁）
+window._navStack = (function(){
+try{ const v = JSON.parse(sessionStorage.getItem("hkmbti_nav_stack") || "[]"); return Array.isArray(v) ? v : []; }
+catch(e){ return []; }
+})();
 window._navSilent = false;
 window._fromPop = false;
 window._histSeeded = false;
@@ -2936,6 +2940,8 @@ window._lastRomanceScenario = null;
 window._lastType = null;
 window._lastLetter = null;
 window._lastArticleType = null;
+// 百科「由場景睇」而家開咗邊個場景詳情（返上一頁要還原呢個子視圖）
+window._hubSceneKey = null;
 window._cameFromOtherPage = (function(){
 try{
 if(!document.referrer) return false;
@@ -2956,18 +2962,60 @@ letter: window._lastLetter,
 articleType: window._lastArticleType,
 deepType: window._deepType || null,
 deepCh: (typeof window._deepCh === "number" ? window._deepCh : 0),
-pendingVersion: (window.state && window.state.pendingVersion) || null
+hubScene: window._hubSceneKey || null,
+pendingVersion: (window.state && window.state.pendingVersion) || null,
+// 當時捲到邊：返上一頁要停返原本位置（Roy 2026-10-02）
+sy: (function(){ try{ return window.scrollY || window.pageYOffset || 0; }catch(e){ return 0; } })()
  };
+};
+
+// ── 導覽堆疊（persist 落 sessionStorage）──
+// 點解要自己一個堆疊：下拉重新整理（或開深層連結）之後 _histDepth 會歸零、
+// history 裏面冇「上一頁」，但用戶撳返回仍然應該返上一頁（唔可以跳指定頁）。
+// 呢個堆疊記住每一頁嘅快照（含捲動位置 sy），重新整理之後照樣返得返。
+// Roy 2026-10-02 鐵律：所有返回掣＋手機返回鍵 = 返上一頁 + 還原嗰頁嘅捲動位置。
+window._navPersist = function(){
+try{ sessionStorage.setItem("hkmbti_nav_stack", JSON.stringify((window._navStack || []).slice(-16))); }catch(e){}
+};
+window._navPush = function(snap){
+try{
+window._navStack.push(snap);
+if(window._navStack.length > 24) window._navStack.shift();
+window._navPersist();
+ }catch(e){}
+};
+window._navPop = function(){
+try{
+if(!window._navStack || !window._navStack.length) return null;
+const e = window._navStack.pop();
+window._navPersist();
+return e;
+ }catch(e){ return null; }
+};
+// 還原「上一頁嗰個捲動位置」。用 setTimeout 0：好多 openXxx() 喺 show() 之後
+// 會自己 window.scrollTo(0,0)，要等佢行完才蓋返（唔係就會被清 0）。
+window._pendingScrollY = null;
+window._applyPendingScroll = function(){
+const y = window._pendingScrollY;
+window._pendingScrollY = null;
+if(typeof y !== "number") return false;
+try{ window.scrollTo(0, y); }catch(e){}
+setTimeout(function(){ try{ window.scrollTo(0, y); }catch(e){} }, 0);
+return true;
 };
 
 window.show = function(id){
 const prevId = window._showing;
+// 離開嗰頁嘅快照：一定要喺「捲返頂」之前捕捉，否則記錄落嘅捲動位置永遠係 0
+// （Roy 2026-10-02 報「返上一頁冇還原位置」嘅根因）。
+// ⚠️ 呢度唔可以過濾 profile／test：要同 _histWrite("push") 一層對一層，
+//    否則 popstate 每次 pop 一筆就會同 history 走位。
+let _leftSnap = null;
 if(!window._navSilent && window._showing && window._showing !== id){
-const eph = {profile:1, test:1};
-if(!eph[window._showing] && !eph[id]){
-window._navStack.push(window._navSnap());
-if(window._navStack.length > 24) window._navStack.shift();
- }
+try{
+_leftSnap = window._navSnap();
+_leftSnap.sy = (function(){ try{ return window.scrollY || window.pageYOffset || 0; }catch(e){ return 0; } })();
+ }catch(e){ _leftSnap = null; }
  }
 // 防禦（Roy 2026-10-01 報「下拉重整變空白頁」）：
 // id 唔存在／唔喺已知清單 → 一律 fallback 主頁，否則全部 section hidden = 一片空白
@@ -2979,7 +3027,9 @@ try{ window._homeScrollY = window.scrollY || window.pageYOffset || 0; }catch(e){
  }
 ["home","profile","test","result","about","hub","dims","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
-if(id === "home" && (window._homeScrollY || 0) > 0){
+if(window._applyPendingScroll()){
+// 返上一頁：停返嗰頁原本位置（Roy 2026-10-02）
+ } else if(id === "home" && (window._homeScrollY || 0) > 0){
 // 返主頁：還原原本停留位置（唔彈返頂）
 const _ry = window._homeScrollY;
 try{ window.scrollTo(0, _ry); }catch(e){}
@@ -3018,6 +3068,7 @@ window._histWrite("replace");
  } else if(id === "result" && prevId === "test"){
 window._histWrite("replace");
  } else {
+if(_leftSnap) window._navPush(_leftSnap);
 window._histWrite("push");
  }
  }
@@ -5032,7 +5083,12 @@ show("deep"); return;
 if(id === "about"){ openAbout(); return; }
 if(id === "method"){ if(typeof window.openMethod === "function"){ openMethod(); return; } }
 if(id === "privacy"){ openPrivacy(); return; }
-if(id === "hub"){ openHub(); return; }
+if(id === "hub"){
+openHub();
+// 還原百科嘅子視圖（場景詳情），唔係淨係返到列表
+try{ if(prev && prev.hubScene && typeof window.openHubScene === "function") window.openHubScene(prev.hubScene); }catch(e){}
+return;
+ }
 if(id === "result"){
 try{
 let idx = 0;
@@ -5049,6 +5105,10 @@ show(id || "home");
 };
 
 window.goBack = function(){
+// 鐵律（Roy 2026-10-02）：左上角返回掣一律「返上一頁 + 還原嗰頁嘅捲動位置」，
+// 唔准跳去指定頁。下面 1) 行真 history（同手機返回鍵行同一條路），
+// 2) 係兜底：下拉重新整理之後 _histDepth 歸零、history 冇上一頁，
+//    就用自己 persist 咗嘅導覽堆疊還原（仍然係「上一頁」，唔係指定頁）。
 if((window._histDepth || 0) > 0){
 try{ history.back(); return; }catch(e){}
  }
@@ -5059,6 +5119,17 @@ try{ history.back(); return; }catch(e){}
 if(window._cameFromOtherPage){
 try{ history.back(); return; }catch(e){}
  }
+const prev = window._navPop();
+if(prev && prev.id && prev.id !== window._showing){
+if(typeof prev.sy === "number") window._pendingScrollY = prev.sy;
+window._navSilent = true;
+try{
+if(prev.id === "home") show("home");
+else window.restoreNav(prev);
+ }catch(e){ try{ show("home"); }catch(e2){} }
+window._navSilent = false;
+return;
+ }
 if(window._showing !== "home"){ show("home"); }
 };
 
@@ -5066,11 +5137,19 @@ window.addEventListener("popstate", function(e){
 const st = e.state;
 if(!st || !st.hk) return;
 if(window._histDepth > 0) window._histDepth--;
+// 自己嘅堆疊要同 history 一齊退（兩邊都係導覽層），否則重新整理之後會攞錯上一頁
+const popped = window._navPop();
+// 返上一頁要停返嗰頁原本捲動位置（Roy 2026-10-02）
+const y = (popped && typeof popped.sy === "number") ? popped.sy : ((typeof st.sy === "number") ? st.sy : null);
+if(y !== null) window._pendingScrollY = y;
+// ⚠️ 用 popped（離開嗰刻嘅快照）優先：history entry 係「入頁時」寫嘅，
+// 之後嘅頁內狀態變化（開咗百科場景詳情、切咗人格頁 tab）唔會反映到裏面。
+const target = (popped && popped.id) ? popped : st;
 window._fromPop = true;
 window._navSilent = true;
 try{
-if(st.id === "home") show("home");
-else window.restoreNav(st);
+if(target.id === "home") show("home");
+else window.restoreNav(target);
  }catch(err){
 try{ show("home"); }catch(e2){}
  }
@@ -5356,6 +5435,8 @@ window.openMethod = function(){
 show("method");
 };
 
+// ⚠️ Legacy alias：2026-10-02 起 #method 左上角掣直接 onclick="goBack()"，
+// 呢個 function 保留係因為舊版連結／測試會引用，行為同 goBack() 完全一樣。
 window.backFromMethod = function(){
 // Roy 2026-10-02：左上角返回掣一律「返上一頁」，唔准跳去指定頁。
 // 舊寫法會硬跳去指定畫面 —— 由 #hub／#type 入嚟就會跳錯頁，
@@ -5503,10 +5584,22 @@ show("deep");
 window.scrollTo(0,0);
 };
 window.openDeepType = function(t){
+// ⚠️ 一定要喺設定 _deepType 之前捕捉「16 型選擇」層嘅快照（此時 _deepType 仲係
+// renderDeepList() 清走嘅 null）。呢一層 section 冇變但狀態變，所以 show() 唔會 push，
+// 要自己 push history —— 而且必須同步 push 落自己嘅導覽堆疊，否則
+// popstate 每次 pop 一筆就會同 history 走位，撳返回會跳錯層（2026-10-02 撞到）。
+let _prevSnap = null;
+try{
+ _prevSnap = window._navSnap();
+ _prevSnap.deepType = null;
+ _prevSnap.sy = (function(){ try{ return window.scrollY || window.pageYOffset || 0; }catch(e){ return 0; } })();
+}catch(e){ _prevSnap = null; }
 window._deepType = t;
 window.renderDeepTypeToc(t);
-// 16 型目錄 → 型別 9 章目錄：section 冇變但狀態變，要自己入一層 history，先返得返上一層
-if(!window._fromPop && !window._navSilent){ try{ window._histWrite("push"); }catch(e){} }
+if(!window._fromPop && !window._navSilent){
+ try{ if(_prevSnap) window._navPush(_prevSnap); }catch(e){}
+ try{ window._histWrite("push"); }catch(e){}
+ }
 };
 window.deepBackToTypes = function(){
 // 型別目錄 → 返全部 16 型：有 history 層照行（同系統返回鍵一致）
@@ -5728,8 +5821,13 @@ window.renderTypeTabs = function(code){
 };
 // 由人格分頁深入 tab 開章節：行返正常目錄路徑（有 history 層，返回掣先返得返型頁）
 window.openDeepChapterFromType = function(i, code){
- window.openDeepType(String(code || "").toUpperCase());
- window.openDeepChapter(i);
+// ⚠️ 唔可以直接叫 openDeepType：佢會 render 兼 show 章節目錄頁，
+// 喺 history 入咗 2 層 phantom「目錄」層 → 用戶撳「返回」就唔係返人格頁，
+// 而係去咗目錄（Roy 2026-10-02 報）。呢度只設狀態，唔 show 目錄頁。
+const t = String(code || "").toUpperCase();
+if(!t || !(window.PREMIUM || {})[t]) return;
+window._deepType = t;
+window.openDeepChapter(i);
 };
 window.openDeepFor = function(code){
  // 目錄全開放：任何人都入得（第 1 章免費，其餘章節喺 openDeepChapter 才把關）
@@ -5779,6 +5877,8 @@ window.renderHubSceneList = function(){
   + '</div>';
 };
 window.openHubScene = function(key){
+ // 記住開咗邊個場景詳情：由詳情撳入文章，再撳「返回」要返到呢個詳情（唔係淨係返到百科列表）
+ window._hubSceneKey = key;
  const isR = !!(window.ROMANCE && window.ROMANCE[key]);
  const s = isR ? window.ROMANCE[key] : ((window.SOCIAL && window.SOCIAL[key]) || null);
  if(!s) return;
@@ -5802,6 +5902,7 @@ window.openHubScene = function(key){
  try{ window.scrollTo(0,0); }catch(e){}
 };
 window.closeHubScene = function(){
+ window._hubSceneKey = null;
  const l = $("hubSceneList"), d = $("hubSceneDetail");
  if(d) d.classList.add("hidden");
  if(l) l.classList.remove("hidden");
