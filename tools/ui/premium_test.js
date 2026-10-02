@@ -96,6 +96,10 @@ setTimeout(async ()=>{
   chk('★ 解鎖後人格頁入口唔再有鎖標記（內容已解鎖）', !/type-more-lock/.test($('#typeMoreList').innerHTML), $('#typeMoreList').innerHTML.slice(0,60));
 
   // ---------- 16 型目錄（色卡版，參考性格百科排位）----------
+  // 回 16 型選擇層（上面嘅入口測試會去咗某一型嘅 9 章目錄，同下面斷言無關）
+  // ⚠️ 一定要顯式重設：唔可以靠「某一型未有內容所以 fallback 返 16 型格」
+  //    —— 16 型寫齊之後就唔會再 fallback（2026-10-02 中過招）
+  w.openDeep(); await _s(40);
   const cards=[...d.querySelectorAll('#deepTypeGrid .hub-type-card')];
   chk('★ 深入分析目錄用 16 張色卡（同性格百科同一款）', cards.length===16, cards.length);
   chk('★ 用返同一套 4 欄密格（hub-type-grid）', !!d.querySelector('#deepList .hub-type-grid'));
