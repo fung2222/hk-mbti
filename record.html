@@ -114,18 +114,6 @@ border:1px solid #E0D6BE;font-family:inherit;cursor:pointer;text-decoration:none
  .hero h1{font-size:42px;}
 }
 
-/* ===== 廣告位樣式 (跟主頁 f8b7244 一致) ===== */
-.ad-slot{width:100%;max-width:100%;background:rgba(184,168,120,0.04);border:1px dashed rgba(184,168,120,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;color:#7a766c;font-size:11px;position:relative;overflow:hidden;flex-direction:column;padding:10px;}
-.ad-slot ins.adsbygoogle{display:block;width:100%;height:auto;}
-.ad-slot[data-ad-status="empty"]{display:none;}
-.ad-footer-sticky{position:fixed;left:0;right:0;bottom:0;z-index:40;min-height:54px;background:#fff;box-shadow:0 -2px 10px rgba(0,0,0,0.08);border-top:1px solid rgba(184,168,120,0.25);padding:2px 36px 2px 2px;}
-.ad-close{position:absolute;top:4px;right:6px;background:transparent;border:0;color:#7a766c;font-size:12px;line-height:1;padding:2px 6px;cursor:pointer;z-index:2;}
-body.has-sticky-ad{padding-bottom:60px;}
-@media (min-width:769px){.ad-footer-sticky{max-width:728px;left:50%;transform:translateX(-50%);border-radius:8px 0 0;}}
-@media (max-width:768px){.ad-hero-bottom,.ad-result-top{min-height:60px;}}
-body.no-ad .ad-slot{display:none!important;}
-body.no-ad{padding-bottom:0!important;}
-.ad-unlock{display:inline-block;-webkit-appearance:none;appearance:none;background:none;border:0;color:#888;font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 8px;font-family:inherit;font-weight:400;line-height:1.4;}
 
 </style>
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
@@ -211,11 +199,8 @@ html.dk .softbox-sub,html.dk .softbox-btn{color:#A79E92}
 html.dk .rec-num{color:#C9B489}
 html.dk .act-del{background:#3A1F22;color:#F0A9A4}
 html.dk .act-del:hover{background:#4A2629}
-html.dk .ad-footer-sticky{background:var(--dk-card)}
-html.dk .ad-slot,html.dk .ad-close{color:#9A9388}
 html.dk .empty,html.dk .footer-note,html.dk .history-meta,html.dk .section-note,html.dk .record-actions-title{color:#A79E92}
 html.dk .history-mbti{color:#C2BAAD}
-html.dk .ad-unlock{color:#9A9388}
 html.dk .text-gray-500{color:#A79E92}
 html.dk .text-gray-600{color:#C2BAAD}
 /* v3 補漏（Roy 2026-09-29）— 只補色 */
@@ -612,29 +597,6 @@ navigator.serviceWorker.register("./sw.js").catch(()=>{});
 render();
 </script>
 
-<script>
-// ====================== 永久去廣告 unlock (Demo IAP) ======================
-(function(){
-const KEY = 'hkmbti_no_ad';
-function hasNoAd(){
-try{ return localStorage.getItem(KEY) === '1'; }catch(e){ return false; }
- }
-function applyNoAd(){
-document.body.classList.add('no-ad');
-document.querySelectorAll('[data-no-ad-hide]').forEach(b => b.style.display='none');
- }
-window.HAS_PAID_NO_AD = hasNoAd();
-window.purchaseNoAd = function(){
-if(hasNoAd()) return;
-const ok = confirm('你嘅 HK$18 會做兩件事：\n\n支援港式 MBTI 繼續整新測試\n幫你永久免廣告\n\n此示範版本即時解鎖（Play 上架後改用 Google Play Billing）。\n\n確定支持？');
-if(!ok) return;
-try{ localStorage.setItem(KEY, '1'); }catch(e){}
-applyNoAd();
- };
-window.restoreAds = function(){ try{ localStorage.removeItem(KEY); }catch(e){} location.reload(); };
-if(hasNoAd()) applyNoAd();
-})();
-</script>
 
 <script>
 // ===== 自訂 app 彈窗（取代原生 confirm／alert）=====

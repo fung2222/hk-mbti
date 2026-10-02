@@ -60,14 +60,16 @@ setTimeout(()=>{
                 chk('B 15 個原生 alert 已經清零（index）', !/(?<![.\w])alert\s*\(/.test(srcIndex));
                 chk('B 文案已經唔再有「撳」「唔」等字（檢查幾個樣本）',
                     !srcIndex.includes('請揀一個稱呼') && !srcIndex.includes('生成圖片失敗，請再試一次') && srcIndex.includes('請選擇性別'));
-                chk('C 組 HK$18 示範 confirm 有意保留', /(?<![.\w])confirm\s*\(/.test(srcIndex));
+                chk('index：原生 confirm 已經清零（廣告 demo 殘骸已刪）', !/(?<![.\w])confirm\s*\(/.test(srcIndex));
+                chk('index：舊「永久去廣告」demo 殘骸已清', !/hkmbti_no_ad|hasNoAd|purchaseNoAd|HAS_PAID_NO_AD|data-no-ad-hide|ad-unlock/.test(srcIndex));
 
                 console.log('\n===== record.html =====');
                 const r=load('record.html','record.html?x=1');
                 chk('彈窗元素存在', !!r.d.getElementById('appDialog'));
                 chk('appDialog / appNotice 有定義', typeof r.w.appDialog==='function' && typeof r.w.appNotice==='function');
                 chk('record：alert 清零', !/(?<![.\w])alert\s*\(/.test(srcRecord));
-                chk('record：剩返 HK$18 示範 confirm', (srcRecord.match(/(?<![.\w])confirm\s*\(/g)||[]).length===1);
+                chk('record：原生 confirm 已經清零', (srcRecord.match(/(?<![.\w])confirm\s*\(/g)||[]).length===0);
+                chk('record：舊「永久去廣告」demo 殘骸已清', !/hkmbti_no_ad|hasNoAd|purchaseNoAd|HAS_PAID_NO_AD|data-no-ad-hide|ad-unlock/.test(srcRecord));
                 chk('record：delRec 已 async', /async function delRec\(/.test(srcRecord));
                 chk('record：clearAllRecords 已 async', /async function clearAllRecords\(/.test(srcRecord));
                 r.w.appDialog({title:'刪除這筆紀錄？',body:'刪除後無法復原。',cancelText:'取消',okText:'刪除'});

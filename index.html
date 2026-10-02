@@ -598,55 +598,6 @@ background:#1a1a1a;color:#f5f5f5;border-radius:12px;
 padding:1rem 1.2rem;font-family:'SF Mono',Consolas,monospace;
 font-size:14px;line-height:1.6;overflow-x:auto
 }
-/* ===== 廣告位樣式 (mobile-first · 不阻擋 CTA) ===== */
-.ad-slot{
-width:100%;
-max-width:100%;
-background:rgba(184,168,120,0.04);
-border:1px dashed rgba(184,168,120,0.3);
-border-radius:8px;
-display:flex;align-items:center;justify-content:center;
-text-align:center;color:#7a766c;font-size:11px;
-position:relative;
-overflow:hidden;
-}
-.ad-slot ins.adsbygoogle{display:block;width:100%;height:auto;}
-.ad-slot[data-ad-status="empty"]{display:none;}
-/* 主頁底部 sticky banner · mobile-first */
-.ad-footer-sticky{
-position:fixed;left:0;right:0;bottom:0;z-index:40;
-min-height:54px;
-background:#fff;
-box-shadow:0 -2px 10px rgba(0,0,0,0.08);
-border-top:1px solid rgba(184,168,120,0.25);
-border-radius:0;
-padding:2px 36px 2px 2px;
-}
-.ad-footer-sticky ins.adsbygoogle{margin:0 auto;}
-.ad-close{
-position:absolute;top:4px;right:6px;
-background:transparent;border:0;color:#7a766c;
-font-size:12px;line-height:1;padding:2px 6px;cursor:pointer;
-z-index:2;
-}
-/* 主頁底部加 padding 防 sticky banner 遮 CTA */
-body.has-sticky-ad{padding-bottom:60px;}
-@media (min-width:769px){
- .ad-footer-sticky{max-width:728px;left:50%;transform:translateX(-50%);border-radius:8px 8px 0 0;}
-}
-@media (max-width:768px){
- .ad-hero-bottom,.ad-result-top{min-height:60px;}
-}
-/* ===== No-Ad 解鎖狀態 ===== */
-body.no-ad .ad-slot{display:none!important;}
-body.no-ad{padding-bottom:0!important;}
-.ad-unlock{display:inline-block;-webkit-appearance:none;appearance:none;background:none;border:0;color:#888;font-size:12px;cursor:pointer;text-decoration:underline;padding:4px 8px;font-family:inherit;font-weight:400;line-height:1.45;}
-.ad-unlock:hover{filter:brightness(1.08);}
-.ad-tag{
-display:inline-block;background:#2a4a3a;color:#a8e6c8;
-font-size:10px;font-weight:700;padding:3px 8px;
-border-radius:10px;margin-left:6px;letter-spacing:0.04em;
-}
 
 /* ---- 計分方法同限制（app 感：幼分隔線、大字、留空、色點）---- */
 .mth-lead{margin:2px 0 4px;font-size:15px;line-height:1.8;color:#3F3A34;}
@@ -940,7 +891,6 @@ html.dk .gender-btn{background:var(--dk-card);border-color:var(--dk-line2)}
 html.dk .persona-sect .scenario-badge{background:var(--dk-card);border-color:var(--dk-line)}
 html.dk .option:hover{background:var(--dk-hover)}
 html.dk .option.selected{background:var(--dk-on)}
-html.dk .ad-footer-sticky{background:var(--dk-card);border-top-color:var(--dk-line)}
 /* 版本卡：金／銀／銅／米 → 同色系深色版 */
 html.dk .ver-btn[data-ver="life"]{background:linear-gradient(135deg,#251F13,#312817)}
 html.dk .ver-btn[data-ver="life"].ver-lit{background:linear-gradient(135deg,#312817,#3E3219)}
@@ -957,9 +907,7 @@ html.dk .scene-sub,html.dk .wiz-ghost,html.dk .home-acc-desc,html.dk .home-acc-g
 html.dk.dt .dt-nav-links a,html.dk.dt .dt-nav-links button{color:#A79E92}
 html.dk .mth-lead,html.dk .mth-axis p,html.dk .mth-step p,html.dk .mth-notes p,html.dk .mth-notes-p,html.dk .mth-limits p{color:#D9D2C6}
 html.dk .article-guide-body p,html.dk .article-guide-body li,html.dk .pros-item{color:#D9D2C6}
-html.dk .ad-unlock{color:#9A9388}
 html.dk .ver-chev,html.dk .home-acc-chev,html.dk .home-more-down,html.dk.dt #dtTypeRows span{color:#B9A97F}
-html.dk .ad-slot,html.dk .ad-close{color:#9A9388}
 html.dk .text-gray-400{color:#9A9388}
 html.dk .text-gray-500{color:#A79E92}
 html.dk .text-gray-600{color:#C2BAAD}
@@ -2278,49 +2226,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 </footer>
 
-<!-- ====================== 廣告 + IAP 解鎖邏輯 ====================== -->
-<script>
-// 永久去廣告 unlock (Demo 版 · 用 localStorage 模擬 entitlement)
-(function(){
-const KEY = 'hkmbti_no_ad';
-function hasNoAd(){
-try{ return localStorage.getItem(KEY) === '1'; }catch(e){ return false; }
- }
-function applyNoAd(){
-document.body.classList.add('no-ad');
- // 同時 hide 所有 unlock button (唔再顯示)
-document.querySelectorAll('[data-no-ad-hide]').forEach(b => b.style.display='none');
- // footer placeholder 標記
-const f = document.querySelector('footer .no-ad-tag');
-if(f) f.style.display = 'inline-block';
- }
-function clearNoAd(){
-try{ localStorage.removeItem(KEY); }catch(e){}
-document.body.classList.remove('no-ad');
-document.querySelectorAll('[data-no-ad-hide]').forEach(b => b.style.display = '');
-const f = document.querySelector('footer .no-ad-tag');
-if(f) f.style.display = 'none';
- }
- // 公開 API
-window.HAS_PAID_NO_AD = hasNoAd();
-window.purchaseNoAd = function(){
-if(hasNoAd()) return; // 已經 unlock
-const ok = confirm('你嘅 HK$18 會做兩件事：\n\n支援港式 MBTI 繼續整新測試\n幫你永久免廣告\n\n此示範版本即時解鎖（Play 上架後改用 Google Play Billing）。\n\n確定支持？');
-if(!ok) return;
-try{ localStorage.setItem(KEY, '1'); }catch(e){}
-applyNoAd();
- // 提示
-const tip = document.createElement('div');
-tip.style.cssText='position:fixed;left:50%;top:30%;transform:translateX(-50%);background:#1E2A3B;color:#D4A95F;padding:16px 24px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.4);z-index:99;font-size:14px;font-weight:700;text-align:center;';
-tip.innerHTML=' 廣告已移除<br><span style="font-size:11px;color:#a8e6c8;font-weight:400">感謝支持 · Play 上架後將接 Play Billing</span>';
-document.body.appendChild(tip);
-setTimeout(()=>tip.remove(), 2200);
- };
-window.restoreAds = clearNoAd; // 給 developer console 用嘅 reset
- // 開頁時 apply
-if(hasNoAd()) applyNoAd();
-})();
-</script>
 <!-- ====================== 60 題港式情境題庫 ====================== -->
 <script src="data.js"></script>
 <script src="social.js"></script>
@@ -3895,9 +3800,6 @@ const v = state.pendingVersion || "life";
 startTestWithVersion(v);
 };
 
-window.startTest = function(){
-startTestWithVersion("life");
-};
 
 window.startTestWithVersion = function(version, resume){
  // version: 'life' (60題), 'advanced' (30題), 'bb' (10題)
@@ -5046,19 +4948,6 @@ appNotice("分享失敗", "請長按結果圖片儲存，再以 WhatsApp 傳送�
  }
 };
 
-window.copyResult = function(){
-const shareUrl = "https://fung2222.github.io/hk-mbti/";
-const text = window.lastResult
- ? `我嘅港式 MBTI：${window.lastResult}\n${shareUrl}`
- : shareUrl;
-if(navigator.clipboard){
-navigator.clipboard.writeText(text).then(() => {
-setShareStatus(" 已 Copy 網址到剪貼簿！");
- }).catch(() => fallbackCopy(text));
- } else {
-fallbackCopy(text);
- }
-};
 
 function fallbackCopy(text){
 const ta = document.createElement("textarea");
@@ -5095,28 +4984,6 @@ window.scrollHomeTop = function(){
 const hero = document.querySelector("#home .home-hero");
 if(hero){ hero.scrollIntoView({behavior:"smooth", block:"start"}); return; }
 window.scrollTo({top:0, behavior:"smooth"});
-};
-window.scrollToTypeCards = function(rootId, code){
-const root = $(rootId);
-if(!root) return;
-const go = function(){
-const hint = root.querySelector(".hub-type-hint") || root.querySelector(".hub-type-grid");
-if(hint) hint.scrollIntoView({block:"start"});
-if(!code) return;
-const cards = root.querySelectorAll(".hub-type-card");
-for(let i = 0; i < cards.length; i++){
-const lab = cards[i].querySelector(".hub-type-code");
-if(!lab || lab.textContent !== code) continue;
-const grid = cards[i].closest(".hub-type-grid");
-if(grid){
-grid.querySelectorAll(".hub-type-card.is-on").forEach(function(el){ el.classList.remove("is-on"); });
-cards[i].classList.add("is-on");
-grid.classList.add("is-picking");
- }
-break;
- }
- };
-requestAnimationFrame(function(){ requestAnimationFrame(go); });
 };
 window.goHome = function(){
 window._homeScrollY = 0;
@@ -5267,13 +5134,6 @@ window.getHistoryList = function(){
 return getHistoryAll().slice(0, 5);
 };
 
-window.toggleHistory = function(){
-const list = $("historyList");
-const chev = $("historyChevron");
-if(!list) return;
-const hidden = list.classList.toggle("hidden");
-if(chev) chev.style.transform = hidden ? "rotate(0deg)" : "rotate(90deg)";
-};
 
 window.openHistoryRow = function(idx){
 const row = document.querySelector('[data-history-row="'+idx+'"]');
@@ -5972,12 +5832,6 @@ show("socialArticle");
 window.scrollTo(0,0);
 };
 
-window.goRomanceFromSocial = function(){
- // 跳到同一類型的拍拖攻略（默認「拍拖」場景）
-const scenarioKey = "拍拖";
-const type = $("socialArticleType").dataset.code || $("socialArticleType").textContent;
-openRomanceArticle(scenarioKey, type);
-};
 
 // ====================== Romance Guide Functions ======================
 window.openRomanceArticle = function(scenarioKey, type){
@@ -5999,11 +5853,6 @@ show("romanceArticle");
 window.scrollTo(0,0);
 };
 
-window.goSocialFromRomance = function(){
-const scenarioKey = "WhatsAppGroup";
-const type = $("romanceArticleType").dataset.code || $("romanceArticleType").textContent;
-openSocialArticle(scenarioKey, type);
-};
 
 window.goTypeFromResult = function(){
 const r = window.lastResult || "INTJ";
