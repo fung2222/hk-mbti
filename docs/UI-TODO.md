@@ -33,6 +33,8 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 | 21 | **頁底大白真兇**（Roy 報「我的紀錄」冇改善）：`record.html`／`tee.html` 各自有 `body{padding-bottom:80px}`，**獨立頁唔共用 index.html CSS** → 改 `calc(16px + env(safe-area-inset-bottom))`；「資料 100% 喺你部機（localStorage）／跨裝置唔同步」整句移入「匯出／全部刪除」卡片做標題（`.85rem`/700/`#6b6560`，另加 dark 覆蓋），底部 `footer-note` 刪走 | `3c149dc` `c72ecc1` `03b7572` `ee0fe2e` `0ad23e5` |
 | 22 | **下拉重新整理政策反轉**（Roy 2026-10-02）：**全站開放**，**只喺 `#test` 測驗進行中先鎖**。解除 `offline.html`／`record.html`／`stats.html`／`tee.html` 各自嘅 `html,body{overscroll-behavior-y:contain}`；`index.html` 嘅 `body.in-test` ＋ `documentElement.style.overscrollBehaviorY` 保留（只測驗中生效） | `3c149dc` |
 | 23 | 百科「由場景睇」場景詳情：16 型卡 grid 同下面測試入口卡太貼（Roy 圖報）→ `#hubSceneDetail .hub-type-grid{margin-bottom:20px}`、`.hub-type-hint{margin-bottom:10px}`（**scope 住**，唔影響百科／深入分析嗰兩個 `.hub-type-grid`） | `3c149dc` |
+| 24 | **性格解說頁（`#type`）重排：4 個分頁 tab**（Roy 2026-10-02 方案 B：性格／關係／場景／深入）。根因：`TYPES` 有 8 個欄位，人格頁只用 4 個（`desc`／`tags`／`score`／`compat` **0 次**），但結果頁全部有 → 所以「結果頁生動、性格頁死板」。改：分頁掣沿用百科 `.hub-mode-switch`；性格 tab 用返嗰 4 個欄位 + 性格刻度 bars + 強弱 2 欄；關係 tab 4 張卡 + 相容性；場景 tab 10 張卡直接開文章；深入 tab 9 章目錄。**拆走** `#typeScenes` 獨立分頁（`openTypeScenes` 保留做兼容入口）＋ `#typeMore` 入口卡 ＋ 死 CSS `.type-more-*`／`.persona-sect`。相容 % 改穩定值（原本 `Math.random`）。守門：`tools/ui/type_tabs_test.js`（54 項） | `6bce43a` |
+| 25 | 16 型深入分析 **144 章全部寫齊**（16 型 × 9 章、約 18,600 中文字；每章 106–160 字、固定標題／收尾）—— 4 批 commit：`f765162`／`dfb8ba7`／`d8c683e`／`c66ccad` | 4 個 commit |
 
 ## ⏳ 未做
 1. **C 組 3 個 HK$18 示範解鎖彈窗**（`index.html` L2056 / `record.html` L597 / `tee.html` L309）→ 留上架前連 Play Billing 一次過改（soft pitch「看完整分析」）
@@ -58,8 +60,8 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 - ❌ **拆走一個 `section` 要一次過改 7 處**（本體／`show()` 清單／`window.openXxx`／hash `MAP`／`NAV`／`restoreNav` case／專屬 CSS＋dark＋test）；漏 `show()` 清單 → `null.classList` throw → **成個 render 鏈中途爆 = 用戶見空白**
 - ❌ **刪 `window.X = function` 區塊之前，一定要對比刪前刪後嘅函數清單**（`grep -o 'window\.[A-Za-z]\+ = function' | sort`）—— 共用 helper 會坐喺兩個頁面函數中間（`formatGuideHtml`／`formatTypeFullHtml` 就係咁被誤刪過）
 - ❌ **sub-page 唔共用 index.html 嘅 CSS** → 改全站性規則（頁底留白／overscroll／字型／間距）要 `grep -rn '<property>' *.html` 逐個檔改
-- ✅ 改完必跑：`sh tools/ui/run.sh`（15 檔 jsdom）、`python3 tools/preflight.py`(**35**)、`tools/desktop_layout_test.js`(**38**)、`tools/desktop_gate_test.js`(**34**)、`tools/deeplink_test.js`
+- ✅ 改完必跑：`sh tools/ui/run.sh`（15 檔 jsdom）、`python3 tools/preflight.py`(**32**)、`tools/desktop_layout_test.js`(**38**)、`tools/desktop_gate_test.js`(**34**)、`tools/deeplink_test.js`
 
 ## 測試（已永久保存入 repo）
-`sh tools/ui/run.sh` → 7 個 jsdom 回歸測試：wizard 14、版本卡 13、維度卡 13、垃圾桶 14、彈窗 28、返回鍵 24
+`sh tools/ui/run.sh` → **16 個** jsdom 回歸測試（app_feel 46、backkey 24、boot_reload 25、dark_mode 60、dialogs_ab 30、hub_consolidation 69、hub_tiles 18、letter_card 13、letter_career 9、letter_dim 5、oneshot_delete 14、premium 168、reel 27、**type_tabs 54**、version_card 13、wizard 14）
 （首次需要：`npm i --prefix tools/ui jsdom`）＋ `tools/ui/start_flow_probe.js`（人手睇全流程）＋ `tools/ui/button_audit.js`（逐粒掣真撳捉 runtime 錯）
