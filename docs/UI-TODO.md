@@ -35,6 +35,7 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 | 23 | 百科「由場景睇」場景詳情：16 型卡 grid 同下面測試入口卡太貼（Roy 圖報）→ `#hubSceneDetail .hub-type-grid{margin-bottom:20px}`、`.hub-type-hint{margin-bottom:10px}`（**scope 住**，唔影響百科／深入分析嗰兩個 `.hub-type-grid`） | `3c149dc` |
 | 24 | **性格解說頁（`#type`）重排：4 個分頁 tab**（Roy 2026-10-02 方案 B：性格／關係／場景／深入）。根因：`TYPES` 有 8 個欄位，人格頁只用 4 個（`desc`／`tags`／`score`／`compat` **0 次**），但結果頁全部有 → 所以「結果頁生動、性格頁死板」。改：分頁掣沿用百科 `.hub-mode-switch`；性格 tab 用返嗰 4 個欄位 + 性格刻度 bars + 強弱 2 欄；關係 tab 4 張卡 + 相容性；場景 tab 10 張卡直接開文章；深入 tab 9 章目錄。**拆走** `#typeScenes` 獨立分頁（`openTypeScenes` 保留做兼容入口）＋ `#typeMore` 入口卡 ＋ 死 CSS `.type-more-*`／`.persona-sect`。相容 % 改穩定值（原本 `Math.random`）。守門：`tools/ui/type_tabs_test.js`（**64** 項） | `6bce43a` |
 | 26 | **人格頁 4 項微調**（Roy 第二輪）：①tab「深入」→「深入分析」＋星星 SVG icon（金色，唔用 ★ 字元）②**左上角返回掣一律「返上一頁」** —— 查出 `#method` 嘅 `backFromMethod()` 硬跳指定頁（由 `#hub`／`#type` 入嚟會跳錯）→ 改 `goBack()`、清死變數 `_methodBackTo`；其餘 13 個 `#index` 掣＋4 個 sub-page 本來就係上一頁語意 ③強項／弱項每項加語意 icon（99 詞 → 10 家族，強金弱灰）取代裸「＋／－」④深入分析目錄底「返全部 16 型」旁水平加「立即測試」「16型統計」 | `8a8f15e` |
+| 27 | **人格頁排版兩問題**（Roy 圖報）：①「深入分析」tab 斷成兩行（`.hub-mode-btn{flex:1 1 0}` 平均分，360px 每粒 69.5px 但「深入分析」要 ~74px）→ 長字掣 `flex:0 0 auto`＋`nowrap` 自己攞 88px，其餘 3 粒分剩位（390/360/320px → 73/63/50px 全部單行）②強／弱項 icon 高過文字 6px（`.pros-item` 行高 27px、icon 15px 又冇 `align-items`；`margin-top:3px` 只補一半）→ 拆 margin 改 `.pros-box .pros-item{align-items:center}`。守門：`type_tabs_test` 加「斷行算術」（由 CSS 抽參數即場計）＋「水平對齊」斷言（67 項） | `8ec1fb0` |
 | 25 | 16 型深入分析 **144 章全部寫齊**（16 型 × 9 章、約 18,600 中文字；每章 106–160 字、固定標題／收尾）—— 4 批 commit：`f765162`／`dfb8ba7`／`d8c683e`／`c66ccad` | 4 個 commit |
 
 ## ⏳ 未做
@@ -64,5 +65,5 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 - ✅ 改完必跑：`sh tools/ui/run.sh`（15 檔 jsdom）、`python3 tools/preflight.py`(**32**)、`tools/desktop_layout_test.js`(**38**)、`tools/desktop_gate_test.js`(**34**)、`tools/deeplink_test.js`
 
 ## 測試（已永久保存入 repo）
-`sh tools/ui/run.sh` → **16 個** jsdom 回歸測試（app_feel 46、**backkey 30**、boot_reload 25、dark_mode 60、dialogs_ab 30、hub_consolidation 69、hub_tiles 18、letter_card 13、letter_career 9、letter_dim 5、oneshot_delete 14、premium 168、reel 27、**type_tabs 64**、version_card 13、wizard 14）
+`sh tools/ui/run.sh` → **16 個** jsdom 回歸測試（app_feel 46、**backkey 30**、boot_reload 25、dark_mode 60、dialogs_ab 30、hub_consolidation 69、hub_tiles 18、letter_card 13、letter_career 9、letter_dim 5、oneshot_delete 14、premium 168、reel 27、**type_tabs 67**、version_card 13、wizard 14）
 （首次需要：`npm i --prefix tools/ui jsdom`）＋ `tools/ui/start_flow_probe.js`（人手睇全流程）＋ `tools/ui/button_audit.js`（逐粒掣真撳捉 runtime 錯）
