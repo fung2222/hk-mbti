@@ -208,6 +208,81 @@ chk("★ icon 唔係一個公仔走天涯（16 型用到 >=6 個語意家族）"
   }
   chk("★ 16 型 × 4 tab 全部 render 得出（4 tags／3 刻度／4 關係卡／9 章）", bad.length===0, bad.join(" "));
 
+  // ---------- 人格頁左右箭咀（Roy 2026-10-02：色卡加三角箭咀快速轉型）----------
+  // 注意：jsdom 嘅 innerText 寫入唔會反映去 textContent → 一定要讀 innerText（唔可以讀 textContent）
+  chk("★ 色卡 #typeHero 內有左右三角箭咀（有 aria-label）", (function(){
+    const h=$("#typeHero"); if(!h) return false;
+    const pv=h.querySelector("#typePrev"), nx=h.querySelector("#typeNext");
+    return !!pv && !!nx && /上一個類型/.test(pv.getAttribute("aria-label")||"") && /下一個類型/.test(nx.getAttribute("aria-label")||"");
+  })());
+  chk("★ 箭咀用 monoline SVG 三角（fill:none／stroke:currentColor，唔係 emoji）", (function(){
+    return /\.type-nav svg\{[^}]*fill:none[^}]*stroke:currentColor/.test(src)
+        && /<path d="M15\.4 4\.8L7\.2 12l8\.2 7\.2z"\/>/.test(src)
+        && /<path d="M8\.6 4\.8L16\.8 12l-8\.2 7\.2z"\/>/.test(src);
+  })());
+  // ⚠️ 已知重複（2026-10-02 查實）：index.html 有 3 份一模一樣嘅 16 型次序 ——
+  //    `window.DEEP_ORDER`（深入分析，L5563 左右）、`renderDeepList` 內聯一份（L6036 左右）、
+  //    同今次新增嘅 `window.TYPE_ORDER`（百科格／主頁跑馬燈／人格頁箭咀）。
+  //    今次刻意唔整合（最小改動；而且 TYPE_ORDER 定義喺 DEEP_ORDER 之後，直接引用會 undefined）。
+  //    → 將來如果要改次序，**三處都要改**；要整合就要先將 TYPE_ORDER 搬去 script 最前。
+  chk("★ 16 型次序：新 window.TYPE_ORDER 存在，百科格／主頁跑馬燈／箭咀共用同一來源",
+      /window\.TYPE_ORDER = \["INTJ","INTP"/.test(src) && /const order = window\.TYPE_ORDER;/.test(src)
+      && /const order = window\.TYPE_ORDER \|\| \[\]/.test(src));
+  chk("★ 已知重複次序嘅數量＝3（DEEP_ORDER／內聯／TYPE_ORDER）—— 改次序時要三處齊改",
+      (src.match(/\["INTJ","INTP","ENTJ","ENTP","INFJ"/g)||[]).length === 3,
+      String((src.match(/\["INTJ","INTP","ENTJ","ENTP","INFJ"/g)||[]).length));
+  chk("★ typeStep 有定義、而且係全站 use 同一個 source of truth",
+      /window\.typeStep = function\(dir\)/.test(src) && /const order = window\.TYPE_ORDER \|\| \[\]/.test(src));
+
+  w.openType("INTJ","hub"); await new Promise(r=>setTimeout(r,60));
+  const BIG=()=>$("#typeBig").innerText, NM=()=>$("#typeName").innerText;
+  chk("★ 起始 = INTJ / 建築師", BIG()==="INTJ" && NM()==="建築師", BIG()+"/"+NM());
+  const depth0=w._histDepth||0, hlen0=w.history.length;
+  $("#typeNext").click(); await new Promise(r=>setTimeout(r,90));
+  chk("★ 撳右箭咀 → INTJ 變 INTP（色卡 4 字母／中文名／麵包屑全部換）",
+      BIG()==="INTP" && NM()==="邏輯學家" && /性格 \/ INTP/.test($("#typeBreadcrumb").innerText),
+      BIG()+"/"+NM()+"/"+$("#typeBreadcrumb").innerText);
+  chk("★ 轉型後下面內容都真係換（描述唔係殘留舊型、刻度 3 條）",
+      $("#typeDesc").textContent.length>20 && $("#typeScore").querySelectorAll(".stat-bar").length===3,
+      $("#typeDesc").textContent.slice(0,14)+"…");
+  chk("★ 色卡背景跟住型轉（用該型 palette）", /linear-gradient/.test($("#typeHero").style.background||""), $("#typeHero").style.background);
+  chk("★ 轉型**唔會加 history 層**（同一頁換內容，撳返回仍然返上一頁）",
+      (w._histDepth||0)===depth0 && w.history.length===hlen0, "depth "+depth0+"→"+w._histDepth+" / len "+hlen0+"→"+w.history.length);
+  chk("★ 當前歷史層快照已更新做新型（replace，唔係留住舊型）", w._navSnap().type==="INTP", w._navSnap().type);
+  $("#typePrev").click(); await new Promise(r=>setTimeout(r,80));
+  chk("★ 撳左箭咀返得返上一個（INTP → INTJ）", BIG()==="INTJ", BIG());
+  w.openType("INTJ","hub"); await new Promise(r=>setTimeout(r,40));
+  $("#typePrev").click(); await new Promise(r=>setTimeout(r,80));
+  chk("★ 第一型撳「上一個」會環繞去最後一型（INTJ → ESFP）", BIG()==="ESFP", BIG());
+  $("#typeNext").click(); await new Promise(r=>setTimeout(r,80));
+  chk("★ 最後一型撳「下一個」環繞返第一型（ESFP → INTJ）", BIG()==="INTJ", BIG());
+
+  // 全部 16 型行一次：次序要同 TYPE_ORDER 一模一樣，中途唔准 throw
+  w.openType("INTJ","hub"); await new Promise(r=>setTimeout(r,40));
+  const seen=[BIG()], bad2=[];
+  for(let i=0;i<15;i++){ try{ $("#typeNext").click(); await new Promise(r=>setTimeout(r,14)); seen.push(BIG()); }catch(e){ bad2.push(e.message); } }
+  chk("★ 行 15 步嘅次序 = window.TYPE_ORDER 全 16 型（冇跳／冇重複／冇 throw）",
+      bad2.length===0 && JSON.stringify(seen)===JSON.stringify(w.TYPE_ORDER), bad2.join("|")||seen.join(","));
+  $("#typeNext").click(); await new Promise(r=>setTimeout(r,60));
+  chk("★ 第 16 步環繞返起點 INTJ", BIG()==="INTJ", BIG());
+
+  // 轉型要保留當前分頁（唔准彈返「性格」）
+  w.openType("INTJ","hub"); w.setTypeTab("scene"); await new Promise(r=>setTimeout(r,60));
+  $("#typeNext").click(); await new Promise(r=>setTimeout(r,120));
+  chk("★ 喺「場景」分頁轉型 → 仍然留喺場景分頁（10 個場景卡仍在）",
+      w._typeTab==="scene" && !$("#typeTabScene").classList.contains("hidden")
+      && $("#typeSceneList").querySelectorAll(".scene-go-row").length===10,
+      w._typeTab+" / "+$("#typeSceneList").querySelectorAll(".scene-go-row").length);
+  w.setTypeTab("rel"); await new Promise(r=>setTimeout(r,60));
+  $("#typeNext").click(); await new Promise(r=>setTimeout(r,120));
+  chk("★ 喺「關係」分頁轉型 → 仍然留喺關係分頁、配對 icon 重 render",
+      w._typeTab==="rel" && $("#typeCompat").querySelectorAll(".cmp-ico").length>0,
+      w._typeTab+" / "+$("#typeCompat").querySelectorAll(".cmp-ico").length);
+  // 來源要記住（由結果頁入 → 轉型後 _typeFrom 仍然係 result）
+  w._typeFrom="result"; w.openType("INTJ","result"); await new Promise(r=>setTimeout(r,40));
+  $("#typeNext").click(); await new Promise(r=>setTimeout(r,80));
+  chk("★ 由結果頁入再轉型 → _typeFrom 保留（唔會被清走）", w._typeFrom==="result" && BIG()==="INTP", String(w._typeFrom)+"/"+BIG());
+
   // ---------- 完整版 ----------
   w.unlockFull();
   await new Promise(r=>setTimeout(r,320));

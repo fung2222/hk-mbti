@@ -570,6 +570,18 @@ margin-right:11px;
  line-height:1.2;transition:background .15s ease,transform .12s ease}
 .result-more-btn:hover{background:rgba(232,93,93,.16)}
 .result-more-btn:active{transform:scale(.97)}
+/* 人格頁色卡左右箭咀（Roy 2026-10-02）：快速轉上／下一個類型。
+   顏色用白色半透明 —— 底色係該型色卡嘅漸層（淺深模式一樣），所以唔需要入 #dark-layer。 */
+.type-hero-row{display:flex;align-items:center;gap:8px}
+.type-hero-mid{flex:1 1 auto;min-width:0;text-align:center}
+.type-nav{-webkit-appearance:none;appearance:none;flex:0 0 auto;width:40px;height:40px;
+ display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+ background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:50%;
+ color:#fff;padding:0;transition:background .15s ease,transform .12s ease}
+.type-nav:hover{background:rgba(255,255,255,.26)}
+.type-nav:active{transform:scale(.92)}
+.type-nav svg{width:20px;height:20px;display:block;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
 /* 分享卡三粒掣：Roy 2026-10-02 定案 —— 唔要三層次（金／白框／灰）睇落怪，
    三粒**統一**同一個柔和風格（淡底 ＋ 暖邊 ＋ 暖字，同版本卡 pill／探索更多 go 掣同一套語言）。 */
 .share-btn{background:var(--soft);border:1px solid #E0D6BE;color:#7C6B45}
@@ -1767,10 +1779,16 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <!-- 人格色卡（永遠喺頂，下面先係分頁） -->
- <div id="typeHero" class="card p-6 mb-4 text-center">
+ <div id="typeHero" class="card p-6 mb-4">
+ <div class="type-hero-row">
+ <button type="button" class="type-nav" id="typePrev" aria-label="上一個類型" onclick="typeStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 4.8L7.2 12l8.2 7.2z"/></svg></button>
+ <div class="type-hero-mid">
  <div class="text-5xl font-black mb-1" id="typeBig">INTJ</div>
  <h2 class="text-[19px] font-black mb-1" id="typeName">建築師</h2>
  <p class="text-sm" id="typeSlogan">「東鐵企到金鐘」</p>
+ </div>
+ <button type="button" class="type-nav" id="typeNext" aria-label="下一個類型" onclick="typeStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 4.8L16.8 12l-8.2 7.2z"/></svg></button>
+ </div>
  </div>
 
  <!-- 分頁切換（沿用百科「由人格睇／由場景睇」同一款 pill，Roy 2026-10-02） -->
@@ -6170,6 +6188,20 @@ window.scrollTo(0,0);
 };
 
 
+// 人格頁色卡左右箭咀：轉上／下一個類型（Roy 2026-10-02）。
+// 注意：呢個係「同一頁換內容」，同 4 個分頁 tab 一樣唔加 history 層 ——
+// 所以撳完箭咀再撳「返回」，仍然係返上一頁（百科／主頁），唔會逐個型倒退。
+// 但要用 replace 更新當前歷史層嘅快照，否則嗰層仲留住舊型（forward／還原會撞錯）。
+window.typeStep = function(dir){
+ const order = window.TYPE_ORDER || [];
+ if(!order.length) return;
+ const cur = String(window._lastType || "").toUpperCase();
+ const i = order.indexOf(cur);
+ if(i < 0) return;
+ const n = ((i + (dir < 0 ? -1 : 1)) % order.length + order.length) % order.length;
+ window.openType(order[n], window._typeFrom);
+ try{ window._histWrite("replace"); }catch(e){}
+};
 window.goTypeFromResult = function(){
 const r = window.lastResult || "INTJ";
 openType(r.substring(0,4), "result");
@@ -6259,8 +6291,10 @@ btn.classList.add("is-on");
 if(root.classList.contains("hub-type-grid") || root.classList.contains("home-type-reel")) root.classList.add("is-picking");
 if(root.classList.contains("home-type-reel")) window._homeReelHold = true;
 };
+// 16 型嘅瀏覽次序（百科格／主頁跑馬燈／人格頁左右箭咀共用一個來源，唔准各自寫一份）
+window.TYPE_ORDER = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
 window.renderHubTypes = function(){
-const order = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
+const order = window.TYPE_ORDER;
 const gridHtml = order.map(code => window.hubTypeCardHtml(code, `openType('${code}','hub')`)).join("");
 const reelHtml = order.map(code => window.hubTypeCardHtml(code, `openType('${code}','home')`)).join("");
 const grid = $("hubTypeGrid");
