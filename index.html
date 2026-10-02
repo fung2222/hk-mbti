@@ -391,11 +391,6 @@ margin:0 0 6px;line-height:1.6;font-size:17px;color:#374151;
 font-size:14px;letter-spacing:.06em;font-weight:700;color:var(--gold);
 margin:18px 0 8px;
 }
-.article-more-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
-.article-more-list .softbox-btn{margin-top:0;padding:11px 4px;font-size:15px;border-radius:12px;white-space:nowrap}
-/* 少用嘅「其他攻略」方塊：縮細啲 */
-.softbox-tight{padding:18px 16px 16px}
-.softbox-tight .softbox-title{font-size:17px}
 .hub-type-card{
 aspect-ratio:9/16;border-radius:0;color:#fff;border:0;cursor:pointer;
 box-shadow:0 4px 14px rgba(0,0,0,.16);
@@ -435,7 +430,6 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 }
 .hub-type-cn{font-size:.5em;line-height:1.25;opacity:.9;white-space:nowrap;}
 /* 場景文章頁（相處／拍拖）：最底入口卡同上內文唔好貼太近（Roy 2026-10-01） */
-#socialArticle .softbox-tight,#romanceArticle .softbox-tight{margin-top:9px}
 
 /* 百科雙模式切換（Roy 2026-10-01 方案 A）*/
 .hub-mode-switch{display:flex;gap:6px;background:#f1ece3;border-radius:999px;padding:4px;margin:0 12px 16px}
@@ -479,8 +473,8 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 .scene-go-row{display:flex;align-items:center;gap:13px;width:100%;text-align:left;border:0;background:#faf7f2;border-radius:12px;padding:13px 14px;margin:0 0 8px;cursor:pointer;font-family:inherit;}
 .scene-go-row:last-child{margin-bottom:0}
 .scene-go-row:hover{background:#f5efe6}
-.scene-go-ico{flex:0 0 auto;line-height:0;display:flex;align-items:center;justify-content:center}
-.scene-go-ico svg{width:30px;height:30px;display:block}
+.scene-go-ico{flex:0 0 auto;line-height:0;display:flex;align-items:center;justify-content:center;align-self:center}
+.scene-go-ico svg{width:36px;height:36px;display:block}
 .scene-go-body{flex:1 1 auto;min-width:0}
 .scene-go-t{display:block;font-size:14px;font-weight:800;color:var(--ink);margin:0 0 3px}
 .scene-go-d{display:block;font-size:11px;color:#8a8174;line-height:1.5}
@@ -568,6 +562,14 @@ margin-right:11px;
 .btn-gold{background:var(--gold);color:var(--ink);font-weight:700}
 .btn-gold:hover{background:#c89a4d}
 .btn-gold:active{transform:scale(0.97)}
+/* 結果頁「看完整分析」入口：由紅色文字 link 改成實體按鈕（Roy 2026-10-02）*/
+.result-more-btn{-webkit-appearance:none;appearance:none;font-family:inherit;cursor:pointer;
+ display:inline-flex;align-items:center;justify-content:center;
+ background:rgba(232,93,93,.09);border:1px solid rgba(232,93,93,.4);color:var(--accent);
+ font-weight:800;font-size:12px;letter-spacing:.02em;padding:6px 13px;border-radius:999px;
+ line-height:1.2;transition:background .15s ease,transform .12s ease}
+.result-more-btn:hover{background:rgba(232,93,93,.16)}
+.result-more-btn:active{transform:scale(.97)}
 /* 分享卡三粒掣：Roy 2026-10-02 定案 —— 唔要三層次（金／白框／灰）睇落怪，
    三粒**統一**同一個柔和風格（淡底 ＋ 暖邊 ＋ 暖字，同版本卡 pill／探索更多 go 掣同一套語言）。 */
 .share-btn{background:var(--soft);border:1px solid #E0D6BE;color:#7C6B45}
@@ -906,6 +908,7 @@ html.dm .home-hero-mbti{font-size:clamp(4.4rem, calc(var(--dm-vw) * 0.23), 6.6re
    鐵律：只改顏色 → 唔准有 display / 尺寸 / 位置 / 動畫改動；
    16 型 16 色、分享卡 canvas、金標 icon 一律不變。 */
 html.dk{color-scheme:dark}
+html.dk .result-more-btn{background:rgba(240,115,111,.15);border-color:rgba(240,115,111,.5)}
 html.dk .share-btn{background:var(--soft);border-color:rgba(236,231,222,.22);color:#D8C69E}
 html.dk .share-btn:hover{background:var(--dk-hover)}
 html.dk{
@@ -1725,13 +1728,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="socialArticleBody" class="article-guide-body"></div>
  </div>
 
- <div class="card mb-4 softbox softbox-tight">
- <div class="softbox-title">立即睇睇其他攻略</div>
- <div class="article-more-list">
- <button type="button" class="softbox-btn" onclick="openHub()">性格百科</button>
- <button type="button" class="softbox-btn" onclick="openTypeScenes(window._lastArticleType)">呢一型其他場景</button>
- </div>
- </div>
  </section>
 
  <!-- ========== ROMANCE HUB ========== -->
@@ -1759,13 +1755,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="romanceArticleBody" class="article-guide-body"></div>
  </div>
 
- <div class="card mb-4 softbox softbox-tight">
- <div class="softbox-title">立即睇睇其他攻略</div>
- <div class="article-more-list">
- <button type="button" class="softbox-btn" onclick="openHub()">性格百科</button>
- <button type="button" class="softbox-btn" onclick="openTypeScenes(window._lastArticleType)">呢一型其他場景</button>
- </div>
- </div>
  </section>
 
  <!-- ========== TYPE DETAIL ========== -->
@@ -2202,7 +2191,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <!-- 人格 + 完成時間（2026-10-02 Roy：移到分享卡上面）-->
  <div class="text-center mb-3 fade-up">
  <div class="text-[13px] font-bold" style="color:var(--ink)"><span id="resultTaInline"></span></div>
- <div class="text-xs text-gray-500 mt-1">完成時間：<span id="finishTime">5 分鐘</span></div>
+ <div class="text-xs text-gray-500 mt-1">完成時間：<span id="finishTime">5 分鐘</span><span id="resultDate"></span></div>
  </div>
 
  <!-- Share Card -->
@@ -2224,7 +2213,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="result-bleed-inner">
  <div class="flex items-center justify-between mb-3">
  <h3 class="text-xs tracking-widest brand-gold font-bold"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"/><path d="M6 19V9l6-5 6 5v10"/><path d="M10 19v-6h4v6"/></svg>你的性格分析</h3>
- <button type="button" onclick="goTypeFromResult()" class="text-xs text-accent font-bold" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">看完整分析</button>
+ <button type="button" onclick="goTypeFromResult()" class="result-more-btn">看完整分析</button>
  </div>
  <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
 
@@ -4299,6 +4288,7 @@ try{ sessionStorage.setItem("hkmbti_last_record_idx", 0); }catch(e){} // 新結�
 clearProgress(); // 測完清 progress，避免下次彈續做
 const mins = Math.max(1, Math.round((Date.now() - state.startedAt) / 60000));
  $("finishTime").innerText = mins + " 分鐘";
+ $("resultDate").innerText = "　·　" + window.shareDateLabel();
 const verName = r.version === "bb" ? "BB版" : r.version === "advanced" ? "進階版" : "生活版";
 const vb = $("versionBadge");
 if(vb) vb.innerText = verName;
@@ -4517,6 +4507,14 @@ setShareStatus(" 圖片已下載！");
 };
 
 // ====================== Generate Card as Image (real PNG) ======================
+// 分享日期標籤（2026-10-02：由分享卡右上角搬嚟結果頁「完成時間」欄）
+window.shareDateLabel = function(ts){
+ try{
+  const d = ts ? new Date(ts) : new Date();
+  if(isNaN(d.getTime())) return "";
+  return d.getFullYear() + "." + String(d.getMonth()+1).padStart(2,"0");
+ }catch(e){ return ""; }
+};
 window.getTestVersionLabel = function(version, totalQ){
 const labels = { life: "生活版", advanced: "進階版", bb: "BB版" };
 const counts = { life: 60, advanced: 30, bb: 10 };
@@ -4549,7 +4547,7 @@ ctx.fillRect(0, 0, 720, 1280);
 ctx.fillStyle = pal.accent;
 ctx.fillRect(0, 0, 720, 6);
 
- // 頂部 header 一列垂直對齊：icon | 品牌 | 日期+版本
+ // 頂部 header 一列垂直對齊：icon | 品牌 | 版本＋題目（2026-10-02 Roy：日期移去結果頁「完成時間」欄）
 // 版面 grid：同內文一致（左 60 / 右 660，中心 360）
 const MARGIN = 60;
 const RIGHT = 720 - MARGIN; // 660
@@ -4562,8 +4560,6 @@ const versionLabel = window.getTestVersionLabel(
  (window._cardMeta && window._cardMeta.version) || window.state.version,
  (window._cardMeta && window._cardMeta.totalQ) || window.state.maxQ
  );
-const now = new Date();
-const dateLabel = now.getFullYear() + "." + String(now.getMonth()+1).padStart(2,"0");
 
  // 品牌名：同 icon 同一水平中線，字級收細（42 → 34）
 ctx.fillStyle = "white";
@@ -4576,14 +4572,12 @@ const _brandW = ctx.measureText("港式 ").width;
 ctx.font = "34px " + window.CARD_ARCHIVO;
 ctx.fillText("MBTI", _brandX + _brandW, headerMidY + 3);
 
- // 右側：日期 + 版本，右對齊同一條邊（660），上下對稱 icon 中線
+ // 右側：版本＋題目，右對齊同一條邊（660），垂直對準 icon 中線
+ // （2026-10-02 Roy：日期取消 → 淨返一行，字級 20 → 28 加大）
 ctx.textAlign = "right";
-ctx.fillStyle = "rgba(255,255,255,0.95)";
-ctx.font = "bold 23px " + window.CARD_FS;
-ctx.fillText(dateLabel, RIGHT, headerMidY - 15);
-ctx.fillStyle = "rgba(255,255,255,0.68)";
-ctx.font = "bold 20px " + window.CARD_FS;
-ctx.fillText(versionLabel, RIGHT, headerMidY + 17);
+ctx.fillStyle = "rgba(255,255,255,0.9)";
+ctx.font = "bold 28px " + window.CARD_FS;
+ctx.fillText(versionLabel, RIGHT, headerMidY + 2);
  // header 底下幼分隔線（同 grid 同寬）
 ctx.fillStyle = "rgba(255,255,255,0.16)";
 ctx.fillRect(MARGIN, iconY + iconSize + 30, RIGHT - MARGIN, 2);
@@ -5387,6 +5381,7 @@ try{ renderResult(r); rendered = true; }catch(e){}
 try{ show("result"); }catch(e){}
 try{ generateCardImage(); }catch(e){}
 try{ $("finishTime").innerText = formatTimeAgo(rec.timestamp); }catch(e){}
+  try{ $("resultDate").innerText = "　·　" + window.shareDateLabel(rec.timestamp); }catch(e){}
 try{ if($("versionBadge")) $("versionBadge").innerText = ver === "bb" ? "BB版" : ver === "advanced" ? "進階版" : "生活版"; }catch(e){}
 if(!rendered){ appNotice("無法開啟這筆紀錄", "資料不完整。"); }
  } catch(e){
@@ -5913,7 +5908,7 @@ window.renderTypeTabs = function(code){
   }).map(function(k){
    const s = list[k];
    return '<button type="button" class="scene-go-row" onclick="' + fn + "('" + k + "','" + code + "')" + '">'
-    + '<span class="scene-go-ico">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 30) : '') + '</span>'
+    + '<span class="scene-go-ico">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 36) : '') + '</span>'
     + '<span class="scene-go-body"><span class="scene-go-t">' + (s.name || k) + '</span>'
     + '<span class="scene-go-d">' + (s.desc || '') + '</span></span></button>';
   }).join("");
@@ -5985,7 +5980,7 @@ window.renderHubSceneList = function(){
   return Object.keys(list || {}).map(function(k){
    const s = list[k] || {};
    return '<button type="button" class="scene-go-row" onclick="' + fn + "( '" + k + "' )" + '">'
-    + '<span class="scene-go-ico">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 30) : '') + '</span>'
+    + '<span class="scene-go-ico">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 36) : '') + '</span>'
     + '<span class="scene-go-body">'
     + '<span class="scene-go-t">' + (s.name || k) + '</span>'
     + '<span class="scene-go-d">' + (s.desc || '') + '</span>'

@@ -75,7 +75,9 @@ chk("★ 4 個面板都喺 #type 入面", ["typeTabBasic","typeTabRel","typeTabS
 chk("★ 默認只顯示「性格」面板（其餘 3 個 hidden）", /id="typeTabBasic">/.test(src) && /id="typeTabRel" class="hidden"/.test(src) && /id="typeTabScene" class="hidden"/.test(src) && /id="typeTabDeep" class="hidden"/.test(src));
 chk("★ 舊 #typeScenes 獨立分頁已拆走", !/<section id="typeScenes"/.test(src) && !/id="typeScenesList"/.test(src) && !/window\.renderTypeScenes = function/.test(src));
 chk("★ 舊 #typeMore 入口卡已拆走", !/id="typeMore"/.test(src) && !/window\.renderTypeMore = function/.test(src));
-chk("★ openTypeScenes 仍存在（情境文章頁「呢一型其他場景」掣、#typeScenes 深層連結靠佢）", /window\.openTypeScenes = function/.test(src) && /openTypeScenes\(window\._lastArticleType\)/.test(src));
+chk("★ openTypeScenes 函數仍存在（#typeScenes 深層連結靠佢；文章頁底嗰粒掣已按 Roy 要求刪走）",
+    /window\.openTypeScenes = function/.test(src) && /"#typeScenes": "openTypeScenes"/.test(src)
+    && !/openTypeScenes\(window\._lastArticleType\)/.test(src));
 chk("★ 舊 show() 清單冇再列出 typeScenes", !/"dims","typeScenes"/.test(src) && !/"typeScenes","letter"/.test(src));
 chk("★ CSS：關係卡兩欄 grid + 左邊色條（--rc）", /\.type-rel-grid\{display:grid;grid-template-columns:1fr 1fr/.test(src) && /\.type-rel-card\{[^}]*border-left:3px solid var\(--rc\)/.test(src));
 chk("★ CSS：關係卡內文字級跟「卡片解釋字」標準（.85rem / #6b6560）", /\.type-rel-item\{font-size:\.85rem;color:#6b6560/.test(src));

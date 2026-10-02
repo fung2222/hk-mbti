@@ -20,7 +20,7 @@ chk("★ 維度詳解分頁（#dims）有「4 個英文字母代表咩」卡（�
 chk("★ 維度詳解分頁有 8 個字母掣 → #letter", (function(){ const s = src.slice(src.indexOf('<section id="dims"'), src.indexOf('<!-- ========== 人格深入分析')); return (s.match(/openLetter\('/g) || []).length === 8; })());
 chk("★ 16 型色卡（hub-bleed）下間距＝12px（Roy 2026-10-02 兩輪：26px 太大 → 16px 後再要緊啲 → 12px）", /\.hub-bleed\{margin:0 -16px 12px/.test(src));
 chk("★ 場景文章頁：色卡同上內文距離夠（26px）", /\.article-type-stage\{margin:0 -16px 26px/.test(src));
-chk("★ 場景文章頁：最底入口卡同上內文唔貼（+9px）", /#socialArticle \.softbox-tight,#romanceArticle \.softbox-tight\{margin-top:9px\}/.test(src));
+chk("★ 場景文章頁底卡已整張刪（連舊 +9px 規則一併清走）", !/softbox-tight/.test(src) && !/article-more-list/.test(src));
 chk("★ 非主頁垂直間距統一 16px（卡片同非卡容器一致）", !/\.(article-guide|wiz-facts)\{[^}]*margin:[^;}]*20px/.test(src) && /\.article-guide\{margin:0 4px 16px/.test(src) && /\.type-rel-grid\{[^}]*margin-bottom:16px\}/.test(src));
 chk("★ 全站測試入口文案統一：「想確認自己 MBTI 人格？」（唔准有舊文案）", !/睇完想試/.test(src) && (src.match(/想確認自己 MBTI 人格？/g) || []).length >= 8, (src.match(/想確認自己 MBTI 人格？/g) || []).length + " 處");
 chk("★ 全站測試入口按鈕統一：「立即選擇測試版本」（唔准有舊按鈕字）", !/返主頁開始測試/.test(src) && !/>選擇測試版本</.test(src) && (src.match(/立即選擇測試版本/g) || []).length >= 8, (src.match(/立即選擇測試版本/g) || []).length + " 處");
@@ -59,10 +59,11 @@ chk("★ 主頁 ⋯ 選單同右上一樣（補返計分方法、冇光譜／相
 })(), (function(){ const i = src.indexOf('id="homeMenu"'); return (src.slice(i, src.indexOf("home-menu-foot", i)).match(/>(主頁|我的紀錄|關於港式 MBTI|性格百科|香港16型統計|計分方法同限制|私隱聲明)</g) || []).join(" "); })());
 // Roy 2026-10-01：清走已淘汰嘅 UI 入口（光譜／個人相處／個人拍拖）
 chk("★ 全站已冇 UI 入口連去光譜／個人相處／個人拍拖", !/onclick="openSpectrum\(\)"/.test(src) && !/onclick="openSocial\(\)"/.test(src) && !/onclick="openRomance\(\)"/.test(src));
-chk("★ 文章頁底 softbox 換成「性格百科 + 呢一型其他場景」", (function(){
+// Roy 2026-10-02：文章頁底「立即睇睇其他攻略」整張刪除 → 反轉成「一段 softbox-btn 都唔准有」
+chk("★ 文章頁底完全冇入口卡（softbox-btn／其他攻略）", (function(){
   const seg = src.slice(src.indexOf('id="socialArticle"'), src.indexOf('id="type"'));
-  return !/softbox-btn" onclick="open(?:Social|Romance)\(\)/.test(seg) && /softbox-btn" onclick="openTypeScenes\(window\._lastArticleType\)"/.test(seg) && /softbox-btn" onclick="openHub\(\)"/.test(seg);
-})(), (function(){ const seg = src.slice(src.indexOf('id="socialArticle"'), src.indexOf('id="type"')); return (seg.match(/softbox-btn" onclick="(\w+)/g) || []).join(" | "); })());
+  return !/softbox-btn/.test(seg) && !/立即睇睇其他攻略/.test(seg) && !/article-more-list/.test(seg);
+})(), (function(){ const seg = src.slice(src.indexOf('id="socialArticle"'), src.indexOf('id="type"')); return (seg.match(/softbox-btn/g) || []).length + " 個 softbox-btn"; })());
 chk("★ 結果頁已經冇「性格百科」入口（Roy 2026-10-02：有睇完整分析就唔需要）", (function(){
   const i = src.indexOf('id="personalityDetail"');
   const seg = src.slice(Math.max(0, i - 1500), i);
@@ -230,10 +231,11 @@ setTimeout(() => {
   const rk = Object.keys(w.ROMANCE || {})[0];
   w.openRomanceArticle(rk, "ENFP");
   chk("★ 拍拖文章仍開到（排版正常）", !w.$("romanceArticle").classList.contains("hidden") && /article-guide-kicker/.test(w.$("romanceArticleBody").innerHTML) && /測試內文一/.test(w.$("romanceArticleBody").innerHTML), "內文 " + w.$("romanceArticleBody").innerHTML.length);
-  // 文章頁底 softbox 已換成合法入口
+  // 文章頁底卡片：Roy 2026-10-02 明確要求「立即睇睇其他攻略」整張刪除 → 反轉成「必須唔存在」
   const sBox = w.$("socialArticle").querySelector(".article-more-list");
-  chk("★ 文章頁底已冇「個人相處／個人拍拖」", sBox && !/個人相處|個人拍拖/.test(sBox.textContent), sBox ? sBox.textContent.trim().replace(/\s+/g," ") : "(冇)");
-  chk("★ 文章頁底換成「性格百科」＋「呢一型其他場景」", sBox && /性格百科/.test(sBox.textContent) && /其他場景/.test(sBox.textContent));
+  chk("★ 文章頁底「立即睇睇其他攻略」卡已刪", !sBox);
+  chk("★ 拍拖文章頁底同一張卡都已刪", !w.$("romanceArticle").querySelector(".article-more-list"));
+  chk("★ 文章頁底冇殘留「個人相處／個人拍拖／其他攻略」字", !/個人相處|個人拍拖|立即睇睇其他攻略/.test(w.$("socialArticle").textContent + w.$("romanceArticle").textContent));
 
   // ③b 深入分析章節頁仍然開到（formatGuideHtml）
   w.openDeepType("INTJ");

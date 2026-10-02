@@ -117,6 +117,33 @@ chk("★ ⑤ 關係 tab icon 用返該型色卡主色",
     [...cmpIcos].every(s => /(^#[0-9A-Fa-f]{6}$)|(^rgb\()/.test((s.closest(".cmp-ico")||{}).style ? s.closest(".cmp-ico").style.color : "")),
     [...d2.querySelectorAll("#typeCompat .cmp-ico")].map(s=>s.style.color).slice(0,3).join(","));
 
+// ───────── 五、結果頁二次微調（Roy 2026-10-02 第二批）─────────
+chk("★ ① 分享卡已冇日期（冇 dateLabel）", !/dateLabel/.test(SRC));
+chk("★ ① 分享卡版本＋題目字級 20 → 28", /ctx\.font = "bold 28px " \+ window\.CARD_FS;\nctx\.fillText\(versionLabel/.test(SRC));
+chk("★ ① 版本標籤仍然用 getTestVersionLabel（版本＋題目）", /const versionLabel = window\.getTestVersionLabel\(/.test(SRC));
+chk("★ ② #resultDate 喺「完成時間」同一行", /完成時間：<span id="finishTime">[^<]*<\/span><span id="resultDate"><\/span>/.test(rsec));
+chk("★ ② #resultDate 喺分享卡上面（Roy：移到完成時間文字欄附近）",
+    rsec.indexOf('id="resultDate"') > 0 && rsec.indexOf('id="resultDate"') < iCard);
+chk("★ ② 兩條路徑都填日期（新測完 ＋ 開舊記錄）", (SRC.match(/\$\("resultDate"\)\.innerText/g)||[]).length === 2);
+const _sl = new Function("window","document", (SRC.match(/window\.shareDateLabel = function[\s\S]*?\n\};/)||[""])[0] + "; return window.shareDateLabel;")({}, {});
+chk("★ ② shareDateLabel 出 YYYY.MM", _sl(Date.UTC(2026,9,2)) === "2026.10", String(_sl(Date.UTC(2026,9,2))));
+chk("★ ③ 「看完整分析」紅色字已變實體按鈕 .result-more-btn",
+    /onclick="goTypeFromResult\(\)" class="result-more-btn">看完整分析<\/button>/.test(rsec));
+chk("★ ③ 唔再係「純文字 link」（舊 background:none 嗰串已冇）",
+    !/background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">看完整分析/.test(SRC));
+chk("★ ③ 按鈕保留 accent 紅色識別", /\.result-more-btn\{[^}]*color:var\(--accent\)/.test(SRC));
+chk("★ ③ dark 規則喺 #dark-layer",
+    /html\.dk \.result-more-btn\{/.test(SRC.slice(SRC.indexOf('id="dark-layer"'), SRC.indexOf('id="dark-layer"')+22000)));
+chk("★ ④ 場景主題 icon 30 → 36（人格頁場景 tab ＋ 百科場景列表）",
+    (SRC.match(/hubSceneIconHtml\(s\.name, 36\)/g)||[]).length === 2);
+// ⚠️ 場景「詳情頁」頭 icon（.hub-detail-head）係另一個 context，維持 30px → 只驗列表
+chk("★ ④ 兩個場景列表都已冇 30px icon", !/scene-go-ico"[\s\S]{0,60}hubSceneIconHtml\(s\.name, 30\)/.test(SRC));
+chk("★ ④ .scene-go-ico 明確垂直置中（align-self:center）＋ svg 36",
+    /\.scene-go-ico\{[^}]*align-self:center/.test(SRC) && /\.scene-go-ico svg\{width:36px;height:36px/.test(SRC));
+chk("★ ⑤ index.html 完全冇「立即睇睇其他攻略」", !/立即睇睇其他攻略/.test(SRC));
+chk("★ ⑤ 死 CSS 清乾淨（article-more-list／softbox-tight）",
+    !/article-more-list/.test(SRC) && !/softbox-tight/.test(SRC));
+
 // ───────── 四、dark 規則位置 ─────────
 const dk=SRC.slice(SRC.indexOf('id="dark-layer"'), SRC.indexOf('id="dark-layer"')+22000);
 chk("★ ③ dark：share-btn 規則喺 #dark-layer 內（唔准落主 style）",
