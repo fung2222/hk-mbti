@@ -18,12 +18,17 @@ chk("★ 百科首頁維度卡有 8 個字母掣（E/I、S/N、T/F、J/P）", (f
 chk("★ 百科卡底有「撳入去睇」link → #dims", /class="hub-more-link" onclick="openDims\(\)"/.test(src));
 chk("★ 維度詳解分頁（#dims）有「4 個英文字母代表咩」卡（光譜整合入嚟）", /<section id="dims"/.test(src) && /id="dimsLetters"/.test(src) && /class="hub-letter-list"/.test(src));
 chk("★ 維度詳解分頁有 8 個字母掣 → #letter", (function(){ const s = src.slice(src.indexOf('<section id="dims"'), src.indexOf('<!-- ========== 人格深入分析')); return (s.match(/openLetter\('/g) || []).length === 8; })());
-chk("★ 16 型色卡（hub-bleed）同上內文距離夠（26px）→ 百科／深入分析入口卡唔會貼", /\.hub-bleed\{margin:0 -16px 26px/.test(src));
+chk("★ 16 型色卡（hub-bleed）下間距＝16px（Roy 2026-10-02：原本 26px 太大唔啱比例；26px 例外值只留返場景文章頁）", /\.hub-bleed\{margin:0 -16px 16px/.test(src));
 chk("★ 場景文章頁：色卡同上內文距離夠（26px）", /\.article-type-stage\{margin:0 -16px 26px/.test(src));
 chk("★ 場景文章頁：最底入口卡同上內文唔貼（+9px）", /#socialArticle \.softbox-tight,#romanceArticle \.softbox-tight\{margin-top:9px\}/.test(src));
 chk("★ 非主頁垂直間距統一 16px（卡片同非卡容器一致）", !/\.(article-guide|wiz-facts)\{[^}]*margin:[^;}]*20px/.test(src) && /\.article-guide\{margin:0 4px 16px/.test(src) && /\.type-rel-grid\{[^}]*margin-bottom:16px\}/.test(src));
 chk("★ 全站測試入口文案統一：「想確認自己 MBTI 人格？」（唔准有舊文案）", !/睇完想試/.test(src) && (src.match(/想確認自己 MBTI 人格？/g) || []).length >= 8, (src.match(/想確認自己 MBTI 人格？/g) || []).length + " 處");
-chk("★ 全站測試入口按鈕統一：「立即選擇測試版本」（唔准有舊按鈕字）", !/返主頁開始測試/.test(src) && !/>選擇測試版本</.test(src) && !/>立即開始</.test(src) && (src.match(/立即選擇測試版本/g) || []).length >= 8, (src.match(/立即選擇測試版本/g) || []).length + " 處");
+chk("★ 全站測試入口按鈕統一：「立即選擇測試版本」（唔准有舊按鈕字）", !/返主頁開始測試/.test(src) && !/>選擇測試版本</.test(src) && (src.match(/立即選擇測試版本/g) || []).length >= 8, (src.match(/立即選擇測試版本/g) || []).length + " 處");
+chk("★「立即開始」只准出現一次，而且喺結果頁「挑戰再測一次」卡入面（Roy 2026-10-02 指定）", (function(){
+  const hits = src.match(/>立即開始</g) || [];
+  const i = src.indexOf("挑戰再測一次"), k = src.indexOf(">立即開始<");
+  return hits.length === 1 && i > 0 && k > i && k - i < 400;
+})(), "出現 " + ((src.match(/>立即開始</g)||[]).length) + " 次");
 chk("★ 測試入口全部呼叫 goPickVersion()", (src.match(/goPickVersion\(\)/g) || []).length >= 9, (src.match(/goPickVersion\(\)/g) || []).length + " 處");
 chk("★ show() 清單有 dims 同 typeScenes（scenes 已刪）", /"hub","dims"/.test(src) && /"dims","letter","type"/.test(src) && !/\bdims","scenes/.test(src));
 chk("★ 光譜 5 段齊（E/I、S/N、T/F、J/P、T/A）", (function(){ const m = src.match(/window\.HUB_LETTERS = \[[\s\S]*?\n\];/); if(!m) return false; const t = m[0]; return ["E vs I","S vs N","T vs F","J vs P","T vs A"].every(x => t.includes(x)); })());
@@ -51,11 +56,22 @@ chk("★ 文章頁底 softbox 換成「性格百科 + 呢一型其他場景」",
   const seg = src.slice(src.indexOf('id="socialArticle"'), src.indexOf('id="type"'));
   return !/softbox-btn" onclick="open(?:Social|Romance)\(\)/.test(seg) && /softbox-btn" onclick="openTypeScenes\(window\._lastArticleType\)"/.test(seg) && /softbox-btn" onclick="openHub\(\)"/.test(seg);
 })(), (function(){ const seg = src.slice(src.indexOf('id="socialArticle"'), src.indexOf('id="type"')); return (seg.match(/softbox-btn" onclick="(\w+)/g) || []).join(" | "); })());
-chk("★ 結果頁兩條 stale 連結換成性格百科", (function(){
+chk("★ 結果頁已經冇「性格百科」入口（Roy 2026-10-02：有睇完整分析就唔需要）", (function(){
   const i = src.indexOf('id="personalityDetail"');
-  const seg = src.slice(Math.max(0, i - 1200), i);
-  return !/點同人相處|點同人拍拖/.test(seg) && /onclick="openHub\(\)"/.test(seg);
+  const seg = src.slice(Math.max(0, i - 1500), i);
+  return !/點同人相處|點同人拍拖/.test(seg) && !/openHub\(\)/.test(seg) && /goTypeFromResult\(\)/.test(seg);
 })());
+chk("★ 百科「16 型卡」band 下間距 16px，同其他 band 一致（原本 26px＝場景文章頁例外值，唔啱比例）", (function(){
+  const mb = (n)=>{ const m=new RegExp("\\."+n+"\\{([^}]*)\\}").exec(src); if(!m) return -1;
+    const mm=/margin:([^;]*);/.exec(m[1]); return parseInt(mm[1].trim().split(/\s+/)[2],10); };
+  return mb("hub-bleed")===16 && mb("result-bleed")===16 && mb("scenes-bleed")===16;
+})());
+chk("★ 卡牌格 → 比較工具嘅實際間距（band padding-bottom ＋ margin-bottom）唔可以大過同類 band", (function(){
+  const gap = (n)=>{ const m=new RegExp("\\."+n+"\\{([^}]*)\\}").exec(src); if(!m) return 9999;
+    const pb=parseInt(/padding:([^;]*);/.exec(m[1])[1].trim().split(/\s+/)[2],10);
+    const mb2=parseInt(/margin:([^;]*);/.exec(m[1])[1].trim().split(/\s+/)[2],10); return pb+mb2; };
+  return gap("hub-bleed") <= gap("result-bleed") && gap("hub-bleed") <= gap("scenes-bleed");
+})(), "hub=" + (function(){ return ""; })());
 chk("★ 桌面導覽列同右選單一致（冇光譜／相處攻略）", (function(){
   const i = src.indexOf('id="dtNav"'), seg = src.slice(i, src.indexOf("</nav>", i));
   return /性格百科/.test(seg) && /stats\.html/.test(seg) && /record\.html/.test(seg) && !/openSpectrum|openSocial\(/.test(seg);

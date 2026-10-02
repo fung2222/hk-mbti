@@ -127,7 +127,7 @@ setTimeout(async ()=>{
   chk('★ 版頭卡片有「有咩睇」同「有咩用」兩句', /核心動機/.test($('#deep #deepIntro').textContent) && /點相處/.test($('#deep #deepIntro').textContent));
   chk('★ 16 型格下面有測試入口卡', (function(){ const c=$('#deep #deepCta'), g=$('#deepTypeGrid'); return !!c && !!g && (g.compareDocumentPosition(c) & 4) > 0; })());
   chk('★ 測試入口文案同人格分頁一致（想確認自己 MBTI 人格？）', /想確認自己 MBTI 人格？/.test($('#deep #deepCta').textContent), $('#deep #deepCta').textContent.trim());
-  chk('★ 16 型格同下面卡片有距離（hub-bleed margin-bottom 26px）', /\.hub-bleed\{margin:0 -16px 26px/.test(src));
+  chk('★ 16 型格同下面卡片有距離（hub-bleed margin-bottom 16px，全站標準）', /\.hub-bleed\{margin:0 -16px 16px/.test(src));
   chk('★ 上面卡片同 16 型格有距離（mb-4）', /<div class="card p-4 mb-4">/.test(src));
   chk('★ 測試入口掣去揀版本頁（goPickVersion）', /onclick="goPickVersion\(\)">立即選擇測試版本/.test(src));
   chk('★ 入型別目錄時測試入口一齊收埋', /deepCta"[\s\S]{0,90}display = "none"/.test(src));

@@ -330,7 +330,6 @@ html.dk .up-cmp .no{color:#6E675C}
 .result-bleed .scenario-badge{font-size:14px}
 .sub-label{font-size:15px;font-weight:700;color:var(--ink);line-height:1.45;margin:0 0 10px}
 .pros-item{display:flex;gap:7px;font-size:15px;line-height:1.8;color:#3a3632}
-.pros-mark{flex-shrink:0;font-weight:700}
 .result-divider{height:1px;background:rgba(30,42,59,.08);margin:22px 0;}
 /* 底部 CTA box 統一風格（結果頁 / 關於 / 光譜 / 字母 / 類型）：置中、留白、柔和 pill */
 .softbox{padding:26px 22px 24px;text-align:center;border:1px solid rgba(212,169,95,.22)}
@@ -347,7 +346,7 @@ html.dk .up-cmp .no{color:#6E675C}
 }
 .softbox-btn:hover{border-color:var(--gold);color:#8B6F3D}
 .softbox-btn:active{transform:scale(.97)}
-.hub-bleed{margin:0 -16px 26px;padding:24px 14px 20px;background:linear-gradient(180deg,#fff,var(--paper));}
+.hub-bleed{margin:0 -16px 16px;padding:24px 14px 20px;background:linear-gradient(180deg,#fff,var(--paper));}
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
 .hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
 /* 百科「由場景睇」→ 場景詳情：16 型卡 grid 同下面測試入口卡要有距離（Roy 2026-10-01 報貼住） */
@@ -564,6 +563,15 @@ margin-right:11px;
 .btn-gold{background:var(--gold);color:var(--ink);font-weight:700}
 .btn-gold:hover{background:#c89a4d}
 .btn-gold:active{transform:scale(0.97)}
+/* 分享卡三掣配色（2026-10-02 Roy）：主＝金實心、次＝白底金框、第三＝柔灰 */
+.btn-line{background:#fff;border:1.5px solid var(--gold);color:#9A8149}
+.btn-line:hover{background:rgba(200,162,76,.09)}
+.btn-line:active{transform:scale(.97)}
+.btn-quiet{background:var(--soft);color:#6b6560}
+.btn-quiet:active{transform:scale(.97)}
+/* 配對列表嘅型別 icon（跟該型色卡主色） */
+.cmp-ico{display:inline-flex;width:17px;height:17px;flex:0 0 auto}
+.cmp-ico svg{width:100%;height:100%;display:block}
 .glass{background:rgba(255,255,255,0.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .card{background:white;border-radius:1.2rem;box-shadow:0 4px 24px rgba(0,0,0,0.06)}
 .option{
@@ -894,6 +902,9 @@ html.dm .home-hero-mbti{font-size:clamp(4.4rem, calc(var(--dm-vw) * 0.23), 6.6re
    鐵律：只改顏色 → 唔准有 display / 尺寸 / 位置 / 動畫改動；
    16 型 16 色、分享卡 canvas、金標 icon 一律不變。 */
 html.dk{color-scheme:dark}
+html.dk .btn-line{background:transparent;border-color:var(--gold);color:var(--gold)}
+html.dk .btn-line:hover{background:rgba(217,178,106,.12)}
+html.dk .btn-quiet{background:var(--soft);color:#A79E92}
 html.dk{
   --paper:#12161C;--soft:#1B2129;--ink:#ECE7DE;--gold:#D9B26A;--accent:#F0736F;
   --dk-card:#181E26;--dk-hover:#232B35;--dk-on:#2A323C;
@@ -2177,18 +2188,21 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <p class="page-hero-sub">你得到一張 16 型人格分享卡</p>
  </div>
 
+ <!-- 人格 + 完成時間（2026-10-02 Roy：移到分享卡上面）-->
+ <div class="text-center mb-3 fade-up">
+ <div class="text-[13px] font-bold" style="color:var(--ink)"><span id="resultTaInline"></span></div>
+ <div class="text-xs text-gray-500 mt-1">完成時間：<span id="finishTime">5 分鐘</span></div>
+ </div>
+
  <!-- Share Card -->
  <div class="mx-auto mb-4 fade-up" style="width:360px; max-width:100%;">
  <img id="shareCardImg" class="w-full rounded-2xl shadow-lg" alt="分享卡" style="display:block;">
  </div>
- <div class="text-center mb-4">
- <div class="text-xs text-gray-500"><span id="resultTaInline"></span><span id="taDot" class="hidden">　·　</span>完成時間：<span id="finishTime">5 分鐘</span></div>
- </div>
  <div class="mb-2 px-1">
  <div class="grid grid-cols-3 gap-2 max-w-sm mx-auto">
  <button type="button" onclick="downloadCard()" class="btn-gold py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v11"/><path d="M7.5 10l4.5 4.5L16.5 10"/><path d="M4.5 19.5h15"/></svg>儲存圖片</button>
- <button type="button" onclick="shareResult()" class="bg-soft py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5V4"/><path d="M8.5 7.5L12 4l3.5 3.5"/><path d="M5.5 12.5v7h13v-7"/></svg>分享圖片</button>
- <button type="button" onclick="shareLinkOnly()" class="bg-soft py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.2 13.8a3.6 3.6 0 005.4.4l2.6-2.6a3.7 3.7 0 10-5.2-5.2l-1.2 1.2"/><path d="M13.8 10.2a3.6 3.6 0 00-5.4-.4l-2.6 2.6a3.7 3.7 0 105.2 5.2l1.2-1.2"/></svg>分享網址</button>
+ <button type="button" onclick="shareResult()" class="btn-line py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5V4"/><path d="M8.5 7.5L12 4l3.5 3.5"/><path d="M5.5 12.5v7h13v-7"/></svg>分享圖片</button>
+ <button type="button" onclick="shareLinkOnly()" class="btn-quiet py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.2 13.8a3.6 3.6 0 005.4.4l2.6-2.6a3.7 3.7 0 10-5.2-5.2l-1.2 1.2"/><path d="M13.8 10.2a3.6 3.6 0 00-5.4-.4l-2.6 2.6a3.7 3.7 0 105.2 5.2l1.2-1.2"/></svg>分享網址</button>
  </div>
  </div>
  <div id="shareStatus" class="text-[10px] text-gray-500 mt-1 text-center px-2"></div>
@@ -2200,9 +2214,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="flex items-center justify-between mb-3">
  <h3 class="text-xs tracking-widest brand-gold font-bold"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"/><path d="M6 19V9l6-5 6 5v10"/><path d="M10 19v-6h4v6"/></svg>你的性格分析</h3>
  <button type="button" onclick="goTypeFromResult()" class="text-xs text-accent font-bold" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">看完整分析</button>
- </div>
- <div class="flex gap-3 text-xs text-gray-600 mb-4 -mt-1">
- <button type="button" onclick="openHub()" class="underline hover:text-accent" style="-webkit-appearance:none;appearance:none;background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">性格百科</button>
  </div>
  <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
 
@@ -2221,7 +2232,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="card mb-4 softbox">
  <h3 class="softbox-title">挑戰再測一次</h3>
  <p class="softbox-sub">用另一個身份（朋友 / 家人）再測一次</p>
- <button type="button" class="softbox-btn" onclick="goPickVersion()">再測一次</button>
+ <button type="button" class="softbox-btn" onclick="goPickVersion()">立即開始</button>
  </div>
 
  <p class="text-[11px] text-gray-400 text-center px-3 mt-4 leading-relaxed">
@@ -3005,6 +3016,9 @@ return true;
 };
 
 window.show = function(id){
+
+ // 安全網：任何頁面切換都清走撳卡選中狀態（防止殘留 → 全部卡半透明）
+ try{ window.clearTypePick && window.clearTypePick(); }catch(e){}
 const prevId = window._showing;
 // 離開嗰頁嘅快照：一定要喺「捲返頂」之前捕捉，否則記錄落嘅捲動位置永遠係 0
 // （Roy 2026-10-02 報「返上一頁冇還原位置」嘅根因）。
@@ -4396,15 +4410,16 @@ return `<div class="mb-2.5">
 
 const strengths = (F && F.strength) || [];
 const weaknesses = (F && F.weakness) || [];
-const prosCol = (title, items, mark, bg) => `
- <div class="rounded-xl p-3" style="background:${bg}">
+// 強／弱項 icon：2026-10-02 Roy 要求「分享頁都要 icon」，取代原本裸 ＋／－
+const prosCol = (title, items, kind, bg) => `
+ <div class="pros-box is-${kind} rounded-xl p-3" style="background:${bg}">
  <div class="sub-label">${title}</div>
- ${items.slice(0,4).map(s => `<div class="pros-item"><span class="pros-mark">${mark}</span><span>${s}</span></div>`).join("")}
+ ${items.slice(0,4).map(x => `<div class="pros-item">${window.prosIconHtml(x)}<span>${x}</span></div>`).join("")}
  </div>`;
 const prosCons = (strengths.length || weaknesses.length) ? `
  <div class="mt-4 grid grid-cols-2 gap-3">
- ${prosCol("強項", strengths, "＋", "rgba(212,169,95,.06)")}
- ${prosCol("弱項", weaknesses, "－", "rgba(30,42,59,.03)")}
+ ${prosCol("強項", strengths, "str", "rgba(212,169,95,.06)")}
+ ${prosCol("弱項", weaknesses, "wk", "rgba(30,42,59,.03)")}
  </div>` : "";
 
 const closeNote = (r.closeAxes && r.closeAxes.length)
@@ -4459,7 +4474,7 @@ const ct = window.TYPES[c];
 if(ct) compatHtml += `
  <div class="flex items-center gap-3 py-2.5" style="${i ? "border-top:1px solid rgba(30,42,59,.06)" : ""}">
  <div class="flex-1">
- <div class="font-bold text-sm">${c} · ${ct.cn}</div>
+ <div class="font-bold text-sm flex items-center gap-1.5"><span class="cmp-ico" style="color:${(window.PALETTE && window.PALETTE[c] ? window.PALETTE[c].c1 : "currentColor")}">${window.getTypeIcon ? window.getTypeIcon(c) : ""}</span><span>${c} · ${ct.cn}</span></div>
  <div class="text-xs text-gray-500">${ct.slogan}</div>
  </div>
  <div class="text-xs text-accent font-bold">${Math.floor(Math.random()*15+85)}% 夾</div>
@@ -5671,11 +5686,111 @@ window.PROS_ICO = {
  bolt:    '<path d="M13.4 2.9 5.7 13.4h5.3l-.8 7.7 7.8-10.6h-5.4z"/>',
  flag:    '<path d="M6.1 3.5v17"/><path d="M6.1 4.7h11.4l-2.3 3.8 2.3 3.8H6.1z"/>',
  compass: '<circle cx="12" cy="12" r="8.5"/><path d="M15.3 8.7l-1.9 4.9-4.7 1.7 1.9-4.9z"/>',
- hand:    '<path d="M4.3 19.7l1.2-4.3 9.1-9.1 3.1 3.1-9.1 9.1z"/><path d="M13.5 7.4l3.1 3.1"/><path d="M15.6 4.6l3.8 3.8"/>'
+ hand:    '<path d="M4.3 19.7l1.2-4.3 9.1-9.1 3.1 3.1-9.1 9.1z"/><path d="M13.5 7.4l3.1 3.1"/><path d="M15.6 4.6l3.8 3.8"/>',
+ eye:     '<path d="M2.6 12S6.4 5.6 12 5.6 21.4 12 21.4 12 17.6 18.4 12 18.4 2.6 12 2.6 12z"/><circle cx="12" cy="12" r="2.9"/>',
+ scale:   '<path d="M12 4.1v15.4"/><path d="M6.4 5.9h11.2"/><path d="M8.4 19.9h7.2"/><path d="M6.4 5.9 3.5 12.1h5.8z"/><path d="M17.6 5.9 14.7 12.1h5.8z"/>'
 };
 window.PROS_WORD_ICO = {
- "戰略思維":"mind","獨立":"flag","高標準":"shield","系統思考":"mind","長線規劃":"compass","長線 規劃":"compass","抽象思維":"mind","創意":"spark","分析力強":"mind","邏輯":"mind","決策力":"goal","領導":"flag","策略":"flag","自信":"flag","高效率":"bolt","辯論":"people","反應快":"bolt","有魅力":"people","人脈":"people","同理心":"heart","洞察力":"mind","深度思考":"mind","遠見":"compass","寫作":"hand","深度":"mind","理想主義":"spark","溝通":"people","激勵":"people","溫暖":"heart","能量":"bolt","可靠":"shield","細節":"mind","紀律":"shield","耐心":"shield","忠誠":"heart","細心":"mind","忠心":"heart","有愛心":"heart","組織":"shield","執行力":"goal","社交":"people","分析":"mind","實幹":"bolt","冷靜":"shield","實際":"goal","藝術":"hand","靈活":"bolt","審美觀強":"spark","行動":"bolt","說服力":"people","務實":"goal","適應力強":"bolt","精力充沛":"bolt","表演":"hand",
- "自大":"flag","社交笨拙":"people","完美主義":"mind","冷漠":"heart","情緒表達弱":"heart","拖延":"goal","難執行":"goal","社交差":"people","過度分析":"mind","抗拒規律":"compass","不耐煩":"bolt","主導型":"flag","冇耐性":"bolt","不專注":"bolt","挑釁":"people","難完成":"goal","敏感":"heart","自我懷疑":"heart","容易捱壞":"shield","過度付出":"heart","過度理想化":"spark","實際感弱":"compass","太在意別人":"people","忽略自己":"heart","過度樂觀":"spark","規律差":"compass","散漫":"bolt","僵硬":"shield","抗拒改變":"shield","太正經":"shield","唔識變通":"shield","批判":"mind","太謙虛":"heart","固執":"shield","過度在意別人":"people","衝突抗拒":"people","八卦":"people","敢冒險":"bolt","唔識表達":"people","直接":"people","唔識規劃":"compass","太靜":"people","唔諗長遠":"compass","太直接":"people","容易悶":"bolt","唔鍾意規劃":"compass"
+ "不專注":"bolt",
+ "不耐煩":"bolt",
+ "主導型":"people",
+ "人脈":"goal",
+ "僵硬":"shield",
+ "八卦":"spark",
+ "冇耐性":"goal",
+ "冷漠":"heart",
+ "冷靜":"shield",
+ "分析":"mind",
+ "分析力強":"goal",
+ "創意":"spark",
+ "務實":"goal",
+ "反應快":"bolt",
+ "可靠":"shield",
+ "同理心":"heart",
+ "唔諗長遠":"compass",
+ "唔識表達":"people",
+ "唔識規劃":"compass",
+ "唔識變通":"scale",
+ "唔鍾意規劃":"flag",
+ "固執":"bolt",
+ "執行力":"bolt",
+ "太在意別人":"people",
+ "太正經":"eye",
+ "太直接":"people",
+ "太謙虛":"shield",
+ "太靜":"people",
+ "完美主義":"scale",
+ "容易悶":"spark",
+ "容易捱壞":"shield",
+ "實幹":"bolt",
+ "實際":"goal",
+ "實際感弱":"compass",
+ "審美觀強":"spark",
+ "寫作":"hand",
+ "忠心":"people",
+ "忠誠":"scale",
+ "忽略自己":"eye",
+ "情緒表達弱":"eye",
+ "戰略思維":"mind",
+ "批判":"mind",
+ "抗拒改變":"compass",
+ "抗拒規律":"compass",
+ "抽象思維":"mind",
+ "拖延":"goal",
+ "挑釁":"people",
+ "敏感":"heart",
+ "敢冒險":"bolt",
+ "散漫":"compass",
+ "有愛心":"hand",
+ "有魅力":"heart",
+ "決策力":"goal",
+ "洞察力":"eye",
+ "深度":"mind",
+ "深度思考":"mind",
+ "溝通":"people",
+ "溫暖":"hand",
+ "激勵":"bolt",
+ "獨立":"flag",
+ "理想主義":"compass",
+ "直接":"flag",
+ "社交":"bolt",
+ "社交差":"people",
+ "社交笨拙":"people",
+ "策略":"compass",
+ "精力充沛":"spark",
+ "系統思考":"compass",
+ "紀律":"goal",
+ "細心":"eye",
+ "細節":"eye",
+ "組織":"shield",
+ "耐心":"heart",
+ "能量":"bolt",
+ "自信":"shield",
+ "自大":"flag",
+ "自我懷疑":"eye",
+ "藝術":"hand",
+ "行動":"bolt",
+ "衝突抗拒":"shield",
+ "表演":"hand",
+ "規律差":"hand",
+ "說服力":"people",
+ "辯論":"people",
+ "過度付出":"hand",
+ "過度分析":"mind",
+ "過度在意別人":"people",
+ "過度樂觀":"spark",
+ "過度理想化":"spark",
+ "遠見":"compass",
+ "適應力強":"compass",
+ "邏輯":"scale",
+ "長線 規劃":"goal",
+ "長線規劃":"goal",
+ "難執行":"bolt",
+ "難完成":"goal",
+ "靈活":"bolt",
+ "領導":"flag",
+ "高效率":"bolt",
+ "高標準":"scale"
 };
 window.prosIconHtml = function(word){
  const w = String(word == null ? "" : word);
@@ -6083,11 +6198,8 @@ return;
 const F = (window.TYPES_FULL && window.TYPES_FULL[type]) || null;
 if(from) window._typeFrom = from;
 window._homeReelHold = false;
-const reel = $("homeTypeReel");
-if(reel){
-reel.classList.remove("is-picking");
-reel.querySelectorAll(".hub-type-card.is-on").forEach(el => el.classList.remove("is-on"));
- }
+// 清走所有型格／跑馬燈嘅撳卡狀態（唔止主頁跑馬燈；見 clearTypePick 註釋）
+ window.clearTypePick();
 window._lastType = type;
  $("typeBig").innerText = type;
  // 分頁狀態還原（撳返回／下拉重整之後唔會跳返第一個 tab）
@@ -6112,6 +6224,17 @@ return `<button type="button" class="hub-type-card" style="background:linear-gra
  <div class="hub-type-cn">${T.cn}</div>
  <span class="hub-type-go" onclick="event.stopPropagation();${goCall}">進入</span>
  </button>`;
+};
+// 清走「兩段式撳卡」嘅選中／變淡狀態。
+// 2026-10-02 修 bug：由前只有 openType() 清主頁跑馬燈（#homeTypeReel），
+// 百科格 #hubTypeGrid 冇人清 → 撳入型格、遊走完返百科，格仲掛住 .is-picking
+// → 全部 16 張卡維持 opacity:.6（Roy 報「全部卡牌半透明淡化」）。
+window.clearTypePick = function(){
+try{
+document.querySelectorAll(".is-picking").forEach(function(r){ r.classList.remove("is-picking"); });
+document.querySelectorAll(".hub-type-card.is-on").forEach(function(el){ el.classList.remove("is-on"); });
+window._homeReelHold = false;
+ }catch(e){}
 };
 window.pickTypeTile = function(ev){
 const btn = ev.currentTarget;
