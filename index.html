@@ -4512,7 +4512,7 @@ window.shareDateLabel = function(ts){
  try{
   const d = ts ? new Date(ts) : new Date();
   if(isNaN(d.getTime())) return "";
-  return d.getFullYear() + "." + String(d.getMonth()+1).padStart(2,"0");
+  return d.getFullYear() + "." + String(d.getMonth()+1).padStart(2,"0") + "." + String(d.getDate()).padStart(2,"0");
  }catch(e){ return ""; }
 };
 window.getTestVersionLabel = function(version, totalQ){
@@ -4551,11 +4551,12 @@ ctx.fillRect(0, 0, 720, 6);
 // 版面 grid：同內文一致（左 60 / 右 660，中心 360）
 const MARGIN = 60;
 const RIGHT = 720 - MARGIN; // 660
-const headerTop = 44;
-const iconSize = 92;
+// 2026-10-02 Roy：左上角 logo 92px 太大、睇落 hard sell → 跟返隔離「港式 MBTI」34px 字嘅比例（48px）。
+// header 一條垂直中線維持 90，令品牌／版本字位置唔變。
+const headerMidY = 90;
+const iconSize = 48;
 const iconX = MARGIN;
-const iconY = headerTop;
-const headerMidY = iconY + iconSize / 2; // 90
+const iconY = headerMidY - iconSize / 2;
 const versionLabel = window.getTestVersionLabel(
  (window._cardMeta && window._cardMeta.version) || window.state.version,
  (window._cardMeta && window._cardMeta.totalQ) || window.state.maxQ
@@ -4609,7 +4610,7 @@ resolve();
  };
 iconImg.onerror = function(){
 ctx.fillStyle = "white";
-ctx.font = "bold 40px " + window.CARD_FS;
+ctx.font = "bold 24px " + window.CARD_FS;
 ctx.textAlign = "center";
 ctx.textBaseline = "middle";
 ctx.fillText("港", iconX + iconSize/2, headerMidY);
@@ -4644,7 +4645,7 @@ const who = [window.state.displayName, window.state.nickname].filter(Boolean).jo
 if(who){
 ctx.fillStyle = "rgba(255,255,255,0.9)";
 ctx.font = "bold 40px " + window.CARD_FS; // v1.7.8 加強：30 → 40
-ctx.fillText(who, 360, 230);
+ctx.fillText(who, 360, 265); // 2026-10-02 Roy：名＋稱呼移低少少（230 → 265）
  }
 ctx.fillStyle = "rgba(255,255,255,0.8)";
 ctx.font = "28px " + window.CARD_FS;
