@@ -441,7 +441,14 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 .hub-scene-back{display:inline-block;border:0;background:transparent;color:#8A7A5A;font-size:12px;font-weight:800;padding:2px 0 12px;cursor:pointer;font-family:inherit}
 
 /* 人格分頁 4 個 tab（Roy 2026-10-02 方案 B）—— 掣本身沿用 .hub-mode-switch */
-.type-tab-switch .hub-mode-btn{padding:9px 4px;font-size:12.5px}
+.type-tab-switch .hub-mode-btn{padding:9px 4px;font-size:12.5px;display:inline-flex;align-items:center;justify-content:center}
+.type-tab-switch .tab-star{width:12px;height:12px;flex:0 0 auto;fill:#C8A24C;margin-right:4px}
+.pros-ico{width:15px;height:15px;flex:0 0 auto;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-top:3px}
+.pros-box.is-str .pros-ico{stroke:#9A8149}
+.pros-box.is-wk .pros-ico{stroke:#8A837A}
+.deep-foot-row{display:flex;gap:8px;margin-top:8px}
+.deep-foot-btn{flex:1 1 0;display:flex;align-items:center;justify-content:center;border:1px solid #E7DCC4;background:#fff;border-radius:999px;padding:11px 4px;font-size:12px;font-weight:800;color:var(--ink);text-decoration:none;font-family:inherit;cursor:pointer;line-height:1.2;text-align:center}
+.deep-foot-btn:hover{background:#faf7f2}
 .type-rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .type-rel-card{background:#faf7f2;border-radius:12px;padding:13px 13px 12px;border-left:3px solid var(--rc)}
 .type-rel-head{display:flex;align-items:center;gap:6px;margin-bottom:7px}
@@ -946,6 +953,10 @@ html.dk.dt .dt-foot-in{color:#9A9388}
 html.dk.dt .dt-foot-links a,html.dk.dt .dt-foot-links button{color:#9A9388}
 html.dk.dt .dt-cta-ghost:hover{color:#D8C69E}
 html.dk .type-rel-card{background:#222A34}
+html.dk .pros-box.is-str .pros-ico{stroke:#D9B26A}
+html.dk .pros-box.is-wk .pros-ico{stroke:#A79E92}
+html.dk .deep-foot-btn{background:var(--dk-card);border-color:var(--dk-line);color:var(--ink)}
+html.dk .deep-foot-btn:hover{background:var(--dk-hover)}
 html.dk .type-rel-item{color:#A79E92}
 
 </style>
@@ -1745,7 +1756,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <button type="button" class="hub-mode-btn is-on" data-tab="basic" onclick="setTypeTab('basic')">性格</button>
  <button type="button" class="hub-mode-btn" data-tab="rel" onclick="setTypeTab('rel')">關係</button>
  <button type="button" class="hub-mode-btn" data-tab="scene" onclick="setTypeTab('scene')">場景</button>
- <button type="button" class="hub-mode-btn" data-tab="deep" onclick="setTypeTab('deep')">深入</button>
+ <button type="button" class="hub-mode-btn" data-tab="deep" onclick="setTypeTab('deep')"><svg class="tab-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>深入分析</button>
  </div>
 
  <!-- 1 性格 -->
@@ -5329,20 +5340,14 @@ show("privacy");
 };
 
 window.openMethod = function(){
-// 記住由邊一頁入嚟，返回時確定性返去（唔靠 history.back()，避免彈出 app）
-try{
-window._methodBackTo = (window._showing && window._showing !== "method") ? window._showing : "home";
-}catch(e){ window._methodBackTo = "home"; }
 show("method");
 };
 
 window.backFromMethod = function(){
-const to = window._methodBackTo;
-window._methodBackTo = null;
-if(to === "result"){
-try{ show("result"); return; }catch(e){}
- }
-window.goHome();
+// Roy 2026-10-02：左上角返回掣一律「返上一頁」，唔准跳去指定頁。
+// 舊寫法會硬跳去指定畫面 —— 由 #hub／#type 入嚟就會跳錯頁，
+// 而且硬跳主頁嘅做法會清走 _homeScrollY（見血淚陷阱）。
+window.goBack();
 };
 
 window.toggleHomeAcc = function(id){
@@ -5476,7 +5481,11 @@ return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" o
 '<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div>' +
 '</div></button>';
 }).join("") +
-'<button type="button" class="softbox-btn mt-2" onclick="deepBackToTypes()">返全部 16 型</button>';
+'<div class="deep-foot-row">' +
+'<button type="button" class="deep-foot-btn" onclick="deepBackToTypes()">返全部 16 型</button>' +
+'<button type="button" class="deep-foot-btn" onclick="goPickVersion()">立即測試</button>' +
+'<a class="deep-foot-btn" href="./stats.html">16型統計</a>' +
+'</div>';
 show("deep");
 window.scrollTo(0,0);
 };
@@ -5543,7 +5552,33 @@ setTimeout(function(){ try{ window.renderTier(); }catch(e){} }, 0);
 window.openHub = function(){
 show("hub");
 };
-// ===== 人格分頁 4 個 tab（Roy 2026-10-02 方案 B：性格／關係／場景／深入）=====
+// ===== 強項／弱項 每項 icon（Roy 2026-10-02）=====
+// 99 個關鍵詞（53 強 + 46 弱）→ 10 個語意家族。同一個詞兩個 column 都可能出現。
+// 線條 stroke 風格，跟 .type-rel-ico / .scenes-title-ico 同一套。
+window.PROS_ICO = {
+ mind:    '<circle cx="12" cy="5" r="2.2"/><circle cx="5.2" cy="17.4" r="2.2"/><circle cx="18.8" cy="17.4" r="2.2"/><path d="M10.6 6.7 6.6 15.5M13.4 6.7l4 8.8M7.4 17.4h9.2"/>',
+ spark:   '<path d="M9.5 17.3h5"/><path d="M10.3 20.4h3.4"/><path d="M12 3.3a6.3 6.3 0 0 1 3.5 11.5v2.5H8.5v-2.5A6.3 6.3 0 0 1 12 3.3z"/>',
+ goal:    '<circle cx="12" cy="12" r="8.3"/><circle cx="12" cy="12" r="3.9"/><circle cx="12" cy="12" r="1.1"/>',
+ people:  '<circle cx="9" cy="8.6" r="3.1"/><path d="M3.5 20.2c0-3.1 2.5-5.5 5.5-5.5s5.5 2.4 5.5 5.5"/><circle cx="17.3" cy="10.3" r="2.3"/><path d="M16 14.9c2.5.3 4.5 2.3 4.5 5.3"/>',
+ heart:   '<path d="M12 20s-7.2-4.5-7.2-9.4A4.2 4.2 0 0 1 12 7.7a4.2 4.2 0 0 1 7.2 2.9C19.2 15.5 12 20 12 20z"/>',
+ shield:  '<path d="M12 3.6l7.2 2.7v5.6c0 4.4-3 7.9-7.2 9.4-4.2-1.5-7.2-5-7.2-9.4V6.3z"/><path d="M9.1 12.2l2 2 3.8-4"/>',
+ bolt:    '<path d="M13.4 2.9 5.7 13.4h5.3l-.8 7.7 7.8-10.6h-5.4z"/>',
+ flag:    '<path d="M6.1 3.5v17"/><path d="M6.1 4.7h11.4l-2.3 3.8 2.3 3.8H6.1z"/>',
+ compass: '<circle cx="12" cy="12" r="8.5"/><path d="M15.3 8.7l-1.9 4.9-4.7 1.7 1.9-4.9z"/>',
+ hand:    '<path d="M4.3 19.7l1.2-4.3 9.1-9.1 3.1 3.1-9.1 9.1z"/><path d="M13.5 7.4l3.1 3.1"/><path d="M15.6 4.6l3.8 3.8"/>'
+};
+window.PROS_WORD_ICO = {
+ "戰略思維":"mind","獨立":"flag","高標準":"shield","系統思考":"mind","長線規劃":"compass","長線 規劃":"compass","抽象思維":"mind","創意":"spark","分析力強":"mind","邏輯":"mind","決策力":"goal","領導":"flag","策略":"flag","自信":"flag","高效率":"bolt","辯論":"people","反應快":"bolt","有魅力":"people","人脈":"people","同理心":"heart","洞察力":"mind","深度思考":"mind","遠見":"compass","寫作":"hand","深度":"mind","理想主義":"spark","溝通":"people","激勵":"people","溫暖":"heart","能量":"bolt","可靠":"shield","細節":"mind","紀律":"shield","耐心":"shield","忠誠":"heart","細心":"mind","忠心":"heart","有愛心":"heart","組織":"shield","執行力":"goal","社交":"people","分析":"mind","實幹":"bolt","冷靜":"shield","實際":"goal","藝術":"hand","靈活":"bolt","審美觀強":"spark","行動":"bolt","說服力":"people","務實":"goal","適應力強":"bolt","精力充沛":"bolt","表演":"hand",
+ "自大":"flag","社交笨拙":"people","完美主義":"mind","冷漠":"heart","情緒表達弱":"heart","拖延":"goal","難執行":"goal","社交差":"people","過度分析":"mind","抗拒規律":"compass","不耐煩":"bolt","主導型":"flag","冇耐性":"bolt","不專注":"bolt","挑釁":"people","難完成":"goal","敏感":"heart","自我懷疑":"heart","容易捱壞":"shield","過度付出":"heart","過度理想化":"spark","實際感弱":"compass","太在意別人":"people","忽略自己":"heart","過度樂觀":"spark","規律差":"compass","散漫":"bolt","僵硬":"shield","抗拒改變":"shield","太正經":"shield","唔識變通":"shield","批判":"mind","太謙虛":"heart","固執":"shield","過度在意別人":"people","衝突抗拒":"people","八卦":"people","敢冒險":"bolt","唔識表達":"people","直接":"people","唔識規劃":"compass","太靜":"people","唔諗長遠":"compass","太直接":"people","容易悶":"bolt","唔鍾意規劃":"compass"
+};
+window.prosIconHtml = function(word){
+ const w = String(word == null ? "" : word);
+ // data.js 有啲詞中間有空格（例「長線 規劃」）→ 先試原字，再試去空格
+ const key = window.PROS_WORD_ICO[w] || window.PROS_WORD_ICO[w.replace(/\s+/g, "")] || "shield";
+ const path = window.PROS_ICO[key] || window.PROS_ICO.shield;
+ return '<svg class="pros-ico" viewBox="0 0 24 24" aria-hidden="true">' + path + '</svg>';
+};
+// ===== 人格分頁 4 個 tab（Roy 2026-10-02 方案 B：性格／關係／場景／深入分析）=====
 // 原本一頁過（2 大字塊 + 6 段扁平面板）睇落似小說；拆成 tab 一頁一頁睇。
 // 掣沿用百科「由人格睇／由場景睇」同一款 .hub-mode-switch（dark 規則已存在）。
 window._typeTabs = ["basic","rel","scene","deep"];
@@ -5610,8 +5645,8 @@ window.renderTypeTabs = function(code){
  const pc = _g("typeProsCons");
  if(pc) pc.innerHTML = (st.length || wk.length) ? ('<div class="card p-5 mb-4"><div class="sub-label">強項同弱項</div>'
   + '<div class="grid grid-cols-2 gap-3 mt-1">'
-  + '<div class="rounded-xl p-3" style="background:rgba(212,169,95,.06)">' + st.map(function(x){ return '<div class="pros-item"><span class="pros-mark">＋</span><span>' + x + '</span></div>'; }).join("") + '</div>'
-  + '<div class="rounded-xl p-3" style="background:rgba(30,42,59,.03)">' + wk.map(function(x){ return '<div class="pros-item"><span class="pros-mark">－</span><span>' + x + '</span></div>'; }).join("") + '</div>'
+  + '<div class="pros-box is-str" style="background:rgba(212,169,95,.06)">' + st.map(function(x){ return '<div class="pros-item">' + window.prosIconHtml(x) + '<span>' + x + '</span></div>'; }).join("") + '</div>'
+  + '<div class="pros-box is-wk" style="background:rgba(30,42,59,.03)">' + wk.map(function(x){ return '<div class="pros-item">' + window.prosIconHtml(x) + '<span>' + x + '</span></div>'; }).join("") + '</div>'
   + '</div></div>') : "";
  const fEl = _g("typeFull");
  if(fEl) fEl.innerHTML = window.formatTypeFullHtml(F && F.full);

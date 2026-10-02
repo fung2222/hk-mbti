@@ -56,6 +56,21 @@ function pressBack(){
       setTimeout(()=>{
         chk('撳「離開」→ 真係離開（goHome 有跑）', wentHome===true && hid());
         console.log('   pushes='+pushes+' replaces='+replaces+' history.length='+w.history.length);
+        // ===== Roy 2026-10-02：左上角返回掣一律「返上一頁」（唔准跳指定頁）=====
+        const _src = fs.readFileSync(path.join(REPO,'index.html'),'utf8');
+        const _backs = [..._src.matchAll(/class="page-back"[^>]*onclick="([^"]+)"/g)].map(m=>m[1]);
+        chk('★ 每個左上角返回掣都係 goBack／內部轉 goBack 嘅 wrapper', _backs.length>=10 && _backs.every(x=>/^goBack\(\)$/.test(x)||/^(backToDeepToc|backFromMethod)\(\)$/.test(x)), _backs.length+' 個: '+_backs.join(' , '));
+        const _bfm = _src.slice(_src.indexOf('window.backFromMethod = function'), _src.indexOf('window.backFromMethod = function')+460);
+        chk('★ backFromMethod 內部係 goBack()（唔再跳 show("result")／goHome()）', /window\.goBack\(\)/.test(_bfm) && !/show\("result"\)/.test(_bfm) && !/goHome\(\)/.test(_bfm), _bfm.slice(0,120).replace(/\n/g,' '));
+        chk('★ backToDeepToc 內部係 goBack()（有 history 就返上一頁）', /window\.goBack\(\)/.test(_src.slice(_src.indexOf('window.backToDeepToc = function'), _src.indexOf('window.backToDeepToc = function')+420)));
+        chk('★ 死變數 _methodBackTo 已清走', !/_methodBackTo/.test(_src));
+        let _wentBack=false; const _realGoBack=w.goBack; w.goBack=function(){ _wentBack=true; };
+        if(typeof w.show==='function') w.show('hub');
+        w.openMethod();
+        chk('設定：#hub → openMethod() 著陸喺計分方法頁', w._showing==='method', String(w._showing));
+        const _mb=d.querySelector('#method .page-back'); if(_mb) _mb.click();
+        chk('★ 由 #hub 入計分方法頁 → 撳返回掣真係 goBack（返上一頁，唔跳去 home／result）', _wentBack===true && w._showing==='method', 'wentBack='+_wentBack+' showing='+w._showing);
+        w.goBack=_realGoBack;
         console.log('   jsdom 錯誤:', errs.filter(e=>!/scrollTo/.test(e)).length? errs.filter(e=>!/scrollTo/.test(e)).slice(0,2).join(' | ') : '冇（scrollTo 無關）');
         console.log('===== '+(ok===total?'全部通過':'有失敗')+'（'+ok+'/'+total+'） =====');
         process.exit(ok===total?0:1);

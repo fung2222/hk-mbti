@@ -19,10 +19,24 @@ vc.on("jsdomError",e=>{const m=String(e.message||e); if(!/scrollIntoView|scrollT
 // ── 靜態 ──
 chk("★ 分頁掣係 .hub-mode-switch（跟百科「由人格睇／由場景睇」同一款）", /class="hub-mode-switch type-tab-switch" id="typeTabSwitch"/.test(src));
 chk("★ 色卡 #typeHero 喺分頁掣上面（文章頂、人格卡片下）", (function(){ const h=src.indexOf('id="typeHero"'), t=src.indexOf('id="typeTabSwitch"'); return h>0 && t>h; })());
-chk("★ 4 個掣次序 = 性格 → 關係 → 場景 → 深入", (function(){
+chk("★ 4 個掣次序 = 性格 → 關係 → 場景 → 深入分析", (function(){
   const i=src.indexOf('id="typeTabSwitch"'); const seg=src.slice(i, src.indexOf("</div>", i));
   return (seg.match(/data-tab="(\w+)"/g)||[]).map(x=>x.slice(10,-1)).join(",") === "basic,rel,scene,deep";
 })());
+chk("★ 第 4 個掣已改名「深入分析」（唔再係「深入」）", /data-tab="deep"[^>]*>[\s\S]{0,200}深入分析<\/button>/.test(src) && !/data-tab="deep"[^>]*>深入<\/button>/.test(src));
+chk("★ 「深入分析」掣有星星 SVG icon（實心 path）", (function(){
+  const i=src.indexOf('data-tab="deep"'); if(i<0) return false;
+  const seg=src.slice(Math.max(0,i-300), i+240);
+  return /<svg class="tab-star"/.test(seg) && /<path d="M12 3\.1/.test(seg) && /viewBox="0 0 24 24"/.test(seg);
+})());
+chk("★ 星星係金色 fill，用 SVG 唔係 ★／emoji 字元", /\.type-tab-switch \.tab-star\{[^}]*fill:#C8A24C/.test(src) && !/[\u2605\u2606]/.test(src));
+chk("★ 深入分析目錄底部 3 個掣水平一行（返全部 16 型／立即測試／16型統計）", (function(){
+  const i=src.indexOf('class="deep-foot-row"'); if(i<0) return false;
+  const seg=src.slice(i, i+480);
+  return /deepBackToTypes\(\)/.test(seg) && /goPickVersion\(\)/.test(seg) && /stats\.html/.test(seg) && (seg.match(/deep-foot-btn/g)||[]).length>=3;
+})());
+chk("★ 3 個掣係 flex 一行（唔會疊起）", /\.deep-foot-row\{display:flex/.test(src) && /\.deep-foot-btn\{flex:1 1 0/.test(src));
+chk("★ 3 個掣有 dark 規則（只改顏色）", /html\.dk \.deep-foot-btn\{background:var\(--dk-card\)/.test(src));
 chk("★ 4 個面板都喺 #type 入面", ["typeTabBasic","typeTabRel","typeTabScene","typeTabDeep"].every(id=>new RegExp('id="'+id+'"').test(src)));
 chk("★ 默認只顯示「性格」面板（其餘 3 個 hidden）", /id="typeTabBasic">/.test(src) && /id="typeTabRel" class="hidden"/.test(src) && /id="typeTabScene" class="hidden"/.test(src) && /id="typeTabDeep" class="hidden"/.test(src));
 chk("★ 舊 #typeScenes 獨立分頁已拆走", !/<section id="typeScenes"/.test(src) && !/id="typeScenesList"/.test(src) && !/window\.renderTypeScenes = function/.test(src));
@@ -60,7 +74,27 @@ setTimeout(async ()=>{
   chk("★ 性格 tab 用返未用過嘅資料：desc", $("#typeDesc").textContent.length>10, $("#typeDesc").textContent.slice(0,24));
   chk("★ 性格 tab 有 tags 徽章（4 個）", d.querySelectorAll("#typeTags .scenario-badge").length===4, d.querySelectorAll("#typeTags .scenario-badge").length);
   chk("★ 性格 tab 有性格刻度（3 條 bar，用返 score 資料）", d.querySelectorAll("#typeScore .stat-bar .stat-fill").length===3, d.querySelectorAll("#typeScore .stat-bar").length);
-  chk("★ 性格 tab 有強項／弱項兩欄（＋／－）", d.querySelectorAll("#typeProsCons .grid-cols-2 > div").length===2 && d.querySelectorAll("#typeProsCons .pros-mark").length>=8);
+  chk("★ 性格 tab 有強項／弱項兩欄", d.querySelectorAll("#typeProsCons .grid-cols-2 > div").length===2 && d.querySelectorAll("#typeProsCons .pros-item").length>=8);
+chk("★ 強項／弱項每一項都有自己嘅 icon（冇裸 ＋／－）", (function(){
+  const items=[...d.querySelectorAll("#typeProsCons .pros-item")];
+  return items.length>=8 && items.every(el=>{ const sv=el.querySelector("svg.pros-ico"); return sv && sv.querySelectorAll("path,circle").length>0; }) && d.querySelectorAll("#typeProsCons .pros-mark").length===0;
+})(), d.querySelectorAll("#typeProsCons .pros-item").length+" 項");
+chk("★ 強項 icon 同弱項 icon 分色（強金／弱灰）", (function(){
+  const st=d.querySelectorAll("#typeProsCons .pros-box.is-str .pros-ico").length;
+  const wk=d.querySelectorAll("#typeProsCons .pros-box.is-wk .pros-ico").length;
+  return st>=4 && wk>=4 && /\.pros-box\.is-str \.pros-ico\{stroke:#9A8149\}/.test(src) && /\.pros-box\.is-wk \.pros-ico\{stroke:#8A837A\}/.test(src);
+})());
+chk("★ 99 個性格詞全部有對應 icon（唔靠 fallback）", (function(){
+  const F=w.TYPES_FULL||{}, M=w.PROS_WORD_ICO||{}; const a=new Set();
+  Object.keys(F).forEach(c=>{ (F[c].strength||[]).forEach(x=>a.add(x)); (F[c].weakness||[]).forEach(x=>a.add(x)); });
+  const uniq=[...a];
+  return uniq.length>=90 && uniq.every(x=>M[x]||M[String(x).replace(/\s+/g,"")]);
+})(), (function(){ const F=w.TYPES_FULL||{}, M=w.PROS_WORD_ICO||{}; const a=new Set(); Object.keys(F).forEach(c=>{(F[c].strength||[]).forEach(x=>a.add(x));(F[c].weakness||[]).forEach(x=>a.add(x));}); const m=[...a].filter(x=>!M[x]&&!M[String(x).replace(/\s+/g,"")]); return m.length?m.join("／"):"全部有"; })());
+chk("★ icon 唔係一個公仔走天涯（16 型用到 >=6 個語意家族）", (function(){
+  const F=w.TYPES_FULL||{}, M=w.PROS_WORD_ICO||{}; const fams=new Set();
+  Object.keys(F).forEach(c=>{ (F[c].strength||[]).concat(F[c].weakness||[]).forEach(x=>{ fams.add(M[x]||M[String(x).replace(/\s+/g,"")]); }); });
+  return fams.size>=6 && !fams.has(undefined);
+})());
   chk("★ 性格 tab 保留「完整性格分析」長文", d.querySelectorAll("#typeFull p, #typeFull div").length>0 && $("#typeFull").innerHTML.length>200, $("#typeFull").innerHTML.length);
   chk("★ 性格刻度 bar 闊度跟分數（每個 bar = 分數 × 10%）", (function(){
   const rows=[...d.querySelectorAll("#typeScore .stat-bar")];
