@@ -158,7 +158,8 @@ setTimeout(async ()=>{
   const _hasContent = (function(){ const keys = Object.keys(w.PREMIUM || {}); return cards.filter(c => keys.includes((c.getAttribute('onclick')||'').match(/'([A-Z]{4})'/)?.[1])); })();
   const _noContent = (function(){ const keys = Object.keys(w.PREMIUM || {}); return cards.filter(c => !keys.includes((c.getAttribute('onclick')||'').match(/'([A-Z]{4})'/)?.[1])); })();
   chk('★ 有內容嘅型全部顯示「9 章」', _hasContent.length > 0 && _hasContent.every(c => /9 章/.test(c.textContent)), _hasContent.length + ' 型：' + _hasContent.map(c=>c.textContent.replace(/\n/g,'')).join(' '));
-  chk('★ 未有內容嘅型全部顯示「準備中」（16 型寫齊就自動跳過）', _noContent.length > 0 ? _noContent.every(c => /準備中/.test(c.textContent)) : true, _noContent.length + ' 型');
+  chk('★ 未有內容嘅型全部顯示「準備中」', _noContent.every(c => /準備中/.test(c.textContent)), _noContent.length + ' 型未有內容');
+  chk('★ 16 型寫齊之後，冇任何一格顯示「準備中」', _noContent.length > 0 || _hasContent.every(c => !/準備中/.test(c.textContent)), _hasContent.length + ' 型有內容');
   chk('★ premium-data.js 每個型都係 9 章（型號數 × 9 = 章數）', (function(){
     const types = (prem.match(/^[A-Z]{4}: \{/gm) || []).length;
     const chapters = (prem.match(/\{ t:"/g) || []).length;
