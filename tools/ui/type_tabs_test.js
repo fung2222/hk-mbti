@@ -1,0 +1,155 @@
+
+/* 人格分頁 4 個 tab 測試（Roy 2026-10-02 方案 B：性格／關係／場景／深入）
+   驗證：色卡喺分頁掣上面、4 個 tab 切換、每個 tab 有真內容、
+         免費用戶第 2-9 章把關、完整版唔標「完整版」、
+         舊 #typeScenes／#typeMore 入口兼容、dark 規則喺 #dark-layer 且只改顏色。 */
+const fs=require("fs"), path=require("path");
+const {JSDOM, VirtualConsole}=require("jsdom");
+const REPO=path.resolve(__dirname,"../..");
+let ok=0,total=0;
+function chk(n,c,x){total++; if(c)ok++; console.log((c?"✓":"✗")+" "+n+(c?"":"   <- "+(x===undefined?"":x)));}
+const src=fs.readFileSync(path.join(REPO,"index.html"),"utf8");
+function stubCanvas(w){ const ctx=new Proxy({},{ get(k){ if(k==="canvas") return {width:720,height:1280}; if(k==="measureText") return ()=>({width:10}); if(/Gradient/.test(String(k))) return ()=>({addColorStop(){}}); return ()=>{}; }, set(){return true;} });
+  w.HTMLCanvasElement.prototype.getContext=()=>ctx; w.HTMLCanvasElement.prototype.toDataURL=()=>"data:image/jpeg;base64,x";
+  w.Image=class{ set src(v){ setTimeout(()=>this.onload&&this.onload(),0); } }; }
+const html=src.replace(/<script src="(https?:)?\/\/[^"]*"><\/script>/g,"").replace(/<script src="([^"]+\.js)"><\/script>/g,(m,f)=>fs.existsSync(path.join(REPO,f))?"<script>"+String.fromCharCode(10)+fs.readFileSync(path.join(REPO,f),"utf8")+String.fromCharCode(10)+"</script>":"");
+const vc=new VirtualConsole(); const jerr=[];
+vc.on("jsdomError",e=>{const m=String(e.message||e); if(!/scrollIntoView|scrollTo|Not implemented|Could not load/i.test(m)) jerr.push(m.slice(0,90));});
+
+// ── 靜態 ──
+chk("★ 分頁掣係 .hub-mode-switch（跟百科「由人格睇／由場景睇」同一款）", /class="hub-mode-switch type-tab-switch" id="typeTabSwitch"/.test(src));
+chk("★ 色卡 #typeHero 喺分頁掣上面（文章頂、人格卡片下）", (function(){ const h=src.indexOf('id="typeHero"'), t=src.indexOf('id="typeTabSwitch"'); return h>0 && t>h; })());
+chk("★ 4 個掣次序 = 性格 → 關係 → 場景 → 深入", (function(){
+  const i=src.indexOf('id="typeTabSwitch"'); const seg=src.slice(i, src.indexOf("</div>", i));
+  return (seg.match(/data-tab="(\w+)"/g)||[]).map(x=>x.slice(10,-1)).join(",") === "basic,rel,scene,deep";
+})());
+chk("★ 4 個面板都喺 #type 入面", ["typeTabBasic","typeTabRel","typeTabScene","typeTabDeep"].every(id=>new RegExp('id="'+id+'"').test(src)));
+chk("★ 默認只顯示「性格」面板（其餘 3 個 hidden）", /id="typeTabBasic">/.test(src) && /id="typeTabRel" class="hidden"/.test(src) && /id="typeTabScene" class="hidden"/.test(src) && /id="typeTabDeep" class="hidden"/.test(src));
+chk("★ 舊 #typeScenes 獨立分頁已拆走", !/<section id="typeScenes"/.test(src) && !/id="typeScenesList"/.test(src) && !/window\.renderTypeScenes = function/.test(src));
+chk("★ 舊 #typeMore 入口卡已拆走", !/id="typeMore"/.test(src) && !/window\.renderTypeMore = function/.test(src));
+chk("★ openTypeScenes 仍存在（情境文章頁「呢一型其他場景」掣、#typeScenes 深層連結靠佢）", /window\.openTypeScenes = function/.test(src) && /openTypeScenes\(window\._lastArticleType\)/.test(src));
+chk("★ 舊 show() 清單冇再列出 typeScenes", !/"dims","typeScenes"/.test(src) && !/"typeScenes","letter"/.test(src));
+chk("★ CSS：關係卡兩欄 grid + 左邊色條（--rc）", /\.type-rel-grid\{display:grid;grid-template-columns:1fr 1fr/.test(src) && /\.type-rel-card\{[^}]*border-left:3px solid var\(--rc\)/.test(src));
+chk("★ CSS：關係卡內文字級跟「卡片解釋字」標準（.85rem / #6b6560）", /\.type-rel-item\{font-size:\.85rem;color:#6b6560/.test(src));
+chk("★ dark 規則喺 #dark-layer 內（唔可以落主 <style>）", (function(){
+  const i=src.indexOf('id="dark-layer"'), j=src.indexOf("</style>", i), seg=src.slice(i,j);
+  return i>0 && /html\.dk \.type-rel-card\{/.test(seg) && /html\.dk \.type-rel-item\{/.test(seg);
+})());
+chk("★ dark 規則只改顏色（冇 display／尺寸／位置／動畫）", (function(){
+  const i=src.indexOf('id="dark-layer"'), j=src.indexOf("</style>", i), seg=src.slice(i,j);
+  const rules=(seg.match(/html\.dk [^{}]*\{[^}]*\}/g)||[]).filter(r=>/type-rel/.test(r));
+  return rules.length>0 && rules.every(r=>!/display|width|height|margin|padding|font-size|position|transform|animation|transition|top:|left:/.test(r.split("{")[1]||""));
+})(), "");
+
+// ── jsdom ──
+const dom=new JSDOM(html,{runScripts:"dangerously",pretendToBeVisual:true,url:"https://fung2222.github.io/hk-mbti/",virtualConsole:vc,
+  beforeParse(w){ w.alert=()=>{}; w.confirm=()=>true; stubCanvas(w);
+    try{ Object.defineProperty(w,"appDialog",{configurable:true,get(){return ()=>Promise.resolve(true);},set(){}}); }catch(e){}
+    try{ Object.defineProperty(w,"appNotice",{configurable:true,get(){return ()=>Promise.resolve(true);},set(){}}); }catch(e){} }});
+setTimeout(async ()=>{
+  const w=dom.window, d=w.document;
+  const $=s=>d.querySelector(s), vis=id=>{const el=d.getElementById(id); return el && !el.classList.contains("hidden");};
+  const btn=t=>$('#typeTabSwitch .hub-mode-btn[data-tab="'+t+'"]');
+  const onTab=()=>(d.querySelectorAll("#typeTabSwitch .hub-mode-btn.is-on")[0]||{}).dataset;
+
+  // ---------- 免費用戶 ----------
+  w.openType("INTJ","hub");
+  chk("★ 開型 → 停喺 #type", vis("type"), w._showing);
+  chk("★ 默認 tab = 性格（只有佢顯示）", vis("typeTabBasic") && !vis("typeTabRel") && !vis("typeTabScene") && !vis("typeTabDeep"));
+  chk("★ 色卡有 4 字母 + 中文名 + slogan", $("#typeBig").textContent==="INTJ" && $("#typeName").textContent.length>0 && /「/.test($("#typeSlogan").textContent));
+  chk("★ 性格 tab 用返未用過嘅資料：desc", $("#typeDesc").textContent.length>10, $("#typeDesc").textContent.slice(0,24));
+  chk("★ 性格 tab 有 tags 徽章（4 個）", d.querySelectorAll("#typeTags .scenario-badge").length===4, d.querySelectorAll("#typeTags .scenario-badge").length);
+  chk("★ 性格 tab 有性格刻度（3 條 bar，用返 score 資料）", d.querySelectorAll("#typeScore .stat-bar .stat-fill").length===3, d.querySelectorAll("#typeScore .stat-bar").length);
+  chk("★ 性格 tab 有強項／弱項兩欄（＋／－）", d.querySelectorAll("#typeProsCons .grid-cols-2 > div").length===2 && d.querySelectorAll("#typeProsCons .pros-mark").length>=8);
+  chk("★ 性格 tab 保留「完整性格分析」長文", d.querySelectorAll("#typeFull p, #typeFull div").length>0 && $("#typeFull").innerHTML.length>200, $("#typeFull").innerHTML.length);
+  chk("★ 性格刻度 bar 闊度跟分數（每個 bar = 分數 × 10%）", (function(){
+  const rows=[...d.querySelectorAll("#typeScore .stat-bar")];
+  const nums=[...d.querySelectorAll("#typeScore .font-bold.text-ink")].map(x=>parseInt(x.textContent,10));
+  if(rows.length!==3 || nums.some(isNaN)) return false;
+  return rows.every((r,i)=>{ const m=(r.innerHTML.match(/width:(\d+)%/)||[])[1]; return Number(m)===nums[i]*10; });
+})(), $("#typeScore").textContent.replace(/\s+/g," ").slice(0,60));
+
+  // 切去關係
+  btn("rel").click();
+  chk("★ 撳「關係」→ 關係面板顯示、性格隱藏", vis("typeTabRel") && !vis("typeTabBasic"));
+  chk("★ is-on 只有一個（關係）", d.querySelectorAll("#typeTabSwitch .hub-mode-btn.is-on").length===1 && onTab().tab==="rel", JSON.stringify(onTab()));
+  chk("★ 關係 tab 有 4 張卡（職場／愛情／友情／衝突）", d.querySelectorAll("#typeRelCards .type-rel-card").length===4, d.querySelectorAll("#typeRelCards .type-rel-card").length);
+  chk("★ 關係卡有 icon（線條 stroke 風格）", d.querySelectorAll("#typeRelCards .type-rel-ico").length===4);
+  chk("★ 關係卡文字唔再係一行逗號（逐項列出）", d.querySelectorAll("#typeRelCards .type-rel-item").length>=15, d.querySelectorAll("#typeRelCards .type-rel-item").length);
+  chk("★ 關係 tab 有相容性（2 個型 + 穩定 %）", d.querySelectorAll("#typeCompat > div").length===2 && /% 夾/.test($("#typeCompat").textContent));
+  chk("★ 相容 % 係穩定值（唔用 Math.random）", !/Math\.random/.test(src.slice(src.indexOf("window.renderTypeTabs = function"), src.indexOf("window.openDeepChapterFromType = function"))));
+  const _p1=$("#typeCompat").textContent.match(/(\d+)% 夾/)[1];
+  w.openType("INTJ","hub"); btn("rel").click();
+  chk("★ 相容 % 重開之後一樣", $("#typeCompat").textContent.match(/(\d+)% 夾/)[1]===_p1, _p1+" vs "+$("#typeCompat").textContent.match(/(\d+)% 夾/)[1]);
+
+  // 場景
+  btn("scene").click();
+  chk("★ 撳「場景」→ 場景 tab 顯示", vis("typeTabScene") && !vis("typeTabBasic"));
+  const rows=d.querySelectorAll("#typeSceneList .scene-go-row");
+  chk("★ 場景 tab 有 10 張卡（相處 7 + 拍拖 3）", rows.length===10, rows.length);
+  chk("★ 場景卡有 icon", d.querySelectorAll("#typeSceneList .scene-go-icon, #typeSceneList .scene-go-ico svg").length===10, d.querySelectorAll("#typeSceneList .scene-go-ico svg").length);
+  chk("★ 場景卡撳落去直接開情境文章（唔再經獨立分頁）", /open(Social|Romance)Article\(/.test(rows[0].getAttribute("onclick")), rows[0].getAttribute("onclick"));
+  chk("★ 場景 tab 分咗「同人相處」「拍拖關係」兩組", /同人相處/.test($("#typeSceneList").textContent) && /拍拖關係/.test($("#typeSceneList").textContent));
+
+  // 深入（免費用戶）
+  btn("deep").click();
+  chk("★ 撳「深入」→ 深入 tab 顯示", vis("typeTabDeep") && !vis("typeTabBasic"));
+  chk("★ 深入 tab 有 9 章", d.querySelectorAll("#typeDeepBox .deep-item").length===9, d.querySelectorAll("#typeDeepBox .deep-item").length);
+  chk("★ 免費：第 1 章標「免費」", d.querySelectorAll("#typeDeepBox .deep-tag.is-free").length===1);
+  chk("★ 免費：第 2-9 章標「完整版」（8 個）", d.querySelectorAll("#typeDeepBox .deep-tag:not(.is-free)").length===8, d.querySelectorAll("#typeDeepBox .deep-tag:not(.is-free)").length);
+  chk("★ 免費：tab 內有解鎖掣", /openUpgrade\(\)/.test($("#typeDeepBox").innerHTML));
+  chk("★ 章節標題同 #deep 目錄一致（9 個固定標題）", (function(){
+    const t=[...d.querySelectorAll("#typeDeepBox .deep-item")].map(x=>x.textContent);
+    return ["你真正想要嘅嘢","你睇唔到嘅 3 個盲點","壓力爆煲時，你會變成點","3 個可以即刻做嘅改變","職場上嘅你","愛情裡嘅你","友情裡嘅你","唔好同你講嘅 3 句","香港情境對照"].every((x,i)=>t[i].includes(x));
+  })());
+
+  // 免費用戶撳章節
+  d.querySelectorAll("#typeDeepBox .deep-item")[1].click();
+  chk("★ 免費撳第 2 章 → 彈升級頁（把關唔放鬆）", vis("upgrade") || w._showing==="upgrade", w._showing);
+  w.openType("INTJ","hub"); btn("deep").click();
+  d.querySelectorAll("#typeDeepBox .deep-item")[0].click();
+  chk("★ 免費撳第 1 章 → 入到章節頁", w._showing==="deepChapter", w._showing);
+  chk("★ 章節頁有真內容", $("#deepChapterBody").innerHTML.length>200, $("#deepChapterBody").innerHTML.length);
+  chk("★ 章節頁 head 標「免費試睇」", /免費試睇/.test($("#deepChapterHead").textContent), $("#deepChapterHead").textContent);
+
+  // tab 記憶
+  w.openType("INTJ","hub"); btn("scene").click();
+  chk("★ tab 狀態記入 sessionStorage", w.sessionStorage.getItem("hkmbti_type_tab")==="scene", w.sessionStorage.getItem("hkmbti_type_tab"));
+  w.openType("INTJ","hub");
+  chk("★ 重開同一型仍然停喺記住嘅 tab（唔會跳返性格）", vis("typeTabScene") && !vis("typeTabBasic"), w._typeTab);
+
+  // 舊入口兼容
+  w.openTypeScenes("ENFP");
+  chk("★ 舊入口 openTypeScenes(ENFP) → 人格頁 + 場景 tab", vis("type") && vis("typeTabScene") && w._lastType==="ENFP", w._showing+"/"+w._lastType+"/"+w._typeTab);
+  chk("★ 場景 tab 內容跟型別（ENFP 都有 10 個）", d.querySelectorAll("#typeSceneList .scene-go-row").length===10);
+
+  // 16 型全部 render 得出 4 個 tab
+  const CODES=["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
+  let bad=[];
+  for(const c of CODES){
+    try{
+      w.openType(c,"hub");
+      const nb=d.querySelectorAll("#typeTags .scenario-badge").length;
+      const ns=d.querySelectorAll("#typeScore .stat-fill").length;
+      const nrc=d.querySelectorAll("#typeRelCards .type-rel-card").length;
+      const nd=d.querySelectorAll("#typeDeepBox .deep-item").length;
+      if(!(nb===4 && ns===3 && nrc===4 && nd===9)) bad.push(c+"(t"+nb+"/s"+ns+"/r"+nrc+"/d"+nd+")");
+    }catch(e){ bad.push(c+" throw:"+e.message); }
+  }
+  chk("★ 16 型 × 4 tab 全部 render 得出（4 tags／3 刻度／4 關係卡／9 章）", bad.length===0, bad.join(" "));
+
+  // ---------- 完整版 ----------
+  w.unlockFull();
+  await new Promise(r=>setTimeout(r,320));
+  w.openType("INTJ","hub"); btn("deep").click();
+  chk("★ 完整版：深入 tab 唔再標「完整版」", d.querySelectorAll("#typeDeepBox .deep-tag").length===0, d.querySelectorAll("#typeDeepBox .deep-tag").length);
+  chk("★ 完整版：冇解鎖掣", !/openUpgrade\(\)/.test($("#typeDeepBox").innerHTML));
+  d.querySelectorAll("#typeDeepBox .deep-item")[4].click();
+  chk("★ 完整版撳第 5 章 → 直接入到（唔彈升級）", w._showing==="deepChapter" && /完整版/.test($("#deepChapterHead").textContent), w._showing+"/"+$("#deepChapterHead").textContent);
+
+  chk("★ 冇 jsdom 錯誤", jerr.length===0, jerr.slice(0,2).join(" | "));
+  console.log("");
+  console.log(fail$());
+  function fail$(){ return ok===total ? "===== 全部通過（"+ok+"/"+total+"）=====" : "===== 有失敗（"+ok+"/"+total+"）====="; }
+  process.exit(ok===total?0:1);
+},400);

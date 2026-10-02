@@ -5,7 +5,8 @@ const { JSDOM } = require("jsdom");
 
 const root = path.resolve(__dirname, "../..");
 const src = fs.readFileSync(path.join(root, "index.html"), "utf8");
-const SECTIONS = ["home","profile","test","result","about","hub","dims","typeScenes","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter"];
+// typeScenes 獨立分頁已拆（2026-10-02）→ 場景攻略而家係人格頁 #type 嘅一個 tab
+const SECTIONS = ["home","profile","test","result","about","hub","dims","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter"];
 
 let pass = 0, fail = 0;
 const chk = (n, ok, got) => { if (ok) pass++; else { fail++; console.log("✗ " + n + "   <- " + (got === undefined ? "" : got)); } };
@@ -42,7 +43,7 @@ const cases = [
   boot("第一次開 app（sessionStorage 空）", {}),
   boot("下拉重整（原本停主頁）", { lastSection: "home", lastNav: { id: "home" } }),
   boot("下拉重整（原本停百科）", { lastSection: "hub", lastNav: { id: "hub" }, hubMode: "scene" }),
-  boot("下拉重整（原本停該型場景頁）", { lastSection: "typeScenes", lastNav: { id: "typeScenes", type: "ENFP" } }),
+  boot("下拉重整（原本停該型場景頁）", { lastSection: "typeScenes", lastNav: { id: "typeScenes", type: "ENFP" } }),   // 舊 sessionStorage 值 → 要還原去人格頁場景 tab
   boot("下拉重整（原本停維度詳解）", { lastSection: "dims", lastNav: { id: "dims" } }),
   boot("下拉重整（原本停人格頁）", { lastSection: "type", lastNav: { id: "type", type: "ENFP" } }),
   boot("下拉重整（原本停深入分析）", { lastSection: "deep", lastNav: { id: "deep" } }),
@@ -76,8 +77,11 @@ setTimeout(() => {
       else { f2++; console.log("  ✗ 下拉重整後模式唔一致（應該停喺「由場景睇」）"); }
     }
     if (c.label.includes("該型場景")) {
-      const n = c.d.querySelectorAll("#typeScenesList .scene-go-row").length;
-      if (n === 10) p2++; else { f2++; console.log("  ✗ 該型場景頁下拉後內容冇晒！場景卡 = " + n + "（預期 10）"); }
+      const n = c.d.querySelectorAll("#typeSceneList .scene-go-row").length;
+      if (n === 10) p2++; else { f2++; console.log("  ✗ 該型場景 tab 下拉後內容冇晒！場景卡 = " + n + "（預期 10）"); }
+      const panel = c.d.getElementById("typeTabScene");
+      if (panel && !panel.classList.contains("hidden")) p2++;
+      else { f2++; console.log("  ✗ 下拉重整後冇停喺場景 tab"); }
     }
     if (c.label.includes("維度詳解")) {
       const n = c.d.querySelectorAll("#dims .hub-letter-list > div").length;

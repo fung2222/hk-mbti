@@ -21,11 +21,11 @@ chk("★ 維度詳解分頁有 8 個字母掣 → #letter", (function(){ const s
 chk("★ 16 型色卡（hub-bleed）同上內文距離夠（26px）→ 百科／深入分析入口卡唔會貼", /\.hub-bleed\{margin:0 -16px 26px/.test(src));
 chk("★ 場景文章頁：色卡同上內文距離夠（26px）", /\.article-type-stage\{margin:0 -16px 26px/.test(src));
 chk("★ 場景文章頁：最底入口卡同上內文唔貼（+9px）", /#socialArticle \.softbox-tight,#romanceArticle \.softbox-tight\{margin-top:9px\}/.test(src));
-chk("★ 非主頁垂直間距統一 16px（卡片同非卡容器一致）", !/\.(persona-sect|article-guide|wiz-facts)\{[^}]*margin:[^;}]*20px/.test(src) && /\.persona-sect\{margin:0 4px 16px/.test(src) && /\.article-guide\{margin:0 4px 16px/.test(src));
-chk("★ 全站測試入口文案統一：「想確認自己 MBTI 人格？」（唔准有舊文案）", !/睇完想試/.test(src) && (src.match(/想確認自己 MBTI 人格？/g) || []).length >= 9, (src.match(/想確認自己 MBTI 人格？/g) || []).length + " 處");
-chk("★ 全站測試入口按鈕統一：「立即選擇測試版本」（唔准有舊按鈕字）", !/返主頁開始測試/.test(src) && !/>選擇測試版本</.test(src) && !/>立即開始</.test(src) && (src.match(/立即選擇測試版本/g) || []).length >= 9, (src.match(/立即選擇測試版本/g) || []).length + " 處");
+chk("★ 非主頁垂直間距統一 16px（卡片同非卡容器一致）", !/\.(article-guide|wiz-facts)\{[^}]*margin:[^;}]*20px/.test(src) && /\.article-guide\{margin:0 4px 16px/.test(src) && /\.type-rel-grid\{[^}]*margin-bottom:16px\}/.test(src));
+chk("★ 全站測試入口文案統一：「想確認自己 MBTI 人格？」（唔准有舊文案）", !/睇完想試/.test(src) && (src.match(/想確認自己 MBTI 人格？/g) || []).length >= 8, (src.match(/想確認自己 MBTI 人格？/g) || []).length + " 處");
+chk("★ 全站測試入口按鈕統一：「立即選擇測試版本」（唔准有舊按鈕字）", !/返主頁開始測試/.test(src) && !/>選擇測試版本</.test(src) && !/>立即開始</.test(src) && (src.match(/立即選擇測試版本/g) || []).length >= 8, (src.match(/立即選擇測試版本/g) || []).length + " 處");
 chk("★ 測試入口全部呼叫 goPickVersion()", (src.match(/goPickVersion\(\)/g) || []).length >= 9, (src.match(/goPickVersion\(\)/g) || []).length + " 處");
-chk("★ show() 清單有 dims 同 typeScenes（scenes 已刪）", /"hub","dims"/.test(src) && /"dims","typeScenes","letter"/.test(src) && !/\bdims","scenes/.test(src));
+chk("★ show() 清單有 dims 同 typeScenes（scenes 已刪）", /"hub","dims"/.test(src) && /"dims","letter","type"/.test(src) && !/\bdims","scenes/.test(src));
 chk("★ 光譜 5 段齊（E/I、S/N、T/F、J/P、T/A）", (function(){ const m = src.match(/window\.HUB_LETTERS = \[[\s\S]*?\n\];/); if(!m) return false; const t = m[0]; return ["E vs I","S vs N","T vs F","J vs P","T vs A"].every(x => t.includes(x)); })());
 chk("★ 光譜段有「唔係…」澄清句", /唔係「內向 = 怕醜」/.test(src) && /唔係「P 型 = 散漫」/.test(src));
 chk("★ 測試入口卡有「選擇測試版本」掣", /id="hubCta"[\s\S]{0,160}選擇測試版本/.test(src));
@@ -63,13 +63,27 @@ chk("★ 桌面導覽列同右選單一致（冇光譜／相處攻略）", (func
 chk("★ 頁底唔再留 96px 大白（class 已冇 pb-24，改 16px + 安全區）", !/class="[^"]*pb-24/.test(src) && /#app\{padding-bottom:calc\(16px \+ env\(safe-area-inset-bottom\)\)\}/.test(src), (src.match(/id="app" class="[^"]*"/) || [""])[0]);
 chk("★ 測試入口用 goPickVersion（去主頁揀版本位）", /id="hubCta"[\s\S]{0,200}goPickVersion\(\)/.test(src));
 chk("★ 百科兩個模式各有測試入口，舊「返主頁開始測試」已清", (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return !/返主頁開始測試/.test(hub) && (hub.match(/選擇測試版本/g) || []).length === 2; })(), (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return "舊掣 " + ((hub.match(/返主頁開始測試/g) || []).length) + " 個、測試版本 " + ((hub.match(/選擇測試版本/g) || []).length) + " 個"; })());
-chk("★ 人格頁有「深入睇吓呢一型」入口卡", /id="typeMore"[\s\S]{0,200}id="typeMoreList"/.test(src));
-chk("★ 人格頁入口合併為「X × N 個場景」＋「人格深入分析」（Roy 2026-10-01 方案 A）", (function(){ const i = src.indexOf("window.renderTypeMore"); const fn = src.slice(i, src.indexOf("window.openDeepFor", i)); return /openTypeScenes\('/.test(fn) && /"人格深入分析"/.test(fn) && !/"個人相處"/.test(fn) && !/"個人拍拖"/.test(fn); })());
-chk("★ 入口函數都有定義", ["openTypeScenes","openDeepFor","renderTypeScenes"].every(f => new RegExp("window\\." + f + " = function").test(src)));
-chk("★ typeScenes 分頁存在且有返回掣", /<section id="typeScenes"/.test(src) && /id="typeScenesList"/.test(src));
+chk("★ 人格頁有 4 個分頁掣（性格／關係／場景／深入）", (function(){
+  const i = src.indexOf('id="typeTabSwitch"'); if(i < 0) return false;
+  const seg = src.slice(i, src.indexOf("</div>", i));
+  return ["basic","rel","scene","deep"].every(t => new RegExp('data-tab="' + t + '"').test(seg)) && (seg.match(/setTypeTab\(/g) || []).length === 4
+   && (seg.match(/hub-mode-btn/g) || []).length === 4;
+})(), "");
+chk("★ 人格頁 4 個分頁面板齊 + renderTypeTabs 一個函數 render 晒（Roy 2026-10-02 方案 B）", (function(){
+  const okBox = ["typeTabBasic","typeTabRel","typeTabScene","typeTabDeep"].every(id => new RegExp('id="' + id + '"').test(src));
+  const i = src.indexOf("window.renderTypeTabs = function"); if(i < 0 || !okBox) return false;
+  const fn = src.slice(i, src.indexOf("window.openDeepChapterFromType", i));
+  return /typeProsCons/.test(fn) && /typeRelCards/.test(fn) && /typeSceneList/.test(fn) && /typeDeepBox/.test(fn)
+   && !/"個人相處"/.test(fn) && !/"個人拍拖"/.test(fn);
+})(), "");
+chk("★ 入口函數都有定義", ["openTypeScenes","openDeepFor","setTypeTab","renderTypeTabs","openDeepChapterFromType"].every(f => new RegExp("window\\." + f + " = function").test(src)));
+chk("★ 場景攻略已併入人格頁「場景」tab（#typeScenes 獨立分頁已拆走）", !/<section id="typeScenes"/.test(src) && !/id="typeScenesList"/.test(src) && /id="typeSceneList"/.test(src) && /window\.openTypeScenes = function/.test(src));
 chk("★ 深入分析入口全開放（目錄免費睇，把關喺第 2–9 章）", !/openDeepFor = function\(code\)\{[\s\S]{0,130}openUpgrade/.test(src) && /if\(i > 0 && window\.getTier\(\) !== "full"\)\{ window\.openUpgrade\(\); return; \}/.test(src) && /window\.isUnlocked = function\(\)\{ return window\.getTier\(\) === "full"; \};/.test(src));
   chk("★ 舊「正在睇 XX」提示條已隨分頁拆走", !src.includes("scene-for-banner") && !src.includes("_socialForType") && !src.includes("_romanceForType"));
-  chk("★ 人格頁入口 row 有黑暗模式覆蓋", /html\.dk \.type-more-row\{/.test(src));
+  chk("★ 人格頁關係卡有黑暗模式覆蓋（規則喺 #dark-layer 內）", (function(){
+  const i = src.indexOf('id="dark-layer"'), j = src.indexOf("</style>", i);
+  return i > 0 && /html\.dk \.type-rel-card\{/.test(src.slice(i, j)) && /html\.dk \.type-rel-item\{/.test(src.slice(i, j));
+})());
 
 // ── jsdom 真跑 ──
 const dom = new JSDOM(src, { runScripts: "dangerously", pretendToBeVisual: true, url: "https://example.com/" });
@@ -138,10 +152,10 @@ setTimeout(() => {
 
   // ①c 該型 × 場景頁（由人格頁入）
   w.openTypeScenes("ENFP");
-  const tsRows = d.querySelectorAll("#typeScenesList .scene-go-row");
-  chk("★ 該型場景頁：10 個場景（ENFP）", tsRows.length === 10, "render 出 " + tsRows.length);
-  chk("★ 該型場景頁標題帶型別碼", /ENFP/.test($("#typeScenesTitle").textContent), $("#typeScenesTitle").textContent);
-  chk("★ 該型場景卡呼叫 typeScenesOpenSocial／Romance", /typeScenesOpen(Social|Romance)\(/.test(tsRows[0].getAttribute("onclick")), tsRows[0].getAttribute("onclick"));
+  const tsRows = d.querySelectorAll("#typeSceneList .scene-go-row");
+  chk("★ 該型場景 tab：10 個場景（ENFP）", tsRows.length === 10, "render 出 " + tsRows.length);
+  chk("★ 撳「呢一型其他場景」→ 去人格頁 + 場景 tab（唔再係獨立分頁）", w._showing === "type" && w._typeTab === "scene" && !$("#typeTabScene").classList.contains("hidden"), "showing=" + w._showing + " tab=" + w._typeTab);
+  chk("★ 該型場景卡直接呼叫 openSocialArticle／openRomanceArticle", /open(Social|Romance)Article\(/.test(tsRows[0].getAttribute("onclick")), tsRows[0].getAttribute("onclick"));
 
   // ①d 舊相處／拍拖／光譜分頁已拆走（Roy 2026-10-01「整靚啲潔淨啲」）
   chk("★ 舊分頁已拆走：#spectrum／#social／#romance 都唔存在", !w.$("spectrum") && !w.$("social") && !w.$("romance"));

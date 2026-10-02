@@ -101,7 +101,7 @@ const visible = w => ["home","type","about","hub","method","privacy","result"]
 
   console.log("【1】load 時嘅深層連結");
   const CASES = [["#type=INFP","type"],["#type=ESTJ","type"],["#type=isfp","type"],
-    ["#about","about"],["#hub","hub"],["#typeScenes","typeScenes"],
+    ["#about","about"],["#hub","hub"],["#typeScenes","type"],   // 場景攻略已併入人格頁 tab（2026-10-02）
     ["#method","method"],["#privacy","privacy"],["(冇 hash)","home"]];
   for(const [hash, expect] of CASES){
     const { w } = await load({ hash: hash === "(冇 hash)" ? "" : hash });

@@ -37,7 +37,7 @@ setTimeout(async ()=>{
   chk('★ 探索更多已冇「場景攻略」入口（Roy 2026-10-01：全部收埋入百科）', !/data-acc="scenes"/.test(src) && !/openScenes\(\)/.test(src));
   chk('★ 百科有雙模式切換（由人格睇／由場景睇）', /class="hub-mode-btn is-on" data-mode="type"/.test(src) && /data-mode="scene"/.test(src) && /window\.setHubMode = function/.test(src));
   chk('★ 探索更多順序：關於→百科→統計→計分→私隱（Roy 指定）', (function(){ const b = src.slice(src.indexOf('id="homeAccordion"')); const got = [...b.matchAll(/class="home-acc-item" data-acc="([a-z]+)"/g)].map(m => m[1]); return JSON.stringify(got) === JSON.stringify(["about","hub","stats","method","privacy"]); })(), (function(){ const b = src.slice(src.indexOf('id="homeAccordion"')); return [...b.matchAll(/class="home-acc-item" data-acc="([a-z]+)"/g)].map(m => m[1]).join(" → "); })());
-  chk('★ 人格頁有深入分析入口（免費用戶標「第 1 章免費」）', /badge:\(window\.getTier\(\) === "full" \? "" : "第 1 章免費"\)/.test(src) && /openDeepFor\(/.test(src));
+  chk('★ 人格頁「深入」tab 有 9 章入口（免費用戶標「第 1 章免費」）', (function(){ const i = src.indexOf("window.renderTypeTabs = function"); if(i < 0) return false; const fn = src.slice(i, src.indexOf("window.openDeepChapterFromType", i)); return /deep-tag is-free">免費</.test(fn) && /deep-tag">完整版</.test(fn) && /openDeepChapterFromType\(/.test(fn); })());
   chk('★ 免費用戶撳深入分析入口直入目錄（目錄全開放，唔再跳升級頁）', !/window\.openDeepFor = function\(code\)\{[\s\S]{0,110}openUpgrade\(\)/.test(src));
   chk('★ 主頁頂仍有星級用戶入口', /id="tierBtn"/.test(src));
   chk('★ 目錄項已經冇「睇」字（Roy 話唔需要）', !/deep-go">睇/.test(src));
@@ -93,7 +93,11 @@ setTimeout(async ()=>{
   chk('解鎖後升級頁 CTA 文字改變', /已解鎖/.test($('#upgradeCta').textContent), $('#upgradeCta').textContent);
   chk('解鎖後自動去人格深入分析', vis('deep'), 'deep='+vis('deep'));
   chk('★ 解鎖後撳深入分析入口會直入（唔再彈升級頁）', (function(){ const before = vis('deep'); w.openType('ENFP','test'); w.openDeepFor('ENFP'); return vis('deep') && w._showing === 'deep'; })(), 'showing=' + w._showing);
-  chk('★ 解鎖後人格頁入口唔再有鎖標記（內容已解鎖）', !/type-more-lock/.test($('#typeMoreList').innerHTML), $('#typeMoreList').innerHTML.slice(0,60));
+  chk('★ 解鎖後人格頁深入 tab 唔再標「完整版」（內容已解鎖）', (function(){
+    w.openType('ENFP','test');
+    const h = $('#typeDeepBox').innerHTML;
+    return h.length > 0 && !/deep-tag/.test(h) && /openDeepChapterFromType\(/.test(h);
+  })(), $('#typeDeepBox').innerHTML.slice(0,70));
 
   // ---------- 16 型目錄（色卡版，參考性格百科排位）----------
   // 回 16 型選擇層（上面嘅入口測試會去咗某一型嘅 9 章目錄，同下面斷言無關）
@@ -131,8 +135,8 @@ setTimeout(async ()=>{
   chk('★ 已清走舊 .deep-intro / .deep-chips CSS（唔留死碼）', !/\.deep-intro\{/.test(src) && !/\.deep-intro-sub\{/.test(src) && !/\.deep-chips\{/.test(src));
   // ---------- 人格分頁最底 CTA（Roy 2026-10-01）----------
   chk('★ 人格分頁最底文案改咗（想確認自己 MBTI 人格？）', /想確認自己 MBTI 人格？/.test(src));
-  chk('★ 測試入口文案全站統一（想確認自己 MBTI 人格？）', (src.match(/想確認自己 MBTI 人格？/g) || []).length >= 9 && !/睇完想試/.test(src));
-  chk('★ 測試入口按鈕全站統一（立即選擇測試版本）', (src.match(/立即選擇測試版本/g) || []).length >= 9 && !/返主頁開始測試/.test(src));
+  chk('★ 測試入口文案全站統一（想確認自己 MBTI 人格？）', (src.match(/想確認自己 MBTI 人格？/g) || []).length >= 8 && !/睇完想試/.test(src));
+  chk('★ 測試入口按鈕全站統一（立即選擇測試版本）', (src.match(/立即選擇測試版本/g) || []).length >= 8 && !/返主頁開始測試/.test(src));
   chk('★ goPickVersion 存在（show home + 捲到 #homeBelow）', /window\.goPickVersion = function\(\)\{[\s\S]{0,260}show\("home"\)[\s\S]{0,200}homeBelow/.test(src));
   // ---------- 全站「大寫字母／型別碼」字型一致性（Roy 2026-10-01：檢查全站色卡用返 Archivo Black）----------
   chk('★ 色卡 4 字母 .hub-type-code 用 Archivo Black', /\.hub-type-code\{\s*\nfont-family:'Archivo Black'/.test(src));

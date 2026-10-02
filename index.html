@@ -368,8 +368,6 @@ font-size:1em;letter-spacing:.01em;
 .article-type-card .hub-type-cn{font-size:.5em;}
 .article-guide{margin:0 4px 16px;}
 /* 人格分頁內容 grid：同結果頁一致（x=20 / 350px、行高 1.5、#374151） */
-.persona-sect{margin:0 4px 16px;}
-.persona-sect .scenario-badge{background:#fff;border:1px solid #E7DCC4;font-size:14px;}
 .article-guide-body p{
 margin:0 0 12px;line-height:1.6;font-size:17px;color:#374151;
 }
@@ -442,6 +440,16 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 .hub-scene-n{font-weight:600;letter-spacing:0;color:#9a9086}
 .hub-scene-back{display:inline-block;border:0;background:transparent;color:#8A7A5A;font-size:12px;font-weight:800;padding:2px 0 12px;cursor:pointer;font-family:inherit}
 
+/* 人格分頁 4 個 tab（Roy 2026-10-02 方案 B）—— 掣本身沿用 .hub-mode-switch */
+.type-tab-switch .hub-mode-btn{padding:9px 4px;font-size:12.5px}
+.type-rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.type-rel-card{background:#faf7f2;border-radius:12px;padding:13px 13px 12px;border-left:3px solid var(--rc)}
+.type-rel-head{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.type-rel-ico{width:17px;height:17px;stroke:var(--rc);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.type-rel-t{font-size:13px;font-weight:800;color:var(--ink)}
+.type-rel-body{display:flex;flex-direction:column;gap:4px}
+.type-rel-item{font-size:.85rem;color:#6b6560;line-height:1.6}
+
 
 /* 場景攻略列 */
 .scene-go-row{display:flex;align-items:center;gap:13px;width:100%;text-align:left;border:0;background:#faf7f2;border-radius:12px;padding:13px 14px;margin:0 0 8px;cursor:pointer;font-family:inherit;}
@@ -459,12 +467,6 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 .hub-more-link:before{content:"› ";font-weight:800}
 
 /* 人格頁「深入睇吓呢一型」入口列 */
-.type-more-row{display:block;width:100%;text-align:left;border:0;background:#faf7f2;border-radius:12px;padding:12px 14px;margin:0 0 8px;cursor:pointer;font-family:inherit;}
-.type-more-row:last-child{margin-bottom:0}
-.type-more-row:hover{background:#f5efe6}
-.type-more-t{display:block;font-size:14px;font-weight:800;color:var(--ink);margin:0 0 3px}
-.type-more-d{display:block;font-size:11px;color:#8a8174;line-height:1.5}
-.type-more-lock{display:inline-block;font-size:10px;font-weight:700;color:#8a6a1f;background:#f6e7c4;border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:1px}
 
 /* 深入分析版頭：金標下面嗰行黑大字 */
 .deep-lead{font-size:19px;font-weight:900;line-height:1.35;letter-spacing:-.01em;color:var(--ink);margin:0 0 9px}
@@ -890,7 +892,6 @@ html.dk .home-acc-head:hover{background:var(--dk-hover)}
 html.dk .home-acc-head:active{background:var(--dk-on)}
 html.dk.dt .home-acc-item{background:var(--dk-card)}
 html.dk .gender-btn{background:var(--dk-card);border-color:var(--dk-line2)}
-html.dk .persona-sect .scenario-badge{background:var(--dk-card);border-color:var(--dk-line)}
 html.dk .option:hover{background:var(--dk-hover)}
 html.dk .option.selected{background:var(--dk-on)}
 /* 版本卡：金／銀／銅／米 → 同色系深色版 */
@@ -929,10 +930,6 @@ html.dk .glass{background:rgba(24,30,38,.72)}
 html.dk .hub-type-go{background:rgba(18,22,28,.92);color:#ECE7DE}
 html.dk .hub-type-hint{color:#A79E92}
 html.dk .hub-more-link{color:#E8C989}
-html.dk .type-more-row{background:#222A34}
-html.dk .type-more-row:hover{background:#28313C}
-html.dk .type-more-d{color:#A79E92}
-html.dk .type-more-lock{color:#E8C989;background:#3A3324}
 html.dk .deep-tag{color:#E8C989;background:#3A3324}
 html.dk .deep-tag.is-free{color:#9FD0A8;background:rgba(120,180,130,.14)}
 html.dk .scene-go-row{background:#222A34}
@@ -948,6 +945,9 @@ html.dk.dt #app .scenes-head > .text-sm{color:#A79E92}
 html.dk.dt .dt-foot-in{color:#9A9388}
 html.dk.dt .dt-foot-links a,html.dk.dt .dt-foot-links button{color:#9A9388}
 html.dk.dt .dt-cta-ghost:hover{color:#D8C69E}
+html.dk .type-rel-card{background:#222A34}
+html.dk .type-rel-item{color:#A79E92}
+
 </style>
 </head>
 <body class="js-boot">
@@ -1733,69 +1733,57 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  </div>
 
+ <!-- 人格色卡（永遠喺頂，下面先係分頁） -->
  <div id="typeHero" class="card p-6 mb-4 text-center">
  <div class="text-5xl font-black mb-1" id="typeBig">INTJ</div>
  <h2 class="text-[19px] font-black mb-1" id="typeName">建築師</h2>
  <p class="text-sm" id="typeSlogan">「東鐵企到金鐘」</p>
  </div>
 
+ <!-- 分頁切換（沿用百科「由人格睇／由場景睇」同一款 pill，Roy 2026-10-02） -->
+ <div class="hub-mode-switch type-tab-switch" id="typeTabSwitch">
+ <button type="button" class="hub-mode-btn is-on" data-tab="basic" onclick="setTypeTab('basic')">性格</button>
+ <button type="button" class="hub-mode-btn" data-tab="rel" onclick="setTypeTab('rel')">關係</button>
+ <button type="button" class="hub-mode-btn" data-tab="scene" onclick="setTypeTab('scene')">場景</button>
+ <button type="button" class="hub-mode-btn" data-tab="deep" onclick="setTypeTab('deep')">深入</button>
+ </div>
+
+ <!-- 1 性格 -->
+ <div id="typeTabBasic">
+ <div class="card p-5 mb-4">
+ <p id="typeDesc" class="text-sm text-gray-700 leading-relaxed"></p>
+ <div id="typeTags" class="flex flex-wrap gap-2 mt-3"></div>
+ </div>
+ <div class="card p-5 mb-4">
+ <div class="sub-label">性格刻度</div>
+ <div id="typeScore"></div>
+ </div>
+ <div id="typeProsCons"></div>
  <div class="article-guide">
  <h3 class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.6h7l4 4v12.8H7z"/><path d="M14 3.6v4h4"/><path d="M9.8 12.4h5"/><path d="M9.8 15.8h5"/></svg>完整性格分析</h3>
  <div id="typeFull" class="article-guide-body"></div>
  </div>
-
- <div class="persona-sect">
- <h3 class="sub-label">強項</h3>
- <div id="typeStrength" class="flex flex-wrap gap-2"></div>
  </div>
 
- <div class="persona-sect">
- <h3 class="sub-label">弱項</h3>
- <div id="typeWeakness" class="flex flex-wrap gap-2"></div>
+ <!-- 2 關係 -->
+ <div id="typeTabRel" class="hidden">
+ <div id="typeRelCards"></div>
+ <div class="card p-5 mb-4">
+ <div class="sub-label">同邊種人最夾</div>
+ <div id="typeCompat"></div>
+ </div>
  </div>
 
- <div class="persona-sect">
- <h3 class="sub-label">戀愛</h3>
- <div id="typeLove" class="text-sm text-gray-700 leading-relaxed"></div>
+ <!-- 3 場景 -->
+ <div id="typeTabScene" class="hidden">
+ <div id="typeSceneList"></div>
  </div>
 
- <div class="persona-sect">
- <h3 class="sub-label">工作</h3>
- <div id="typeWork" class="text-sm text-gray-700 leading-relaxed"></div>
+ <!-- 4 深入分析 -->
+ <div id="typeTabDeep" class="hidden">
+ <div id="typeDeepBox"></div>
  </div>
 
- <div class="persona-sect">
- <h3 class="sub-label">友情</h3>
- <div id="typeFriend" class="text-sm text-gray-700 leading-relaxed"></div>
- </div>
-
- <div class="persona-sect">
- <h3 class="sub-label">衝突處理</h3>
- <div id="typeConflict" class="text-sm text-gray-700 leading-relaxed"></div>
- </div>
-
- <div class="card p-5 mb-4" id="typeMore">
- <h3 class="font-bold mb-1 text-sm">深入睇吓呢一型</h3>
- <p class="text-xs text-gray-600 mb-3" id="typeMoreSub">同人相處、拍拖、9 章深入分析</p>
- <div id="typeMoreList"></div>
- </div>
-
- <div class="card mb-4 softbox">
- <p class="softbox-sub">想確認自己 MBTI 人格？</p>
- <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
- </div>
- </section>
-
- <!-- 該型 × 場景（由人格頁入；Roy 2026-10-01 方案 A 歸一）-->
- <section id="typeScenes" class="hidden fade-up">
- <div class="page-hero">
- <div class="page-hero-row">
- <button type="button" class="page-back" onclick="goBack()">返回</button>
- <h1 id="typeScenesTitle">場景攻略</h1>
- </div>
- <p class="page-hero-sub" id="typeScenesSub"></p>
- </div>
- <div id="typeScenesList"></div>
  <div class="card mb-4 softbox">
  <p class="softbox-sub">想確認自己 MBTI 人格？</p>
  <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
@@ -2965,7 +2953,7 @@ window._showing = id;
 if(prevId === "home" && id !== "home"){
 try{ window._homeScrollY = window.scrollY || window.pageYOffset || 0; }catch(e){ window._homeScrollY = 0; }
  }
-["home","profile","test","result","about","hub","dims","typeScenes","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
+["home","profile","test","result","about","hub","dims","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
 if(id === "home" && (window._homeScrollY || 0) > 0){
 // 返主頁：還原原本停留位置（唔彈返頂）
@@ -2982,7 +2970,7 @@ try{ clearVersionUI(); }catch(e){}
  }
 // 下面幾頁嘅內容係 JS render 出嚟（唔喺 HTML 內）→ 一定要喺 show() 內重 render，
 // 否則下拉重整（直接 show(id)，唔會行 openXxx()）之後會見到空白（Roy 2026-10-01 報）
-if(id === "typeScenes"){ try{ window.renderTypeScenes(); }catch(e){} }
+if(id === "type"){ try{ window.setTypeTab(window._typeTab || "basic", true); window.renderTypeTabs(window._lastType); }catch(e){} }
 if(id === "dims"){ try{ window.renderDimsLetters(); }catch(e){} }
 if(id === "hub"){
  try{ window.renderHubTypes(); }catch(e){}
@@ -4996,7 +4984,8 @@ if(id === "romanceArticle" && prev.rKey && prev.articleType){
 openRomanceArticle(prev.rKey, prev.articleType); return;
  }
 if(id === "typeScenes"){
-if(prev && prev.type){ window._typeScenesCode = String(prev.type).toUpperCase(); window._lastType = window._typeScenesCode; show("typeScenes"); return; }
+// 舊深層連結／舊紀錄：場景攻略而家係人格分頁嘅一個 tab
+if(prev && prev.type){ openType(prev.type); window.setTypeTab("scene"); return; }
 show("hub"); return;
  }
 if(id === "type"){
@@ -5554,26 +5543,145 @@ setTimeout(function(){ try{ window.renderTier(); }catch(e){} }, 0);
 window.openHub = function(){
 show("hub");
 };
-// 人格頁「深入睇吓呢一型」：相處／拍拖／深入分析 三個入口
-window.renderTypeMore = function(){
- const code = String(window._lastType || "INTJ").toUpperCase();
- const box = document.getElementById("typeMoreList");
- if(!box) return;
+// ===== 人格分頁 4 個 tab（Roy 2026-10-02 方案 B：性格／關係／場景／深入）=====
+// 原本一頁過（2 大字塊 + 6 段扁平面板）睇落似小說；拆成 tab 一頁一頁睇。
+// 掣沿用百科「由人格睇／由場景睇」同一款 .hub-mode-switch（dark 規則已存在）。
+window._typeTabs = ["basic","rel","scene","deep"];
+window._typeTab = "basic";
+window._typeTabBox = {basic:"typeTabBasic", rel:"typeTabRel", scene:"typeTabScene", deep:"typeTabDeep"};
+window.setTypeTab = function(tab, noScroll){
+ if(window._typeTabs.indexOf(tab) < 0) tab = "basic";
+ window._typeTab = tab;
+ try{
+  const btns = document.querySelectorAll("#typeTabSwitch .hub-mode-btn");
+  for(let i=0;i<btns.length;i++) btns[i].classList.toggle("is-on", btns[i].dataset.tab === tab);
+ }catch(e){}
+ for(const k in window._typeTabBox){
+  const el = document.getElementById(window._typeTabBox[k]);
+  if(el) el.classList.toggle("hidden", k !== tab);
+ }
+ if(!noScroll){
+  try{ sessionStorage.setItem("hkmbti_type_tab", tab); }catch(e){}
+  // 只有當分頁掣已經捲出畫面（top < 0）才拉返上去，
+  // 否則撳掣時畫面會跳（Roy 對視覺跳動敏感）
+  try{
+   const sw = document.getElementById("typeTabSwitch");
+   const r = sw && sw.getBoundingClientRect ? sw.getBoundingClientRect() : null;
+   if(r && r.top < 0) window.scrollTo(0, r.top + (window.pageYOffset || 0) - 8);
+  }catch(e){}
+ }
+};
+// 關係卡／工作卡用嘅線條 icon（同金標 .scenes-title-ico 同一套 stroke 風格）
+window.typeRelIcon = function(k){
+ const IC = {
+  work:'<path d="M3.6 8.6h16.8v10.2a1.6 1.6 0 0 1-1.6 1.6H5.2a1.6 1.6 0 0 1-1.6-1.6z"/><path d="M9 8.6V6.4A1.8 1.8 0 0 1 10.8 4.6h2.4A1.8 1.8 0 0 1 15 6.4v2.2"/><path d="M3.6 13.4h16.8"/>',
+  love:'<path d="M12 20s-7.2-4.5-7.2-9.4A4.2 4.2 0 0 1 12 7.7a4.2 4.2 0 0 1 7.2 2.9C19.2 15.5 12 20 12 20z"/>',
+  friend:'<circle cx="9.2" cy="8.4" r="3.4"/><path d="M3 20.2c0-3.5 2.8-6 6.2-6s6.2 2.5 6.2 6"/><path d="M16.4 11.6a2.7 2.7 0 1 0 0-5.4"/><path d="M17.2 14.6c2.3.4 3.8 2.3 3.8 5"/>',
+  conflict:'<path d="M12 3.6 20.8 19.8H3.2z"/><path d="M12 9.8v4"/><path d="M12 16.6v.4"/>'
+ };
+ return '<svg class="type-rel-ico" viewBox="0 0 24 24" aria-hidden="true">' + (IC[k] || "") + '</svg>';
+};
+// 相容度：唔用 Math.random()（每次 render 都變會似 bug）→ 由兩個代號砌出穩定值
+window.typeCompatPct = function(a, b){
+ const x = (a.charCodeAt(0)*3 + a.charCodeAt(3)*5 + b.charCodeAt(0)*7 + b.charCodeAt(3)*11);
+ return 82 + (x % 13);
+};
+window.renderTypeTabs = function(code){
+ code = String(code || window._lastType || "INTJ").toUpperCase();
  const T = (window.TYPES && window.TYPES[code]) || {};
- const nm = T.name ? (code + " · " + T.name) : code;
- const sub = document.getElementById("typeMoreSub");
- if(sub) sub.textContent = nm + " — 場景攻略同 9 章深入分析";
- const _nS = Object.keys(window.SOCIAL || {}).length + Object.keys(window.ROMANCE || {}).length;
- const rows = [
-  {t:code + " × " + _nS + " 個場景", d:"同人相處 7 個 + 拍拖關係 3 個：WhatsApp 群、屋企人、同事、室友、曖昧、分手、見家長…", oc:"openTypeScenes('" + code + "')"},
-  {t:"人格深入分析", d:"9 章：核心動機、3 個盲點、壓力反應、職場、愛情、友情…", oc:"openDeepFor('" + code + "')", badge:(window.getTier() === "full" ? "" : "第 1 章免費")}
- ];
- box.innerHTML = rows.map(function(r){
-  return '<button type="button" class="type-more-row" data-more="' + r.t + '" onclick="' + r.oc + '">'
-   + '<span class="type-more-t">' + r.t + (r.badge ? '<span class="type-more-lock">' + r.badge + '</span>' : '') + '</span>'
-   + '<span class="type-more-d">' + r.d + '</span>'
-   + '</button>';
+ const F = (window.TYPES_FULL && window.TYPES_FULL[code]) || {};
+ const _fl = F || {};
+ const _g = function(id){ return document.getElementById(id); };
+
+ // ---- 1 性格 ----
+ const dEl = _g("typeDesc"); if(dEl) dEl.textContent = T.desc || "";
+ const tEl = _g("typeTags");
+ if(tEl) tEl.innerHTML = (T.tags || []).map(function(x){ return '<span class="scenario-badge bg-soft text-ink">' + x + '</span>'; }).join("");
+ const sEl = _g("typeScore");
+ if(sEl) sEl.innerHTML = (T.score || []).map(function(s){
+  const num = (s.match(/\d+/) || ["0"])[0];
+  const label = s.replace(/\d+/, "");
+  return '<div class="mb-2.5"><div class="flex justify-between text-xs mb-1">'
+   + '<span class="text-gray-600 font-semibold">' + label + '</span>'
+   + '<span class="font-bold text-ink">' + num + '/10</span></div>'
+   + '<div class="stat-bar"><div class="stat-fill" style="width:' + (parseInt(num,10)*10) + '%"></div></div></div>';
  }).join("");
+ const st = _fl.strength || [], wk = _fl.weakness || [];
+ const pc = _g("typeProsCons");
+ if(pc) pc.innerHTML = (st.length || wk.length) ? ('<div class="card p-5 mb-4"><div class="sub-label">強項同弱項</div>'
+  + '<div class="grid grid-cols-2 gap-3 mt-1">'
+  + '<div class="rounded-xl p-3" style="background:rgba(212,169,95,.06)">' + st.map(function(x){ return '<div class="pros-item"><span class="pros-mark">＋</span><span>' + x + '</span></div>'; }).join("") + '</div>'
+  + '<div class="rounded-xl p-3" style="background:rgba(30,42,59,.03)">' + wk.map(function(x){ return '<div class="pros-item"><span class="pros-mark">－</span><span>' + x + '</span></div>'; }).join("") + '</div>'
+  + '</div></div>') : "";
+ const fEl = _g("typeFull");
+ if(fEl) fEl.innerHTML = window.formatTypeFullHtml(F && F.full);
+
+ // ---- 2 關係 ----
+ const relCol = function(title, ico, items, col){
+  return '<div class="type-rel-card" style="--rc:' + col + '">'
+   + '<div class="type-rel-head">' + window.typeRelIcon(ico) + '<span class="type-rel-t">' + title + '</span></div>'
+   + '<div class="type-rel-body">' + (items || []).map(function(x){ return '<div class="type-rel-item">' + x + '</div>'; }).join("") + '</div></div>';
+ };
+ const rc = _g("typeRelCards");
+ if(rc) rc.innerHTML = '<div class="type-rel-grid">'
+  + relCol("職場上嘅你", "work", _fl.work, "#5A7D8C")
+  + relCol("愛情裡嘅你", "love", _fl.love, "#C97B8A")
+  + relCol("友情裡嘅你", "friend", (_fl.friend || _fl.love), "#4F8A5B")
+  + relCol("衝突處理", "conflict", (_fl.conflict || _fl.love), "#D08A3E")
+  + '</div>';
+ const cp = _g("typeCompat");
+ if(cp) cp.innerHTML = (T.compat || []).map(function(c, i){
+  const ct = window.TYPES[c];
+  if(!ct) return "";
+  return '<div class="flex items-center gap-3 py-2.5"' + (i ? ' style="border-top:1px solid rgba(30,42,59,.06)"' : '') + '>'
+   + '<div class="flex-1"><div class="font-bold text-sm">' + c + ' · ' + ct.cn + '</div>'
+   + '<div class="text-xs text-gray-500">' + ct.slogan + '</div></div>'
+   + '<div class="text-xs text-accent font-bold">' + window.typeCompatPct(code, c) + '% 夾</div></div>';
+ }).join("");
+
+ // ---- 3 場景（原本獨立 #typeScenes 分頁，Roy 2026-10-02 併入呢度）----
+ const mk = function(list, fn){
+  return Object.keys(list || {}).filter(function(k){
+   return list[k] && list[k].articles && list[k].articles[code];
+  }).map(function(k){
+   const s = list[k];
+   return '<button type="button" class="scene-go-row" onclick="' + fn + "('" + k + "')" + '">'
+    + '<span class="scene-go-ico">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 30) : '') + '</span>'
+    + '<span class="scene-go-body"><span class="scene-go-t">' + (s.name || k) + '</span>'
+    + '<span class="scene-go-d">' + (s.desc || '') + '</span></span></button>';
+  }).join("");
+ };
+ const soc = mk(window.SOCIAL, "openSocialArticle"), rom = mk(window.ROMANCE, "openRomanceArticle");
+ const nS = (soc.match(/scene-go-row/g) || []).length, nR = (rom.match(/scene-go-row/g) || []).length;
+ const sc = _g("typeSceneList");
+ if(sc) sc.innerHTML = '<div class="text-xs text-gray-500 mb-3">' + code + ' 喺 ' + (nS + nR) + ' 個場景會點反應</div>'
+  + (nS ? ('<div class="card p-5 mb-4"><div class="text-xs tracking-widest brand-gold font-bold mb-3">同人相處<span class="hub-scene-n">（' + nS + ' 個場景）</span></div>' + soc + '</div>') : "")
+  + (nR ? ('<div class="card p-5 mb-4"><div class="text-xs tracking-widest brand-gold font-bold mb-3">拍拖關係<span class="hub-scene-n">（' + nR + ' 個場景）</span></div>' + rom + '</div>') : "");
+
+ // ---- 4 深入分析 ----
+ const dd = (window.PREMIUM || {})[code];
+ const db = _g("typeDeepBox");
+ if(db){
+  if(!dd || !dd.chapters || !dd.chapters.length){
+   db.innerHTML = '<div class="card p-5 mb-4"><div class="text-xs text-gray-500">呢一型嘅 9 章深入分析仲喺度寫，好快會有。</div></div>';
+  } else {
+   const _full = (window.getTier() === "full");
+   db.innerHTML = '<div class="text-xs text-gray-500 mb-3">' + dd.chapters.length + ' 章 · ' + (_full ? "完整版內容" : "第 1 章免費，其餘要完整版") + '</div>'
+    + dd.chapters.map(function(c, i){
+     const tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
+     return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" onclick="openDeepChapterFromType(' + i + ',\'' + code + '\')">'
+      + '<div class="flex items-start gap-3"><span class="deep-num">' + (i + 1) + '</span>'
+      + '<div class="min-w-0 flex-1"><div class="font-bold text-[14px]">' + c.t + tag + '</div>'
+      + '<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div></div></button>';
+    }).join("")
+    + (_full ? "" : '<button type="button" class="softbox-btn mt-2" onclick="openUpgrade()">解鎖全部 9 章</button>');
+  }
+ }
+};
+// 由人格分頁深入 tab 開章節：行返正常目錄路徑（有 history 層，返回掣先返得返型頁）
+window.openDeepChapterFromType = function(i, code){
+ window.openDeepType(String(code || "").toUpperCase());
+ window.openDeepChapter(i);
 };
 window.openDeepFor = function(code){
  // 目錄全開放：任何人都入得（第 1 章免費，其餘章節喺 openDeepChapter 才把關）
@@ -5683,47 +5791,13 @@ window.renderDimsLetters = function(){
 };
 
 // 該型 × 場景：一個人格睇齊佢喺 10 個場景嘅表現（Roy 2026-10-01 方案 A）
-window._typeScenesCode = null;
+// 場景攻略已併入人格分頁嘅「場景」tab（Roy 2026-10-02）。
+// 呢個函數保留做兼容入口：情境文章頁嘅「呢一型其他場景」掣、同 #typeScenes 深層連結都行呢度。
 window.openTypeScenes = function(code){
- window._typeScenesCode = String(code || "").toUpperCase();
- window._lastType = window._typeScenesCode;
- show("typeScenes");
+ const c = String(code || window._lastArticleType || window._lastType || "INTJ").toUpperCase();
+ window.openType(c, "scenes");
+ window.setTypeTab("scene");
 };
-window.renderTypeScenes = function(){
- const code = String(window._typeScenesCode || window._lastType || "INTJ").toUpperCase();
- const T = (window.TYPES && window.TYPES[code]) || {};
- const h1 = $("typeScenesTitle");
- if(h1) h1.textContent = code + (T.name ? " · " + T.name : "") + " 場景攻略";
- const box = $("typeScenesList");
- if(!box) return;
- const mk = function(list, fn){
-  return Object.keys(list || {}).filter(function(k){
-   return list[k] && list[k].articles && list[k].articles[code];
-  }).map(function(k){
-   const s = list[k];
-   return '<button type="button" class="scene-go-row" onclick="' + fn + "( '" + k + "' )" + '">'
-    + '<span class="scene-go-ico">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 30) : '') + '</span>'
-    + '<span class="scene-go-body">'
-    + '<span class="scene-go-t">' + (s.name || k) + '</span>'
-    + '<span class="scene-go-d">' + (s.desc || '') + '</span>'
-    + '</span>'
-    + '</button>';
-  }).join("");
- };
- const soc = mk(window.SOCIAL, "typeScenesOpenSocial");
- const rom = mk(window.ROMANCE, "typeScenesOpenRomance");
- const nS = (soc.match(/scene-go-row/g) || []).length;
- const nR = (rom.match(/scene-go-row/g) || []).length;
- const sub = $("typeScenesSub");
- if(sub) sub.textContent = "睇吓 " + code + " 喺 " + (nS + nR) + " 個場景會點反應";
- let html = "";
- if(nS) html += '<div class="card p-5 mb-4"><div class="text-xs tracking-widest brand-gold font-bold mb-3">同人相處<span class="hub-scene-n">（' + nS + ' 個場景）</span></div>' + soc + '</div>';
- if(nR) html += '<div class="card p-5 mb-4"><div class="text-xs tracking-widest brand-gold font-bold mb-3">拍拖關係<span class="hub-scene-n">（' + nR + ' 個場景）</span></div>' + rom + '</div>';
- box.innerHTML = html;
-};
-window.typeScenesOpenSocial = function(key){ window.openSocialArticle(key, window._typeScenesCode); };
-window.typeScenesOpenRomance = function(key){ window.openRomanceArticle(key, window._typeScenesCode); };
-
 // 由任何頁去主頁「選擇 MBTI 測試版本」嗰個位（人格分頁最底嗰個掣用）
 window.goPickVersion = function(){
 show("home");
@@ -5867,23 +5941,15 @@ reel.querySelectorAll(".hub-type-card.is-on").forEach(el => el.classList.remove(
  }
 window._lastType = type;
  $("typeBig").innerText = type;
- try{ window.renderTypeMore(); }catch(e){}
+ // 分頁狀態還原（撳返回／下拉重整之後唔會跳返第一個 tab）
+ try{ window.setTypeTab(window._typeTab || "basic", true); window.renderTypeTabs(type); }catch(e){}
  $("typeName").innerText = T.cn || T.name;
  $("typeSlogan").innerText = "「" + T.slogan + "」";
  $("typeBreadcrumb").innerText = "性格 / " + type;
  const _tc = Array.isArray(T.color) ? T.color : (T.color ? [T.color, T.color] : ["#4b5563", "#1f2937"]);
  $("typeHero").style.background = "linear-gradient(135deg, " + _tc[0] + ", " + _tc[1] + ")";
  $("typeHero").style.color = "white";
- $("typeFull").innerHTML = window.formatTypeFullHtml(F && F.full);
- // F（TYPES_FULL）冇資料都唔可以 throw：以前一 throw 就彈返主頁
-const _fl = F || {};
- $("typeStrength").innerHTML = ((_fl.strength) || []).map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
- $("typeWeakness").innerHTML = ((_fl.weakness) || []).map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
- $("typeLove").innerText = ((_fl.love) || []).join("、");
- $("typeWork").innerText = ((_fl.work) || []).join("、");
- // 兼容：friend 同 conflict 可能冇定義，fallback 用 love
- $("typeFriend").innerText = ((_fl.friend || _fl.love) || []).join("、");
- $("typeConflict").innerText = ((_fl.conflict || _fl.love) || []).join("、");
+ // 以下強項／弱項／戀愛／工作／友情／衝突 全部搬入 tab（見 renderTypeTabs）
 show("type");
 window.scrollTo(0,0);
 };
