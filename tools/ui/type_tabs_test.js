@@ -25,8 +25,8 @@ chk("★ 4 個掣次序 = 性格 → 關係 → 場景 → 深入分析", (funct
 })());
 chk("★ 第 4 個掣已改名「深入分析」（唔再係「深入」）", /data-tab="deep"[^>]*>[\s\S]{0,200}深入分析<\/button>/.test(src) && !/data-tab="deep"[^>]*>深入<\/button>/.test(src));
 chk("★ 「深入分析」掣有星星 SVG icon（實心 path）", (function(){
-  const i=src.indexOf('data-tab="deep"'); if(i<0) return false;
-  const seg=src.slice(Math.max(0,i-300), i+240);
+  const i=src.indexOf("setTypeTab('deep')"); if(i<0) return false;   // 錨喺 HTML 掣，唔好撞到 CSS 嘅 [data-tab="deep"]
+  const seg=src.slice(Math.max(0,i-300), i+260);
   return /<svg class="tab-star"/.test(seg) && /<path d="M12 3\.1/.test(seg) && /viewBox="0 0 24 24"/.test(seg);
 })());
 chk("★ 星星係金色 fill，用 SVG 唔係 ★／emoji 字元", /\.type-tab-switch \.tab-star\{[^}]*fill:#C8A24C/.test(src) && !/[\u2605\u2606]/.test(src));
@@ -37,6 +37,40 @@ chk("★ 深入分析目錄底部 3 個掣水平一行（返全部 16 型／立�
 })());
 chk("★ 3 個掣係 flex 一行（唔會疊起）", /\.deep-foot-row\{display:flex/.test(src) && /\.deep-foot-btn\{flex:1 1 0/.test(src));
 chk("★ 3 個掣有 dark 規則（只改顏色）", /html\.dk \.deep-foot-btn\{background:var\(--dk-card\)/.test(src));
+chk("★ tab 掣唔會斷行：「深入分析」自身攞夠位，窄機 320px 都放得落", (function(){
+  // 由 CSS 抽出實際數字（改字級／padding 會即刻反映）——jsdom 冇 layout，所以用算術守門
+  const m=/\.type-tab-switch \.hub-mode-btn\{([^}]*)\}/.exec(src); if(!m) return false;
+  const r=m[1];
+  const fs = parseFloat((/font-size:([\d.]+)px/.exec(r)||[])[1]);
+  const padH = parseFloat((/padding:\d+px ([\d.]+)px/.exec(r)||[])[1]);
+  const dm=/\.type-tab-switch \.hub-mode-btn\[data-tab="deep"\]\{([^}]*)\}/.exec(src); if(!dm) return false;
+  const dPadH = parseFloat((/padding:\d+px ([\d.]+)px/.exec(dm[1])||[])[1]);
+  const starW = parseFloat((/\.type-tab-switch \.tab-star\{[^}]*?width:([\d.]+)px/.exec(src)||[])[1]);
+  const starM = parseFloat((/\.type-tab-switch \.tab-star\{[^}]*?margin-right:([\d.]+)px/.exec(src)||[])[1]);
+  if(!fs||!padH||!dPadH||!starW||!starM) return false;
+  const deepNeed = 4*fs + starW + starM + 2*dPadH;   // 「深入分析」4 個中文字 + 星 + padding
+  const btnNeed  = 2*fs + 2*padH;                    // 最窄嘅掣（2 個字）
+  const avail320 = 320 - 32 - 24 - 8 - 18;           // #app padding16×2 / 容器margin12×2 / 容器padding4×2 / gap6×3
+  const fits = deepNeed + 3*btnNeed <= avail320;
+  return /white-space:nowrap/.test(r) && /flex:0 0 auto/.test(dm[1]) && /flex:1 1 auto/.test(r) && fits;
+})(), (function(){
+  const dm=/\.type-tab-switch \.hub-mode-btn\[data-tab="deep"\]\{([^}]*)\}/.exec(src);
+  const r=/\.type-tab-switch \.hub-mode-btn\{([^}]*)\}/.exec(src);
+  return 'deep='+(dm?dm[1]:'?')+' | base='+(r?r[1]:'?');
+})());
+chk("★ tab 掣垂直居中（唔會有一粒凸出容器）", /\.type-tab-switch\{align-items:center\}/.test(src));
+chk("★ 強項／弱項 icon 同文字水平對齊（垂直置中，唔准靠 margin 硬推）", (function(){
+  const ic=/\.pros-ico\{([^}]*)\}/.exec(src); if(!ic) return false;
+  const box=/\.pros-box \.pros-item\{([^}]*)\}/.exec(src); if(!box) return false;
+  const base=/\.pros-item\{([^}]*)\}/.exec(src)||[,""];
+  const fs=parseFloat((/font-size:([\d.]+)px/.exec(base[1])||[])[1]);
+  const lh=parseFloat((/line-height:([\d.]+)/.exec(base[1])||[])[1]);
+  const ih=parseFloat((/height:([\d.]+)px/.exec(ic[1])||[])[1]);
+  if(!fs||!lh||!ih) return false;
+  return /align-items:center/.test(box[1])          // icon 中心 = 文字行中心
+      && !/margin/.test(ic[1])                      // ❌ 唔准用 margin-top 硬推（之前高 6px 嘅來源）
+      && ih <= fs*lh;                               // icon 唔可以高過行高，否則置中都冇意義
+})(), (function(){ const ic=/\.pros-ico\{([^}]*)\}/.exec(src)||[,""]; const box=/\.pros-box \.pros-item\{([^}]*)\}/.exec(src)||[,""]; return 'ico='+ic[1]+' | box='+box[1]; })());
 chk("★ 4 個面板都喺 #type 入面", ["typeTabBasic","typeTabRel","typeTabScene","typeTabDeep"].every(id=>new RegExp('id="'+id+'"').test(src)));
 chk("★ 默認只顯示「性格」面板（其餘 3 個 hidden）", /id="typeTabBasic">/.test(src) && /id="typeTabRel" class="hidden"/.test(src) && /id="typeTabScene" class="hidden"/.test(src) && /id="typeTabDeep" class="hidden"/.test(src));
 chk("★ 舊 #typeScenes 獨立分頁已拆走", !/<section id="typeScenes"/.test(src) && !/id="typeScenesList"/.test(src) && !/window\.renderTypeScenes = function/.test(src));

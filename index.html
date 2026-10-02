@@ -441,9 +441,22 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 .hub-scene-back{display:inline-block;border:0;background:transparent;color:#8A7A5A;font-size:12px;font-weight:800;padding:2px 0 12px;cursor:pointer;font-family:inherit}
 
 /* 人格分頁 4 個 tab（Roy 2026-10-02 方案 B）—— 掣本身沿用 .hub-mode-switch */
-.type-tab-switch .hub-mode-btn{padding:9px 4px;font-size:12.5px;display:inline-flex;align-items:center;justify-content:center}
+.type-tab-switch{align-items:center}
+/* 4 個 tab 但「深入分析」係 4 個字＋星星 icon：唔可以平均分（Roy 2026-10-02 圖報斷行）。
+   360px 機：每個掣得 69.5px，但「深入分析」需要 ~74px → 斷行變兩行、白色 pill 凸出。
+   修法：長字掣 flex:0 0 auto ＋ nowrap 自己攞夠位，其餘 3 個 flex:1 1 auto 分剩落嚟嘅。
+   算式（#app padding 16×2、容器 margin 12×2、容器 padding 4×2、gap 6×3）：
+     390px → 308px 可用；「深入分析」88px → 其餘 3 個各 73px ✓
+     320px → 238px 可用；「深入分析」88px → 其餘 3 個各 50px ✓（「性格」只需 33px） */
+.type-tab-switch .hub-mode-btn{flex:1 1 auto;min-width:0;white-space:nowrap;padding:9px 6px;font-size:12.5px;display:inline-flex;align-items:center;justify-content:center}
+.type-tab-switch .hub-mode-btn[data-tab="deep"]{flex:0 0 auto;padding:9px 11px}
 .type-tab-switch .tab-star{width:12px;height:12px;flex:0 0 auto;fill:#C8A24C;margin-right:4px}
-.pros-ico{width:15px;height:15px;flex:0 0 auto;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-top:3px}
+.pros-ico{width:15px;height:15px;flex:0 0 auto;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* icon 同文字水平對齊（Roy 2026-10-02 圖報）：.pros-item line-height:1.8×15px=27px 行高，
+   icon 得 15px 而冇 align-items 就會靠頂排（中心高咗 6px）；靠 margin-top 補一半都唔準。
+   用 align-items:center 令 icon 中心 = 文字行中心。scope 住 .pros-box（只影響人格頁兩欄，
+   唔郁結果頁原本嘅 ＋／－ 排版）。 */
+.pros-box .pros-item{align-items:center}
 .pros-box.is-str .pros-ico{stroke:#9A8149}
 .pros-box.is-wk .pros-ico{stroke:#8A837A}
 .deep-foot-row{display:flex;gap:8px;margin-top:8px}
