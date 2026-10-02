@@ -294,6 +294,8 @@ html.dk .up-cta{background:#D9B26A;color:#12161C}
 .deep-nav-btn.is-mid{flex:.8;color:#8B6F3D;border-color:rgba(212,169,95,.45)}
 .deep-nav-btn[disabled]{opacity:.3;cursor:default}
 .deep-item{cursor:pointer}
+.deep-tag{display:inline-block;font-size:10px;font-weight:700;color:#8a6a1f;background:#f6e7c4;border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:1px}
+.deep-tag.is-free{color:#3F6B4A;background:rgba(110,165,120,.16)}
 .deep-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:rgba(212,169,95,.16);color:#8B6F3D;font-size:11px;font-weight:800;flex-shrink:0}
 .deep-go{color:#8B6F3D;font-size:12px;font-weight:800;flex-shrink:0}
 html.dk .deep-nav-btn{border-color:rgba(255,255,255,.16);color:#C2BAAD}
@@ -931,6 +933,8 @@ html.dk .type-more-row{background:#222A34}
 html.dk .type-more-row:hover{background:#28313C}
 html.dk .type-more-d{color:#A79E92}
 html.dk .type-more-lock{color:#E8C989;background:#3A3324}
+html.dk .deep-tag{color:#E8C989;background:#3A3324}
+html.dk .deep-tag.is-free{color:#9FD0A8;background:rgba(120,180,130,.14)}
 html.dk .scene-go-row{background:#222A34}
 html.dk .scene-go-row:hover{background:#28313C}
 html.dk .scene-go-d{color:#A79E92}
@@ -1506,6 +1510,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <div class="text-xs tracking-widest brand-gold font-bold mb-3">完整版多咗啲咩</div>
   <p class="text-sm leading-relaxed">免費版已經包括 60 題測試、16 型性格百科、個人相處同拍拖攻略。</p>
   <p class="text-sm leading-relaxed mt-3">完整版加一個新項目：<b>人格深入分析</b>。16 種人格，每一種有 <b>9 章</b> —— 由核心動機、盲點、壓力反應，講到職場、愛情、友情，以及「唔好同佢講嘅 3 句」。</p>
+  <p class="text-sm leading-relaxed mt-3">每一種人格嘅<b>第 1 章免費</b>，你可以先睇咗先決定。</p>
   <p class="text-sm leading-relaxed mt-3">一次買斷，之後新增嘅章節都包括在內。</p>
  </div>
 
@@ -1517,7 +1522,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    <tr><td>16 型性格百科</td><td class="yes">有</td><td class="yes">有</td></tr>
    <tr><td>個人相處同拍拖攻略</td><td class="yes">有</td><td class="yes">有</td></tr>
    <tr><td>香港 16 型統計</td><td class="yes">有</td><td class="yes">有</td></tr>
-   <tr><td><b>人格深入分析</b><br><span class="text-[11px] text-gray-500">16 種人格 × 9 章</span></td><td class="no">—</td><td class="yes">有</td></tr>
+   <tr><td><b>人格深入分析</b><br><span class="text-[11px] text-gray-500">16 種人格 × 9 章</span></td><td class="yes">第 1 章</td><td class="yes">全部 9 章</td></tr>
   </table>
  </div>
 
@@ -5429,7 +5434,8 @@ return full;
 // ====================== 人格深入分析（完整版） ======================
 window.DEEP_ORDER = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
 window.openDeep = function(){
-if(window.getTier() !== "full"){ window.openUpgrade(); return; }
+// 目錄全開放（Roy 2026-10-02）：免費用戶都睇得到 16 型 + 9 章標題，
+// 只有第 2–9 章內文要完整版（第 1 章免費）
 window.renderDeepList();
 show("deep");
 window.scrollTo(0,0);
@@ -5470,12 +5476,14 @@ try{ const _n = document.getElementById("deepHint"); if(_n) _n.style.display = "
 try{ const _c = document.getElementById("deepCta"); if(_c) _c.style.display = "none"; }catch(e){}
 const T = (window.TYPES && window.TYPES[t]) || {};
 const PL = window.getPalette(t);
+const _full = (window.getTier() === "full");
 box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]"><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span> · ' + (T.cn || "") + '</div>' +
-'<div class="text-xs text-gray-500 mt-1">' + d.chapters.length + ' 章 · 完整版內容</div></div>' +
+'<div class="text-xs text-gray-500 mt-1">' + d.chapters.length + ' 章 · ' + (_full ? "完整版內容" : "第 1 章免費，其餘要完整版") + '</div></div>' +
 d.chapters.map(function(c, i){
+const _tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
 return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" onclick="openDeepChapter(' + i + ')">' +
 '<div class="flex items-start gap-3"><span class="deep-num">' + (i + 1) + '</span>' +
-'<div class="min-w-0 flex-1"><div class="font-bold text-[14px]">' + c.t + '</div>' +
+'<div class="min-w-0 flex-1"><div class="font-bold text-[14px]">' + c.t + _tag + '</div>' +
 '<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div>' +
 '</div></button>';
 }).join("") +
@@ -5505,6 +5513,8 @@ return;
 }
 if(i < 0) i = 0;
 if(i > d.chapters.length - 1) i = d.chapters.length - 1;
+// 第 1 章免費試睇；第 2 章起要完整版（Roy 2026-10-02）
+if(i > 0 && window.getTier() !== "full"){ window.openUpgrade(); return; }
 window._deepCh = i;
 const T = (window.TYPES && window.TYPES[t]) || {};
 const ch = d.chapters[i];
@@ -5513,7 +5523,7 @@ document.getElementById("deepChapterCrumb").textContent = t + " · " + (i + 1) +
 document.getElementById("deepChapterType").innerHTML = (window.typeIcoHtml ? window.typeIcoHtml(t) : t);
 document.getElementById("deepChapterType").dataset.code = t;
 document.getElementById("deepChapterCn").textContent = T.cn || "";
-document.getElementById("deepChapterHead").textContent = "完整版 · 第 " + (i + 1) + " 章";
+document.getElementById("deepChapterHead").textContent = ((i === 0 && window.getTier() !== "full") ? "第 1 章 · 免費試睇" : "完整版 · 第 " + (i + 1) + " 章");
 document.getElementById("deepChapterBody").innerHTML = window.formatGuideHtml(ch.b);
 const hero = document.getElementById("deepChapterHero");
 if(hero){ const PL = window.getPalette(t); hero.style.background = "linear-gradient(135deg, " + PL.c1 + ", " + PL.c2 + ")"; }
@@ -5556,17 +5566,17 @@ window.renderTypeMore = function(){
  const _nS = Object.keys(window.SOCIAL || {}).length + Object.keys(window.ROMANCE || {}).length;
  const rows = [
   {t:code + " × " + _nS + " 個場景", d:"同人相處 7 個 + 拍拖關係 3 個：WhatsApp 群、屋企人、同事、室友、曖昧、分手、見家長…", oc:"openTypeScenes('" + code + "')"},
-  {t:"人格深入分析", d:"9 章：核心動機、3 個盲點、壓力反應、職場、愛情、友情…", oc:"openDeepFor('" + code + "')", lock:true}
+  {t:"人格深入分析", d:"9 章：核心動機、3 個盲點、壓力反應、職場、愛情、友情…", oc:"openDeepFor('" + code + "')", badge:(window.getTier() === "full" ? "" : "第 1 章免費")}
  ];
  box.innerHTML = rows.map(function(r){
   return '<button type="button" class="type-more-row" data-more="' + r.t + '" onclick="' + r.oc + '">'
-   + '<span class="type-more-t">' + r.t + (r.lock ? '<span class="type-more-lock">完整版</span>' : '') + '</span>'
+   + '<span class="type-more-t">' + r.t + (r.badge ? '<span class="type-more-lock">' + r.badge + '</span>' : '') + '</span>'
    + '<span class="type-more-d">' + r.d + '</span>'
    + '</button>';
  }).join("");
 };
 window.openDeepFor = function(code){
- if(!window.isUnlocked || !window.isUnlocked()){ window.openUpgrade(); return; }
+ // 目錄全開放：任何人都入得（第 1 章免費，其餘章節喺 openDeepChapter 才把關）
  window.openDeepType(String(code || "").toUpperCase());
 };
 // ===== 百科雙模式：由人格睇／由場景睇（Roy 2026-10-01 方案 A）=====

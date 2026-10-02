@@ -37,8 +37,8 @@ setTimeout(async ()=>{
   chk('★ 探索更多已冇「場景攻略」入口（Roy 2026-10-01：全部收埋入百科）', !/data-acc="scenes"/.test(src) && !/openScenes\(\)/.test(src));
   chk('★ 百科有雙模式切換（由人格睇／由場景睇）', /class="hub-mode-btn is-on" data-mode="type"/.test(src) && /data-mode="scene"/.test(src) && /window\.setHubMode = function/.test(src));
   chk('★ 探索更多順序：關於→百科→統計→計分→私隱（Roy 指定）', (function(){ const b = src.slice(src.indexOf('id="homeAccordion"')); const got = [...b.matchAll(/class="home-acc-item" data-acc="([a-z]+)"/g)].map(m => m[1]); return JSON.stringify(got) === JSON.stringify(["about","hub","stats","method","privacy"]); })(), (function(){ const b = src.slice(src.indexOf('id="homeAccordion"')); return [...b.matchAll(/class="home-acc-item" data-acc="([a-z]+)"/g)].map(m => m[1]).join(" → "); })());
-  chk('★ 人格頁有深入分析入口（帶「完整版」標記）', /type-more-lock">完整版/.test(src) && /openDeepFor\(/.test(src));
-  chk('★ 未解鎖撳深入分析入口會轉去升級頁', /window\.openDeepFor = function\(code\)\{[\s\S]{0,80}openUpgrade\(\)/.test(src));
+  chk('★ 人格頁有深入分析入口（免費用戶標「第 1 章免費」）', /badge:\(window\.getTier\(\) === "full" \? "" : "第 1 章免費"\)/.test(src) && /openDeepFor\(/.test(src));
+  chk('★ 免費用戶撳深入分析入口直入目錄（目錄全開放，唔再跳升級頁）', !/window\.openDeepFor = function\(code\)\{[\s\S]{0,110}openUpgrade\(\)/.test(src));
   chk('★ 主頁頂仍有星級用戶入口', /id="tierBtn"/.test(src));
   chk('★ 目錄項已經冇「睇」字（Roy 話唔需要）', !/deep-go">睇/.test(src));
   chk('★ 開放下拉重整（Roy 要求；唔再鎖 no-pull）', !/html\.no-pull/.test(src) && !/_noPull/.test(src));
@@ -63,7 +63,26 @@ setTimeout(async ()=>{
   chk('免費用戶撳等級掣 → 去 #upgrade', vis('upgrade') && !vis('home'), 'upgrade='+vis('upgrade'));
   chk('升級頁有價錢 HK$18', /HK\$18/.test($('#upgrade .up-price').textContent));
   chk('升級頁有免費／完整對比表', !!$('#upgrade table.up-cmp'));
-  chk('★ 免費用戶 openDeep() 會彈返升級頁（唔會偷入）', (function(){ w.openDeep(); return vis('upgrade') && !vis('deep'); })());
+  // ---------- 目錄全開放 + 第 1 章免費（Roy 2026-10-02）----------
+  const _s=(ms)=>new Promise(r=>setTimeout(r,ms));
+  w.localStorage.setItem('hkmbti_tier','free'); w.renderTier();
+  w.show('home'); await _s(30); w.openDeep(); await _s(40);
+  chk('★ 免費用戶 openDeep() 入到 16 型目錄（目錄全開放）', vis('deep') && d.querySelectorAll('#deepTypeGrid .hub-type-card').length===16, 'deep='+vis('deep'));
+  w.openDeepType('INTJ'); await _s(40);
+  chk('★ 免費用戶睇得到 9 章目錄', d.querySelectorAll('#deepList .deep-item').length===9, d.querySelectorAll('#deepList .deep-item').length);
+  chk('★ 第 1 章標「免費」', /deep-tag is-free">免費/.test($('#deepList').innerHTML));
+  chk('★ 第 2–9 章標「完整版」（8 個）', ($('#deepList').innerHTML.match(/deep-tag">完整版/g)||[]).length===8, ($('#deepList').innerHTML.match(/deep-tag">完整版/g)||[]).length);
+  chk('★ 目錄頂卡寫「第 1 章免費，其餘要完整版」', /第 1 章免費，其餘要完整版/.test($('#deepList').textContent));
+  w.openDeepChapter(0); await _s(40);
+  chk('★ 免費用戶開得到第 1 章', vis('deepChapter'), 'deepChapter='+vis('deepChapter'));
+  chk('★ 第 1 章 head = 第 1 章 · 免費試睇', $('#deepChapterHead').textContent==='第 1 章 · 免費試睇', $('#deepChapterHead').textContent);
+  chk('★ 第 1 章有真內容（>300 字元）', $('#deepChapterBody').innerHTML.length>300, $('#deepChapterBody').innerHTML.length);
+  w.openDeepChapter(1); await _s(40);
+  chk('★ 免費用戶撳第 2 章 → 彈升級頁', vis('upgrade'), 'upgrade='+vis('upgrade'));
+  chk('★ 把關喺 openDeepChapter（唔係入口把關）', /if\(i > 0 && window\.getTier\(\) !== "full"\)\{ window\.openUpgrade\(\); return; \}/.test(src));
+  chk('★ .deep-tag 有黑暗模式覆蓋', /html\.dk \.deep-tag\{/.test(src) && /html\.dk \.deep-tag\.is-free\{/.test(src));
+  chk('★ 升級頁有提「第 1 章免費」', /第 1 章免費/.test($('#upgrade').textContent));
+  chk('★ 對比表：免費欄寫住「第 1 章」', /<td class="yes">第 1 章<\/td>/.test(src));
 
   // ---------- 示範解鎖 ----------
   await w.unlockFull();
@@ -74,7 +93,7 @@ setTimeout(async ()=>{
   chk('解鎖後升級頁 CTA 文字改變', /已解鎖/.test($('#upgradeCta').textContent), $('#upgradeCta').textContent);
   chk('解鎖後自動去人格深入分析', vis('deep'), 'deep='+vis('deep'));
   chk('★ 解鎖後撳深入分析入口會直入（唔再彈升級頁）', (function(){ const before = vis('deep'); w.openType('ENFP','test'); w.openDeepFor('ENFP'); return vis('deep') && w._showing === 'deep'; })(), 'showing=' + w._showing);
-  chk('★ 解鎖後人格頁入口仍然帶「完整版」標記（內容已解鎖）', /type-more-lock/.test($('#typeMoreList').innerHTML) || $('#typeMoreList').innerHTML.length > 0);
+  chk('★ 解鎖後人格頁入口唔再有鎖標記（內容已解鎖）', !/type-more-lock/.test($('#typeMoreList').innerHTML), $('#typeMoreList').innerHTML.slice(0,60));
 
   // ---------- 16 型目錄（色卡版，參考性格百科排位）----------
   const cards=[...d.querySelectorAll('#deepTypeGrid .hub-type-card')];

@@ -67,7 +67,7 @@ chk("★ 人格頁有「深入睇吓呢一型」入口卡", /id="typeMore"[\s\S]
 chk("★ 人格頁入口合併為「X × N 個場景」＋「人格深入分析」（Roy 2026-10-01 方案 A）", (function(){ const i = src.indexOf("window.renderTypeMore"); const fn = src.slice(i, src.indexOf("window.openDeepFor", i)); return /openTypeScenes\('/.test(fn) && /"人格深入分析"/.test(fn) && !/"個人相處"/.test(fn) && !/"個人拍拖"/.test(fn); })());
 chk("★ 入口函數都有定義", ["openTypeScenes","openDeepFor","renderTypeScenes"].every(f => new RegExp("window\\." + f + " = function").test(src)));
 chk("★ typeScenes 分頁存在且有返回掣", /<section id="typeScenes"/.test(src) && /id="typeScenesList"/.test(src));
-chk("★ 深入分析入口要解鎖（未解鎖跳升級頁）", /if\(!window\.isUnlocked \|\| !window\.isUnlocked\(\)\)\{ window\.openUpgrade\(\); return; \}/.test(src) && /window\.isUnlocked = function\(\)\{ return window\.getTier\(\) === "full"; \};/.test(src));
+chk("★ 深入分析入口全開放（目錄免費睇，把關喺第 2–9 章）", !/openDeepFor = function\(code\)\{[\s\S]{0,130}openUpgrade/.test(src) && /if\(i > 0 && window\.getTier\(\) !== "full"\)\{ window\.openUpgrade\(\); return; \}/.test(src) && /window\.isUnlocked = function\(\)\{ return window\.getTier\(\) === "full"; \};/.test(src));
   chk("★ 舊「正在睇 XX」提示條已隨分頁拆走", !src.includes("scene-for-banner") && !src.includes("_socialForType") && !src.includes("_romanceForType"));
   chk("★ 人格頁入口 row 有黑暗模式覆蓋", /html\.dk \.type-more-row\{/.test(src));
 
@@ -81,7 +81,7 @@ setTimeout(() => {
   if (!w.SOCIAL) w.SOCIAL = { WhatsAppGroup: { name: "WhatsApp 群", desc: "d" }, TeaFriend: { name: "飲茶朋友", desc: "d" } };
   if (!w.ROMANCE) w.ROMANCE = { 拍拖: { name: "拍拖", desc: "d" }, 吵架: { name: "吵架", desc: "d" } };
   if (!w.TYPES) w.TYPES = { ENFP: { name: "調停者" }, INTJ: { name: "建築師" } };
-  if (!w.PREMIUM) w.PREMIUM = { INTJ: { chapters: [{ t: "第一章", b: "測試內容一。\n\n- 點一\n- 點二" }] } };
+  if (!w.PREMIUM) w.PREMIUM = { INTJ: { chapters: [{ t: "第一章", b: "測試內容一。\n\n- 點一\n- 點二" }, { t: "第二章", b: "測試內容二。\n\n- 點三" }] } };  // 2 章：第 1 章免費、第 2 章要解鎖（Roy 2026-10-02）
 
   // ① 百科：維度掣撳入 → 維度詳解分頁
   w.openHub();
@@ -180,8 +180,10 @@ setTimeout(() => {
   chk("★ 深入分析章節頁仍 render 到內文", w.$("deepChapterBody").innerHTML.length > 20, "內文 " + w.$("deepChapterBody").innerHTML.length);
 
   // ⑥ 未解鎖：深入分析入口會跳升級頁
-  w.openDeepFor("ENFP");
-  chk("★ 未解鎖撳深入分析 → 跳升級頁", !$("#upgrade").classList.contains("hidden") || w._showing === "upgrade", "showing=" + w._showing);
+  w.openDeepFor("INTJ");
+  chk("★ 免費用戶撳深入分析 → 入到目錄（目錄全開放）", w._showing === "deep", "showing=" + w._showing);
+  w.openDeepChapter(1);
+  chk("★ 免費用戶撳第 2 章 → 跳升級頁", !$("#upgrade").classList.contains("hidden") || w._showing === "upgrade", "showing=" + w._showing);
 
   console.log(fail === 0 ? "\n===== 全部通過（" + pass + "/" + pass + "）=====" : "\n===== 有失敗（" + pass + "/" + (pass + fail) + "）=====");
   process.exit(fail === 0 ? 0 : 1);
