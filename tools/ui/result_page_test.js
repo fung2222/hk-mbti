@@ -23,8 +23,9 @@ chk("★ ② 次序＝人格／完成時間文字 → 分享卡 → 三掣",
     iTa>0 && iCard>iTa && iBtn>iCard, "ta="+iTa+" card="+iCard+" btn="+iBtn);
 chk("★ ② 完成時間喺文字嗰組（卡片上面）", rsec.indexOf('id="finishTime"') < iCard);
 const btn=[...rsec.matchAll(/onclick="(downloadCard|shareResult|shareLinkOnly)\(\)" class="([^"]+)"/g)].map(m=>m[2]);
-chk("★ ③ 三粒掣＝三種唔同款（btn-gold／btn-line／btn-quiet）",
-    btn.length===3 && /btn-gold/.test(btn[0]) && /btn-line/.test(btn[1]) && /btn-quiet/.test(btn[2]), btn.join(" | "));
+chk("★ ③ 三粒掣**統一**同一個柔和風格 .share-btn（Roy 2026-10-02：三層次配色睇落怪）",
+    btn.length===3 && btn.every(b=>/share-btn/.test(b)), btn.join(" | "));
+chk("★ ③ 三粒掣唔再係金實心／白框混搭", !/btn-gold/.test(btn.join(" ")));
 chk("★ ⑥ 底部掣改咗「立即開始」", /goPickVersion\(\)">立即開始</.test(rsec));
 chk("★ ⑥ 冇殘留「再測一次」掣", !/>再測一次</.test(rsec));
 
@@ -75,13 +76,54 @@ const dist={}; allWords.forEach(x=>{ const f=MAP[x]||MAP[x.replace(/\s+/g,"")]; 
 const vs=Object.values(dist);
 chk("★ ⑦ 分佈平均（最多－最少 ≤ 12）", Math.max(...vs)-Math.min(...vs)<=12, "分佈 "+JSON.stringify(dist));
 
+// ───────── 五、最底 CTA 發光燈泡（Roy 2026-10-02 #6）─────────
+(function(){
+  const hits = [SRC.indexOf('<p class="softbox-sub">想確認自己 MBTI 人格？</p>')];
+  const nTx = (SRC.match(/想確認自己 MBTI 人格？/g) || []).length;
+  chk("★ ⑥ 8 個「想確認自己 MBTI 人格？」CTA 全部都有發光燈泡喺上面",
+      nTx >= 8 && (SRC.match(/<span class="cta-bulb">/g) || []).length === nTx,
+      "文案 " + nTx + " 處 / 燈泡 " + ((SRC.match(/<span class="cta-bulb">/g) || []).length) + " 個");
+  chk("★ ⑥ 燈泡喺文案**之前**（上面）",
+      /class="cta-bulb">[\s\S]{0,700}?<\/span>\s*<p class="softbox-sub">想確認自己 MBTI 人格？<\/p>/.test(SRC));
+  chk("★ ⑥ 燈泡有顏色（var(--gold)，dark 自動跟）",
+      /\.cta-bulb\{[^}]*color:var\(--gold\)/.test(SRC));
+  chk("★ ⑥ 燈泡有「發光」效果（drop-shadow glow，唔係硬邊）",
+      /\.cta-bulb\{[^}]*filter:drop-shadow\([^)]*\)/.test(SRC));
+  chk("★ ⑥ 燈泡置中（margin auto）＋同文字有距離",
+      /\.cta-bulb\{[^}]*margin:0 auto [0-9]+px/.test(SRC));
+  chk("★ ⑥ 燈泡畫嘅係燈泡＋光線（有 8 條 path：泡身／燈頭／頸／光線）",
+      (function(){ const m=/<span class="cta-bulb"><svg[\s\S]*?<\/svg><\/span>/.exec(SRC); return !!m && (m[0].match(/<path/g)||[]).length >= 8; })());
+  // ⚠️ 唔可以喺度重複 preflight 嘅全站 emoji 檢查：✓ ✗（U+2713/2717）本身喺 2600–27BF 範圍內、
+//    但係全站**准許**嘅符號 → 寧願只驗燈泡嗰段 markup 冇 emoji（全站檢查交返 preflight，已係硬失敗）。
+chk("★ ⑥ 燈泡係 SVG 畫嘅（唔用 emoji 字元）",
+    (function(){ const m=/<span class="cta-bulb">([\s\S]*?)<\/span>/.exec(SRC);
+      return !!m && /^<svg /.test(m[1].trim()) && !/[\u{1F000}-\u{1FAFF}]/u.test(m[1]); })());
+  // 只准出現喺 CTA（唔可以亂咁加去其他卡）
+  chk("★ ⑥ 燈泡只出現喺 CTA softbox 卡入面", (function(){
+    const idxs = [...SRC.matchAll(/<span class="cta-bulb">/g)].map(m=>m.index);
+    return idxs.every(i => SRC.slice(Math.max(0,i-200), i+300).includes("softbox"));
+  })());
+})();
+const dom2=new JSDOM(HTML,{runScripts:"dangerously",pretendToBeVisual:true,url:"https://example.com/"});
+const w2d=dom2.window, d2=dom2.window.document;
+w2d.openType("INTJ","hub");
+try{ w2d.setTypeTab("rel", true); }catch(e){}
+const cmpHtml = d2.getElementById("typeCompat") ? d2.getElementById("typeCompat").innerHTML : "";
+const cmpIcos = d2.querySelectorAll("#typeCompat .cmp-ico svg");
+const cmpRows = d2.querySelectorAll("#typeCompat .flex-1");
+chk("★ ⑤ 關係 tab「同邊種人最夾？」每行英文前面有型別 icon（"+cmpRows.length+" 行）",
+    cmpRows.length > 0 && cmpIcos.length === cmpRows.length, "行=" + cmpRows.length + " icon=" + cmpIcos.length);
+chk("★ ⑤ 關係 tab icon 用返該型色卡主色",
+    [...cmpIcos].every(s => /(^#[0-9A-Fa-f]{6}$)|(^rgb\()/.test((s.closest(".cmp-ico")||{}).style ? s.closest(".cmp-ico").style.color : "")),
+    [...d2.querySelectorAll("#typeCompat .cmp-ico")].map(s=>s.style.color).slice(0,3).join(","));
+
 // ───────── 四、dark 規則位置 ─────────
 const dk=SRC.slice(SRC.indexOf('id="dark-layer"'), SRC.indexOf('id="dark-layer"')+22000);
-chk("★ ③ dark：btn-line／btn-quiet 規則喺 #dark-layer 內（唔准落主 style）",
-    /html\.dk \.btn-line\{/.test(dk) && /html\.dk \.btn-quiet\{/.test(dk));
+chk("★ ③ dark：share-btn 規則喺 #dark-layer 內（唔准落主 style）",
+    /html\.dk \.share-btn\{/.test(dk));
 // ⚠️ 主 style 本身有歷史遺留嘅 html.dk 規則（唔係今次改動）→ 只驗我新加嘅兩個 class 有冇落 #dark-layer
-chk("★ ③ 新加嘅 .btn-line／.btn-quiet 冇喺主 style 出現 dark 版",
-    !/html\.dk \.btn-(line|quiet)\{/.test(SRC.slice(0, SRC.indexOf('id="dark-layer"'))));
+chk("★ ③ .share-btn 冇喺主 style 出現 dark 版",
+    !/html\.dk \.share-btn\{/.test(SRC.slice(0, SRC.indexOf('id="dark-layer"'))));
 
 console.log("\n===== 結果頁測試 "+ok+"/"+total+" =====");
 process.exit(ok===total?0:1);

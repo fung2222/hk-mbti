@@ -18,7 +18,7 @@ chk("★ 百科首頁維度卡有 8 個字母掣（E/I、S/N、T/F、J/P）", (f
 chk("★ 百科卡底有「撳入去睇」link → #dims", /class="hub-more-link" onclick="openDims\(\)"/.test(src));
 chk("★ 維度詳解分頁（#dims）有「4 個英文字母代表咩」卡（光譜整合入嚟）", /<section id="dims"/.test(src) && /id="dimsLetters"/.test(src) && /class="hub-letter-list"/.test(src));
 chk("★ 維度詳解分頁有 8 個字母掣 → #letter", (function(){ const s = src.slice(src.indexOf('<section id="dims"'), src.indexOf('<!-- ========== 人格深入分析')); return (s.match(/openLetter\('/g) || []).length === 8; })());
-chk("★ 16 型色卡（hub-bleed）下間距＝16px（Roy 2026-10-02：原本 26px 太大唔啱比例；26px 例外值只留返場景文章頁）", /\.hub-bleed\{margin:0 -16px 16px/.test(src));
+chk("★ 16 型色卡（hub-bleed）下間距＝12px（Roy 2026-10-02 兩輪：26px 太大 → 16px 後再要緊啲 → 12px）", /\.hub-bleed\{margin:0 -16px 12px/.test(src));
 chk("★ 場景文章頁：色卡同上內文距離夠（26px）", /\.article-type-stage\{margin:0 -16px 26px/.test(src));
 chk("★ 場景文章頁：最底入口卡同上內文唔貼（+9px）", /#socialArticle \.softbox-tight,#romanceArticle \.softbox-tight\{margin-top:9px\}/.test(src));
 chk("★ 非主頁垂直間距統一 16px（卡片同非卡容器一致）", !/\.(article-guide|wiz-facts)\{[^}]*margin:[^;}]*20px/.test(src) && /\.article-guide\{margin:0 4px 16px/.test(src) && /\.type-rel-grid\{[^}]*margin-bottom:16px\}/.test(src));
@@ -33,7 +33,14 @@ chk("★ 測試入口全部呼叫 goPickVersion()", (src.match(/goPickVersion\(\
 chk("★ show() 清單有 dims 同 typeScenes（scenes 已刪）", /"hub","dims"/.test(src) && /"dims","letter","type"/.test(src) && !/\bdims","scenes/.test(src));
 chk("★ 光譜 5 段齊（E/I、S/N、T/F、J/P、T/A）", (function(){ const m = src.match(/window\.HUB_LETTERS = \[[\s\S]*?\n\];/); if(!m) return false; const t = m[0]; return ["E vs I","S vs N","T vs F","J vs P","T vs A"].every(x => t.includes(x)); })());
 chk("★ 光譜段有「唔係…」澄清句", /唔係「內向 = 怕醜」/.test(src) && /唔係「P 型 = 散漫」/.test(src));
-chk("★ 測試入口卡有「選擇測試版本」掣", /id="hubCta"[\s\S]{0,160}選擇測試版本/.test(src));
+// ⚠️ 用字數窗口好脆弱：2026-10-02 喺 CTA 文案上面加咗發光燈泡 span（~650 字）→ 舊窗口 {0,160} 掃唔到。
+//    改成切出成個 #hubCta 卡再驗，唔靠字數。
+chk("★ 測試入口卡有「選擇測試版本」掣", (function(){
+  const i = src.indexOf('id="hubCta"');
+  if(i < 0) return false;
+  const seg = src.slice(i, src.indexOf("</div>", src.indexOf("goPickVersion", i)) + 6);
+  return /選擇測試版本/.test(seg) && /goPickVersion\(\)/.test(seg);
+})());
 // Roy 2026-10-01：百科「由人格睇」次序 = 4 維度卡 → 16 型卡 → 比較工具 → 測試入口（最底）
 chk("★ 百科「由人格睇」次序：16 型卡 → 比較工具 → 測試入口（最底）", (function(){
   const i = src.indexOf('<div id="hubTypeMode">'), j = src.indexOf('</div><!-- /hubTypeMode -->');
@@ -64,20 +71,23 @@ chk("★ 結果頁已經冇「性格百科」入口（Roy 2026-10-02：有睇完
 chk("★ 百科「16 型卡」band 下間距 16px，同其他 band 一致（原本 26px＝場景文章頁例外值，唔啱比例）", (function(){
   const mb = (n)=>{ const m=new RegExp("\\."+n+"\\{([^}]*)\\}").exec(src); if(!m) return -1;
     const mm=/margin:([^;]*);/.exec(m[1]); return parseInt(mm[1].trim().split(/\s+/)[2],10); };
-  return mb("hub-bleed")===16 && mb("result-bleed")===16 && mb("scenes-bleed")===16;
+  return mb("hub-bleed")===12 && mb("result-bleed")===16 && mb("scenes-bleed")===16;
 })());
 chk("★ 卡牌格 → 比較工具嘅實際間距（band padding-bottom ＋ margin-bottom）唔可以大過同類 band", (function(){
   const gap = (n)=>{ const m=new RegExp("\\."+n+"\\{([^}]*)\\}").exec(src); if(!m) return 9999;
     const pb=parseInt(/padding:([^;]*);/.exec(m[1])[1].trim().split(/\s+/)[2],10);
     const mb2=parseInt(/margin:([^;]*);/.exec(m[1])[1].trim().split(/\s+/)[2],10); return pb+mb2; };
-  return gap("hub-bleed") <= gap("result-bleed") && gap("hub-bleed") <= gap("scenes-bleed");
+  return gap("hub-bleed") < gap("result-bleed") && gap("hub-bleed") < gap("scenes-bleed");
 })(), "hub=" + (function(){ return ""; })());
 chk("★ 桌面導覽列同右選單一致（冇光譜／相處攻略）", (function(){
   const i = src.indexOf('id="dtNav"'), seg = src.slice(i, src.indexOf("</nav>", i));
   return /性格百科/.test(seg) && /stats\.html/.test(seg) && /record\.html/.test(seg) && !/openSpectrum|openSocial\(/.test(seg);
 })());
 chk("★ 頁底唔再留 96px 大白（class 已冇 pb-24，改 16px + 安全區）", !/class="[^"]*pb-24/.test(src) && /#app\{padding-bottom:calc\(16px \+ env\(safe-area-inset-bottom\)\)\}/.test(src), (src.match(/id="app" class="[^"]*"/) || [""])[0]);
-chk("★ 測試入口用 goPickVersion（去主頁揀版本位）", /id="hubCta"[\s\S]{0,200}goPickVersion\(\)/.test(src));
+chk("★ 測試入口用 goPickVersion（去主頁揀版本位）", (function(){
+  const i = src.indexOf('id="hubCta"');
+  return i > 0 && /goPickVersion\(\)/.test(src.slice(i, i + 1200));
+})());
 chk("★ 百科兩個模式各有測試入口，舊「返主頁開始測試」已清", (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return !/返主頁開始測試/.test(hub) && (hub.match(/選擇測試版本/g) || []).length === 2; })(), (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return "舊掣 " + ((hub.match(/返主頁開始測試/g) || []).length) + " 個、測試版本 " + ((hub.match(/選擇測試版本/g) || []).length) + " 個"; })());
 chk("★ 人格頁有 4 個分頁掣（性格／關係／場景／深入）", (function(){
   const i = src.indexOf('id="typeTabSwitch"'); if(i < 0) return false;
@@ -171,7 +181,28 @@ setTimeout(() => {
   const tsRows = d.querySelectorAll("#typeSceneList .scene-go-row");
   chk("★ 該型場景 tab：10 個場景（ENFP）", tsRows.length === 10, "render 出 " + tsRows.length);
   chk("★ 撳「呢一型其他場景」→ 去人格頁 + 場景 tab（唔再係獨立分頁）", w._showing === "type" && w._typeTab === "scene" && !$("#typeTabScene").classList.contains("hidden"), "showing=" + w._showing + " tab=" + w._typeTab);
-  chk("★ 該型場景卡直接呼叫 openSocialArticle／openRomanceArticle", /open(Social|Romance)Article\(/.test(tsRows[0].getAttribute("onclick")), tsRows[0].getAttribute("onclick"));
+  // ⚠️ 2026-10-02 教訓：原本只驗 onclick 字串有冇「openSocialArticle(」→ 漏傳 type 參數
+  //    （openSocialArticle(key, type) 少一個 arg → 靜靜 return → 掣完全冇反應）都照綠。
+  //    假守門！而家一定要**真撳** + 驗參數數目。
+  chk("★ 該型場景卡 onclick 有齊 2 個參數（key ＋ type）",
+      /open(Social|Romance)Article\('[^']+','[A-Z]{4}'\)/.test(tsRows[0].getAttribute("onclick")), tsRows[0].getAttribute("onclick"));
+  (function(){
+    const before = w._showing;
+    tsRows[0].dispatchEvent(new w.MouseEvent("click", { bubbles: true }));
+    const after = w._showing;
+    const okNav = (after === "socialArticle" || after === "romanceArticle");
+    chk("★ ★ 真撳第一個場景卡 → 真係去咗文章頁（bug 2026-10-02：撳完冇反應）", okNav, "before=" + before + " after=" + after);
+    if(okNav){
+      // ⚠️ 呢個檔嘅 $ 係 d.querySelector（CSS selector），唔係 getElementById → 要寫 "#id"
+      const bodySel = after === "socialArticle" ? "#socialArticleBody" : "#romanceArticleBody";
+      const bEl = $(bodySel);
+      // ⚠️ 測試環境嘅 SOCIAL／ROMANCE 係 mock（「測試內文一。」）→ 唔可以要求 50 字，
+      //    重點係「有真內容 render 入去、唔係空頁」。
+      chk("★ 文章內容真係 render 咗（唔係空頁）", !!bEl && bEl.innerHTML.includes("<p>") && bEl.textContent.trim().length > 5,
+          "字數=" + (bEl ? bEl.textContent.trim().length : 0));
+    }
+    w.openTypeScenes("ENFP");
+  })();
 
   // ①d 舊相處／拍拖／光譜分頁已拆走（Roy 2026-10-01「整靚啲潔淨啲」）
   chk("★ 舊分頁已拆走：#spectrum／#social／#romance 都唔存在", !w.$("spectrum") && !w.$("social") && !w.$("romance"));

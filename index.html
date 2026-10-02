@@ -335,6 +335,11 @@ html.dk .up-cmp .no{color:#6E675C}
 .softbox{padding:26px 22px 24px;text-align:center;border:1px solid rgba(212,169,95,.22)}
 .softbox-title{font-size:19px;font-weight:900;letter-spacing:-.01em;color:var(--ink);line-height:1.45;margin:0}
 .softbox-sub{font-size:15px;color:#6b6560;margin-top:7px;line-height:1.6;margin-bottom:0}
+/* 最底 CTA 嘅發光燈泡（Roy 2026-10-02）：有顏色、置中、帶出「可以發掘自己性格」嘅感覺。
+   光暈用 drop-shadow（只改顏色／光影，唔郁尺寸位置）→ dark 都跟 var(--gold) 自動變。 */
+.cta-bulb{display:block;width:30px;height:30px;margin:0 auto 6px;color:var(--gold);
+ filter:drop-shadow(0 0 5px rgba(200,162,76,.55)) drop-shadow(0 0 13px rgba(200,162,76,.28))}
+.cta-bulb svg{width:100%;height:100%;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .softbox-sub:first-child{margin-top:0}
 .softbox-btn{
  -webkit-appearance:none;appearance:none;font-family:inherit;cursor:pointer;
@@ -346,7 +351,7 @@ html.dk .up-cmp .no{color:#6E675C}
 }
 .softbox-btn:hover{border-color:var(--gold);color:#8B6F3D}
 .softbox-btn:active{transform:scale(.97)}
-.hub-bleed{margin:0 -16px 16px;padding:24px 14px 20px;background:linear-gradient(180deg,#fff,var(--paper));}
+.hub-bleed{margin:0 -16px 12px;padding:22px 14px 16px;background:linear-gradient(180deg,#fff,var(--paper));}
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
 .hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
 /* 百科「由場景睇」→ 場景詳情：16 型卡 grid 同下面測試入口卡要有距離（Roy 2026-10-01 報貼住） */
@@ -563,12 +568,11 @@ margin-right:11px;
 .btn-gold{background:var(--gold);color:var(--ink);font-weight:700}
 .btn-gold:hover{background:#c89a4d}
 .btn-gold:active{transform:scale(0.97)}
-/* 分享卡三掣配色（2026-10-02 Roy）：主＝金實心、次＝白底金框、第三＝柔灰 */
-.btn-line{background:#fff;border:1.5px solid var(--gold);color:#9A8149}
-.btn-line:hover{background:rgba(200,162,76,.09)}
-.btn-line:active{transform:scale(.97)}
-.btn-quiet{background:var(--soft);color:#6b6560}
-.btn-quiet:active{transform:scale(.97)}
+/* 分享卡三粒掣：Roy 2026-10-02 定案 —— 唔要三層次（金／白框／灰）睇落怪，
+   三粒**統一**同一個柔和風格（淡底 ＋ 暖邊 ＋ 暖字，同版本卡 pill／探索更多 go 掣同一套語言）。 */
+.share-btn{background:var(--soft);border:1px solid #E0D6BE;color:#7C6B45}
+.share-btn:hover{background:#EDE6D6}
+.share-btn:active{transform:scale(.97)}
 /* 配對列表嘅型別 icon（跟該型色卡主色） */
 .cmp-ico{display:inline-flex;width:17px;height:17px;flex:0 0 auto}
 .cmp-ico svg{width:100%;height:100%;display:block}
@@ -902,9 +906,8 @@ html.dm .home-hero-mbti{font-size:clamp(4.4rem, calc(var(--dm-vw) * 0.23), 6.6re
    鐵律：只改顏色 → 唔准有 display / 尺寸 / 位置 / 動畫改動；
    16 型 16 色、分享卡 canvas、金標 icon 一律不變。 */
 html.dk{color-scheme:dark}
-html.dk .btn-line{background:transparent;border-color:var(--gold);color:var(--gold)}
-html.dk .btn-line:hover{background:rgba(217,178,106,.12)}
-html.dk .btn-quiet{background:var(--soft);color:#A79E92}
+html.dk .share-btn{background:var(--soft);border-color:rgba(236,231,222,.22);color:#D8C69E}
+html.dk .share-btn:hover{background:var(--dk-hover)}
 html.dk{
   --paper:#12161C;--soft:#1B2129;--ink:#ECE7DE;--gold:#D9B26A;--accent:#F0736F;
   --dk-card:#181E26;--dk-hover:#232B35;--dk-on:#2A323C;
@@ -1322,6 +1325,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="card mb-4 softbox">
+ <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
  <p class="softbox-sub">想確認自己 MBTI 人格？</p>
  <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
  </div>
@@ -1414,6 +1418,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <!-- 測試入口（最底，Roy 2026-10-01：16 型卡 → 比較工具 → 測試入口）-->
  <div class="card mb-4 softbox" id="hubCta">
+ <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
  <p class="softbox-sub">想確認自己 MBTI 人格？</p>
  <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
  </div>
@@ -1426,6 +1431,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="hubSceneList"></div>
  <div id="hubSceneDetail" class="hidden"></div>
  <div class="card mb-4 softbox">
+ <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
  <p class="softbox-sub">想確認自己 MBTI 人格？</p>
  <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
  </div>
@@ -1498,7 +1504,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="card softbox" id="deepCta">
-  <p class="softbox-sub">想確認自己 MBTI 人格？</p>
+  <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
+ <p class="softbox-sub">想確認自己 MBTI 人格？</p>
   <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
  </div>
 </section>
@@ -1641,6 +1648,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="card mb-4 softbox">
+ <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
  <p class="softbox-sub">想確認自己 MBTI 人格？</p>
  <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
  </div>
@@ -1686,6 +1694,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="letterFriends" class="text-sm text-gray-700 leading-relaxed"></div>
  </div>
  <div class="card mb-4 softbox">
+ <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
  <p class="softbox-sub">想確認自己 MBTI 人格？</p>
  <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
  </div>
@@ -1820,6 +1829,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="card mb-4 softbox">
+ <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
  <p class="softbox-sub">想確認自己 MBTI 人格？</p>
  <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
  </div>
@@ -1880,6 +1890,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <h2 class="mth-h">私隱</h2>
  <p class="mth-notes-p">測試答案同紀錄只存喺你自己部電話（瀏覽器儲存），唔會上傳。清除瀏覽器資料就會冇咗。<br>另外我哋用 GoatCounter 記錄「有幾多人開過網站、開邊一頁」嘅匿名瀏覽次數：唔記 IP、唔用 cookie、同你嘅測試答案完全分開。</p>
  <div class="card mb-4 softbox">
+ <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
  <p class="softbox-sub">想確認自己 MBTI 人格？</p>
  <button type="button" class="softbox-btn" onclick="goPickVersion()">立即選擇測試版本</button>
  </div>
@@ -2200,9 +2211,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  <div class="mb-2 px-1">
  <div class="grid grid-cols-3 gap-2 max-w-sm mx-auto">
- <button type="button" onclick="downloadCard()" class="btn-gold py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v11"/><path d="M7.5 10l4.5 4.5L16.5 10"/><path d="M4.5 19.5h15"/></svg>儲存圖片</button>
- <button type="button" onclick="shareResult()" class="btn-line py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5V4"/><path d="M8.5 7.5L12 4l3.5 3.5"/><path d="M5.5 12.5v7h13v-7"/></svg>分享圖片</button>
- <button type="button" onclick="shareLinkOnly()" class="btn-quiet py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.2 13.8a3.6 3.6 0 005.4.4l2.6-2.6a3.7 3.7 0 10-5.2-5.2l-1.2 1.2"/><path d="M13.8 10.2a3.6 3.6 0 00-5.4-.4l-2.6 2.6a3.7 3.7 0 105.2 5.2l1.2-1.2"/></svg>分享網址</button>
+ <button type="button" onclick="downloadCard()" class="share-btn py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v11"/><path d="M7.5 10l4.5 4.5L16.5 10"/><path d="M4.5 19.5h15"/></svg>儲存圖片</button>
+ <button type="button" onclick="shareResult()" class="share-btn py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5V4"/><path d="M8.5 7.5L12 4l3.5 3.5"/><path d="M5.5 12.5v7h13v-7"/></svg>分享圖片</button>
+ <button type="button" onclick="shareLinkOnly()" class="share-btn py-2.5 px-1 rounded-xl text-[14px] font-bold leading-tight"><svg class="rbtn-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.2 13.8a3.6 3.6 0 005.4.4l2.6-2.6a3.7 3.7 0 10-5.2-5.2l-1.2 1.2"/><path d="M13.8 10.2a3.6 3.6 0 00-5.4-.4l-2.6 2.6a3.7 3.7 0 105.2 5.2l1.2-1.2"/></svg>分享網址</button>
  </div>
  </div>
  <div id="shareStatus" class="text-[10px] text-gray-500 mt-1 text-center px-2"></div>
@@ -5890,7 +5901,7 @@ window.renderTypeTabs = function(code){
   const ct = window.TYPES[c];
   if(!ct) return "";
   return '<div class="flex items-center gap-3 py-2.5"' + (i ? ' style="border-top:1px solid rgba(30,42,59,.06)"' : '') + '>'
-   + '<div class="flex-1"><div class="font-bold text-sm">' + c + ' · ' + ct.cn + '</div>'
+   + '<div class="flex-1"><div class="font-bold text-sm flex items-center gap-1.5"><span class="cmp-ico" style="color:' + ((window.PALETTE && window.PALETTE[c]) ? window.PALETTE[c].c1 : "currentColor") + '">' + (window.getTypeIcon ? window.getTypeIcon(c) : "") + '</span><span>' + c + ' · ' + ct.cn + '</span></div>'
    + '<div class="text-xs text-gray-500">' + ct.slogan + '</div></div>'
    + '<div class="text-xs text-accent font-bold">' + window.typeCompatPct(code, c) + '% 夾</div></div>';
  }).join("");
@@ -5901,7 +5912,7 @@ window.renderTypeTabs = function(code){
    return list[k] && list[k].articles && list[k].articles[code];
   }).map(function(k){
    const s = list[k];
-   return '<button type="button" class="scene-go-row" onclick="' + fn + "('" + k + "')" + '">'
+   return '<button type="button" class="scene-go-row" onclick="' + fn + "('" + k + "','" + code + "')" + '">'
     + '<span class="scene-go-ico">' + (window.hubSceneIconHtml ? window.hubSceneIconHtml(s.name, 30) : '') + '</span>'
     + '<span class="scene-go-body"><span class="scene-go-t">' + (s.name || k) + '</span>'
     + '<span class="scene-go-d">' + (s.desc || '') + '</span></span></button>';
