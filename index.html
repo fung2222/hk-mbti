@@ -3782,23 +3782,6 @@ state.resumeData = null;
 startTestWithVersion(v, resume);
 };
 
-window.confirmProfileAndStart = function(anon){
-let name = ($("profileName") && $("profileName").value || "").trim();
-let nick = state.nickname || "";
-if(anon){
-name = name || "匿名港人";
-nick = nick || "神秘人";
- } else {
-if(!name){ appNotice("請輸入姓名", "或按「匿名港人」繼續。"); return; }
-if(!nick){ appNotice("請選擇一個稱呼"); return; }
- }
-if(name.length > 12) name = name.slice(0,12);
-state.displayName = name;
-state.nickname = nick;
-try{ localStorage.setItem("hkmbti_profile", JSON.stringify({name, nickname: nick})); }catch(e){}
-const v = state.pendingVersion || "life";
-startTestWithVersion(v);
-};
 
 
 window.startTestWithVersion = function(version, resume){
@@ -4971,15 +4954,6 @@ if(!el) return;
 el.scrollIntoView({behavior:"smooth", block:"start"});
 };
 // 結果頁「再測一次」：返主頁，捲到 3 個版本卡（唔直接開測）
-window.goPickVersion = function(){
-window.goHome();
-setTimeout(function(){
-try{
-const el = $("homeBelow");
-if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
- }catch(e){}
- }, 120);
-};
 window.scrollHomeTop = function(){
 const hero = document.querySelector("#home .home-hero");
 if(hero){ hero.scrollIntoView({behavior:"smooth", block:"start"}); return; }
@@ -5350,19 +5324,6 @@ refreshResumeBanner();
  };
 };
 
-window.confirmProfileAndStart = function(anon){
-let name = ($("profileName") && $("profileName").value || "").trim();
-let nick = state.nickname || "";
-const resume = state.resumeData;
-state.resumeData = null;
-const v = state.pendingVersion || "life";
-if(anon){ name = "匿名港人"; nick = ""; }
-state.displayName = name; state.nickname = nick;
-try{
-localStorage.setItem("hkmbti_profile", JSON.stringify({name:name, nickname:nick, ts:Date.now()}));
- }catch(e){}
-startTestWithVersion(v, resume);
-};
 
 // ====================== Knowledge Hub Functions ======================
 window.openAbout = function(){

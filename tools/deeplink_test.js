@@ -3,7 +3,8 @@
 // 行法：NODE_PATH=/opt/data/profiles/apps/cache/scratch/harness/node_modules node tools/deeplink_test.js
 //
 // 守嘅 regression（2026-09-26 Roy 報「記錄頁 16 型統計撳人格圖彈返主頁」）：
-//   1. #type=XXXX / #about / #hub / #spectrum / #social / #romance / #method / #privacy 都要開到
+//   1. #type=XXXX / #about / #hub / #typeScenes / #method / #privacy 都要開到
+//      （#spectrum / #social / #romance 已於 2026-10-02 拆走，唔再係有效 hash）
 //   2. sessionStorage 舊旗標唔可以劫持明確深層連結（hash 一定要贏）
 //   3. load 之後 hash 再變（同一文件內跳轉）／bfcache 還原（load 唔會再跑）都要照開
 //   4. 跨頁入口要有兩條渠道（sessionStorage + hash）：人格圖、四版選單連結
