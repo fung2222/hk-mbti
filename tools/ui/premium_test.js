@@ -150,7 +150,18 @@ setTimeout(async ()=>{
   chk('★ 冇任何色卡文字硬編 px（除基準 24px）', !/\.hub-type-code\{[^}]*font-size:\d+px/.test(src) && !/\.hub-type-cn\{[^}]*font-size:\d+px/.test(src) && !/\.article-type-card \.hub-type-code\{[^}]*font-size:\d+px/.test(src));
   chk('★ 簡介唔提「買斷」（Roy 指定：只講有咩睇、有咩用）', !/買斷/.test($('#deep #deepIntro').textContent), '');
   chk('INTJ 卡顯示「9 章」', /9 章/.test(cards[0].textContent), cards[0].textContent.replace(/\n/g,' '));
-  chk('未寫嘅型顯示「準備中」', /準備中/.test(cards[1].textContent), cards[1].textContent.replace(/\n/g,' '));
+  // 動態判斷（唔綁死型號）：有內容顯示「N 章」、冇內容顯示「準備中」
+  const _hasContent = (function(){ const keys = Object.keys(w.PREMIUM || {}); return cards.filter(c => keys.includes((c.getAttribute('onclick')||'').match(/'([A-Z]{4})'/)?.[1])); })();
+  const _noContent = (function(){ const keys = Object.keys(w.PREMIUM || {}); return cards.filter(c => !keys.includes((c.getAttribute('onclick')||'').match(/'([A-Z]{4})'/)?.[1])); })();
+  chk('★ 有內容嘅型全部顯示「9 章」', _hasContent.length > 0 && _hasContent.every(c => /9 章/.test(c.textContent)), _hasContent.length + ' 型：' + _hasContent.map(c=>c.textContent.replace(/\n/g,'')).join(' '));
+  chk('★ 未有內容嘅型全部顯示「準備中」（16 型寫齊就自動跳過）', _noContent.length > 0 ? _noContent.every(c => /準備中/.test(c.textContent)) : true, _noContent.length + ' 型');
+  chk('★ premium-data.js 每個型都係 9 章（型號數 × 9 = 章數）', (function(){
+    const types = (prem.match(/^[A-Z]{4}: \{/gm) || []).length;
+    const chapters = (prem.match(/\{ t:"/g) || []).length;
+    return types > 0 && chapters === types * 9;
+  })(), (prem.match(/^[A-Z]{4}: \{/gm)||[]).length + ' 型 × 9 = ' + ((prem.match(/^[A-Z]{4}: \{/gm)||[]).length*9) + '，實際 ' + (prem.match(/\{ t:"/g)||[]).length + ' 章');
+  chk('★ 每章都有 s（摘要）同 b（內文）', (prem.match(/\{ t:"[^"]+",\s*\n\s*s:"[^"]+",\s*\n\s*b:`/g) || []).length === (prem.match(/\{ t:"/g) || []).length, (prem.match(/\{ t:"/g)||[]).length + ' 章');
+  chk('★ 每個型都有 cn（中文名）', (prem.match(/cn:"[^"]+"/g) || []).length >= (prem.match(/^[A-Z]{4}: \{/gm) || []).length);
   chk('★ 卡有該型漸變色（唔係文字格）', /linear-gradient\(135deg,#6B4E9E/.test(cards[0].getAttribute('style')), cards[0].getAttribute('style'));
   chk('★ 16 張卡各有自己顏色', (new Set(cards.map(c=>(c.getAttribute('style')||'').match(/#[0-9A-Fa-f]{6}/g)?.join()))).size === 16);
   // ---------- 港物件 icon（第一版 9 個，實心）----------
