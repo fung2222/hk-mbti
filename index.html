@@ -570,17 +570,23 @@ margin-right:11px;
  line-height:1.2;transition:background .15s ease,transform .12s ease}
 .result-more-btn:hover{background:rgba(232,93,93,.16)}
 .result-more-btn:active{transform:scale(.97)}
-/* 人格頁色卡左右箭咀（Roy 2026-10-02）：快速轉上／下一個類型。
-   顏色用白色半透明 —— 底色係該型色卡嘅漸層（淺深模式一樣），所以唔需要入 #dark-layer。 */
+/* 人格頁色卡／場景文章牌匾左右箭咀（Roy 2026-10-02）：快速轉上／下一個類型。
+   Roy 2026-10-02 第二輪：「想要實心三角不要圓形外框」→ 改實心（svg 本身已經係閉合三角，
+   淨係將 fill 打開、stroke 關掉）＋冇背景、冇邊框。
+   顏色純白 → 底色係該型色卡嘅漸層（淺深模式一樣），所以唔需要入 #dark-layer。 */
 .type-hero-row{display:flex;align-items:center;gap:8px}
 .type-hero-mid{flex:1 1 auto;min-width:0;text-align:center}
-.type-nav{-webkit-appearance:none;appearance:none;flex:0 0 auto;width:40px;height:40px;
+.type-nav{-webkit-appearance:none;appearance:none;flex:0 0 auto;width:34px;height:34px;
  display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
- background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);border-radius:50%;
- color:#fff;padding:0;transition:background .15s ease,transform .12s ease}
-.type-nav:hover{background:rgba(255,255,255,.26)}
-.type-nav:active{transform:scale(.92)}
-.type-nav svg{width:20px;height:20px;display:block;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+ background:none;border:0;padding:0;color:#fff;opacity:.88;
+ transition:opacity .15s ease,transform .12s ease}
+.type-nav:hover{opacity:1}
+.type-nav:active{transform:scale(.9)}
+.type-nav svg{width:22px;height:22px;display:block;fill:currentColor;stroke:none}
+/* 場景文章頁牌匾：.article-type-card 係 pointer-events:none → 箭咀要自己開返 */
+.type-plaque-row{display:flex;align-items:center;gap:10px;width:100%;padding:0 8px;box-sizing:border-box}
+.type-plaque-mid{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.article-type-card .type-nav{pointer-events:auto}
 
 /* 分享卡三粒掣：Roy 2026-10-02 定案 —— 唔要三層次（金／白框／灰）睇落怪，
    三粒**統一**同一個柔和風格（淡底 ＋ 暖邊 ＋ 暖字，同版本卡 pill／探索更多 go 掣同一套語言）。 */
@@ -1730,8 +1736,14 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <div class="article-type-stage">
  <div id="socialArticleHero" class="article-type-card">
+ <div class="type-plaque-row">
+ <button type="button" class="type-nav" aria-label="上一個類型" onclick="articleTypeStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
+ <div class="type-plaque-mid">
  <div class="hub-type-code" id="socialArticleType">INTJ</div>
  <div class="hub-type-cn" id="socialArticleCn"></div>
+ </div>
+ <button type="button" class="type-nav" aria-label="下一個類型" onclick="articleTypeStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
+ </div>
  </div>
  </div>
 
@@ -1757,8 +1769,14 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <div class="article-type-stage">
  <div id="romanceArticleHero" class="article-type-card">
+ <div class="type-plaque-row">
+ <button type="button" class="type-nav" aria-label="上一個類型" onclick="articleTypeStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
+ <div class="type-plaque-mid">
  <div class="hub-type-code" id="romanceArticleType">INTJ</div>
  <div class="hub-type-cn" id="romanceArticleCn"></div>
+ </div>
+ <button type="button" class="type-nav" aria-label="下一個類型" onclick="articleTypeStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
+ </div>
  </div>
  </div>
 
@@ -6200,6 +6218,25 @@ window.typeStep = function(dir){
  if(i < 0) return;
  const n = ((i + (dir < 0 ? -1 : 1)) % order.length + order.length) % order.length;
  window.openType(order[n], window._typeFrom);
+ try{ window._histWrite("replace"); }catch(e){}
+};
+// 場景文章頁牌匾左右箭咀：轉上／下一個類型，**同一個場景唔變**（Roy 2026-10-02）。
+// 同 typeStep 一樣係「同一頁換內容」→ 唔加 history 層，只用 replace 更新當前層快照。
+window.articleTypeStep = function(dir){
+ const order = window.TYPE_ORDER || [];
+ if(!order.length) return;
+ const cur = String(window._lastArticleType || "").toUpperCase();
+ const i = order.indexOf(cur);
+ if(i < 0) return;
+ const code = order[((i + (dir < 0 ? -1 : 1)) % order.length + order.length) % order.length];
+ const onRomance = (window._showing === "romanceArticle");
+ if(onRomance){
+  if(!window._lastRomanceScenario) return;
+  window.openRomanceArticle(window._lastRomanceScenario, code);
+ } else {
+  if(!window._lastSocialScenario) return;
+  window.openSocialArticle(window._lastSocialScenario, code);
+ }
  try{ window._histWrite("replace"); }catch(e){}
 };
 window.goTypeFromResult = function(){

@@ -215,11 +215,15 @@ chk("★ icon 唔係一個公仔走天涯（16 型用到 >=6 個語意家族）"
     const pv=h.querySelector("#typePrev"), nx=h.querySelector("#typeNext");
     return !!pv && !!nx && /上一個類型/.test(pv.getAttribute("aria-label")||"") && /下一個類型/.test(nx.getAttribute("aria-label")||"");
   })());
-  chk("★ 箭咀用 monoline SVG 三角（fill:none／stroke:currentColor，唔係 emoji）", (function(){
-    return /\.type-nav svg\{[^}]*fill:none[^}]*stroke:currentColor/.test(src)
+  // Roy 2026-10-02 第二輪：「想要實心三角不要圓形外框」
+  chk("★ 箭咀＝實心三角、冇背景／冇邊框／冇圓角（唔係 emoji、唔係空心 monoline）", (function(){
+    const css=(src.match(/\.type-nav\{[^}]*\}/)||[""])[0];
+    return /\.type-nav svg\{[^}]*fill:currentColor/.test(src) && /\.type-nav svg\{[^}]*stroke:none/.test(src)
+        && /background:none/.test(css) && /border:0/.test(css) && !/border-radius/.test(css)
         && /<path d="M15\.4 4\.8L7\.2 12l8\.2 7\.2z"\/>/.test(src)
         && /<path d="M8\.6 4\.8L16\.8 12l-8\.2 7\.2z"\/>/.test(src);
   })());
+  chk("★ 箭咀仍然係 SVG（唔可以係 emoji 字符）", /class="type-nav"[^>]*><svg viewBox="0 0 24 24"/.test(src));
   // ⚠️ 已知重複（2026-10-02 查實）：index.html 有 3 份一模一樣嘅 16 型次序 ——
   //    `window.DEEP_ORDER`（深入分析，L5563 左右）、`renderDeepList` 內聯一份（L6036 左右）、
   //    同今次新增嘅 `window.TYPE_ORDER`（百科格／主頁跑馬燈／人格頁箭咀）。

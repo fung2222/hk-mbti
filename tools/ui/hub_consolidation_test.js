@@ -248,6 +248,66 @@ setTimeout(() => {
   w.openDeepChapter(1);
   chk("★ 免費用戶撳第 2 章 → 跳升級頁", !$("#upgrade").classList.contains("hidden") || w._showing === "upgrade", "showing=" + w._showing);
 
+  // ---------- 場景文章牌匾左右箭咀（Roy 2026-10-02 第二輪）----------
+  // 內容：喺 10 個場景嘅人格牌匾都可以左右轉型（同一個場景唔變）。
+  // ⚠️ 本檔係 sync（setTimeout callback）→ 唔可以用 await；app 嘅 render 係同步嘅。
+  // ⚠️ 測試 mock 只有 INTJ／ENFP 兩種型有文章 → 要補齊 16 型先驗得到「轉型」
+  (function(){
+    [w.SOCIAL, w.ROMANCE].forEach(function(bag){
+      Object.keys(bag||{}).forEach(function(k){
+        const arts = bag[k].articles || (bag[k].articles = {});
+        const ks = Object.keys(arts); if(!ks.length) return;
+        const tpl = arts[ks[0]]; if(typeof tpl !== "string") return;
+        (w.TYPE_ORDER||[]).forEach(function(c){ if(!arts[c]) arts[c]=tpl; });
+      });
+    });
+  })();
+  chk("★ 相處／拍拖文章牌匾都有左右箭咀（.type-nav ＋ aria-label）", (function(){
+    return ["socialArticleHero","romanceArticleHero"].every(function(id){
+      const hero=d.getElementById(id); if(!hero) return false;
+      const b=hero.querySelectorAll(".type-nav");
+      return b.length===2 && /上一個類型/.test(b[0].getAttribute("aria-label")||"")
+          && /下一個類型/.test(b[1].getAttribute("aria-label")||"");
+    });
+  })());
+  chk("★ 牌匾箭咀可以撳到（.article-type-card 本身 pointer-events:none → 箭咀要開返）",
+      /\.article-type-card \.type-nav\{pointer-events:auto\}/.test(src));
+  chk("★ articleTypeStep 有定義", /window\.articleTypeStep = function\(dir\)/.test(src));
+
+  const pSk=Object.keys(w.SOCIAL||{})[0];
+  w.openSocialArticle(pSk,"INTJ");
+  const aSc=w.$("socialArticleScenario").innerText;
+  const aBtns=w.$("socialArticleHero").querySelectorAll(".type-nav");
+  const aDepth=w._histDepth||0, aLen=w.history.length;
+  aBtns[1].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+  chk("★ 撳牌匾右箭咀 → 轉下一個型（INTJ → INTP）、麵包屑＋內文都換",
+      w.$("socialArticleType").dataset.code==="INTP" && /INTP/.test(w.$("socialArticleBreadcrumb").innerText)
+      && w.$("socialArticleBody").innerHTML.length>5,
+      w.$("socialArticleType").dataset.code+" / "+w.$("socialArticleBreadcrumb").innerText);
+  chk("★ 場景本身唔變（轉型唔會跳去第二個場景）", w.$("socialArticleScenario").innerText===aSc, w.$("socialArticleScenario").innerText);
+  chk("★ 牌匾轉型**唔加 history 層**", (w._histDepth||0)===aDepth && w.history.length===aLen,
+      "depth "+aDepth+"→"+w._histDepth+" / len "+aLen+"→"+w.history.length);
+  chk("★ 當前歷史層快照已更新做新型", w._navSnap().articleType==="INTP", w._navSnap().articleType);
+  aBtns[0].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+  chk("★ 撳牌匾左箭咀返得返（INTP → INTJ）", w.$("socialArticleType").dataset.code==="INTJ", w.$("socialArticleType").dataset.code);
+  w.openSocialArticle(pSk,"INTJ");
+  aBtns[0].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+  chk("★ 第一型撳上一個 → 環繞去最後一型（INTJ → ESFP）", w.$("socialArticleType").dataset.code==="ESFP", w.$("socialArticleType").dataset.code);
+  w.openSocialArticle(pSk,"INTJ");
+  const seq=[w.$("socialArticleType").dataset.code];
+  for(let k=0;k<15;k++){ aBtns[1].dispatchEvent(new w.MouseEvent("click",{bubbles:true})); seq.push(w.$("socialArticleType").dataset.code); }
+  chk("★ 行 15 步 → 次序完全等於 TYPE_ORDER（16 型齊）", JSON.stringify(seq)===JSON.stringify(w.TYPE_ORDER),
+      seq.slice(0,4).join(",")+"…");
+  const pRk=Object.keys(w.ROMANCE||{})[0];
+  w.openRomanceArticle(pRk,"INTJ");
+  const rSc=w.$("romanceArticleScenario").innerText;
+  const rBtns=w.$("romanceArticleHero").querySelectorAll(".type-nav");
+  rBtns[1].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+  chk("★ 拍拖文章牌匾同樣轉得（而且場景唔變）",
+      w.$("romanceArticleType").dataset.code==="INTP" && w.$("romanceArticleScenario").innerText===rSc
+      && w.$("romanceArticleBody").innerHTML.length>5,
+      w.$("romanceArticleType").dataset.code);
+
   console.log(fail === 0 ? "\n===== 全部通過（" + pass + "/" + pass + "）=====" : "\n===== 有失敗（" + pass + "/" + (pass + fail) + "）=====");
   process.exit(fail === 0 ? 0 : 1);
 }, 300);
