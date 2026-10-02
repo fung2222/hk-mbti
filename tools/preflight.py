@@ -80,7 +80,10 @@ for f in html_files():
     src = read(f)
     bad = sorted({c for c in EMOJI.findall(src) if c not in ALLOWED_SYMBOLS})
     if bad:
-        warns.append("%s 有 emoji／符號殘留：%s" % (f, " ".join("%s(U+%04X)" % (c, ord(c)) for c in bad)))
+        # 2026-10-02：由 warns 改為 fails。原因：全站「唔准 emoji」係硬規則，
+        # 但用 warns 時 summary 照樣印「全部通過」＋exit 0 → 前後已經走漏 4 次
+        # （5373a96／4f03b11／4849d73／4809518），每次都係註解入面嘅 ⚠️。
+        fails.append("%s 有 emoji／符號殘留：%s" % (f, " ".join("%s(U+%04X)" % (c, ord(c)) for c in bad)))
 
 # ---------- 5. JSON 有效 ----------
 for f in ("manifest.json",):

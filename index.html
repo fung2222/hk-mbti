@@ -3022,7 +3022,7 @@ window.show = function(id){
 const prevId = window._showing;
 // 離開嗰頁嘅快照：一定要喺「捲返頂」之前捕捉，否則記錄落嘅捲動位置永遠係 0
 // （Roy 2026-10-02 報「返上一頁冇還原位置」嘅根因）。
-// ⚠️ 呢度唔可以過濾 profile／test：要同 _histWrite("push") 一層對一層，
+// 注意：呢度唔可以過濾 profile／test：要同 _histWrite("push") 一層對一層，
 //    否則 popstate 每次 pop 一筆就會同 history 走位。
 let _leftSnap = null;
 if(!window._navSilent && window._showing && window._showing !== id){
@@ -5157,7 +5157,7 @@ const popped = window._navPop();
 // 返上一頁要停返嗰頁原本捲動位置（Roy 2026-10-02）
 const y = (popped && typeof popped.sy === "number") ? popped.sy : ((typeof st.sy === "number") ? st.sy : null);
 if(y !== null) window._pendingScrollY = y;
-// ⚠️ 用 popped（離開嗰刻嘅快照）優先：history entry 係「入頁時」寫嘅，
+// 注意：用 popped（離開嗰刻嘅快照）優先：history entry 係「入頁時」寫嘅，
 // 之後嘅頁內狀態變化（開咗百科場景詳情、切咗人格頁 tab）唔會反映到裏面。
 const target = (popped && popped.id) ? popped : st;
 window._fromPop = true;
@@ -5450,7 +5450,7 @@ window.openMethod = function(){
 show("method");
 };
 
-// ⚠️ Legacy alias：2026-10-02 起 #method 左上角掣直接 onclick="goBack()"，
+// 注意：Legacy alias：2026-10-02 起 #method 左上角掣直接 onclick="goBack()"，
 // 呢個 function 保留係因為舊版連結／測試會引用，行為同 goBack() 完全一樣。
 window.backFromMethod = function(){
 // Roy 2026-10-02：左上角返回掣一律「返上一頁」，唔准跳去指定頁。
@@ -5599,7 +5599,7 @@ show("deep");
 window.scrollTo(0,0);
 };
 window.openDeepType = function(t){
-// ⚠️ 一定要喺設定 _deepType 之前捕捉「16 型選擇」層嘅快照（此時 _deepType 仲係
+// 注意：一定要喺設定 _deepType 之前捕捉「16 型選擇」層嘅快照（此時 _deepType 仲係
 // renderDeepList() 清走嘅 null）。呢一層 section 冇變但狀態變，所以 show() 唔會 push，
 // 要自己 push history —— 而且必須同步 push 落自己嘅導覽堆疊，否則
 // popstate 每次 pop 一筆就會同 history 走位，撳返回會跳錯層（2026-10-02 撞到）。
@@ -5936,7 +5936,7 @@ window.renderTypeTabs = function(code){
 };
 // 由人格分頁深入 tab 開章節：行返正常目錄路徑（有 history 層，返回掣先返得返型頁）
 window.openDeepChapterFromType = function(i, code){
-// ⚠️ 唔可以直接叫 openDeepType：佢會 render 兼 show 章節目錄頁，
+// 注意：唔可以直接叫 openDeepType：佢會 render 兼 show 章節目錄頁，
 // 喺 history 入咗 2 層 phantom「目錄」層 → 用戶撳「返回」就唔係返人格頁，
 // 而係去咗目錄（Roy 2026-10-02 報）。呢度只設狀態，唔 show 目錄頁。
 const t = String(code || "").toUpperCase();
