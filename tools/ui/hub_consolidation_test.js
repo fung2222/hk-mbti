@@ -248,10 +248,10 @@ setTimeout(() => {
   w.openDeepChapter(1);
   chk("★ 免費用戶撳第 2 章 → 跳升級頁", !$("#upgrade").classList.contains("hidden") || w._showing === "upgrade", "showing=" + w._showing);
 
-  // ---------- 場景文章牌匾左右箭咀（Roy 2026-10-02 第二輪）----------
-  // 內容：喺 10 個場景嘅人格牌匾都可以左右轉型（同一個場景唔變）。
-  // ⚠️ 本檔係 sync（setTimeout callback）→ 唔可以用 await；app 嘅 render 係同步嘅。
-  // ⚠️ 測試 mock 只有 INTJ／ENFP 兩種型有文章 → 要補齊 16 型先驗得到「轉型」
+  // ---------- 文章牌匾左右箭咀（Roy 2026-10-02 第二輪）----------
+  // 內容（Roy 糾正後）：「同一個人格、左右切換唔同場景」＋「所有文章都加左右三角」。
+  // ⚠️ 本檔係 sync（setTimeout callback）→ 唔可以用 await。
+  // ⚠️ 測試 mock 只有 INTJ／ENFP 兩種型有文章 → 要補齊 16 型（下面嗰 10 個場景都係跟 mock）。
   (function(){
     [w.SOCIAL, w.ROMANCE].forEach(function(bag){
       Object.keys(bag||{}).forEach(function(k){
@@ -262,51 +262,81 @@ setTimeout(() => {
       });
     });
   })();
-  chk("★ 相處／拍拖文章牌匾都有左右箭咀（.type-nav ＋ aria-label）", (function(){
+  const get = function(id){ return d.getElementById(id); };
+  chk("★ 相處／拍拖牌匾都有左右箭咀（aria-label＝上／下一個場景）", (function(){
     return ["socialArticleHero","romanceArticleHero"].every(function(id){
-      const hero=d.getElementById(id); if(!hero) return false;
+      const hero=get(id); if(!hero) return false;
       const b=hero.querySelectorAll(".type-nav");
-      return b.length===2 && /上一個類型/.test(b[0].getAttribute("aria-label")||"")
-          && /下一個類型/.test(b[1].getAttribute("aria-label")||"");
+      return b.length===2 && /上一個場景/.test(b[0].getAttribute("aria-label")||"")
+          && /下一個場景/.test(b[1].getAttribute("aria-label")||"");
     });
   })());
-  chk("★ 牌匾箭咀可以撳到（.article-type-card 本身 pointer-events:none → 箭咀要開返）",
+  chk("★ 深入分析章節牌匾都有左右箭咀（aria-label＝上／下一章）", (function(){
+    const hero=get("deepChapterHero"); if(!hero) return false;
+    const b=hero.querySelectorAll(".type-nav");
+    return b.length===2 && /上一章/.test(b[0].getAttribute("aria-label")||"")
+        && /下一章/.test(b[1].getAttribute("aria-label")||"");
+  })());
+  chk("★ 牌匾箭咀撳得到（.article-type-card 本身 pointer-events:none → 要開返）",
       /\.article-type-card \.type-nav\{pointer-events:auto\}/.test(src));
-  chk("★ articleTypeStep 有定義", /window\.articleTypeStep = function\(dir\)/.test(src));
+  chk("★ articleStep／deepStep 都有定義",
+      /window\.articleStep = function\(dir\)/.test(src) && /window\.deepStep = function\(dir\)/.test(src));
+  chk("★ 舊嘅 articleTypeStep（轉人格版，做錯）已清走", !/articleTypeStep/.test(src));
 
+  // 場景牌匾：**人格唔變**、場景變、次序跟「相處 7 + 拍拖 3」
   const pSk=Object.keys(w.SOCIAL||{})[0];
   w.openSocialArticle(pSk,"INTJ");
-  const aSc=w.$("socialArticleScenario").innerText;
-  const aBtns=w.$("socialArticleHero").querySelectorAll(".type-nav");
-  const aDepth=w._histDepth||0, aLen=w.history.length;
-  aBtns[1].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
-  chk("★ 撳牌匾右箭咀 → 轉下一個型（INTJ → INTP）、麵包屑＋內文都換",
-      w.$("socialArticleType").dataset.code==="INTP" && /INTP/.test(w.$("socialArticleBreadcrumb").innerText)
-      && w.$("socialArticleBody").innerHTML.length>5,
-      w.$("socialArticleType").dataset.code+" / "+w.$("socialArticleBreadcrumb").innerText);
-  chk("★ 場景本身唔變（轉型唔會跳去第二個場景）", w.$("socialArticleScenario").innerText===aSc, w.$("socialArticleScenario").innerText);
-  chk("★ 牌匾轉型**唔加 history 層**", (w._histDepth||0)===aDepth && w.history.length===aLen,
-      "depth "+aDepth+"→"+w._histDepth+" / len "+aLen+"→"+w.history.length);
-  chk("★ 當前歷史層快照已更新做新型", w._navSnap().articleType==="INTP", w._navSnap().articleType);
-  aBtns[0].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
-  chk("★ 撳牌匾左箭咀返得返（INTP → INTJ）", w.$("socialArticleType").dataset.code==="INTJ", w.$("socialArticleType").dataset.code);
+  const firstSc=get("socialArticleScenario").innerText;
+  const sBtns=get("socialArticleHero").querySelectorAll(".type-nav");
+  const sDepth=w._histDepth||0, sLen=w.history.length;
+  sBtns[1].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+  chk("★ 撳牌匾右箭咀：**人格唔變**（INTJ）、換咗場景",
+      get("socialArticleType").dataset.code==="INTJ" && get("socialArticleScenario").innerText!==firstSc
+      && /INTJ/.test(get("socialArticleBreadcrumb").innerText),
+      get("socialArticleType").dataset.code+" / "+get("socialArticleScenario").innerText);
+  chk("★ 場景轉換＝同一頁換內容 → 唔加 history 層",
+      (w._histDepth||0)===sDepth && w.history.length===sLen, "depth "+sDepth+"→"+w._histDepth+" / len "+sLen+"→"+w.history.length);
+  chk("★ 當前歷史層快照已更新做新場景（sKey）", w._navSnap().sKey!==pSk, "sKey="+w._navSnap().sKey);
+
   w.openSocialArticle(pSk,"INTJ");
-  aBtns[0].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
-  chk("★ 第一型撳上一個 → 環繞去最後一型（INTJ → ESFP）", w.$("socialArticleType").dataset.code==="ESFP", w.$("socialArticleType").dataset.code);
-  w.openSocialArticle(pSk,"INTJ");
-  const seq=[w.$("socialArticleType").dataset.code];
-  for(let k=0;k<15;k++){ aBtns[1].dispatchEvent(new w.MouseEvent("click",{bubbles:true})); seq.push(w.$("socialArticleType").dataset.code); }
-  chk("★ 行 15 步 → 次序完全等於 TYPE_ORDER（16 型齊）", JSON.stringify(seq)===JSON.stringify(w.TYPE_ORDER),
-      seq.slice(0,4).join(",")+"…");
-  const pRk=Object.keys(w.ROMANCE||{})[0];
-  w.openRomanceArticle(pRk,"INTJ");
-  const rSc=w.$("romanceArticleScenario").innerText;
-  const rBtns=w.$("romanceArticleHero").querySelectorAll(".type-nav");
+  const expectK=Object.keys(w.SOCIAL).filter(function(k){ return w.SOCIAL[k].articles && w.SOCIAL[k].articles["INTJ"]; })
+    .concat(Object.keys(w.ROMANCE).filter(function(k){ return w.ROMANCE[k].articles && w.ROMANCE[k].articles["INTJ"]; }));
+  const gotNames=[get("socialArticleScenario").innerText];
+  for(let k=0;k<expectK.length-1;k++){
+    const inR = (w._showing === "romanceArticle");
+    const bts = (inR ? get("romanceArticleHero") : get("socialArticleHero")).querySelectorAll(".type-nav");
+    bts[1].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+    gotNames.push((w._showing === "romanceArticle" ? get("romanceArticleScenario") : get("socialArticleScenario")).innerText);
+  }
+  chk("★ 行 9 步：場景次序 = 相處 7 → 拍拖 3（跨 section 都跟次序）", (function(){
+    const want=expectK.map(function(k){ return (w.SOCIAL[k]||w.ROMANCE[k]).name; });
+    return JSON.stringify(gotNames)===JSON.stringify(want);
+  })(), gotNames.length+" 個："+gotNames.slice(0,3).join("→")+"…→"+gotNames[gotNames.length-1]);
+  chk("★ 場景全部係同一個人格（INTJ）＋ 最後跨到拍拖 section", /INTJ/.test(get("romanceArticleBreadcrumb").innerText) && w._showing==="romanceArticle",
+      get("romanceArticleBreadcrumb").innerText);
+  const rBtns=get("romanceArticleHero").querySelectorAll(".type-nav");
   rBtns[1].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
-  chk("★ 拍拖文章牌匾同樣轉得（而且場景唔變）",
-      w.$("romanceArticleType").dataset.code==="INTP" && w.$("romanceArticleScenario").innerText===rSc
-      && w.$("romanceArticleBody").innerHTML.length>5,
-      w.$("romanceArticleType").dataset.code);
+  chk("★ 最後一個場景撳下一個 → 環繞返第一個（拍拖 → 相處）",
+      w._showing==="socialArticle" && get("socialArticleScenario").innerText===firstSc,
+      w._showing+" / "+get("socialArticleScenario").innerText);
+
+  // 深入分析章節牌匾：同一個人、上一／下一章、頭尾夾住
+  w.localStorage.setItem("hkmbti_tier","full"); w.renderTier();
+  w.openDeepFor("INTJ"); w.openDeepChapter(0);
+  const dPrev=get("deepPrevTop"), dNext=get("deepNextTop");
+  chk("★ 第 1 章：上一章 disabled（夾住唔環繞）、下一章可撳", dPrev.disabled===true && dNext.disabled===false,
+      "prev="+dPrev.disabled+" next="+dNext.disabled);
+  const dDepth=w._histDepth||0, dLen=w.history.length;
+  dNext.dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+  chk("★ 撳下一章 → 去第 2 章（同一個人、內文真係換）",
+      /2 \/ 2/.test(get("deepChapterCrumb").textContent) && get("deepChapterBody").innerHTML.length>5 && dPrev.disabled===false,
+      get("deepChapterCrumb").textContent);
+  chk("★ 章節轉頁都唔加 history 層", (w._histDepth||0)===dDepth && w.history.length===dLen,
+      "depth "+dDepth+"→"+w._histDepth);
+  chk("★ 最後一章：上下兩對「下一章」全部 disabled（唔環繞）",
+      dNext.disabled===true && get("deepNext").disabled===true && get("deepPrevTop").disabled===false);
+  dPrev.dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+  chk("★ 撳上一章 → 返第 1 章", /1 \/ 2/.test(get("deepChapterCrumb").textContent), get("deepChapterCrumb").textContent);
 
   console.log(fail === 0 ? "\n===== 全部通過（" + pass + "/" + pass + "）=====" : "\n===== 有失敗（" + pass + "/" + (pass + fail) + "）=====");
   process.exit(fail === 0 ? 0 : 1);

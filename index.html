@@ -583,6 +583,7 @@ margin-right:11px;
 .type-nav:hover{opacity:1}
 .type-nav:active{transform:scale(.9)}
 .type-nav svg{width:22px;height:22px;display:block;fill:currentColor;stroke:none}
+.type-nav[disabled]{opacity:.3;cursor:default}
 /* 場景文章頁牌匾：.article-type-card 係 pointer-events:none → 箭咀要自己開返 */
 .type-plaque-row{display:flex;align-items:center;gap:10px;width:100%;padding:0 8px;box-sizing:border-box}
 .type-plaque-mid{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px}
@@ -1542,8 +1543,14 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <div class="article-type-stage">
   <div id="deepChapterHero" class="article-type-card">
-   <div class="hub-type-code" id="deepChapterType">INTJ</div>
-   <div class="hub-type-cn" id="deepChapterCn"></div>
+   <div class="type-plaque-row">
+    <button type="button" class="type-nav" id="deepPrevTop" aria-label="上一章" onclick="deepStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
+    <div class="type-plaque-mid">
+     <div class="hub-type-code" id="deepChapterType">INTJ</div>
+     <div class="hub-type-cn" id="deepChapterCn"></div>
+    </div>
+    <button type="button" class="type-nav" id="deepNextTop" aria-label="下一章" onclick="deepStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
+   </div>
   </div>
  </div>
 
@@ -1737,12 +1744,12 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="article-type-stage">
  <div id="socialArticleHero" class="article-type-card">
  <div class="type-plaque-row">
- <button type="button" class="type-nav" aria-label="上一個類型" onclick="articleTypeStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
+ <button type="button" class="type-nav" aria-label="上一個場景" onclick="articleStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
  <div class="type-plaque-mid">
  <div class="hub-type-code" id="socialArticleType">INTJ</div>
  <div class="hub-type-cn" id="socialArticleCn"></div>
  </div>
- <button type="button" class="type-nav" aria-label="下一個類型" onclick="articleTypeStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
+ <button type="button" class="type-nav" aria-label="下一個場景" onclick="articleStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
  </div>
  </div>
  </div>
@@ -1770,12 +1777,12 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="article-type-stage">
  <div id="romanceArticleHero" class="article-type-card">
  <div class="type-plaque-row">
- <button type="button" class="type-nav" aria-label="上一個類型" onclick="articleTypeStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
+ <button type="button" class="type-nav" aria-label="上一個場景" onclick="articleStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
  <div class="type-plaque-mid">
  <div class="hub-type-code" id="romanceArticleType">INTJ</div>
  <div class="hub-type-cn" id="romanceArticleCn"></div>
  </div>
- <button type="button" class="type-nav" aria-label="下一個類型" onclick="articleTypeStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
+ <button type="button" class="type-nav" aria-label="下一個場景" onclick="articleStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
  </div>
  </div>
  </div>
@@ -5692,6 +5699,10 @@ if(hero){ const PL = window.getPalette(t); hero.style.background = "linear-gradi
 const prev = document.getElementById("deepPrev"), next = document.getElementById("deepNext");
 if(prev) prev.disabled = (i === 0);
 if(next) next.disabled = (i === d.chapters.length - 1);
+// 牌匾上面嗰對三角箭咀（Roy 2026-10-02）同底部文字掣狀態一致
+const prevT = document.getElementById("deepPrevTop"), nextT = document.getElementById("deepNextTop");
+if(prevT) prevT.disabled = (i === 0);
+if(nextT) nextT.disabled = (i === d.chapters.length - 1);
 show("deepChapter");
 window.scrollTo(0,0);
 };
@@ -5700,8 +5711,10 @@ const t = window._deepType;
 const d = (window.PREMIUM || {})[t];
 if(!d || !d.chapters) return;
 const n = (window._deepCh || 0) + dir;
+// 頭尾夾住唔環繞（第 2 章起要完整版，環繞會突然跳升級頁）
 if(n < 0 || n > d.chapters.length - 1) return;
 window.openDeepChapter(n);
+try{ window._histWrite("replace"); }catch(e){}
 };
 window.backToDeepToc = function(){
 // 有 history 層就照行（保持同系統返回鍵一致）；冇嘅話直接還原目錄
@@ -6220,23 +6233,35 @@ window.typeStep = function(dir){
  window.openType(order[n], window._typeFrom);
  try{ window._histWrite("replace"); }catch(e){}
 };
-// 場景文章頁牌匾左右箭咀：轉上／下一個類型，**同一個場景唔變**（Roy 2026-10-02）。
-// 同 typeStep 一樣係「同一頁換內容」→ 唔加 history 層，只用 replace 更新當前層快照。
-window.articleTypeStep = function(dir){
- const order = window.TYPE_ORDER || [];
- if(!order.length) return;
- const cur = String(window._lastArticleType || "").toUpperCase();
- const i = order.indexOf(cur);
- if(i < 0) return;
- const code = order[((i + (dir < 0 ? -1 : 1)) % order.length + order.length) % order.length];
- const onRomance = (window._showing === "romanceArticle");
- if(onRomance){
-  if(!window._lastRomanceScenario) return;
-  window.openRomanceArticle(window._lastRomanceScenario, code);
- } else {
-  if(!window._lastSocialScenario) return;
-  window.openSocialArticle(window._lastSocialScenario, code);
+// 場景文章頁牌匾左右箭咀（Roy 2026-10-02）：
+// **同一個人格、左右切換唔同場景**（相處 7 + 拍拖 3 = 10 個，次序同人格頁「場景」分頁一樣）。
+// 注意（2026-10-02 第一版做錯嘅位）：寫成「轉人格、場景唔變」→ Roy 糾正：「場景的左右三角係按左右
+//    是同一個人格，不同場景的」。所以係轉場景，唔係轉型。
+window.articleStep = function(dir){
+ const code = String(window._lastArticleType || window._lastType || "").toUpperCase();
+ if(!code) return;
+ const items = [];
+ ["SOCIAL","ROMANCE"].forEach(function(bag){
+  const list = window[bag] || {};
+  Object.keys(list).forEach(function(k){
+   const sc = list[k];
+   if(sc && sc.articles && sc.articles[code]) items.push({ bag: bag, key: k });
+  });
+ });
+ if(items.length < 2) return;
+ const curBag = (window._showing === "romanceArticle") ? "ROMANCE" : "SOCIAL";
+ const curKey = (curBag === "ROMANCE") ? window._lastRomanceScenario : window._lastSocialScenario;
+ let idx = -1;
+ for(let n = 0; n < items.length; n++){
+  if(items[n].bag === curBag && items[n].key === curKey){ idx = n; break; }
  }
+ if(idx < 0) return;
+ const nx = items[((idx + (dir < 0 ? -1 : 1)) % items.length + items.length) % items.length];
+ window._navSilent = true;   // 同一頁換內容 → 唔加 history 層（就算跨 相處/拍拖 section 都唔加）
+ try{
+  if(nx.bag === "ROMANCE") window.openRomanceArticle(nx.key, code);
+  else window.openSocialArticle(nx.key, code);
+ } finally { window._navSilent = false; }
  try{ window._histWrite("replace"); }catch(e){}
 };
 window.goTypeFromResult = function(){
