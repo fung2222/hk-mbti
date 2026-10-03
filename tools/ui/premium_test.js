@@ -144,13 +144,12 @@ setTimeout(async ()=>{
   chk('★ 結果頁大字母 #typeBig 用 Archivo Black', /#typeBig\{font-family:'Archivo Black'/.test(src));
   chk('★ 維度分頁大字母 #letterBig 都用 Archivo Black（原本漏咗）', /#letterBig\{font-family:'Archivo Black'/.test(src));
   chk('★ 維度字母 .dim-pair button 用 Archivo Black', /\.dim-pair button\{[^}]*Archivo Black/.test(src));
-  chk('★ 文章型別卡 .article-type-card .hub-type-code 用 Archivo Black', /\.article-type-card \.hub-type-code\{[^}]*Archivo Black/.test(src));
-  chk('★ 場景文章牌匾 4 字母仍然係 .hub-type-code（相處／拍拖）', ['socialArticleType','romanceArticleType'].every(id=>new RegExp('class="hub-type-code" id="'+id+'"').test(src)));
+  chk('★ 文章牌匾 4 字母改用同 #typeBig 一組（text-5xl font-black）', ['socialArticleType','romanceArticleType','deepChapterType'].every(id=>new RegExp('class="text-5xl font-black mb-1" id="'+id+'"').test(src)));
+  chk('★ 場景／章節牌匾已經唔用 .hub-type-code（只剩 16 型 hub 卡用）', !/class="hub-type-code" id="/.test(src));
   // Roy 2026-10-03：章節色卡要同人格頁色卡一模一樣 → 4 字母改用同 #typeBig 一組 class
   chk('★ 章節色卡 4 字母跟人格頁 #typeBig（text-5xl font-black）',
       /class="text-5xl font-black mb-1" id="deepChapterType"/.test(src) && /class="text-5xl font-black mb-1" id="typeBig"/.test(src));
-  chk('★ 章節色卡唔再係滿版（改用 .card p-6 mb-4 + .type-hero-row，同人格頁一樣）',
-      /class="card p-6 mb-4" id="deepChapterHero"/.test(src) && !/article-type-stage">\s*<div class="card p-6 mb-4" id="deepChapterHero"/.test(src));
+  chk('★ 三塊文章色卡（相處／拍拖／章節）都唔再係滿版（.card p-6 mb-[26px] ＋ type-hero-row/mid）', (src.match(/class="card p-6 mb-\[26px\]"/g)||[]).length===3 && !/article-type-stage/.test(src) && (src.match(/class="type-hero-row"/g)||[]).length>=3);
   // Roy 2026-10-03：九章目錄號碼 icon → 星星 + 標題上加「第X章」
   chk('★ 九章目錄：號碼方塊 .deep-num 已清走（死 CSS 都清）', !/deep-num/.test(src));
   chk('★ 九章目錄：每章有星星 icon（.deep-star，金色）', (src.match(/class="deep-star"/g)||[]).length===2 && /\.deep-star svg\{[^}]*fill:#C8A24C/.test(src));
@@ -162,7 +161,7 @@ setTimeout(async ()=>{
   chk('★ icon = .92em（= 22px）', /\.type-ico\{display:block;width:\.92em;height:\.92em/.test(src));
   chk('★ badge = .42em（= 10px）', /\.deep-badge\{[^}]*font-size:\.42em/.test(src));
   chk('★ 「進入」= .46em（= 11px）', /\.hub-type-go\{[^}]*font-size:\.46em/.test(src));
-  chk('★ 文章型別卡用同一組比例（基準 2.8rem、4 字母 1em、中文 .5em）', /\.article-type-card\{[^}]*font-size:2\.8rem/.test(src) && /\.article-type-card \.hub-type-code\{[^}]*font-size:1em/.test(src) && /\.article-type-card \.hub-type-cn\{font-size:\.5em/.test(src));
+  chk('★ .article-type-card／.article-type-stage／.type-plaque-* 死 CSS 已清', !/article-type-card/.test(src) && !/article-type-stage/.test(src) && !/type-plaque-/.test(src));
   chk('★ 桌面轉輪基準移落 .hub-type-card', /html\.dt \.home-type-reel \.hub-type-card\{font-size:clamp/.test(src));
   chk('★ 冇任何色卡文字硬編 px（除基準 24px）', !/\.hub-type-code\{[^}]*font-size:\d+px/.test(src) && !/\.hub-type-cn\{[^}]*font-size:\d+px/.test(src) && !/\.article-type-card \.hub-type-code\{[^}]*font-size:\d+px/.test(src));
   chk('★ 簡介唔提「買斷」（Roy 指定：只講有咩睇、有咩用）', !/買斷/.test($('#deep #deepIntro').textContent), '');
@@ -209,10 +208,10 @@ setTimeout(async ()=>{
   chk('★ 性格百科：16 張卡都有 icon', hubCards.length===16 && hubCards.filter(c=>c.querySelector('.hub-type-code .type-ico svg')).length===16, hubCards.length+' / '+hubCards.filter(c=>c.querySelector('.hub-type-code .type-ico svg')).length);
   chk('★ 主頁轉輪：32 張卡（16+16 複本）都有 icon', (function(){ const r=[...d.querySelectorAll('#homeTypeReel .hub-type-card')]; return r.length===32 && r.filter(c=>c.querySelector('.type-ico svg')).length===32; })(), (function(){ const r=[...d.querySelectorAll('#homeTypeReel .hub-type-card')]; return r.length+' / '+r.filter(c=>c.querySelector('.type-ico svg')).length; })());
   w.openSocialArticle('WhatsAppGroup','INTJ'); await _w(70);
-  chk('★ 相處攻略：型別大字有 icon', !!d.querySelector('#socialArticleType .type-ico svg'));
+  chk('★ 相處攻略：型別大字＝純 4 字母（同人格頁色卡一致，冇 icon）', !!d.getElementById('socialArticleType') && !d.querySelector('#socialArticleType .type-ico'));
   chk('★ 相處攻略：仍然讀得返型別 code（唔會因為加 icon 而壞）', d.querySelector('#socialArticleType').dataset.code==='INTJ', d.querySelector('#socialArticleType').dataset.code);
   w.openRomanceArticle('拍拖','INTJ'); await _w(70);
-  chk('★ 拍拖攻略：型別大字有 icon', !!d.querySelector('#romanceArticleType .type-ico svg'));
+  chk('★ 拍拖攻略：型別大字＝純 4 字母（同人格頁色卡一致，冇 icon）', !!d.getElementById('romanceArticleType') && !d.querySelector('#romanceArticleType .type-ico'));
   chk('★ 拍拖攻略：仍然讀得返型別 code', d.querySelector('#romanceArticleType').dataset.code==='INTJ', d.querySelector('#romanceArticleType').dataset.code);
   chk('卡撳落去開該型目錄', /openDeepType\('INTJ'\)/.test(cards[0].getAttribute('onclick')));
 

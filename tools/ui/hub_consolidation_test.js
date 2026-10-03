@@ -19,7 +19,7 @@ chk("★ 百科卡底有「撳入去睇」link → #dims", /class="hub-more-link
 chk("★ 維度詳解分頁（#dims）有「4 個英文字母代表咩」卡（光譜整合入嚟）", /<section id="dims"/.test(src) && /id="dimsLetters"/.test(src) && /class="hub-letter-list"/.test(src));
 chk("★ 維度詳解分頁有 8 個字母掣 → #letter", (function(){ const s = src.slice(src.indexOf('<section id="dims"'), src.indexOf('<!-- ========== 人格深入分析')); return (s.match(/openLetter\('/g) || []).length === 8; })());
 chk("★ 16 型色卡（hub-bleed）下間距＝12px（Roy 2026-10-02 兩輪：26px 太大 → 16px 後再要緊啲 → 12px）", /\.hub-bleed\{margin:0 -16px 12px/.test(src));
-chk("★ 場景文章頁：色卡同上內文距離夠（26px）", /\.article-type-stage\{margin:0 -16px 26px/.test(src));
+chk("★ 文章頁（相處／拍拖／章節）色卡同上內文距離夠（文章頁 26px 留白）", (src.match(/class="card p-6 mb-\[26px\]"/g)||[]).length===3, (src.match(/mb-\[26px\]/g)||[]).length+" 處");
 chk("★ 場景文章頁底卡已整張刪（連舊 +9px 規則一併清走）", !/softbox-tight/.test(src) && !/article-more-list/.test(src));
 chk("★ 非主頁垂直間距統一 16px（卡片同非卡容器一致）", !/\.(article-guide|wiz-facts)\{[^}]*margin:[^;}]*20px/.test(src) && /\.article-guide\{margin:0 4px 16px/.test(src) && /\.type-rel-grid\{[^}]*margin-bottom:16px\}/.test(src));
 chk("★ 全站測試入口文案統一：「想確認自己 MBTI 人格？」（唔准有舊文案）", !/睇完想試/.test(src) && (src.match(/想確認自己 MBTI 人格？/g) || []).length >= 8, (src.match(/想確認自己 MBTI 人格？/g) || []).length + " 處");
@@ -277,8 +277,7 @@ setTimeout(() => {
     return b.length===2 && /上一章/.test(b[0].getAttribute("aria-label")||"")
         && /下一章/.test(b[1].getAttribute("aria-label")||"");
   })());
-  chk("★ 牌匾箭咀撳得到（.article-type-card 本身 pointer-events:none → 要開返）",
-      /\.article-type-card \.type-nav\{pointer-events:auto\}/.test(src));
+  chk("★ 文章牌匾箭咀撳得到（色卡 ＝ 普通 .card p-6，冇 pointer-events:none）", !/\.article-type-card/.test(src) && (src.match(/class="card p-6 mb-\[26px\]"/g)||[]).length===3);
   chk("★ articleStep／deepStep 都有定義",
       /window\.articleStep = function\(dir\)/.test(src) && /window\.deepStep = function\(dir\)/.test(src));
   chk("★ 舊嘅 articleTypeStep（轉人格版，做錯）已清走", !/articleTypeStep/.test(src));
@@ -356,14 +355,11 @@ setTimeout(() => {
   })());
   dItems[0].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
   const dHero=d.getElementById("deepChapterHero");
-  chk("★ 章節色卡＝人格頁色卡同一格式（card p-6 mb-4 ＋ type-hero-row/mid，唔再滿版）",
-      dHero.className.indexOf("card")>=0 && dHero.className.indexOf("p-6")>=0 && dHero.className.indexOf("mb-4")>=0
-      && !dHero.classList.contains("article-type-card")
-      && !!dHero.querySelector(".type-hero-row .type-hero-mid"),
-      dHero.className);
+  chk("★ 章節色卡＝人格頁色卡同一格式（card p-6 ＋ type-hero-row/mid，唔再滿版）", dHero.className.indexOf("card")>=0 && dHero.className.indexOf("p-6")>=0 && /mb-/.test(dHero.className) && !dHero.classList.contains("article-type-card") && !!dHero.querySelector(".type-hero-row .type-hero-mid"), dHero.className);
   chk("★ 章節色卡文字色白（底色係型漸層）＋ 4 字母純文字", dHero.style.color==="white" && d.getElementById("deepChapterType").innerText==="INTJ",
       dHero.style.color+" / "+d.getElementById("deepChapterType").innerText);
   w.openType("INTJ","hub"); w.setTypeTab("deep");
+  chk("★ 九章目錄：每章都有線條 icon（9 個，層次唔同主題）", d.querySelectorAll("#deepList .deep-ico svg").length===nChap && (d.querySelectorAll("#deepList .deep-ico svg")[0]||{}).innerHTML!==(d.querySelectorAll("#deepList .deep-ico svg")[1]||{}).innerHTML, d.querySelectorAll("#deepList .deep-ico svg").length+" 個 icon");
   chk("★ 人格頁「深入分析」分頁都有 9 粒星 ＋ 第X章",
       d.querySelectorAll("#typeDeepBox .deep-star svg").length===nChap
       && (d.querySelectorAll("#typeDeepBox .deep-ch")[0]||{}).textContent==="第一章",

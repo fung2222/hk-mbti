@@ -296,6 +296,9 @@ html.dk .up-cta{background:#D9B26A;color:#12161C}
 .deep-item{cursor:pointer}
 .deep-tag{display:inline-block;font-size:10px;font-weight:700;color:#8a6a1f;background:#f6e7c4;border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:1px}
 .deep-tag.is-free{color:#3F6B4A;background:rgba(110,165,120,.16)}
+.deep-ico{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;flex:0 0 auto;margin-left:auto;color:#A08A5C}
+.deep-ico svg{width:19px;height:19px;display:block;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+html.dk .deep-ico{color:#C0A87A}
 .deep-star{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;flex:0 0 auto}
 .deep-star svg{width:18px;height:18px;display:block;fill:#C8A24C}
 .deep-ch{font-size:11px;font-weight:800;color:#8B6F3D;letter-spacing:.02em;margin-bottom:2px}
@@ -361,18 +364,6 @@ html.dk .up-cmp .no{color:#6E675C}
 #hubSceneDetail .hub-type-hint{margin-bottom:10px}
 #hubSceneDetail .hub-type-grid{margin-bottom:20px}
 .hub-type-hint{font-size:11px;line-height:1.45;color:#8a8174;text-align:left;margin:0 0 8px;font-weight:400;}
-.article-type-stage{margin:0 -16px 26px;}
-.article-type-card{
-width:100%;aspect-ratio:16/7;min-height:7.2rem;border-radius:0;color:#fff;
-display:flex;flex-direction:column;align-items:center;justify-content:center;
-gap:8px;box-shadow:none;pointer-events:none;
-font-size:2.8rem; /* 大卡文字基準：icon／中文／4 字母全部跟同一組比例，同色卡一致 */
-}
-.article-type-card .hub-type-code{
-font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:700;font-style:normal;
-font-size:1em;letter-spacing:.01em;
-}
-.article-type-card .hub-type-cn{font-size:.5em;}
 .article-guide{margin:0 4px 16px;}
 /* 人格分頁內容 grid：同結果頁一致（x=20 / 350px、行高 1.5、#374151） */
 .article-guide-body p{
@@ -590,11 +581,6 @@ margin-right:11px;
 /* 淺色底（字母卡）用 ink 色 —— var(--ink) 淺深模式自動適應，所以唔使入 #dark-layer */
 .type-nav.is-ink{color:var(--ink);opacity:.42}
 .type-nav.is-ink:hover{opacity:.72}
-/* 場景文章頁牌匾：.article-type-card 係 pointer-events:none → 箭咀要自己開返 */
-.type-plaque-row{display:flex;align-items:center;gap:10px;width:100%;padding:0 8px;box-sizing:border-box}
-.type-plaque-mid{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px}
-.article-type-card .type-nav{pointer-events:auto}
-
 /* 分享卡三粒掣：Roy 2026-10-02 定案 —— 唔要三層次（金／白框／灰）睇落怪，
    三粒**統一**同一個柔和風格（淡底 ＋ 暖邊 ＋ 暖字，同版本卡 pill／探索更多 go 掣同一套語言）。 */
 .share-btn{background:var(--soft);border:1px solid #E0D6BE;color:#7C6B45}
@@ -1547,7 +1533,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <p class="page-hero-sub" id="deepChapterCrumb">INTJ · 1 / 9</p>
  </div>
 
- <div class="card p-6 mb-4" id="deepChapterHero">
+ <div class="card p-6 mb-[26px]" id="deepChapterHero">
   <div class="type-hero-row">
    <button type="button" class="type-nav" id="deepPrevTop" aria-label="上一章" onclick="deepStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
    <div class="type-hero-mid">
@@ -1751,16 +1737,14 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  <span id="socialArticleScenario" class="hidden"></span>
 
- <div class="article-type-stage">
- <div id="socialArticleHero" class="article-type-card">
- <div class="type-plaque-row">
+ <div id="socialArticleHero" class="card p-6 mb-[26px]">
+ <div class="type-hero-row">
  <button type="button" class="type-nav" aria-label="上一個場景" onclick="articleStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
- <div class="type-plaque-mid">
- <div class="hub-type-code" id="socialArticleType">INTJ</div>
- <div class="hub-type-cn" id="socialArticleCn"></div>
+ <div class="type-hero-mid">
+ <div class="text-5xl font-black mb-1" id="socialArticleType">INTJ</div>
+ <h2 class="text-[19px] font-black mb-1" id="socialArticleCn"></h2>
  </div>
  <button type="button" class="type-nav" aria-label="下一個場景" onclick="articleStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
- </div>
  </div>
  </div>
 
@@ -1784,16 +1768,14 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  <span id="romanceArticleScenario" class="hidden"></span>
 
- <div class="article-type-stage">
- <div id="romanceArticleHero" class="article-type-card">
- <div class="type-plaque-row">
+ <div id="romanceArticleHero" class="card p-6 mb-[26px]">
+ <div class="type-hero-row">
  <button type="button" class="type-nav" aria-label="上一個場景" onclick="articleStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
- <div class="type-plaque-mid">
- <div class="hub-type-code" id="romanceArticleType">INTJ</div>
- <div class="hub-type-cn" id="romanceArticleCn"></div>
+ <div class="type-hero-mid">
+ <div class="text-5xl font-black mb-1" id="romanceArticleType">INTJ</div>
+ <h2 class="text-[19px] font-black mb-1" id="romanceArticleCn"></h2>
  </div>
  <button type="button" class="type-nav" aria-label="下一個場景" onclick="articleStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
- </div>
  </div>
  </div>
 
@@ -5628,6 +5610,21 @@ box.innerHTML = '<div class="hub-type-grid" id="deepTypeGrid">' +
 window.DEEP_ORDER.map(function(t){ return window.deepTypeCardHtml(t); }).join("") +
 '</div>';
 };
+window.DEEP_ICO_PATHS = [
+'<circle cx="12" cy="12" r="8.4"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z"/>',
+'<path d="M2.8 12S6.2 6.6 12 6.6 21.2 12 21.2 12 17.8 17.4 12 17.4 2.8 12 2.8 12z"/><circle cx="12" cy="12" r="2.7"/>',
+'<path d="M13.4 2.9L5.8 13.5h4.9l-1.5 7.6 7.8-10.7h-5z"/>',
+'<path d="M12 20V4.6"/><path d="M6.6 10L12 4.6 17.4 10"/>',
+'<rect x="3" y="7.4" width="18" height="12.4" rx="2.6"/><path d="M8.6 7.4V5.8a2 2 0 012-2h2.8a2 2 0 012 2v1.6"/><path d="M3 12.8h18"/>',
+'<path d="M12 20.3S4.3 15.5 4.3 10.5a4.3 4.3 0 017.7-2.5 4.3 4.3 0 017.7 2.5c0 5-7.7 9.8-7.7 9.8z"/>',
+'<circle cx="9.2" cy="9" r="3.2"/><path d="M3.6 19.4c0-3.1 2.5-5.6 5.6-5.6s5.6 2.5 5.6 5.6"/><path d="M16.6 6.2a3.1 3.1 0 010 5.6"/><path d="M17.8 14.4c2 .7 3.4 2.5 3.4 4.6"/>',
+'<path d="M20.6 12.2c0 3.9-3.6 7-8.1 7a9.7 9.7 0 01-2.6-.4L5.2 21l1.2-3.4a6.6 6.6 0 01-1.8-4.5c0-3.9 3.6-7 8.1-7s7.9 3.1 7.9 7z"/>',
+'<path d="M12 21.2s6.4-6.2 6.4-10.5a6.4 6.4 0 10-12.8 0C5.6 15 12 21.2 12 21.2z"/><circle cx="12" cy="10.7" r="2.4"/>'
+];
+window.deepIcoHtml = function(i){
+ var p = window.DEEP_ICO_PATHS[i] || "";
+ return p ? '<span class="deep-ico"><svg viewBox="0 0 24 24" aria-hidden="true">' + p + '</svg></span>' : "";
+};
 window.renderDeepTypeToc = function(t){
 const d = (window.PREMIUM || {})[t];
 const box = document.getElementById("deepList");
@@ -5649,6 +5646,7 @@ return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" o
 '<div class="min-w-0 flex-1"><div class="deep-ch">第' + "一二三四五六七八九".charAt(i) + '章</div>' +
 '<div class="font-bold text-[14px]">' + c.t + _tag + '</div>' +
 '<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div>' +
+window.deepIcoHtml(i) +
 '</div></button>';
 }).join("") +
 '<div class="deep-foot-row">' +
@@ -5996,7 +5994,8 @@ window.renderTypeTabs = function(code){
       + '<div class="flex items-start gap-3">' + '<span class="deep-star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg></span>'
       + '<div class="min-w-0 flex-1"><div class="deep-ch">第' + "一二三四五六七八九".charAt(i) + '章</div>'
       + '<div class="font-bold text-[14px]">' + c.t + tag + '</div>'
-      + '<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div></div></button>';
+      + '<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div>'
+       + window.deepIcoHtml(i) + '</div></button>';
     }).join("")
     + (_full ? "" : '<button type="button" class="softbox-btn mt-2" onclick="openUpgrade()">解鎖全部 9 章</button>');
   }
@@ -6199,11 +6198,12 @@ window._lastSocialScenario = scenarioKey;
 window._lastArticleType = type;
  $("socialArticleTitle").innerText = s.name;
  $("socialArticleBreadcrumb").innerText = "社交 / " + s.name + " / " + type;
- $("socialArticleType").innerHTML = (window.typeIcoHtml ? window.typeIcoHtml(type) : type);
+ $("socialArticleType").innerText = type;
  $("socialArticleType").dataset.code = type;
  $("socialArticleCn").innerText = T.cn;
  $("socialArticleScenario").innerText = s.name;
  $("socialArticleHero").style.background = "linear-gradient(135deg, " + T.color[0] + ", " + T.color[1] + ")";
+$("socialArticleHero").style.color = "white";
  $("socialArticleBody").innerHTML = window.formatGuideHtml(article);
 show("socialArticle");
 window.scrollTo(0,0);
@@ -6220,11 +6220,12 @@ window._lastRomanceScenario = scenarioKey;
 window._lastArticleType = type;
  $("romanceArticleTitle").innerText = s.name;
  $("romanceArticleBreadcrumb").innerText = "拍拖 / " + s.name + " / " + type;
- $("romanceArticleType").innerHTML = (window.typeIcoHtml ? window.typeIcoHtml(type) : type);
+ $("romanceArticleType").innerText = type;
  $("romanceArticleType").dataset.code = type;
  $("romanceArticleCn").innerText = T.cn;
  $("romanceArticleScenario").innerText = s.name;
  $("romanceArticleHero").style.background = "linear-gradient(135deg, " + T.color[0] + ", " + T.color[1] + ")";
+$("romanceArticleHero").style.color = "white";
  $("romanceArticleBody").innerHTML = window.formatGuideHtml(article);
 show("romanceArticle");
 window.scrollTo(0,0);
