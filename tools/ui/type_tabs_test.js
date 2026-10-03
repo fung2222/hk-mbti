@@ -80,7 +80,7 @@ chk("★ openTypeScenes 函數仍存在（#typeScenes 深層連結靠佢；文�
     && !/openTypeScenes\(window\._lastArticleType\)/.test(src));
 chk("★ 舊 show() 清單冇再列出 typeScenes", !/"dims","typeScenes"/.test(src) && !/"typeScenes","letter"/.test(src));
 chk("★ CSS：關係卡兩欄 grid + 左邊色條（--rc）", /\.type-rel-grid\{display:grid;grid-template-columns:1fr 1fr/.test(src) && /\.type-rel-card\{[^}]*border-left:3px solid var\(--rc\)/.test(src));
-chk("★ CSS：關係卡內文字級跟「卡片解釋字」標準（.85rem / #6b6560）", /\.type-rel-item\{font-size:\.85rem;color:#6b6560/.test(src));
+chk("★ CSS：關係卡內文字級＝14px（折入 scale，唔再用 .85rem）／#6b6560", /\.type-rel-item\{font-size:14px;color:#6b6560/.test(src));
 chk("★ dark 規則喺 #dark-layer 內（唔可以落主 <style>）", (function(){
   const i=src.indexOf('id="dark-layer"'), j=src.indexOf("</style>", i), seg=src.slice(i,j);
   return i>0 && /html\.dk \.type-rel-card\{/.test(seg) && /html\.dk \.type-rel-item\{/.test(seg);

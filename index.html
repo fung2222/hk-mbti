@@ -70,7 +70,7 @@ html{background:var(--paper)}
 .hub-row{display:flex;align-items:center;gap:13px}
 .hub-row-body{flex:1;min-width:0}
 .hub-row-title{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.hub-row-chev{font-size:10px;color:#C0B08A;flex-shrink:0;line-height:1}
+.hub-row-chev{font-size:10px;color:#A08A5C;flex-shrink:0;line-height:1}
 .hub-detail-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
 .scene-name{font-size:15px;font-weight:700;color:var(--ink);}
 .scene-sub{font-size:14px;color:#6b6560;line-height:1.6;}
@@ -187,8 +187,8 @@ cursor:pointer;-webkit-appearance:none;appearance:none;
 /* 黑暗模式：同一個深色維度色提亮（唔改色相） */
 html.dk .dim-pair button{filter:brightness(2.05) saturate(1.12)}
 .dim-pair button:active{transform:scale(.93)}
-.dim-pair .vs{font-size:11px;font-weight:700;color:#8A8272}
-html.dk .dim-pair .vs{color:#9E968A}
+.dim-pair .vs{font-size:11px;font-weight:700;color:#6b6560}
+html.dk .dim-pair .vs{color:#A79E92}
 .cd-overlay{position:fixed;inset:0;background:rgba(30,42,59,.96);z-index:200;display:flex;align-items:center;justify-content:center;}
 /* ===== 自訂 app 彈窗（取代原生 confirm／alert：原生會顯示「fung2222.github.io 顯示」網址 ✗）===== */
 .ad-overlay{position:fixed;inset:0;background:rgba(30,42,59,.62);z-index:300;display:flex;align-items:center;justify-content:center;padding:26px;}
@@ -294,15 +294,15 @@ html.dk .up-cta{background:#D9B26A;color:#12161C}
 .deep-nav-btn.is-mid{flex:.8;color:#8B6F3D;border-color:rgba(212,169,95,.45)}
 .deep-nav-btn[disabled]{opacity:.3;cursor:default}
 .deep-item{cursor:pointer}
-.deep-tag{display:inline-block;font-size:10px;font-weight:700;color:#8a6a1f;background:#f6e7c4;border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:1px}
+.deep-tag{display:inline-block;font-size:10px;font-weight:700;color:#8B6F3D;background:#f6e7c4;border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:1px}
 .deep-tag.is-free{color:#3F6B4A;background:rgba(110,165,120,.16)}
 .deep-ico{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;flex:0 0 auto;margin-left:auto;color:#A08A5C}
 .deep-ico svg{width:19px;height:19px;display:block;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 html.dk .deep-ico{color:#C0A87A}
 .deep-star{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;flex:0 0 auto}
 .deep-star svg{width:18px;height:18px;display:block;fill:#C8A24C}
-.deep-ch{font-size:11px;font-weight:800;color:#8B6F3D;letter-spacing:.02em;margin-bottom:2px}
-.deep-go{color:#8B6F3D;font-size:12px;font-weight:800;flex-shrink:0}
+.deep-ch{font-size:11px;font-weight:700;color:#8B6F3D;letter-spacing:.02em;margin-bottom:2px}
+.deep-go{color:#8B6F3D;font-size:12px;font-weight:700;flex-shrink:0}
 html.dk .deep-nav-btn{border-color:rgba(255,255,255,.16);color:#C2BAAD}
 html.dk .deep-nav-btn.is-mid{color:#D8C69E;border-color:rgba(217,178,106,.45)}
 html.dk .deep-ch{color:#D8C69E}
@@ -340,6 +340,8 @@ html.dk .up-cmp .no{color:#6E675C}
 /* 底部 CTA box 統一風格（結果頁 / 關於 / 光譜 / 字母 / 類型）：置中、留白、柔和 pill */
 .softbox{padding:26px 22px 24px;text-align:center;border:1px solid rgba(212,169,95,.22)}
 .softbox-title{font-size:19px;font-weight:900;letter-spacing:-.01em;color:var(--ink);line-height:1.45;margin:0}
+.hub-sec-title{font-size:19px;font-weight:900;letter-spacing:-.01em;color:var(--ink);line-height:1.45;margin:0}
+#hub .text-gray-600,#hub .text-gray-500,#type .text-gray-600,#type .text-gray-500{color:#6b6560!important}
 .softbox-sub{font-size:15px;color:#6b6560;margin-top:7px;line-height:1.6;margin-bottom:0}
 /* 最底 CTA 嘅發光燈泡（Roy 2026-10-02）：有顏色、置中、帶出「可以發掘自己性格」嘅感覺。
    光暈用 drop-shadow（只改顏色／光影，唔郁尺寸位置）→ dark 都跟 var(--gold) 自動變。 */
@@ -363,7 +365,7 @@ html.dk .up-cmp .no{color:#6E675C}
 /* 百科「由場景睇」→ 場景詳情：16 型卡 grid 同下面測試入口卡要有距離（Roy 2026-10-01 報貼住） */
 #hubSceneDetail .hub-type-hint{margin-bottom:10px}
 #hubSceneDetail .hub-type-grid{margin-bottom:20px}
-.hub-type-hint{font-size:11px;line-height:1.45;color:#8a8174;text-align:left;margin:0 0 8px;font-weight:400;}
+.hub-type-hint{font-size:11px;line-height:1.45;color:#6b6560;text-align:left;margin:0 0 8px;font-weight:400;}
 .article-guide{margin:0 4px 16px;}
 /* 人格分頁內容 grid：同結果頁一致（x=20 / 350px、行高 1.5、#374151） */
 .article-guide-body p{
@@ -411,7 +413,7 @@ margin-top:1px;font-size:.46em;font-weight:700;font-family:inherit;line-height:1
 color:var(--ink);background:rgba(255,255,255,.92);border-radius:999px;padding:.13em .36em;
 }
 .hub-type-card.is-on .hub-type-go{opacity:1;pointer-events:auto;}
-.deep-badge{margin-top:1px;font-size:.42em;font-weight:800;line-height:1.2;font-family:inherit;color:rgba(255,255,255,.92);background:rgba(0,0,0,.24);border-radius:999px;padding:.08em .3em;}
+.deep-badge{margin-top:1px;font-size:.42em;font-weight:700;line-height:1.2;font-family:inherit;color:rgba(255,255,255,.92);background:rgba(0,0,0,.24);border-radius:999px;padding:.08em .3em;}
 .deep-badge.is-soon{color:rgba(255,255,255,.7);background:rgba(0,0,0,.16);font-weight:700;}
 /* 港物件 icon：置中 + 同下面 4 字母留 5px（全部用 em，跟色卡基準自動縮放） */
 .type-ico{display:block;width:.92em;height:.92em;margin:0 auto .21em;opacity:1}
@@ -427,10 +429,10 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 
 /* 百科雙模式切換（Roy 2026-10-01 方案 A）*/
 .hub-mode-switch{display:flex;gap:6px;background:#f1ece3;border-radius:999px;padding:4px;margin:0 12px 16px}
-.hub-mode-btn{flex:1 1 0;border:0;background:transparent;border-radius:999px;padding:9px 10px;font-size:13px;font-weight:800;color:#6b6257;cursor:pointer;font-family:inherit}
+.hub-mode-btn{flex:1 1 0;border:0;background:transparent;border-radius:999px;padding:9px 10px;font-size:13px;font-weight:700;color:#6b6560;cursor:pointer;font-family:inherit}
 .hub-mode-btn.is-on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(26,26,26,.1)}
-.hub-scene-n{font-weight:600;letter-spacing:0;color:#9a9086}
-.hub-scene-back{display:inline-block;border:0;background:transparent;color:#8A7A5A;font-size:12px;font-weight:800;padding:2px 0 12px;cursor:pointer;font-family:inherit}
+.hub-scene-n{font-weight:600;letter-spacing:0;color:#6b6560}
+.hub-scene-back{display:inline-block;border:0;background:transparent;color:#8B6F3D;font-size:12px;font-weight:700;padding:2px 0 12px;cursor:pointer;font-family:inherit}
 
 /* 人格分頁 4 個 tab（Roy 2026-10-02 方案 B）—— 掣本身沿用 .hub-mode-switch */
 .type-tab-switch{align-items:center}
@@ -440,7 +442,7 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
    算式（#app padding 16×2、容器 margin 12×2、容器 padding 4×2、gap 6×3）：
      390px → 308px 可用；「深入分析」88px → 其餘 3 個各 73px ✓
      320px → 238px 可用；「深入分析」88px → 其餘 3 個各 50px ✓（「性格」只需 33px） */
-.type-tab-switch .hub-mode-btn{flex:1 1 auto;min-width:0;white-space:nowrap;padding:9px 6px;font-size:12.5px;display:inline-flex;align-items:center;justify-content:center}
+.type-tab-switch .hub-mode-btn{flex:1 1 auto;min-width:0;white-space:nowrap;padding:9px 6px;font-size:12px;display:inline-flex;align-items:center;justify-content:center}
 .type-tab-switch .hub-mode-btn[data-tab="deep"]{flex:0 0 auto;padding:9px 11px}
 .type-tab-switch .tab-star{width:12px;height:12px;flex:0 0 auto;fill:#C8A24C;margin-right:4px}
 .pros-ico{width:15px;height:15px;flex:0 0 auto;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -452,15 +454,15 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 .pros-box.is-str .pros-ico{stroke:#9A8149}
 .pros-box.is-wk .pros-ico{stroke:#8A837A}
 .deep-foot-row{display:flex;gap:8px;margin-top:8px}
-.deep-foot-btn{flex:1 1 0;display:flex;align-items:center;justify-content:center;border:1px solid #E7DCC4;background:#fff;border-radius:999px;padding:11px 4px;font-size:12px;font-weight:800;color:var(--ink);text-decoration:none;font-family:inherit;cursor:pointer;line-height:1.2;text-align:center}
+.deep-foot-btn{flex:1 1 0;display:flex;align-items:center;justify-content:center;border:1px solid #E7DCC4;background:#fff;border-radius:999px;padding:11px 4px;font-size:12px;font-weight:700;color:var(--ink);text-decoration:none;font-family:inherit;cursor:pointer;line-height:1.2;text-align:center}
 .deep-foot-btn:hover{background:#faf7f2}
 .type-rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .type-rel-card{background:#faf7f2;border-radius:12px;padding:13px 13px 12px;border-left:3px solid var(--rc)}
 .type-rel-head{display:flex;align-items:center;gap:6px;margin-bottom:7px}
 .type-rel-ico{width:17px;height:17px;stroke:var(--rc);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-.type-rel-t{font-size:13px;font-weight:800;color:var(--ink)}
+.type-rel-t{font-size:13px;font-weight:700;color:var(--ink)}
 .type-rel-body{display:flex;flex-direction:column;gap:4px}
-.type-rel-item{font-size:.85rem;color:#6b6560;line-height:1.6}
+.type-rel-item{font-size:14px;color:#6b6560;line-height:1.6}
 
 
 /* 場景攻略列 */
@@ -470,13 +472,13 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 .scene-go-ico{flex:0 0 auto;line-height:0;display:flex;align-items:center;justify-content:center;align-self:center}
 .scene-go-ico svg{width:36px;height:36px;display:block}
 .scene-go-body{flex:1 1 auto;min-width:0}
-.scene-go-t{display:block;font-size:14px;font-weight:800;color:var(--ink);margin:0 0 3px}
-.scene-go-d{display:block;font-size:11px;color:#8a8174;line-height:1.5}
+.scene-go-t{display:block;font-size:14px;font-weight:700;color:var(--ink);margin:0 0 3px}
+.scene-go-d{display:block;font-size:11px;color:#6b6560;line-height:1.5}
 
 
 /* 百科維度卡底「睇字母代表咩」link */
-.hub-more-link{display:block;width:100%;text-align:left;border:0;background:transparent;padding:11px 0 0;margin:0;font-family:inherit;font-size:12px;font-weight:700;color:#8a6a1f;cursor:pointer;}
-.hub-more-link:before{content:"› ";font-weight:800}
+.hub-more-link{display:block;width:100%;text-align:left;border:0;background:transparent;padding:11px 0 0;margin:0;font-family:inherit;font-size:12px;font-weight:700;color:#8B6F3D;cursor:pointer;}
+.hub-more-link:before{content:"› ";font-weight:700}
 
 /* 人格頁「深入睇吓呢一型」入口列 */
 
@@ -671,6 +673,15 @@ font-size:14px;line-height:1.6;overflow-x:auto
 #method{padding-bottom:28px;}
 /* 方法頁底部 CTA：同上面最後一段留返空間（之前 0px 太貼） */
 #method .softbox{margin-top:30px;}
+
+/* 性格百科：新統一 token 嘅 dark 覆蓋（Roy 2026-10-03 字色對齊） */
+html.dk .hub-sec-title{color:var(--ink)}
+html.dk #hub .text-gray-600,html.dk #hub .text-gray-500,html.dk #type .text-gray-600,html.dk #type .text-gray-500{color:#A79E92!important}
+html.dk .hub-mode-btn{color:#A79E92}
+html.dk .hub-mode-btn.is-on{color:var(--ink)}
+html.dk .hub-type-hint,html.dk .hub-scene-n{color:#A79E92}
+html.dk .hub-more-link,html.dk .hub-scene-back,html.dk .deep-ch,html.dk .deep-go{color:#D8C69E}
+html.dk .hub-row-chev{color:#C0A87A}
 </style>
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
 <script data-goatcounter="https://fung2222.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -1367,7 +1378,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <!-- 4 個維度入口：8 個字母掣 ＋ 撳入去睇詳解 -->
  <div class="card p-5 mb-4" id="hubDims">
- <h3 class="font-bold mb-1 text-sm">4 個維度（8 個字母）</h3>
+ <h3 class="hub-sec-title mb-1">4 個維度（8 個字母）</h3>
  <p class="text-xs text-gray-600 mb-3">每個人嘅性格由呢 4 個維度組成</p>
  <div class="grid grid-cols-2 gap-3">
   <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #B4652E">
@@ -1402,7 +1413,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <!-- 性格比較工具 -->
  <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">性格比較工具</h3>
+ <h3 class="hub-sec-title mb-3">性格比較工具</h3>
  <p class="text-xs text-gray-600 mb-3">揀兩個 4 字母睇佢哋夾唔夾、邊度同、邊度唔同</p>
  <div class="grid grid-cols-2 gap-2 mb-3">
  <select id="compareA" class="bg-soft p-2 rounded-lg text-sm font-bold">
@@ -1471,7 +1482,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 </div>
 
 <div class="card p-5 mb-4">
-<h3 class="font-bold mb-3 text-sm">4 個維度（8 個字母）</h3>
+<h3 class="hub-sec-title mb-3">4 個維度（8 個字母）</h3>
 <p class="text-xs text-gray-600 mb-3">撳任何一個字母睇詳細解釋</p>
 <div class="grid grid-cols-2 gap-3">
  <div class="card p-3 text-left hover:bg-soft" style="border-left:4px solid #B4652E">
@@ -1694,27 +1705,27 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">詳細解釋</h3>
+ <h3 class="hub-sec-title mb-3">詳細解釋</h3>
  <div id="letterDesc" class="text-sm text-gray-700 leading-relaxed whitespace-pre-line"></div>
  </div>
 
  <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">強項</h3>
+ <h3 class="hub-sec-title mb-3">強項</h3>
  <div id="letterStrength" class="flex flex-wrap gap-2"></div>
  </div>
 
  <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">弱項</h3>
+ <h3 class="hub-sec-title mb-3">弱項</h3>
  <div id="letterWeakness" class="flex flex-wrap gap-2"></div>
  </div>
 
  <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">適合嘅工作</h3>
+ <h3 class="hub-sec-title mb-3">適合嘅工作</h3>
  <div id="letterCareer" class="text-sm text-gray-700 leading-relaxed"></div>
  </div>
 
  <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3 text-sm">朋友配對</h3>
+ <h3 class="hub-sec-title mb-3">朋友配對</h3>
  <div id="letterFriends" class="text-sm text-gray-700 leading-relaxed"></div>
  </div>
  <div class="card mb-4 softbox">

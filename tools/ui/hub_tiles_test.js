@@ -29,7 +29,7 @@ setTimeout(()=>{
   chk('★ 8 個維度字母改用深色 --dc（百科卡 + 維度詳解兩處各 8）', (src.match(/--dc:#[0-9A-Fa-f]{6}/g)||[]).length===16, (src.match(/--dc:#[0-9A-Fa-f]{6}/g)||[]).length);
   chk('★ .dim-pair button 讀 --dc', /\.dim-pair button\{[^}]*color:var\(--dc/.test(src));
   chk('★ 維度字母有黑暗模式提亮（唔會深底深字）', /html\.dk \.dim-pair button\{filter:brightness/.test(src));
-  chk('★ 「vs」字加深（原本 #b0a795 太淺）', /\.dim-pair \.vs\{[^}]*color:#8A8272/.test(src));
+  chk("★ 「vs」字用次文字 token（#6b6560，同全站灰一致）", /\.dim-pair \.vs\{[^}]*color:#6b6560/.test(src) && !/#b0a795/.test(src));
   chk('★ 4 個維度細字（能量來源等）已加深', ['能量來源','認知方式','決策方式','生活態度'].every(t=>new RegExp('text-\\[11px\\] text-gray-600 font-semibold mt-1">'+t).test(src)), '');
   const dimPairs=[...d.querySelectorAll('#hubDims .dim-pair')];
   chk('★ 4 個維度入口喺百科首頁卡內（每組 2 個字母）', dimPairs.length===4 && dimPairs.every(t=>t.querySelectorAll('button').length===2), dimPairs.length);

@@ -365,6 +365,31 @@ setTimeout(() => {
       && (d.querySelectorAll("#typeDeepBox .deep-ch")[0]||{}).textContent==="第一章",
       d.querySelectorAll("#typeDeepBox .deep-star svg").length+" 星");
 
+  // ---------- 性格百科：字級／字色對齊（Roy 2026-10-03；jsdom 冇 Tailwind CDN → 靜態 assertion）----------
+  const _css=(src.match(/<style>([\s\S]*)<\/style>/)||["",""])[1];
+  const ruleAll=sel=>{const out=[];const re=new RegExp(sel.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\{([^}]*)\\}","g");let m;while((m=re.exec(_css)))out.push(m[1]);return out;};
+  const has=(sel,tok)=>ruleAll(sel).some(b=>b.indexOf(tok)>=0);
+  const MUTED="#6b6560", GOLD="#8B6F3D", LGOLD="#A08A5C";
+  const GREY_SEL=[".hub-type-hint",".hub-scene-n",".scene-go-d",".hub-mode-btn",".dim-pair .vs"];
+  const GOLD_SEL=[".hub-more-link",".hub-scene-back",".deep-tag",".deep-ch",".deep-go"];
+  chk("★ 百科字色：灰只用一個 token #6b6560", GREY_SEL.every(sel=>has(sel,MUTED)), GREY_SEL.map(s=>has(s,MUTED)?"✓":"✗").join(""));
+  chk("★ 百科字色：金棕只用一個 token #8B6F3D", GOLD_SEL.every(sel=>has(sel,GOLD)), GOLD_SEL.map(s=>has(s,GOLD)?"✓":"✗").join(""));
+  chk("★ 淡金 glyph 統一 #A08A5C（.hub-row-chev）", has(".hub-row-chev",LGOLD));
+  chk("★ 舊散色已清（#6b6257/#9a9086/#8a6a1f/#C0B08A 全清；#8a8174 只准留喺桌面版）",
+      !/#6b6257|#9a9086|#8a6a1f|#C0B08A/.test(_css) && !has(".hub-type-hint","#8a8174") && !has(".scene-go-d","#8a8174"));
+  chk("★ T/A 維度軸數據色 #8A7A5A 唔准當文字色換走（仍 3 處）", (src.match(/#8A7A5A/g)||[]).length>=3);
+  chk("★ 字重：百科 flow 規則冇 800（只准 400/600/700/900）",
+      ![".hub-mode-btn",".deep-ch",".deep-go",".deep-badge",".deep-foot-btn",".type-rel-t",".scene-go-t",".hub-scene-back"].some(sel=>/font-weight:\s*800/.test(ruleAll(sel).join(""))));
+  chk("★ 字級折入 scale：tab 切換 12px、關係項目 14px、冇 12.5px／.85rem",
+      has(".type-tab-switch .hub-mode-btn","font-size:12px") && has(".type-rel-item","font-size:14px")
+      && !/font-size:\s*12\.5px|font-size:\s*\.85rem/.test(_css));
+  chk("★ 百科卡標題＝同一套（.hub-sec-title 同 .softbox-title 19px/900/1.45/var(--ink)）",
+      /\.hub-sec-title\{font-size:19px;font-weight:900;[^}]*color:var\(--ink\)[^}]*line-height:1\.45/.test(_css)
+      && (src.match(/class="hub-sec-title/g)||[]).length>=7, (src.match(/class="hub-sec-title/g)||[]).length+" 個標題");
+  chk("★ 百科 Tailwind 灰（text-gray-600/500）remap 成 token ＋ 深色模式有覆蓋",
+      /#hub \.text-gray-600,#hub \.text-gray-500,#type \.text-gray-600,#type \.text-gray-500\{color:#6b6560!important\}/.test(_css)
+      && /html\.dk #hub \.text-gray-600[^{]*\{color:#A79E92!important\}/.test(_css));
+
   console.log(fail === 0 ? "\n===== 全部通過（" + pass + "/" + pass + "）=====" : "\n===== 有失敗（" + pass + "/" + (pass + fail) + "）=====");
   process.exit(fail === 0 ? 0 : 1);
 }, 300);
