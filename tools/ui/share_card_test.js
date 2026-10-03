@@ -84,6 +84,21 @@ w.Image=class{ set src(v){ this._v=v; setTimeout(()=>this.onload&&this.onload(),
   chk("⑧ 所有文字縱向喺卡內（0–1280）", outY.length===0, outY.map(c=>c.t+"@"+c.y).join(" | "));
   chk("⑧ 卡上文字層次唔會撞（名 265 < 你是 < code < 性格名 < slogan < chip）",
       (function(){ const ys=["你是","INFJ"].map(t=>F.find(c=>c.t===t)); return ys.every(Boolean) && name.y<ys[0].y && ys[0].y<ys[1].y; })());
+// ───────── 底部 hashtag（Roy 2026-10-03：太貼底 ＋ 太細睇唔清）─────────
+chk("★ hashtag 字級 28px（原本 22px）＋ 有自動收窄保險（> 600px 縮字）",
+    /let _tagFont = 28;/.test(HTML) && /_tagW > 600\) _tagFont = Math\.max\(20/.test(HTML));
+chk("★ hashtag 亮度 0.86（原本 0.55，睇唔清）",
+    /rgba\(255,255,255,0\.86\)[\s\S]{0,400}?_tagStr/.test(HTML) || /_tagStr[\s\S]{0,600}?rgba\(255,255,255,0\.86\)/.test(HTML));
+chk("★ hashtag 基線 1172 → 同卡底距 108px（原本 1190／90px）、同分數條留 52px",
+    (function(){
+      const m = HTML.match(/_tagStr, 360, (\d+)\)/); if(!m) return false;
+      const y = +m[1], barBottom = 936 + 2*80 + 12 + 12;   // 分數列 936 起、3 行 ×80、條高 12
+      return y === 1172 && (1280 - y) >= 100 && Math.abs(y - barBottom) >= 40;
+    })());
+chk("★ 分數列上移 24px（960 → 936）令底部有空間",
+    /let y = 936;/.test(HTML) && !/let y = 960;/.test(HTML));
+chk("★ CARD_FONT_ID 已 bump（舊紀錄縮圖會自動重畫）",
+    /CARD_FONT_ID = "archivo-ta4"/.test(HTML));
   console.log("===== 分享卡版面測試 " + ok + "/" + total + "=====");
   process.exit(ok===total?0:1);
 })();

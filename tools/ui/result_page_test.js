@@ -80,9 +80,13 @@ chk("★ ⑦ 分佈平均（最多－最少 ≤ 12）", Math.max(...vs)-Math.min
 (function(){
   const hits = [SRC.indexOf('<p class="softbox-sub">想確認自己 MBTI 人格？</p>')];
   const nTx = (SRC.match(/想確認自己 MBTI 人格？/g) || []).length;
-  chk("★ ⑥ 8 個「想確認自己 MBTI 人格？」CTA 全部都有發光燈泡喺上面",
-      nTx >= 8 && (SRC.match(/<span class="cta-bulb">/g) || []).length === nTx,
-      "文案 " + nTx + " 處 / 燈泡 " + ((SRC.match(/<span class="cta-bulb">/g) || []).length) + " 個");
+  const nBulb  = (SRC.match(/<span class="cta-bulb">/g) || []).length;
+  const nPaired = (SRC.match(/<span class="cta-bulb">[\s\S]{0,700}?<\/span>\s*<p class="softbox-sub">想確認自己 MBTI 人格？<\/p>/g) || []).length;
+  chk("★ ⑥ 8 個「想確認自己 MBTI 人格？」CTA 每個都有發光燈泡喺上面（一個唔缺、唔重複）",
+      nTx >= 8 && nPaired === nTx && nBulb === nTx + 1,
+      "文案 " + nTx + " 處 / 配對 " + nPaired + " / 燈泡 " + nBulb + " 個（＋1 = 再測卡）");
+  chk("★ 結果頁最底「挑戰再測一次」標題上有一粒發光 icon（Roy 2026-10-03）",
+      /class="card mb-4 softbox">\s*<span class="cta-bulb"><svg[\s\S]{0,260}?<\/span>\s*<h3 class="softbox-title">挑戰再測一次<\/h3>/.test(SRC));
   chk("★ ⑥ 燈泡喺文案**之前**（上面）",
       /class="cta-bulb">[\s\S]{0,700}?<\/span>\s*<p class="softbox-sub">想確認自己 MBTI 人格？<\/p>/.test(SRC));
   chk("★ ⑥ 燈泡有顏色（var(--gold)，dark 自動跟）",

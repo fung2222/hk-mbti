@@ -2284,6 +2284,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="card mb-4 softbox">
+      <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 12a8.2 8.2 0 1 1-2.9-6.3"/><path d="M20.4 4.2v4.6h-4.6"/></svg></span>
  <h3 class="softbox-title">挑戰再測一次</h3>
  <p class="softbox-sub">用另一個身份（朋友 / 家人）再測一次</p>
  <button type="button" class="softbox-btn" onclick="goPickVersion()">立即開始</button>
@@ -4372,7 +4373,7 @@ try{ loadHistory(); }catch(e){}
 // 分享卡字體：同 app 網頁同一套（iPhone PingFang HK / Android Noto Sans HK）
 window.CARD_FS = '"PingFang HK","Noto Sans HK","Hiragino Sans CNS","Microsoft JhengHei",sans-serif';
 window.CARD_ARCHIVO = '"Archivo Black", Georgia, "Times New Roman", serif';
-window.CARD_FONT_ID = "archivo-ta3";   // 改字型／卡內容時改呢個代號 → 舊紀錄會自動重畫
+window.CARD_FONT_ID = "archivo-ta4";   // 2026-10-03 hashtag 字級／位置改 → 舊紀錄重畫   // 改字型／卡內容時改呢個代號 → 舊紀錄會自動重畫
 window.refreshRecordCards = async function(){
 try{
 if(document.getElementById("test") && !document.getElementById("test").classList.contains("hidden")) return;  // 測試中唔好搞
@@ -4742,7 +4743,7 @@ ctx.fillText(_taLabel, 360, 878);
 const scores = t.score;
 ctx.fillStyle = "white";
 ctx.textAlign = "left";
-let y = 960;
+let y = 936;   // 2026-10-03：上移 24px，讓底部 hashtag 有空間放大（Roy 話太貼底）
 for(let i=0;i<3;i++){
 const parts = scores[i].split("/");
 const label = parts[0];
@@ -4766,10 +4767,16 @@ const code4 = window.lastResult.substring(0,4);
 const tagPal = window.getPalette(code4);
 const v1 = (tagPal.vibes && tagPal.vibes[0]) || "16型";
 const v2 = (tagPal.vibes && tagPal.vibes[1]) || "香港人";
-ctx.fillStyle = "rgba(255,255,255,0.55)";
-ctx.font = "22px " + window.CARD_FS;
+// 2026-10-03 Roy：太貼底＋太細睇唔清 → 22px/55% → 28px/86%，基線 1190 → 1172（底距 85 → 102px）
+ctx.fillStyle = "rgba(255,255,255,0.86)";
+let _tagFont = 28;
+const _tagStr = `#港式MBTI #${code4} #${v1} #${v2}`;
+ctx.font = _tagFont + "px " + window.CARD_FS;
+const _tagW = ctx.measureText(_tagStr).width;
+if(_tagW > 600) _tagFont = Math.max(20, Math.floor(_tagFont * 600 / _tagW));
+ctx.font = _tagFont + "px " + window.CARD_FS;
 ctx.textAlign = "center";
-ctx.fillText(`#港式MBTI #${code4} #${v1} #${v2}`, 360, 1190);
+ctx.fillText(_tagStr, 360, 1172);
  // Set 落 img tag
 const dataUrl = canvas.toDataURL("image/png");
 const img = $("shareCardImg");
