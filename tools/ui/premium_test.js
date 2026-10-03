@@ -145,7 +145,16 @@ setTimeout(async ()=>{
   chk('★ 維度分頁大字母 #letterBig 都用 Archivo Black（原本漏咗）', /#letterBig\{font-family:'Archivo Black'/.test(src));
   chk('★ 維度字母 .dim-pair button 用 Archivo Black', /\.dim-pair button\{[^}]*Archivo Black/.test(src));
   chk('★ 文章型別卡 .article-type-card .hub-type-code 用 Archivo Black', /\.article-type-card \.hub-type-code\{[^}]*Archivo Black/.test(src));
-  chk('★ 全部型別碼容器都係 .hub-type-code（5 個位）', ['deepChapterType','socialArticleType','romanceArticleType'].every(id=>new RegExp('class="hub-type-code" id="'+id+'"').test(src)));
+  chk('★ 場景文章牌匾 4 字母仍然係 .hub-type-code（相處／拍拖）', ['socialArticleType','romanceArticleType'].every(id=>new RegExp('class="hub-type-code" id="'+id+'"').test(src)));
+  // Roy 2026-10-03：章節色卡要同人格頁色卡一模一樣 → 4 字母改用同 #typeBig 一組 class
+  chk('★ 章節色卡 4 字母跟人格頁 #typeBig（text-5xl font-black）',
+      /class="text-5xl font-black mb-1" id="deepChapterType"/.test(src) && /class="text-5xl font-black mb-1" id="typeBig"/.test(src));
+  chk('★ 章節色卡唔再係滿版（改用 .card p-6 mb-4 + .type-hero-row，同人格頁一樣）',
+      /class="card p-6 mb-4" id="deepChapterHero"/.test(src) && !/article-type-stage">\s*<div class="card p-6 mb-4" id="deepChapterHero"/.test(src));
+  // Roy 2026-10-03：九章目錄號碼 icon → 星星 + 標題上加「第X章」
+  chk('★ 九章目錄：號碼方塊 .deep-num 已清走（死 CSS 都清）', !/deep-num/.test(src));
+  chk('★ 九章目錄：每章有星星 icon（.deep-star，金色）', (src.match(/class="deep-star"/g)||[]).length===2 && /\.deep-star svg\{[^}]*fill:#C8A24C/.test(src));
+  chk('★ 九章目錄：標題上面有「第X章」（兩處 renderer 都有）', (src.match(/deep-ch">第'/g)||[]).length===2);
   // ---------- 全站色卡文字比例統一（Roy 2026-10-01：用主頁色卡比例）----------
   chk('★ 色卡基準 font-size:24px 喺 .hub-type-card', /\.hub-type-card\{[^}]*font-size:24px/.test(src));
   chk('★ 4 字母 = 1em（跟基準）', /\.hub-type-code\{\s*\nfont-family:'Archivo Black'[^}]*font-size:1em/.test(src));
@@ -214,7 +223,10 @@ setTimeout(async ()=>{
   chk('★ 型別目錄內冇提示（提示只喺 16 型選擇層）', !/撳入去/.test($('#deepList').textContent));
   const toc=[...d.querySelectorAll('#deepList .deep-item')];
   chk('INTJ 目錄有 9 章', toc.length===9, toc.length);
-  chk('目錄每章有序號 1..9', toc[0].querySelector('.deep-num').textContent==='1' && toc[8].querySelector('.deep-num').textContent==='9');
+  chk('目錄每章有星星 icon ＋ 標題上「第一章」..「第九章」（號碼方塊已換走）',
+      toc.length===9 && !toc[0].querySelector('.deep-num') && !!toc[0].querySelector('.deep-star svg')
+      && toc[0].querySelector('.deep-ch').textContent==='第一章' && toc[8].querySelector('.deep-ch').textContent==='第九章',
+      (toc[0].querySelector('.deep-ch')||{}).textContent);
   chk('目錄有「返全部 16 型」', /返全部 16 型/.test($('#deepList').textContent));
 
   // ---------- 章節頁 + 上一章／下一章 ----------
@@ -240,7 +252,7 @@ setTimeout(async ()=>{
   // ---------- 鐵律 ----------
   chk('新內容冇 emoji', !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test($('#upgrade').textContent + $('#deepChapter').textContent + prem.replace(/\/\/[^\n]*/g,'')));
   chk('等級掣有黑暗模式覆蓋（html.dk .tier-btn）', /html\.dk \.tier-btn/.test(src));
-  chk('升級頁／深入分析走 dark 覆蓋（html.dk .up-cmp / .deep-num）', /html\.dk \.up-cmp/.test(src) && /html\.dk \.deep-num/.test(src));
+  chk('升級頁／深入分析走 dark 覆蓋（html.dk .up-cmp / .deep-ch / .deep-star）', /html\.dk \.up-cmp/.test(src) && /html\.dk \.deep-ch/.test(src) && /html\.dk \.deep-star svg/.test(src));
   chk('冇改動版本號（仍然 2.0.0）', /"version":\s*"2\.0\.0"/.test(fs.readFileSync(path.join(REPO,'manifest.json'),'utf8')));
 
   // ---------- 真跑：完整返回鏈（4 層）----------

@@ -338,6 +338,37 @@ setTimeout(() => {
   dPrev.dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
   chk("★ 撳上一章 → 返第 1 章", /1 \/ 2/.test(get("deepChapterCrumb").textContent), get("deepChapterCrumb").textContent);
 
+  // ---------- 九章目錄：星星 + 第X章 + 章節色卡格式（Roy 2026-10-03）----------
+  w.localStorage.setItem("hkmbti_tier","full"); w.renderTier();
+  w.openDeepFor("INTJ");
+  const dItems=d.querySelectorAll("#deepList .deep-item");
+  const nChap=(w.PREMIUM["INTJ"].chapters||[]).length;
+  chk("★ 目錄頁：每章一張卡 ＋ 每張都有星星（號碼方塊冇咗）",
+      dItems.length===nChap && d.querySelectorAll("#deepList .deep-star svg").length===nChap
+      && d.querySelectorAll("#deepList .deep-num").length===0,
+      "卡 "+dItems.length+" / 星 "+d.querySelectorAll("#deepList .deep-star svg").length);
+  chk("★ 目錄頁：標題上有「第X章」（中文數字、無空格）",
+      (d.querySelectorAll("#deepList .deep-ch")[0]||{}).textContent==="第一章",
+      (d.querySelectorAll("#deepList .deep-ch")[0]||{}).textContent);
+  chk("★ 目錄頁：卡內順序＝第X章 → 標題 → 副標題", (function(){
+    const it=d.querySelectorAll("#deepList .deep-item")[0];
+    return !!(it.querySelector(".deep-ch") && it.querySelector(".font-bold") && it.querySelector(".text-xs"));
+  })());
+  dItems[0].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
+  const dHero=d.getElementById("deepChapterHero");
+  chk("★ 章節色卡＝人格頁色卡同一格式（card p-6 mb-4 ＋ type-hero-row/mid，唔再滿版）",
+      dHero.className.indexOf("card")>=0 && dHero.className.indexOf("p-6")>=0 && dHero.className.indexOf("mb-4")>=0
+      && !dHero.classList.contains("article-type-card")
+      && !!dHero.querySelector(".type-hero-row .type-hero-mid"),
+      dHero.className);
+  chk("★ 章節色卡文字色白（底色係型漸層）＋ 4 字母純文字", dHero.style.color==="white" && d.getElementById("deepChapterType").innerText==="INTJ",
+      dHero.style.color+" / "+d.getElementById("deepChapterType").innerText);
+  w.openType("INTJ","hub"); w.setTypeTab("deep");
+  chk("★ 人格頁「深入分析」分頁都有 9 粒星 ＋ 第X章",
+      d.querySelectorAll("#typeDeepBox .deep-star svg").length===nChap
+      && (d.querySelectorAll("#typeDeepBox .deep-ch")[0]||{}).textContent==="第一章",
+      d.querySelectorAll("#typeDeepBox .deep-star svg").length+" 星");
+
   console.log(fail === 0 ? "\n===== 全部通過（" + pass + "/" + pass + "）=====" : "\n===== 有失敗（" + pass + "/" + (pass + fail) + "）=====");
   process.exit(fail === 0 ? 0 : 1);
 }, 300);

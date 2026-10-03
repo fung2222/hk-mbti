@@ -296,11 +296,14 @@ html.dk .up-cta{background:#D9B26A;color:#12161C}
 .deep-item{cursor:pointer}
 .deep-tag{display:inline-block;font-size:10px;font-weight:700;color:#8a6a1f;background:#f6e7c4;border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:1px}
 .deep-tag.is-free{color:#3F6B4A;background:rgba(110,165,120,.16)}
-.deep-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:rgba(212,169,95,.16);color:#8B6F3D;font-size:11px;font-weight:800;flex-shrink:0}
+.deep-star{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;flex:0 0 auto}
+.deep-star svg{width:18px;height:18px;display:block;fill:#C8A24C}
+.deep-ch{font-size:11px;font-weight:800;color:#8B6F3D;letter-spacing:.02em;margin-bottom:2px}
 .deep-go{color:#8B6F3D;font-size:12px;font-weight:800;flex-shrink:0}
 html.dk .deep-nav-btn{border-color:rgba(255,255,255,.16);color:#C2BAAD}
 html.dk .deep-nav-btn.is-mid{color:#D8C69E;border-color:rgba(217,178,106,.45)}
-html.dk .deep-num{background:rgba(217,178,106,.18);color:#D8C69E}
+html.dk .deep-ch{color:#D8C69E}
+html.dk .deep-star svg{fill:#D9B26A}
 html.dk .deep-go{color:#D8C69E}
 .deep-code{color:var(--tc);font-size:19px;letter-spacing:-.01em}
 html.dk .deep-code{color:var(--tc-dk)}
@@ -1544,16 +1547,14 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <p class="page-hero-sub" id="deepChapterCrumb">INTJ · 1 / 9</p>
  </div>
 
- <div class="article-type-stage">
-  <div id="deepChapterHero" class="article-type-card">
-   <div class="type-plaque-row">
-    <button type="button" class="type-nav" id="deepPrevTop" aria-label="上一章" onclick="deepStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
-    <div class="type-plaque-mid">
-     <div class="hub-type-code" id="deepChapterType">INTJ</div>
-     <div class="hub-type-cn" id="deepChapterCn"></div>
-    </div>
-    <button type="button" class="type-nav" id="deepNextTop" aria-label="下一章" onclick="deepStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
+ <div class="card p-6 mb-4" id="deepChapterHero">
+  <div class="type-hero-row">
+   <button type="button" class="type-nav" id="deepPrevTop" aria-label="上一章" onclick="deepStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
+   <div class="type-hero-mid">
+    <div class="text-5xl font-black mb-1" id="deepChapterType">INTJ</div>
+    <h2 class="text-[19px] font-black mb-1" id="deepChapterCn"></h2>
    </div>
+   <button type="button" class="type-nav" id="deepNextTop" aria-label="下一章" onclick="deepStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
   </div>
  </div>
 
@@ -5644,8 +5645,9 @@ box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]">
 d.chapters.map(function(c, i){
 const _tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
 return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" onclick="openDeepChapter(' + i + ')">' +
-'<div class="flex items-start gap-3"><span class="deep-num">' + (i + 1) + '</span>' +
-'<div class="min-w-0 flex-1"><div class="font-bold text-[14px]">' + c.t + _tag + '</div>' +
+'<div class="flex items-start gap-3">' + '<span class="deep-star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg></span>' +
+'<div class="min-w-0 flex-1"><div class="deep-ch">第' + "一二三四五六七八九".charAt(i) + '章</div>' +
+'<div class="font-bold text-[14px]">' + c.t + _tag + '</div>' +
 '<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div>' +
 '</div></button>';
 }).join("") +
@@ -5698,13 +5700,13 @@ const T = (window.TYPES && window.TYPES[t]) || {};
 const ch = d.chapters[i];
 document.getElementById("deepChapterTitle").textContent = ch.t;
 document.getElementById("deepChapterCrumb").textContent = t + " · " + (i + 1) + " / " + d.chapters.length;
-document.getElementById("deepChapterType").innerHTML = (window.typeIcoHtml ? window.typeIcoHtml(t) : t);
+document.getElementById("deepChapterType").innerText = t;
 document.getElementById("deepChapterType").dataset.code = t;
 document.getElementById("deepChapterCn").textContent = T.cn || "";
 document.getElementById("deepChapterHead").textContent = ((i === 0 && window.getTier() !== "full") ? "第 1 章 · 免費試睇" : "完整版 · 第 " + (i + 1) + " 章");
 document.getElementById("deepChapterBody").innerHTML = window.formatGuideHtml(ch.b);
 const hero = document.getElementById("deepChapterHero");
-if(hero){ const PL = window.getPalette(t); hero.style.background = "linear-gradient(135deg, " + PL.c1 + ", " + PL.c2 + ")"; }
+if(hero){ const PL = window.getPalette(t); hero.style.background = "linear-gradient(135deg, " + PL.c1 + ", " + PL.c2 + ")"; hero.style.color = "white"; }
 const prev = document.getElementById("deepPrev"), next = document.getElementById("deepNext");
 if(prev) prev.disabled = (i === 0);
 if(next) next.disabled = (i === d.chapters.length - 1);
@@ -5991,8 +5993,9 @@ window.renderTypeTabs = function(code){
     + dd.chapters.map(function(c, i){
      const tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
      return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" onclick="openDeepChapterFromType(' + i + ',\'' + code + '\')">'
-      + '<div class="flex items-start gap-3"><span class="deep-num">' + (i + 1) + '</span>'
-      + '<div class="min-w-0 flex-1"><div class="font-bold text-[14px]">' + c.t + tag + '</div>'
+      + '<div class="flex items-start gap-3">' + '<span class="deep-star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg></span>'
+      + '<div class="min-w-0 flex-1"><div class="deep-ch">第' + "一二三四五六七八九".charAt(i) + '章</div>'
+      + '<div class="font-bold text-[14px]">' + c.t + tag + '</div>'
       + '<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div></div></button>';
     }).join("")
     + (_full ? "" : '<button type="button" class="softbox-btn mt-2" onclick="openUpgrade()">解鎖全部 9 章</button>');
