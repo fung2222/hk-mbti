@@ -28,6 +28,40 @@ setTimeout(()=>{
       chk(`${L} 標題有內容`, (d.getElementById('letterTitle').innerText||'').length>0);
     }
   });
+  // ---------- 字母卡左右箭咀（Roy 2026-10-03：「字母卡要加」）----------
+  // 同一個位置、左右切換唔同字母（次序 ＝ window.LETTERS：E→I→S→N→T→F→J→P）
+  const lHero=d.getElementById('letterHero');
+  const lBtns=lHero.querySelectorAll('.type-nav');
+  chk('字母卡有左右箭咀（aria-label＝上／下一個字母）',
+      lBtns.length===2 && /上一個字母/.test(lBtns[0].getAttribute('aria-label')||'')
+      && /下一個字母/.test(lBtns[1].getAttribute('aria-label')||''), '搵到 '+lBtns.length+' 粒');
+  chk('箭咀喺 .type-hero-row 內（flex 排版，320px 都唔會壓字）', !!lHero.querySelector('.type-hero-row .type-nav'));
+  chk('箭咀用 ink 色（字母卡係淺底，白色會睇唔到）＋var(--ink) 自動跟黑夜模式',
+      lBtns.length===2 && lBtns[0].classList.contains('is-ink') && /\.type-nav\.is-ink\{color:var\(--ink\)/.test(html));
+  w.openLetter('E');   // 明確起點（上面個 loop 停喺 J）
+  const lDep=w._histDepth||0, lLen=w.history.length;
+  lBtns[1].dispatchEvent(new w.MouseEvent('click',{bubbles:true}));
+  chk('撳右箭咀 → 轉下一個字母（E → I）＋標題／麵包屑／內文都換',
+      d.getElementById('letterBig').innerText==='I' && /I/.test(d.getElementById('letterBreadcrumb').innerText)
+      && (d.getElementById('letterDesc').innerText||'').length>50,
+      d.getElementById('letterBig').innerText+' / '+d.getElementById('letterBreadcrumb').innerText);
+  chk('字母轉換＝同一頁換內容 → 唔加 history 層',
+      (w._histDepth||0)===lDep && w.history.length===lLen, 'depth '+lDep+'→'+w._histDepth);
+  chk('當前歷史層快照已更新做新字母', w._navSnap().letter==='I', w._navSnap().letter);
+  lBtns[0].dispatchEvent(new w.MouseEvent('click',{bubbles:true}));
+  chk('撳返左箭咀 → 返 E', d.getElementById('letterBig').innerText==='E', d.getElementById('letterBig').innerText);
+  w.openLetter('E');
+  d.getElementById('letterHero').querySelectorAll('.type-nav')[0].dispatchEvent(new w.MouseEvent('click',{bubbles:true}));
+  chk('第一個字母撳左 → 環繞去最後一個（E → P）', d.getElementById('letterBig').innerText==='P', d.getElementById('letterBig').innerText);
+  w.openLetter('E');
+  const lSeq=['E'];
+  for(let k=0;k<7;k++){
+    d.getElementById('letterHero').querySelectorAll('.type-nav')[1].dispatchEvent(new w.MouseEvent('click',{bubbles:true}));
+    lSeq.push(d.getElementById('letterBig').innerText);
+  }
+  chk('行 7 步 → 次序完全等於 window.LETTERS（8 個字母齊）',
+      JSON.stringify(lSeq)===JSON.stringify(Object.keys(w.LETTERS)), lSeq.join('→'));
+
   chk('全程冇 JS 錯誤', errs.length===0, errs.slice(0,2).join(' | '));
   console.log('\n===== '+(ok===total?'全部通過':'有失敗')+'（'+ok+'/'+total+'） =====');
   process.exit(ok===total?0:1);

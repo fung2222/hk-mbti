@@ -584,6 +584,9 @@ margin-right:11px;
 .type-nav:active{transform:scale(.9)}
 .type-nav svg{width:22px;height:22px;display:block;fill:currentColor;stroke:none}
 .type-nav[disabled]{opacity:.3;cursor:default}
+/* 淺色底（字母卡）用 ink 色 —— var(--ink) 淺深模式自動適應，所以唔使入 #dark-layer */
+.type-nav.is-ink{color:var(--ink);opacity:.42}
+.type-nav.is-ink:hover{opacity:.72}
 /* 場景文章頁牌匾：.article-type-card 係 pointer-events:none → 箭咀要自己開返 */
 .type-plaque-row{display:flex;align-items:center;gap:10px;width:100%;padding:0 8px;box-sizing:border-box}
 .type-plaque-mid{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px}
@@ -1692,9 +1695,15 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div id="letterHero" class="card p-6 mb-4 text-center">
+ <div class="type-hero-row">
+ <button type="button" class="type-nav is-ink" aria-label="上一個字母" onclick="letterStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
+ <div class="type-hero-mid">
  <div class="text-6xl font-black mb-2" id="letterBig">E</div>
  <h2 class="text-2xl font-black mb-1" id="letterTitle">外向</h2>
  <p class="text-sm font-semibold text-gray-700" id="letterShort">由外在世界獲得能量</p>
+ </div>
+ <button type="button" class="type-nav is-ink" aria-label="下一個字母" onclick="letterStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
+ </div>
  </div>
 
  <div class="card p-5 mb-4">
@@ -6287,6 +6296,20 @@ window._lastLetter = letter;
  $("letterFriends").innerText = L.friends.join("、");
 show("letter");
 window.scrollTo(0,0);
+};
+// 字母卡左右箭咀（Roy 2026-10-03）：同一個位置、左右切換唔同字母
+// （次序 ＝ window.LETTERS 本身：E → I → S → N → T → F → J → P，兩頭環繞）。
+// 同 typeStep／articleStep 一樣「同一頁換內容」→ 唔加 history 層 + replace 更新快照。
+window.letterStep = function(dir){
+const keys = Object.keys(window.LETTERS || {});
+if(keys.length < 2) return;
+const cur = String(window._lastLetter || "").toUpperCase();
+let i = keys.indexOf(cur);
+if(i < 0) i = 0;
+const nx = keys[((i + (dir < 0 ? -1 : 1)) % keys.length + keys.length) % keys.length];
+window._navSilent = true;
+try{ window.openLetter(nx); } finally { window._navSilent = false; }
+try{ window._histWrite("replace"); }catch(e){}
 };
 
 window.openType = function(type, from){
