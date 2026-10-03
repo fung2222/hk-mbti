@@ -349,10 +349,20 @@ setTimeout(() => {
   chk("★ 目錄頁：標題上有「第X章」（中文數字、無空格）",
       (d.querySelectorAll("#deepList .deep-ch")[0]||{}).textContent==="第一章",
       (d.querySelectorAll("#deepList .deep-ch")[0]||{}).textContent);
-  chk("★ 目錄頁：卡內順序＝第X章 → 標題 → 副標題", (function(){
+  chk("★ 目錄頁：卡內順序＝[icon] 第X章 → 標題 → 副標題", (function(){
     const it=d.querySelectorAll("#deepList .deep-item")[0];
-    return !!(it.querySelector(".deep-ch") && it.querySelector(".font-bold") && it.querySelector(".text-xs"));
+    return !!(it.querySelector(".deep-ico") && it.querySelector(".deep-ch") && it.querySelector(".deep-t") && it.querySelector(".text-xs"));
   })());
+  chk("★ 目錄頁：icon 喺最前、星星喺最後（次序 deep-ico → 文字 → deep-star）", (function(){
+    const it=d.querySelectorAll("#deepList .deep-item")[0];
+    const kids=[...it.querySelector(".deep-row").children].map(e=>e.className.split(" ")[0]);
+    return kids[0]==="deep-ico" && kids[kids.length-1]==="deep-star" && kids.length===3;
+  })());
+  chk("★ 目錄 icon 同場景目錄一樣：36px ＋ 垂直置中（.deep-row align-items:center）",
+      /\.deep-ico svg\{width:36px;height:36px/.test(src) && /\.deep-row\{display:flex;align-items:center/.test(src)
+      && /\.deep-ico\{[^}]*align-self:center/.test(src));
+  chk("★ 目錄標題字級＝場景目錄同一套（.deep-t 14px/700,同 .scene-go-t）",
+      /\.deep-t\{display:block;font-size:14px;font-weight:700;color:var\(--ink\)/.test(src));
   dItems[0].dispatchEvent(new w.MouseEvent("click",{bubbles:true}));
   const dHero=d.getElementById("deepChapterHero");
   chk("★ 章節色卡＝人格頁色卡同一格式（card p-6 ＋ type-hero-row/mid，唔再滿版）", dHero.className.indexOf("card")>=0 && dHero.className.indexOf("p-6")>=0 && /mb-/.test(dHero.className) && !dHero.classList.contains("article-type-card") && !!dHero.querySelector(".type-hero-row .type-hero-mid"), dHero.className);
@@ -389,6 +399,31 @@ setTimeout(() => {
   chk("★ 百科 Tailwind 灰（text-gray-600/500）remap 成 token ＋ 深色模式有覆蓋",
       /#hub \.text-gray-600,#hub \.text-gray-500,#type \.text-gray-600,#type \.text-gray-500\{color:#6b6560!important\}/.test(_css)
       && /html\.dk #hub \.text-gray-600[^{]*\{color:#A79E92!important\}/.test(_css));
+
+  // ---------- 章節內文排版（Roy 2026-10-03：唔可以逐句切段／唔可以露星號）----------
+  chk("★ 章節排版器存在；章節頁用 formatChapterHtml（場景文章仍用 formatGuideHtml）",
+      typeof w.formatChapterHtml==="function" && /deepChapterBody"\)\.innerHTML = window\.formatChapterHtml/.test(src)
+      && (src.match(/formatGuideHtml/g)||[]).length>=3);
+  chk("★ 段落跟原文（\n\n 分段）—— 唔再逐個「。」切段", (function(){
+    const h=w.formatChapterHtml("第一句。第二句。第三句。\n\n第四句。第五句。");
+    return (h.match(/<p>/g)||[]).length===2 && /第一句。第二句。第三句。/.test(h);
+  })());
+  chk("★ 行內粗體轉 <strong>，唔會露 ** 星號（144 章全掃）", (function(){
+    for(const t of Object.keys(w.PREMIUM)) for(const c of w.PREMIUM[t].chapters) if(/\*\*/.test(w.formatChapterHtml(c.b))) return false;
+    return true;
+  })());
+  chk("★ 3 點清單變真 <ol class=guide-list>（<li> ×3）", (function(){
+    const h=w.formatChapterHtml("1. **要點一**：說明一。\n\n2. **要點二**：說明二。\n\n3. **要點三**：說明三。");
+    return /<ol class="guide-list">/.test(h) && (h.match(/<li>/g)||[]).length===3 && (h.match(/<strong>/g)||[]).length===3 && !/<p>/.test(h);
+  })());
+  chk("★ 收尾「**一句總結**：…」變 kicker ＋ 一段（唔會連住內文）", (function(){
+    const h=w.formatChapterHtml("正文一段。\n\n**一句總結**：你要嘅唔係人哋聽你講。");
+    return /<div class="article-guide-kicker">一句總結<\/div><p>/.test(h) && (h.match(/<p>/g)||[]).length===2;
+  })());
+  chk("★ 場景文章唔受影響（formatGuideHtml 保留逐句 <p>，只加 <strong>）",
+      (function(){const h=w.formatGuideHtml("第一句。第二句。**重點**跟住。");return (h.match(/<p>/g)||[]).length===3 && /<strong>重點<\/strong>/.test(h);})());
+  chk("★ 章節頁 CSS：清單 <ol> 用 decimal ＋ 章節 li 行高 1.9",
+      /\.article-guide-body ol\.guide-list\{list-style:decimal\}/.test(src) && /#deepChapter \.article-guide-body li\{[^}]*line-height:1\.9/.test(src));
 
   console.log(fail === 0 ? "\n===== 全部通過（" + pass + "/" + pass + "）=====" : "\n===== 有失敗（" + pass + "/" + (pass + fail) + "）=====");
   process.exit(fail === 0 ? 0 : 1);

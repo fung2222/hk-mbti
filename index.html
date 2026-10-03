@@ -296,11 +296,13 @@ html.dk .up-cta{background:#D9B26A;color:#12161C}
 .deep-item{cursor:pointer}
 .deep-tag{display:inline-block;font-size:10px;font-weight:700;color:#8B6F3D;background:#f6e7c4;border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:1px}
 .deep-tag.is-free{color:#3F6B4A;background:rgba(110,165,120,.16)}
-.deep-ico{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;flex:0 0 auto;margin-left:auto;color:#A08A5C}
-.deep-ico svg{width:19px;height:19px;display:block;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.deep-row{display:flex;align-items:center;gap:13px}
+.deep-ico{flex:0 0 auto;line-height:0;display:flex;align-items:center;justify-content:center;align-self:center;color:#A08A5C}
+.deep-ico svg{width:36px;height:36px;display:block;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 html.dk .deep-ico{color:#C0A87A}
 .deep-star{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;flex:0 0 auto}
 .deep-star svg{width:18px;height:18px;display:block;fill:#C8A24C}
+.deep-t{display:block;font-size:14px;font-weight:700;color:var(--ink);margin:0 0 3px}
 .deep-ch{font-size:11px;font-weight:700;color:#8B6F3D;letter-spacing:.02em;margin-bottom:2px}
 .deep-go{color:#8B6F3D;font-size:12px;font-weight:700;flex-shrink:0}
 html.dk .deep-nav-btn{border-color:rgba(255,255,255,.16);color:#C2BAAD}
@@ -375,9 +377,14 @@ margin:0 0 12px;line-height:1.6;font-size:17px;color:#374151;
 #deepChapter .article-guide-body p{margin:0 0 16px;line-height:1.9;}
 #deepChapter .article-guide-body .article-guide-kicker{margin:28px 0 11px;font-size:15px;}
 #deepChapter .article-guide-body p:last-child{margin-bottom:0;}
-.article-guide-body ul{
+.article-guide-body ul,.article-guide-body ol.guide-list{
 margin:0 0 14px;padding:0 0 0 1.35rem;list-style:disc;
 }
+.article-guide-body ol.guide-list{list-style:decimal}
+.article-guide-body strong{font-weight:700;color:var(--ink)}
+html.dk .article-guide-body strong{color:var(--ink)}
+#deepChapter .article-guide-body li{margin:0 0 12px;line-height:1.9;font-size:17px;color:#374151}
+#deepChapter .article-guide-body ol.guide-list{margin:0 0 18px}
 .article-guide-body li{
 margin:0 0 6px;line-height:1.6;font-size:17px;color:#374151;
 }
@@ -485,6 +492,7 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 /* 深入分析版頭：金標下面嗰行黑大字 */
 .deep-lead{font-size:19px;font-weight:900;line-height:1.35;letter-spacing:-.01em;color:var(--ink);margin:0 0 9px}
 html.dk .deep-lead{color:var(--ink)}
+html.dk #deepChapter .article-guide-body p,html.dk #deepChapter .article-guide-body li{color:#D8D2C8}
 
 .home-type-reel-wrap{
 position:relative;flex-shrink:0;margin:0 -20px 6px;
@@ -5653,11 +5661,10 @@ box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]">
 d.chapters.map(function(c, i){
 const _tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
 return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" onclick="openDeepChapter(' + i + ')">' +
-'<div class="flex items-start gap-3">' + '<span class="deep-star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg></span>' +
+'<div class="deep-row">' + '<span class="deep-ico">' + window.deepIcoHtml(i) + '</span>' +
 '<div class="min-w-0 flex-1"><div class="deep-ch">第' + "一二三四五六七八九".charAt(i) + '章</div>' +
-'<div class="font-bold text-[14px]">' + c.t + _tag + '</div>' +
-'<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div>' +
-window.deepIcoHtml(i) +
+'<div class="deep-t">' + c.t + _tag + '</div>' +
+'<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div>' + '<span class="deep-star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg></span>' +
 '</div></button>';
 }).join("") +
 '<div class="deep-foot-row">' +
@@ -5713,7 +5720,7 @@ document.getElementById("deepChapterType").innerText = t;
 document.getElementById("deepChapterType").dataset.code = t;
 document.getElementById("deepChapterCn").textContent = T.cn || "";
 document.getElementById("deepChapterHead").textContent = ((i === 0 && window.getTier() !== "full") ? "第 1 章 · 免費試睇" : "完整版 · 第 " + (i + 1) + " 章");
-document.getElementById("deepChapterBody").innerHTML = window.formatGuideHtml(ch.b);
+document.getElementById("deepChapterBody").innerHTML = window.formatChapterHtml(ch.b);
 const hero = document.getElementById("deepChapterHero");
 if(hero){ const PL = window.getPalette(t); hero.style.background = "linear-gradient(135deg, " + PL.c1 + ", " + PL.c2 + ")"; hero.style.color = "white"; }
 const prev = document.getElementById("deepPrev"), next = document.getElementById("deepNext");
@@ -6002,11 +6009,11 @@ window.renderTypeTabs = function(code){
     + dd.chapters.map(function(c, i){
      const tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
      return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" onclick="openDeepChapterFromType(' + i + ',\'' + code + '\')">'
-      + '<div class="flex items-start gap-3">' + '<span class="deep-star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg></span>'
+      + '<div class="deep-row">' + '<span class="deep-ico">' + window.deepIcoHtml(i) + '</span>'
       + '<div class="min-w-0 flex-1"><div class="deep-ch">第' + "一二三四五六七八九".charAt(i) + '章</div>'
-      + '<div class="font-bold text-[14px]">' + c.t + tag + '</div>'
+      + '<div class="deep-t">' + c.t + tag + '</div>'
       + '<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div>'
-       + window.deepIcoHtml(i) + '</div></button>';
+       + '<span class="deep-star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg></span>' + '</div></button>';
     }).join("")
     + (_full ? "" : '<button type="button" class="softbox-btn mt-2" onclick="openUpgrade()">解鎖全部 9 章</button>');
   }
@@ -6150,6 +6157,37 @@ if(el && el.scrollIntoView) el.scrollIntoView({block:"center"});
 };
 // ====================== Social Guide Functions ======================
 // 純文字 → HTML 排版（共用 helper；相處／拍拖文章、深入分析章節、人格深入分析都用）
+window.formatChapterHtml = function(raw){
+if(!raw) return "";
+const esc = function(x){
+return String(x).replace(/[&<>]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; });
+ };
+const bold = function(x){ return esc(x).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>"); };
+const blocks = String(raw).split(/\n\s*\n/).map(function(x){ return x.trim(); }).filter(Boolean);
+let html = "", listOpen = false;
+const closeList = function(){ if(listOpen){ html += "</ol>"; listOpen = false; } };
+blocks.forEach(function(b){
+const m = b.match(/^\*\*([^*]+)\*\*[：:]\s*([\s\S]*)$/);
+if(m){
+closeList();
+html += '<div class="article-guide-kicker">' + esc(m[1]) + '</div>';
+const rest = (m[2] || "").trim();
+if(rest) html += "<p>" + bold(rest) + "</p>";
+return;
+ }
+const lines = b.split(/\n/).map(function(x){ return x.trim(); }).filter(Boolean);
+if(lines.length === 1 && /^\d+[.、)]\s*/.test(lines[0])){
+if(!listOpen){ html += '<ol class="guide-list">'; listOpen = true; }
+html += "<li>" + bold(lines[0].replace(/^\d+[.、)]\s*/, "")) + "</li>";
+return;
+ }
+closeList();
+html += "<p>" + bold(b.replace(/\n/g, "<br>")) + "</p>";
+ });
+closeList();
+return html;
+};
+
 window.formatGuideHtml = function(raw){
 if(!raw) return "";
 const esc = function(s){
@@ -6157,7 +6195,7 @@ return String(s).replace(/[&<>]/g, function(c){ return {"&":"&amp;","<":"&lt;","
  };
 const paras = function(s){
 return s.split(/。/).map(function(x){ return x.trim(); }).filter(Boolean)
- .map(function(x){ return "<p>" + esc(x) + "。</p>"; }).join("");
+ .map(function(x){ return "<p>" + esc(x).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>") + "。</p>"; }).join("");
  };
 const chunks = String(raw).split(/\*\*([^*]+)\*\*[：:]/);
 let html = "";
