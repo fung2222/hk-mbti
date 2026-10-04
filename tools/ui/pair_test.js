@@ -75,5 +75,11 @@ d.getElementById("pairBody").innerHTML="";
 w.restoreNav(snap);
 chk("★ restoreNav 還原得返同一篇（唔會空白）", /最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));
 
+
+// 不變量 4：內容唔准出現簡體專用字（2026-10-04 加：寫第二批時手誤寫過一個「为」）
+const SIMP_ONLY="为们这说会时让还过对觉东车买卖来见听问间无发样门机长网岁点热闹爱气头实际亲记认识语读写学习义举优势应该处达与专业";
+const simp=keys.filter(k=>new RegExp("["+SIMP_ONLY+"]").test(JSON.stringify(P[k])));
+chk("★ 內容零簡體專用字（繁體／港式用字）", simp.length===0, simp.slice(0,4).join(" , "));
+
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);
