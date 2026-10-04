@@ -29,7 +29,9 @@ function boot(label, { lastSection, lastNav, navType = "reload", hubMode } = {})
       const _A = { ENFP: { body: "b" } };
       w.SOCIAL = { WhatsAppGroup: { name: "WhatsApp 群組", desc: "d", articles: _A }, FamilyGathering: { name: "親戚飯局", desc: "d", articles: _A }, TeaFriend: { name: "飲茶吹水朋友", desc: "d", articles: _A }, GroupProject: { name: "Group Project 隊友", desc: "d", articles: _A }, Roommate: { name: "室友", desc: "d", articles: _A }, Workplace: { name: "返工同事", desc: "d", articles: _A }, 失戀陪: { name: "失戀時陪佢", desc: "d", articles: _A } };
       w.ROMANCE = { 拍拖: { name: "點同佢拍拖", desc: "d", articles: _A }, 吵架: { name: "同佢點收科", desc: "d", articles: _A }, 分手: { name: "點同佢分手", desc: "d", articles: _A } };
-      w.TYPES = { ENFP: { name: "調停者" }, INTJ: { name: "建築師" } };
+      w.TYPES = { ENFP: { name: "調停者" }, INTJ: { name: "建築師" }, INFP: { name: "調解員", cn: "調解員" } };
+      // 配對深入資料（模擬真機已載入 pair-data.js）—— 唔注入就會走「陸續補上」分支 ✗
+      w.PAIRS = { "INFP|ENFP": { spark: "兩个", clash: ["a","b","c"], give: ["d","e"], sum: "f" } };
     }
   });
   const d = dom.window.document;
@@ -86,7 +88,8 @@ setTimeout(() => {
     }
     if (c.label.includes("配對深入")) {
       const n = (c.d.getElementById("pairBody") || {}).innerHTML || "";
-      if (n.length > 300) p2++; else { f2++; console.log("  ✗ 配對頁下拉重整後內容冇晒！長度 = " + n.length); }
+      if (n.indexOf("最容易撞嘅 3 個位") >= 0 && /<li>/.test(n)) p2++;
+      else { f2++; console.log("  ✗ 配對頁下拉重整後內容冇晒！長度 = " + n.length); }
       if (visible.join() === "pair") p2++; else { f2++; console.log("  ✗ 配對頁重整後唔止一個畫面顯示：" + visible.join()); }
     }
     if (c.label.includes("維度詳解")) {
