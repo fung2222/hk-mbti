@@ -107,5 +107,44 @@ chk("★ 真跑：D 卡內容同之前一模一樣（3 個相似型＋數字）"
 chk("★ 真跑：傾向程度 % 都返嚟（同一個 root cause）", /你嘅傾向程度/.test(afterPct) && /65%/.test(afterPct));
 chk("★ 真跑：仲係結果頁（冇被踢走）", /id="result"/.test(d.body.innerHTML) && !d.getElementById("result").classList.contains("hidden"));
 
+
+// ───────── 四、舊紀錄（修復前冇 pct）：同型頂住、唔同型唔准亂套 ─────────
+w.localStorage.clear();
+w.localStorage.setItem(w.TIER_KEY, "full");
+w.renderResult(JSON.parse(JSON.stringify(R)));            // 令 _lastScoreObj = 今次（INTJ）
+w.localStorage.setItem("hkmbti_history", JSON.stringify([{id:"old1", mbti:"INTJ-T", timestamp:Date.now(), version:"life"}]));
+w.viewHistoryResult("0");
+const pOld = d.getElementById("personalityDetail").innerHTML;
+chk("★ 舊紀錄（冇 pct）＋同型 → 「傾向程度」用最後一次分數頂住", /你嘅傾向程度/.test(pOld) && /40%/.test(pOld) && /65%/.test(pOld));
+chk("★ 舊紀錄（冇 pct）＋同型 → D 卡都出返", /pr-sim-c/.test(d.getElementById("personalReport").innerHTML));
+chk("★ 舊紀錄（冇 pct）＋同型 → 唔會出「修復前舊紀錄」說明", !/修復前嘅舊紀錄/.test(pOld));
+
+w.localStorage.setItem("hkmbti_history", JSON.stringify([{id:"old2", mbti:"ENFP-A", timestamp:Date.now(), version:"life"}]));
+w.viewHistoryResult("0");
+const pOther = d.getElementById("personalityDetail").innerHTML;
+const dOther = d.getElementById("personalReport").innerHTML;
+chk("★ 舊紀錄（冇 pct）＋唔同型 → 唔准亂套 %（冇「你嘅傾向程度」）", !/你嘅傾向程度/.test(pOther));
+chk("★ 舊紀錄（冇 pct）＋唔同型 → 出「修復前舊紀錄」說明句", /修復前嘅舊紀錄/.test(pOther));
+chk("★ 舊紀錄（冇 pct）＋唔同型 → D 卡唔會殘留上一個型嘅內容", !/pr-sim-c/.test(dOther), dOther.slice(0, 80));
+
+
+// ───────── 五、重開 app（記憶體清空）：靠 localStorage 都要頂得住 ─────────
+chk("★ 有持久化最近分數（hkmbti_last_score）＋ lastScoreObj() helper",
+    RAW.includes("hkmbti_last_score") && RAW.includes("window.lastScoreObj = function"));
+chk("★ 用舊紀錄分數時有標明「同型參考」（唔冒充嗰次紀錄嘅數字）",
+    RAW.includes("同型參考：以下係你最近一次同型測試嘅維度分數"));
+w.localStorage.clear();
+w.localStorage.setItem(w.TIER_KEY, "full");
+w.renderResult(JSON.parse(JSON.stringify(R)));
+w.lastResult = R.mbti;
+w.saveResult();                                        // 產生 hkmbti_last_score
+w._lastScoreObj = null;                                // 模擬「完全閂 app 再開」：記憶體清空
+w.localStorage.setItem("hkmbti_history", JSON.stringify([{id:"old3", mbti:"INTJ-T", timestamp:Date.now(), version:"life"}]));
+w.viewHistoryResult("0");
+const pR = d.getElementById("personalityDetail").innerHTML;
+chk("★ 重開 app 後開舊紀錄 → 靠 localStorage 都出返「傾向程度」", /你嘅傾向程度/.test(pR) && /40%/.test(pR));
+chk("★ 重開 app 後 → 有「同型參考」註腳（唔係靜靜當係嗰次）", /同型參考/.test(pR));
+chk("★ 重開 app 後 → D 卡都有返", /pr-sim-c/.test(d.getElementById("personalReport").innerHTML));
+
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);

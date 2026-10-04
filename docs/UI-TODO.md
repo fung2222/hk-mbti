@@ -88,6 +88,7 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 - ✅ 改完必跑：`sh tools/ui/run.sh`（**21 檔** jsdom）、`python3 tools/preflight.py`(**32**)、`tools/desktop_layout_test.js`(**56**)、`tools/desktop_gate_test.js`(**34**)、`tools/deeplink_test.js`、`tools/record_view_test.js`、`tools/voice_test.js`
 | **48** | **完整版 D 模組：個人化報告**（入口＝結果頁 `#personalReport`）：未解鎖＝卡片＋「解鎖完整版」；已解鎖＝最似 3 個型＋3 條個人盲點＋5 條軸解釋。純函數 `personalReport()`、deterministic、閘=`getTier()` | 2026-10-04 | 完成（`personal_report_test.js` 25/25）|
 | **49** | **修：D 卡出入紀錄後消失**（`saveResult()` 冇存 `pct`＋開舊紀錄 `r` 冇 `pct` → `personalReport` 回 null → 清空）。修：紀錄存 `pct/score/closeAxes`、開紀錄帶返、`renderPersonalReport` 同型 fallback。順帶修好舊紀錄「傾向程度」% 都唔見 | 2026-10-04 | 完成（`personal_report_test.js` 33/33）|
+| **50** | **修：舊紀錄（修復前）完全冇「傾向程度」** —— 加 ① `lastScoreObj()`（記憶體→`localStorage.hkmbti_last_score`，重開 app 都頂得住）② 同型 → 用最近一次分數並**標明「同型參考」**（唔冒充嗰次）③ 唔同型 → 出一句說明叫重做 ④ `renderResult` 唔准用無數字嘅 `r` 覆寫 `_lastScoreObj` | 2026-10-04 | 完成（`personal_report_test.js` 44/44）|
 
 ## 測試（已永久保存入 repo）
 `sh tools/ui/run.sh` → **21 個** jsdom 回歸測試（app_feel 46、back_nav 29、backkey 30、boot_reload 25、dark_mode 60、dialogs_ab 30、hub_consolidation **117**、hub_tiles 18、letter_card 22、letter_career 9、letter_dim 5、**mobile_debug_fixes 28**、oneshot_delete 14、premium **173**、reel **31**、result_page **51**、share_card **23**、type_pick 15、type_tabs 87、version_card 15、wizard 14）

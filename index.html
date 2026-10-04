@@ -4545,6 +4545,15 @@ window.PR_CLOSE = { "EI":"你 E／I 幾乎一半一半——你會覺得自己�
 window.PR_MID   = { "EI":"你 E／I 偏中性——你唔係派對動物，亦唔係完全唔出聲；你係睇場合同人先決定開唔開。", "SN":"你 S／N 偏中性——你睇實細節之餘又會推演，所以兩邊嘅人都覺得你明白佢。", "TF":"你 T／F 偏中性——你講道理但唔冷血，所以你成日做朋友之間嘅中間人。", "JP":"你 J／P 偏中性——你做到計劃，又接受到臨時改，所以你成日幫人補位。", "TA":"你 T／A 偏中性——你唔算易爆，但都唔係完全無感。" };
 window.PR_SHARP = { "EI_E":"你嘅外向最明顯——你嘅本能係「講出嚟先諗清」。但遇到極內向嘅人，你會覺得佢「點解唔講」，其實佢只係未諗完。", "EI_I":"你嘅內向最明顯——你嘅本能係「諗清先講」。但遇到極外向嘅人，你會覺得佢「點解乜都講」，其實佢只係用講嘢嚟諗。", "SN_S":"你嘅實感最明顯——你信做過嘅嘢。但遇到直覺型，你會覺得佢「離地」，其實佢係先睇方向。", "SN_N":"你嘅直覺最明顯——你信方向同可能性。但遇到實感型，你會覺得佢「太保守」，其實佢係要落地。", "TF_T":"你嘅思考最明顯——你嘅本能係先講邏輯。但遇到情感型，你會覺得佢「唔講道理」，其實佢係先講感受。", "TF_F":"你嘅情感最明顯——你嘅本能係先顧人。但遇到思考型，你會覺得佢「唔近人情」，其實佢係想解決件事。", "JP_J":"你嘅判斷最明顯——你嘅本能係收尾同定案。但遇到感知型，你會覺得佢「拖」，其實佢係想留多啲選擇。", "JP_P":"你嘅感知最明顯——你嘅本能係留選項。但遇到判斷型，你會覺得佢「太急」，其實佢係想早啲安心。" };
 window.PR_BLIND = { "EI_E":"你嘅第二強項係外向——注意：你會唔覺意用「傾」去消化壓力，令身邊內向嘅人覺得好攰。", "EI_I":"你嘅第二強項係內向——注意：你會唔覺意收埋自己，令外向嘅人以為你有事、或者唔想理佢。", "SN_S":"你嘅第二強項係實感——注意：你會唔覺意太快講「唔得㗎」，扼殺咗未成形嘅新念頭。", "SN_N":"你嘅第二強項係直覺——注意：你會唔覺意跳步，令同事或家人覺得你「講嘢無尾」。", "TF_T":"你嘅第二強項係思考——注意：你會唔覺意答得太直接，對方聽到嘅係「你唔在乎我」。", "TF_F":"你嘅第二強項係情感——注意：你會唔覺意攬晒上身，應承咗啲自己其實做唔到嘅事。", "JP_J":"你嘅第二強項係判斷——注意：你會唔覺意想幫人「搞掂」，但對方可能淨係想呻下。", "JP_P":"你嘅第二強項係感知——注意：你會唔覺意拖到最後，令要配合你嘅人好緊。" };
+// 最近一次「有分數」嘅結果：先記憶體、後 localStorage（重開 app 都頂得住）
+window.lastScoreObj = function(){
+ if(window._lastScoreObj && window._lastScoreObj.pct) return window._lastScoreObj;
+ try{
+ const s2 = JSON.parse(localStorage.getItem("hkmbti_last_score") || "null");
+ if(s2 && s2.pct){ window._lastScoreObj = s2; return s2; }
+ }catch(e){}
+ return window._lastScoreObj || null;
+};
 window.personalReport = function(r){
   const x = r || window._lastScoreObj;
   if(!x || !x.pct) return null;
@@ -4588,7 +4597,7 @@ window.renderPersonalReport = function(r){
   let d = window.personalReport(r);
   if(!d){
     // 舊紀錄冇分數：只有當「最後一次分數」同今次顯示嘅型一樣，先用佢頂住；否則清空
-    const ls = window._lastScoreObj;
+    const ls = (typeof window.lastScoreObj === "function") ? window.lastScoreObj() : window._lastScoreObj;
     const same = ls && r && String(ls.mbti||"").substring(0,4) === String(r.mbti||"").substring(0,4);
     if(same) d = window.personalReport(ls);
     if(!d){ box.innerHTML = ""; return; }
@@ -4635,7 +4644,17 @@ const t = window.TYPES[r.mbti.substring(0,4)];
 const F = window.TYPES_FULL && window.TYPES_FULL[r.mbti.substring(0,4)];
 
  // 傾向程度（真實百分比）
-const _pct = r.pct || {};
+// 舊紀錄（修復前）冇存分數：同型可以參考「最近一次測試」嘅分數；唔同型唔准亂套
+let _pct = r.pct || {};
+let _pctNote = "";
+if(!_pct.EI){
+ const _ls = (typeof window.lastScoreObj === "function") ? window.lastScoreObj() : null;
+ if(_ls && String(_ls.mbti||"").substring(0,4) === String(r.mbti||"").substring(0,4)){
+ _pct = (_ls.pct || {});
+ if(_pct.EI) _pctNote = '<div class="text-[10px] text-gray-500 leading-relaxed mt-1">（同型參考：以下係你最近一次同型測試嘅維度分數。）</div>';
+ }
+}
+const _noPctNote = '<div class="text-[11px] text-gray-500 leading-relaxed mt-1">呢條係修復前嘅舊紀錄，冇儲存維度分數。重新做一次測試，就會有返「傾向程度」同完整版個人化報告。</div>';
 const _ac = {EI:"#E89A6B", SN:"#A86B7C", TF:"#3A4F6B", JP:"#6B5A8A", TA:"#8A7A5A"};
 const _row = function(lab, lv, rlab, rv, col){
 if(typeof lv !== "number" || typeof rv !== "number") return "";
@@ -4658,9 +4677,9 @@ const pctBlock = (_pct.EI ? `<div class="card p-4 mb-4">
  ${_row("T 思考", _pct.TF[0], "情感 F", _pct.TF[1], _ac.TF)}
  ${_row("J 判斷", _pct.JP[0], "感知 P", _pct.JP[1], _ac.JP)}
  ${_row("T 敏感", _pct.TA[0], "自信 A", _pct.TA[1], _ac.TA)}
- <div class="text-[10px] text-gray-500 leading-relaxed mt-1">百分比係你喺該軸兩邊嘅得分比例，唔代表好壞。中間幼線係 50%；分差 1 分以內嘅軸，我哋會下面另外提你。</div>
+ <div class="text-[10px] text-gray-500 leading-relaxed mt-1">百分比係你喺該軸兩邊嘅得分比例，唔代表好壞。中間幼線係 50%；分差 1 分以內嘅軸，我哋會下面另外提你。</div>${_pctNote}
  <button type="button" class="mt-3 text-[11px] font-bold brand-gold" onclick="openMethod()">計分方法同限制 →</button>
- </div>` : "");
+ </div>` : _noPctNote);
 
 const scoreBars = (t.score || []).map(s => {
 const num = (s.match(/\d+/) || ["0"])[0];
@@ -4701,7 +4720,7 @@ let detailHtml = `
  ${prosCons}
  `;
  $("personalityDetail").innerHTML = detailHtml;
-try{ window._lastScoreObj = r; window.renderPersonalReport(r); }catch(e){}
+try{ if(r && r.pct) window._lastScoreObj = r; window.renderPersonalReport(r); }catch(e){}
 
 const type = r.mbti.substring(0,4);
  // 場景配對：按字母重疊計分（唔再要求全中，否則 ENTJ 等會零著燈）
@@ -5038,6 +5057,7 @@ version: window.state.version || "life"
  record.pct = _sc.pct || null;
  record.score = _sc.score || null;
  record.closeAxes = _sc.closeAxes || [];
+ try{ localStorage.setItem("hkmbti_last_score", JSON.stringify({mbti:_sc.mbti, pct:_sc.pct, score:_sc.score, closeAxes:_sc.closeAxes})); }catch(e){}
  }
  }catch(e){}
  // 兼容舊 key + 新 5 次 list
