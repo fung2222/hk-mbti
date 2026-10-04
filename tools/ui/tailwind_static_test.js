@@ -53,16 +53,17 @@ const toks=new Set();
 });
 const isDefined=t=>css.includes("."+esc(t)) || siteCSS.includes("."+t);
 // 已知歷來死 class（CDN 年代一樣冇生效 → 唔准當成今次改動嘅漏網；亦唔准有新增）
-const KNOWN_DEAD=new Set(["text-ink","focus:border-gold","hover:bg-soft"]);
+const KNOWN_DEAD=new Set(["focus:border-gold","hover:bg-soft"]);
 const missAll=[...toks].filter(t=>TWRE.test(t.replace(/^!/,"")) && !isDefined(t) && !/[:]/.test(t) && !KNOWN_DEAD.has(t));
 chk("★ 凡用到嘅 Tailwind class 都有對應 rule（唔准有漏）", missAll.length===0, missAll.join(" , "));
 const deadNow=[...toks].filter(t=>TWRE.test(t.replace(/^!/,"")) && !isDefined(t) && !/[:]/.test(t));
 chk("★ 死 class 名單冇增長（現時已知："+[...KNOWN_DEAD].join("／")+"）",
     deadNow.every(t=>KNOWN_DEAD.has(t)), deadNow.filter(t=>!KNOWN_DEAD.has(t)).join(" , "));
-// text-ink 只有 privacy.html 自己有定義；index.html 內用 30 次但冇 rule（歷來如此，CDN 年代一樣）
+// text-ink：2026-10-04 Roy 批准修正 —— 加一句 .text-ink{color:var(--ink)}（27 處本來就繼承 body 嘅 --ink → 零視覺變化；
+// 用 var(--ink) 係關鍵：黑夜層 html.dk 會 redefine --ink，所以一個 rule 兩個主題都啱）
 const idxCSS=(read("index.html").match(/<style[^>]*>[\s\S]*?<\/style>/g)||[]).join("\n");
-chk("★ index.html 嘅 text-ink 依然冇 rule（歷來死 class；真係要修就要連 30 處一齊改，唔准臨時加 rule）",
-    !css.includes(".text-ink") && !idxCSS.includes(".text-ink"));
+chk("★ index.html 有 .text-ink{color:var(--ink)}（27 處唔再係死 class）", idxCSS.includes(".text-ink{color:var(--ink)}"));
+chk("★ 唔准用硬編碼色（黑夜會唔跟）", !/\.text-ink\{[^}]*#[0-9a-fA-F]/.test(idxCSS));
 chk("★ focus:border-gold／hover:bg-soft 依然冇 rule（同上，歷來死 class）",
     ["focus:border-gold","hover:bg-soft"].every(t=>!css.includes("."+esc(t)) && !siteCSS.includes("."+t)));
 
