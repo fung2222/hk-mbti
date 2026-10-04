@@ -25,7 +25,19 @@ const dom=new JSDOM(HTML,{runScripts:"dangerously",pretendToBeVisual:true,url:"h
 const w=dom.window, d=w.document;
 const P=w.PAIRS||{};
 const keys=Object.keys(P);
-chk("★ 第一批有 16 篇（INFP × 16 型）", keys.length===16 && keys.every(k=>k.indexOf("INFP")===0), keys.length+" 篇: "+keys.slice(0,3).join(","));
+chk("★ 至少 16 篇（第一批 INFP × 16）", keys.length>=16, keys.length+" 篇");
+// 不變量 1：行完整性 —— 邊個型有自己嘅自配對（X|X），就要同其餘 15 型都有文
+const TYPES16=["INFP","ENFP","ISFJ","ESFJ","ISTJ","ESTJ","ISFP","ESFP","INTP","ENTP","INFJ","ENFJ","INTJ","ENTJ","ISTP","ESTP"];
+const rows=TYPES16.filter(x=>P[x+"|"+x]);
+const incomplete=rows.filter(T=>TYPES16.some(U=>!(P[T+"|"+U]||P[U+"|"+T])));
+chk("★ 行完整性：已完成嘅行（"+rows.join("／")+"）同其餘 15 型都有文",
+    rows.length>0 && incomplete.length===0, "未齊: "+incomplete.join("／"));
+// 不變量 2：唔准同一對出現兩次（兩個方向）
+const dupes=keys.filter(k=>{const [x,y]=k.split("|"); return x!==y && P[y+"|"+x];});
+chk("★ 冇反向重複（同一對唔會出現兩次）", dupes.length===0, dupes.join(" , "));
+// 不變量 3：key 一定要係合法型號對
+const badKey=keys.filter(k=>!/^[EI][NS][TF][JP]\|[EI][NS][TF][JP]$/.test(k));
+chk("★ 所有 key 都係合法 4 字母型號對", badKey.length===0, badKey.join(" , "));
 chk("★ 每篇 4 段齊（spark／clash×3／give×2／sum）",
     keys.every(k=>P[k].spark && (P[k].clash||[]).length===3 && (P[k].give||[]).length===2 && P[k].sum));
 

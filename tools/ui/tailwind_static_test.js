@@ -98,7 +98,7 @@ const dom=new JSDOM(HTML,{runScripts:"dangerously",pretendToBeVisual:true,url:"h
 const w2=dom.window;
 chk("★ 真跑：app boot 得起（renderResult 有定義）", typeof w2.renderResult==="function");
 chk("★ 真跑：QUESTIONS 載入（>0 題）", (w2.QUESTIONS||[]).length>0, (w2.QUESTIONS||[]).length);
-chk("★ 真跑：PAIRS 載入（16 篇）", Object.keys(w2.PAIRS||{}).length===16);
+chk("★ 真跑：PAIRS 載入（≥16 篇）", Object.keys(w2.PAIRS||{}).length>=16, Object.keys(w2.PAIRS||{}).length);
 w2.openPair("INFP","ENFP");
 chk("★ 真跑：配對文章開得到", /最容易撞嘅 3 個位/.test(w2.document.getElementById("pairBody").innerHTML));
 
