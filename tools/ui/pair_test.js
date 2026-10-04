@@ -57,9 +57,13 @@ w.openPair("ENFP","INFP");
 chk("★ 反方向（ENFP × INFP）拎到同一篇內容（pairKey 雙向）",
     /最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));
 
-// 未寫嘅組合要優雅收場
-w.openPair("INTJ","ESTJ");
-chk("★ 未寫嘅組合 → 出「陸續補上」提示，唔會空白／爆",
+// 未寫嘅組合要優雅收場 —— 唔可以寫死某一對（分批寫落去會陸續變成「已寫」），要由資料動態搵一對真未寫嘅
+const T4=w.TYPE_ORDER||[];
+let unwritten=null;
+outer: for(const x of T4) for(const y of T4){ if(x!==y && !P[x+"|"+y] && !P[y+"|"+x]){ unwritten=[x,y]; break outer; } }
+chk("★ 搵到一對真未寫嘅組合（測試前提）", !!unwritten, "16 型已經全部寫滿");
+w.openPair(unwritten[0], unwritten[1]);
+chk("★ 未寫嘅組合（"+unwritten[0]+" × "+unwritten[1]+"）→ 出「陸續補上」提示，唔會空白／爆",
     /仲喺度寫/.test(d.getElementById("pairBody").innerHTML) && !d.getElementById("pair").classList.contains("hidden"));
 
 // 結果頁入口掣
@@ -74,6 +78,22 @@ chk("★ 導覽快照記住咗 pair（pairA/pairB）", snap && snap.id==="pair" 
 d.getElementById("pairBody").innerHTML="";
 w.restoreNav(snap);
 chk("★ restoreNav 還原得返同一篇（唔會空白）", /最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));
+
+// ── 畫面互斥（Roy 2026-10-04 實報：「入咗配對頁 → 按返回 → 配對頁同結果頁上下合埋」）
+//    根因：show() 嘅硬編碼隱藏清單漏咗 "pair" → #pair 永遠唔會被 hidden。
+const vis=()=>[...d.querySelectorAll("section[id]")].filter(x=>!x.classList.contains("hidden")).map(x=>x.id).join();
+w.renderResult({mbti:"INFP-T", pct:{EI:[40,60], SN:[35,65], TF:[70,30], JP:[80,20], TA:[62,38]}, closeAxes:[], score:{}, version:"life", totalQ:60});
+w.show("result");
+w.openPair("INFP","ENFP");
+chk("★ 畫面互斥：入配對頁之後，只有 #pair 顯示（#result 必須 hidden）", vis()==="pair", vis());
+w.show("result");
+chk("★ 畫面互斥：返結果頁之後，只有 #result 顯示（#pair 必須 hidden）", vis()==="result", vis());
+// 守門：show() 嘅隱藏清單一定要覆蓋全部 section[id]，將來加新畫面唔可以再漏
+const PAGE=fs.readFileSync(path.join(REPO,"index.html"),"utf8");
+const allSec=[...new Set([...PAGE.matchAll(/<section[^>]*id="([^"]+)"/g)].map(m=>m[1]))];
+const hideList=(PAGE.match(/\["home","profile","test"[^\]]*\]/)||[""])[0];
+chk("★ 守門：show() 畫面清單覆蓋全部 section[id]（" + allSec.length + " 個）",
+    allSec.every(x=>hideList.indexOf('"'+x+'"')>=0), "漏：" + allSec.filter(x=>hideList.indexOf('"'+x+'"')<0).join(","));
 
 
 // 不變量 4：內容唔准出現簡體專用字（2026-10-04 加：寫第二批時手誤寫過一個「为」）

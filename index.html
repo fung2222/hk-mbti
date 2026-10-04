@@ -3248,7 +3248,7 @@ window._showing = id;
 if(prevId === "home" && id !== "home"){
 try{ window._homeScrollY = window.scrollY || window.pageYOffset || 0; }catch(e){ window._homeScrollY = 0; }
  }
-["home","profile","test","result","about","hub","dims","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter"].forEach(s => window.$(s).classList.add("hidden"));
+["home","profile","test","result","about","hub","dims","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter","pair"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
 if(window._applyPendingScroll()){
 // 返上一頁：停返嗰頁原本位置（Roy 2026-10-02）
