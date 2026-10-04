@@ -88,6 +88,20 @@ w.openPair("INFP","ENFP");
 chk("★ 畫面互斥：入配對頁之後，只有 #pair 顯示（#result 必須 hidden）", vis()==="pair", vis());
 w.show("result");
 chk("★ 畫面互斥：返結果頁之後，只有 #result 顯示（#pair 必須 hidden）", vis()==="result", vis());
+// ★ 真 popstate 路徑（＝手機實體返回鍵／瀏覽器返回掣，Roy 2026-10-04 實報嗰條路）
+//   由配對頁撳返回 → app 會行 popstate handler → restoreNav({id:"result"}) → viewHistoryResult(idx)
+//   → show("result")。修復前：#pair 唔會被 hidden → 兩個畫面疊埋（用戶可見 bug）。
+const _rec={id:"r0",mbti:"INFP-A",timestamp:Date.now(),completed:true,name:"Roy",nickname:"阿豐",version:"life",
+            pct:{EI:[40,60],SN:[35,65],TF:[70,30],JP:[80,20],TA:[62,38]},closeAxes:[],score:{},totalQ:10};
+w.localStorage.setItem("hkmbti_history", JSON.stringify([_rec]));
+w.localStorage.setItem("hkmbti_last_result", JSON.stringify(_rec));
+w.sessionStorage.setItem("hkmbti_last_record_idx","0");
+w.renderResult(_rec, true); w.show("result"); w.openPair("INFP","ENFJ");
+const beforePop=vis();
+const pe=new w.Event("popstate"); pe.state={hk:true,id:"result",sKey:null,rKey:null,type:null,typeFrom:null,letter:null,pairA:null,pairB:null,articleType:null};
+w.dispatchEvent(pe);
+chk("★ 真 popstate（撳返回）之後：只可以見到 #result", beforePop==="pair" && vis()==="result", "pop 前="+beforePop+" / pop 後="+vis());
+
 // 守門：show() 嘅隱藏清單一定要覆蓋全部 section[id]，將來加新畫面唔可以再漏
 const PAGE=fs.readFileSync(path.join(REPO,"index.html"),"utf8");
 const allSec=[...new Set([...PAGE.matchAll(/<section[^>]*id="([^"]+)"/g)].map(m=>m[1]))];
