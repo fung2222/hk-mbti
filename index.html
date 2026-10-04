@@ -4767,16 +4767,31 @@ const code4 = window.lastResult.substring(0,4);
 const tagPal = window.getPalette(code4);
 const v1 = (tagPal.vibes && tagPal.vibes[0]) || "16型";
 const v2 = (tagPal.vibes && tagPal.vibes[1]) || "香港人";
-// 2026-10-03 Roy：太貼底＋太細睇唔清 → 22px/55% → 28px/86%，基線 1190 → 1172（底距 85 → 102px）
+// 2026-10-03 Roy：①太貼底＋太細 → 28px/86%，基線 1172（底距 108px）②每個 tag 要「梳」開
+// → 唔再一氣過畫一句，改成逐個 tag 獨立畫、中間固定空隙（空隙隨字級 = 1.07em，28px 時 ≈30px）。
 ctx.fillStyle = "rgba(255,255,255,0.86)";
+const _tagList = ["#港式MBTI", "#" + code4, "#" + v1, "#" + v2];
 let _tagFont = 28;
-const _tagStr = `#港式MBTI #${code4} #${v1} #${v2}`;
+let _tagGap = Math.round(_tagFont * 1.07);
+const _tagTotalW = function(){
+  ctx.font = _tagFont + "px " + window.CARD_FS;
+  return _tagList.reduce((a,x) => a + ctx.measureText(x).width, 0) + _tagGap * (_tagList.length - 1);
+};
+if(_tagTotalW() > 600){
+  _tagFont = Math.max(20, Math.floor(_tagFont * 600 / _tagTotalW()));
+  _tagGap = Math.round(_tagFont * 1.07);
+}
 ctx.font = _tagFont + "px " + window.CARD_FS;
-const _tagW = ctx.measureText(_tagStr).width;
-if(_tagW > 600) _tagFont = Math.max(20, Math.floor(_tagFont * 600 / _tagW));
-ctx.font = _tagFont + "px " + window.CARD_FS;
+const _tagsW = _tagList.map(x => ctx.measureText(x).width);
+const _tagsTotal = _tagsW.reduce((a,b) => a + b, 0) + _tagGap * (_tagList.length - 1);
+let _tagX = 360 - _tagsTotal / 2;
+ctx.textAlign = "left";
+_tagList.forEach(function(_tg, _i){
+  ctx.fillText(_tg, _tagX, 1172);
+  _tagX += _tagsW[_i] + _tagGap;
+});
 ctx.textAlign = "center";
-ctx.fillText(_tagStr, 360, 1172);
+ctx.font = "10px " + window.CARD_FS;
  // Set 落 img tag
 const dataUrl = canvas.toDataURL("image/png");
 const img = $("shareCardImg");
