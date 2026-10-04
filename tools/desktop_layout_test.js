@@ -55,7 +55,15 @@ for (const m of mediaBlocks) for (const r of m[2].matchAll(/([^{}]+)\{([^{}]*)\}
   }
 }
 check("冇覆寫 section（#home 等）嘅 display 而唔寫 :not(.hidden)（會令 .hidden 失效）", hiddenBreakers.length === 0, hiddenBreakers.join(" | "));
-check("桌面：跑馬燈後 16 張複本隱藏", /html\.dt \.home-type-reel \.hub-type-card:nth-child\(n\+17\)\{display:none\}/.test(layer));
+check("桌面：複本唔再隱藏（32 張先可以無縫循環，唔會飄到盡頭）",
+  !/nth-child\(n\+17\)\{display:none\}/.test(layer));
+check("桌面：滑輪自動轉（tick 一律用 AUTO_V ＋ 一律 wrapLoop）",
+  /let v = AUTO_V;/.test(html) && !/onDt/.test(html) && /reel\.scrollLeft \+= v;\s*\n?\s*wrapLoop\(\);/.test(html.replace(/\r/g,"")));
+check("桌面：滑輪卡係 9/16 直角（唔要正方形／圓角）",
+  !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*aspect-ratio:1\/1/.test(layer) &&
+  !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*border-radius/.test(layer));
+check("桌面：版本卡 grid 唔 stretch（展開一格唔會拉高其他）",
+  /html\.dt #versionList\{[^}]*align-items:start/.test(layer));
 check("桌面／平板：16 型係橫向可滑滑輪，唔係 grid",
   /html\.dt \.home-type-reel\{[^}]*display:flex[^}]*overflow-x:auto/.test(layer) &&
   !/html\.dt \.home-type-reel\{[^}]*display:grid/.test(layer));

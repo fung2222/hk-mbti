@@ -768,17 +768,16 @@ html.dk .hub-row-chev{color:#C0A87A}
     scroll-snap-type:x mandatory;scroll-behavior:auto;scrollbar-width:none;
     padding:8px 2px 14px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
   html.dt .home-type-reel::-webkit-scrollbar{display:none}
-  html.dt .home-type-reel.is-auto{scroll-snap-type:x mandatory}
-  html.dt .home-type-reel .hub-type-card{font-size:clamp(22px,2vw,30px);flex:0 0 118px;width:118px;aspect-ratio:1/1;border-radius:14px;scroll-snap-align:start;padding:8px 6px 12px}
-  html.dt .home-type-reel .hub-type-card:nth-child(n+17){display:none}
-  html.dt .home-type-reel .hub-type-card:hover:not(.is-on){transform:translateY(-3px)}
+  html.dt .home-type-reel.is-auto{scroll-snap-type:none}
+  html.dt .home-type-reel .hub-type-card{font-size:clamp(22px,2vw,30px);flex:0 0 118px;width:118px;scroll-snap-align:start;padding:8px 6px 12px}
+    html.dt .home-type-reel .hub-type-card:hover:not(.is-on){transform:translateY(-3px)}
   html.dt .home-type-reel .hub-type-code{font-size:1em}
   html.dt .home-type-reel .hub-type-cn{font-size:.5em}
   html.dt #dtTypeRows{display:flex;order:-1;gap:14px;margin:0 0 8px;flex-wrap:wrap}
   html.dt #dtTypeRows span{font-size:12px;font-weight:700;letter-spacing:.12em;color:#A08A5C}
 
   html.dt #homeBelow{width:var(--dt-w);margin:8px auto 0;padding:8px 0 40px;background:none;border-radius:0;box-shadow:none;scroll-margin-top:88px}
-  html.dt #versionList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  html.dt #versionList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
   html.dt #versionList > *{margin:0;width:auto}
   html.dt .ver-btn{min-height:104px;padding:20px 20px;border-radius:16px}
   html.dt #resumeBanner{width:var(--dt-w);margin:0 auto 28px}
@@ -6606,9 +6605,8 @@ if(w > 0){
 }
  };
 const tick = () => {
-const onDt = document.documentElement.classList.contains("dt");
 if(!paused && !window._homeReelHold){
-let v = onDt ? 0 : AUTO_V;
+let v = AUTO_V;
 if(Math.abs(spinV) > AUTO_V){
   v = spinV;
   spinV *= 0.955;                              // 快速轉之後慢慢減速 → 停返自轉速度
@@ -6616,7 +6614,7 @@ if(Math.abs(spinV) > AUTO_V){
 }
 if(v){
 reel.scrollLeft += v;
-if(!onDt) wrapLoop();
+wrapLoop();
 }
  }
 requestAnimationFrame(tick);

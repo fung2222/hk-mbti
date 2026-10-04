@@ -51,7 +51,13 @@ setTimeout(()=>{
   chk('仍然有 is-auto class（自動模式）', /reel\.classList\.add\("is-auto"\)/.test(src));
   chk('左右箭嘴仍然存在', !!$('.home-type-nav.is-l') && !!$('.home-type-nav.is-r'));
   chk('桌面層轉輪維持橫向可滑（唔係 grid）', /html\.dt \.home-type-reel\{[^}]*display:flex[^}]*overflow-x:auto/.test(src) && !/html\.dt \.home-type-reel\{[^}]*display:grid/.test(src));
-  chk('桌面隱藏複本規則仍在（nth-child(n+17)）', /html\.dt \.home-type-reel \.hub-type-card:nth-child\(n\+17\)\{display:none\}/.test(src));
+  chk('桌面唔准再隱藏複本（要 32 張先可以無縫循環）', !/nth-child\(n\+17\)\{display:none\}/.test(src));
+  chk('桌面滑輪一樣自動轉（唔准 onDt ? 0）', /let v = AUTO_V;/.test(src) && !/onDt \? 0/.test(src) && !/onDt/.test(src));
+  chk('桌面自轉一樣會 wrapLoop（到中間就回捲，唔會飄到盡頭）', /wrapLoop\(\);\s*\n\s*\}\s*\nrequestAnimationFrame\(tick\)/.test(src) || /if\(v\)\{\s*reel\.scrollLeft \+= v;\s*wrapLoop\(\);/.test(src));
+  chk('桌面滑輪卡係 9/16 直角（唔准 aspect-ratio:1/1 ／ border-radius:14px）',
+      !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*aspect-ratio:1\/1/.test(src) && !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*border-radius:14px/.test(src)
+      && /\.hub-type-card\{\s*aspect-ratio:9\/16;border-radius:0/.test(src));
+  chk('桌面 is-auto 關 snap（唔同自轉搶）', /html\.dt \.home-type-reel\.is-auto\{scroll-snap-type:none\}/.test(src));
 
   // ---------- jsdom 真跑：32 張卡（16 + 16 複本 = 無限輪基礎）----------
   const reel=$('#homeTypeReel');

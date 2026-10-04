@@ -19,7 +19,9 @@ setTimeout(()=>{
   chk('16 型卡仍然 9/16 窄高', /aspect-ratio:9\/16/.test(base));
   chk('冇任何 .hub-type-grid .hub-type-card 覆寫（唔准再「美化」）', !/\.hub-type-grid \.hub-type-card/.test(src));
   chk('主頁跑馬燈卡維持 flex:0 0 6rem / 9/16', /\.home-type-reel \.hub-type-card\{[^}]*flex:0 0 6rem/.test(src.replace(/\n/g,'')));
-  chk('桌面層維持 html.dt 1/1', /html\.dt \.home-type-reel \.hub-type-card\{[^}]*aspect-ratio:1\/1/.test(src));
+  chk('桌面層滑輪卡維持 9/16 直角（Roy 2026-10-04：唔要正方形；同手機／百科一致）',
+      !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*aspect-ratio:1\/1/.test(src)
+      && !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*border-radius/.test(src));
   w.renderHub && w.renderHub();
   const tiles=[...d.querySelectorAll('#hubTypeGrid .hub-type-card')];
   chk('16 格仍然渲染到', tiles.length===16, tiles.length);
