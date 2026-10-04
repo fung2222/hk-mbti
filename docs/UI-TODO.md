@@ -96,3 +96,13 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 ## 測試（已永久保存入 repo）
 `sh tools/ui/run.sh` → **21 個** jsdom 回歸測試（app_feel 46、back_nav 29、backkey 30、boot_reload 25、dark_mode 60、dialogs_ab 30、hub_consolidation **117**、hub_tiles 18、letter_card 22、letter_career 9、letter_dim 5、**mobile_debug_fixes 28**、oneshot_delete 14、premium **173**、reel **31**、result_page **51**、share_card **23**、type_pick 15、type_tabs 87、version_card 15、wizard 14）
 （首次需要：`npm i --prefix tools/ui jsdom`）＋ `tools/ui/start_flow_probe.js`（人手睇全流程）＋ `tools/ui/button_audit.js`（逐粒掣真撳捉 runtime 錯）
+
+
+---
+
+## 2026-10-04 之後 · 未做（等 Roy 拍板）
+- [ ] **B 配對下一批**：INTP（5.5%）→ ENTP（5.0%）→ …，目標 136 個不重複配對（現有 100 篇／8 行）
+- [ ] **`pair-data.js` 106 處用「你」** ✗（規格＝用型號）→ 分批改 ＋ 加守門
+- [ ] A1 覆蓋缺口：**SW 更新時序**、**無障礙**（真排版缺口已由 Chromium 解決）
+- [ ] Play：2026-10-13（二）可申請正式版；期內唔改封測設定、唔撳 Exit Pack
+- 註：**出貨只准用 `sh tools/ship.sh "message"`**；交接見 `docs/SESSION-2026-10-04.md`；獨立審計見 `docs/audit/`
