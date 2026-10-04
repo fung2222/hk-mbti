@@ -60,8 +60,7 @@ Live：<https://fung2222.github.io/hk-mbti/>
 | `tools/mobile_zero_impact.py` | **手機零影響像素測試**（9 畫面 × 360/390/430）|
 | `tools/desktop_layout_test.js` | 靜態鐵律 + DOM 假設（jsdom，37 項）|
 | `tools/desktop_gate_test.js` | gate 開關（34 項，14 情境）|
-| `tools/build_desktop_demo.py` | 由 `index.html` 重建 `demo/desktop-full.html` |
-| `demo/desktop-full.html` | 真身示範（停 SW、noindex、去分析 script、加 `<base>`）|
+| `tools/build_desktop_demo.py` | （按需）重建 standalone demo；**`demo/desktop-full.html` 已於 2026-10-04 刪除**（Roy 話唔再用）|
 
 > 組別標籤用「探索者」而唔係「探險家」：因為 ISFP 嘅中文名已經係「探險家」，同一個畫面兩個「探險家」會混淆。
 
@@ -135,7 +134,7 @@ python3 tools/preflight.py          # 20 項（pre-push hook 會跑）
 # 真 Chrome（pip install playwright pillow numpy；Chrome 預設 /usr/bin/google-chrome，可 CHROME=… 改）
 python3 tools/desktop_render_test.py    # 45 項：真實位置（1440/1024 版式、冇橫向 scroll、#home 收得埋）
 python3 tools/mobile_zero_impact.py     # 手機零影響：54 張截圖必須 0 pixel 差異
-python3 tools/build_desktop_demo.py     # 改咗桌面層就重建 demo/desktop-full.html
+# python3 tools/build_desktop_demo.py   # 只在需要 standalone demo 先跑（demo/ 已刪）
 ```
 
 之後**親眼睇截圖**：1920／1440／1280／1024／768／390，主頁 + 百科／類型／測試／結果／資料頁。
