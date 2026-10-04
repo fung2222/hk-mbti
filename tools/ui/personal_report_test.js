@@ -79,5 +79,33 @@ chk("★ 冇撞爛結果頁原有元素（分享卡／三掣／傾向程度）",
 chk("★ 結果頁「看完整分析」＋「立即開始」仲在",
     /goTypeFromResult\(\)/.test(d.body.innerHTML) && /goPickVersion\(\)">立即開始</.test(d.body.innerHTML));
 
+// ───────── 三、迴歸：做完測試 → 入紀錄睇 → 出返嚟，D 卡唔可以消失（Roy 2026-10-04 報）─────────
+chk("★ saveResult 真係有存 pct／closeAxes／score",
+    RAW.includes("record.pct = _sc.pct") && RAW.includes("record.closeAxes = _sc.closeAxes") && RAW.includes("record.score = _sc.score"));
+chk("★ 開舊紀錄會帶返 pct／closeAxes",
+    RAW.includes("pct: rec.pct || null") && RAW.includes("closeAxes: rec.closeAxes || []"));
+chk("★ renderPersonalReport 冇數據唔會盲清空（有同型 fallback）",
+    RAW.includes("const same = ls && r && String(ls.mbti"));
+
+// 真跑一次完整流程
+w.localStorage.clear();
+w.localStorage.setItem(w.TIER_KEY, "full");
+w.renderResult(JSON.parse(JSON.stringify(R)));
+w.lastResult = R.mbti;
+w.saveResult();
+const hist = JSON.parse(w.localStorage.getItem("hkmbti_history") || "[]");
+chk("★ 真跑：紀錄真係存到 pct（同 r.pct 完全一樣）",
+    hist.length === 1 && JSON.stringify(hist[0].pct) === JSON.stringify(R.pct),
+    JSON.stringify(hist[0] || {}).slice(0, 150));
+const beforeD = d.getElementById("personalReport").innerHTML;
+const beforePct = d.getElementById("personalityDetail").innerHTML;
+w.viewHistoryResult("0");          // 用戶：入咗去睇嗰條紀錄，再出返嚟
+const afterD = d.getElementById("personalReport").innerHTML;
+const afterPct = d.getElementById("personalityDetail").innerHTML;
+chk("★ 真跑：出入紀錄之後 D 卡仲在（唔再消失）", afterD.length > 0 && /pr-sim-c/.test(afterD), "長度=" + afterD.length);
+chk("★ 真跑：D 卡內容同之前一模一樣（3 個相似型＋數字）", afterD === beforeD, "before=" + beforeD.length + "B after=" + afterD.length + "B");
+chk("★ 真跑：傾向程度 % 都返嚟（同一個 root cause）", /你嘅傾向程度/.test(afterPct) && /65%/.test(afterPct));
+chk("★ 真跑：仲係結果頁（冇被踢走）", /id="result"/.test(d.body.innerHTML) && !d.getElementById("result").classList.contains("hidden"));
+
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);

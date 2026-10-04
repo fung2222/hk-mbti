@@ -4585,8 +4585,14 @@ window.personalReport = function(r){
 window.renderPersonalReport = function(r){
   const box = document.getElementById("personalReport");
   if(!box) return;
-  const d = window.personalReport(r);
-  if(!d){ box.innerHTML = ""; return; }
+  let d = window.personalReport(r);
+  if(!d){
+    // 舊紀錄冇分數：只有當「最後一次分數」同今次顯示嘅型一樣，先用佢頂住；否則清空
+    const ls = window._lastScoreObj;
+    const same = ls && r && String(ls.mbti||"").substring(0,4) === String(r.mbti||"").substring(0,4);
+    if(same) d = window.personalReport(ls);
+    if(!d){ box.innerHTML = ""; return; }
+  }
   if(window.getTier() !== "full"){
     box.innerHTML = '<div class="card p-5 softbox">'
       + '<div class="softbox-title">完整版 · 你嘅個人化報告</div>'
@@ -5025,6 +5031,15 @@ name: window.state.displayName || "",
 nickname: window.state.nickname || "",
 version: window.state.version || "life"
  };
+ // 2026-10-04：存埋分數，重開舊紀錄時「傾向程度」同「個人化報告」先重現得到
+ try{
+ const _sc = window._lastScoreObj;
+ if(_sc && String(_sc.mbti||"").substring(0,4) === String(window.lastResult||"").substring(0,4)){
+ record.pct = _sc.pct || null;
+ record.score = _sc.score || null;
+ record.closeAxes = _sc.closeAxes || [];
+ }
+ }catch(e){}
  // 兼容舊 key + 新 5 次 list
 localStorage.setItem("hkmbti_last_result", JSON.stringify(record));
 let list = [];
@@ -5653,7 +5668,7 @@ window.state.nickname = rec.nickname || "";
 const ver = rec.version || "life";
 const totalQ = ver === "bb" ? 10 : ver === "advanced" ? 30 : 60;
 window._cardMeta = { version: ver, totalQ: totalQ };
-const r = {mbti: rec.mbti, score:{}, version: ver, totalQ: totalQ};
+const r = {mbti: rec.mbti, score: rec.score || {}, pct: rec.pct || null, closeAxes: rec.closeAxes || [], version: ver, totalQ: totalQ};
 // 每步獨立 try：任何一步（例如畫分享卡）出事都唔可以令用戶睇唔到結果
 let rendered = false;
 try{ renderResult(r); rendered = true; }catch(e){}
