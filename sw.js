@@ -12,6 +12,10 @@ const ASSETS = [
   "/hk-mbti/manifest.json",
   "/hk-mbti/icon-192.png",
   "/hk-mbti/icon-512.png",
+  "/hk-mbti/record.html",
+  "/hk-mbti/stats.html",
+  "/hk-mbti/privacy.html",
+  "/hk-mbti/tee.html",
   "/hk-mbti/offline.html"
 ];
 

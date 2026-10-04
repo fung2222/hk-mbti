@@ -17,6 +17,13 @@ chk("★ 配對列表每行有入口掣（openPair）", /onclick="openPair\('\$\
 chk("★ 導覽堆疊有記 pairA／pairB（返回會還原同一篇）", RAW.includes("pairA: window._pairA || null") && RAW.includes('if(id === "pair" && prev && prev.pairA && prev.pairB)'));
 chk("★ 內容冇 emoji", !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/u.test(PAIRS_JS));
 chk("★ 內容唔提「買斷／付費／訂閱」", !/買斷|付費|訂閱/.test(PAIRS_JS));
+// 守門（2026-10-04）：黑夜色一定要喺 #dark-layer 且 html.dk 前綴 —— 曾誤放主 style 令光模式都用金黃字 ✗
+const PAGE_SRC=fs.readFileSync(path.join(REPO,"index.html"),"utf8");
+const mainBlock=(PAGE_SRC.match(/<style>([\s\S]*?)<\/style>/)||["",""])[1];
+const dkBlock=(PAGE_SRC.match(/<style id="dark-layer">([\s\S]*?)<\/style>/)||["",""])[1];
+chk("★ 守門：#dark-layer 有 html.dk 前綴嘅 .pair-go/.pair-ol/.pair-x 色", /html\.dk \.pair-go\{/.test(dkBlock) && /html\.dk \.pair-ol li/.test(dkBlock) && /html\.dk \.pair-x\{/.test(dkBlock));
+chk("★ 守門：主 style 冇「冇 html.dk 前綴」嘅 .pair 黑夜色（#D9B26A／#A79E92／#C0A87A）",
+    !/\.pair-go\{[^}]*#D9B26A/.test(mainBlock) && !/\.pair-ol li,\.pair-ul li\{color:#A79E92\}/.test(mainBlock) && !/\.pair-x\{color:#C0A87A\}/.test(mainBlock));
 chk("★ CSS 有 .pair-go／.pair-ol（黑夜只加色）", /\.pair-go\{/.test(RAW) && /\.pair-ol li/.test(RAW));
 chk("★ 桌面有 html.dt #pair 寬度規則", /html\.dt #pair > \*\{max-width:760px/.test(RAW));
 

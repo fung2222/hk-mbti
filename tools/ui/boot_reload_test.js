@@ -6,7 +6,7 @@ const { JSDOM } = require("jsdom");
 const root = path.resolve(__dirname, "../..");
 const src = fs.readFileSync(path.join(root, "index.html"), "utf8");
 // typeScenes 獨立分頁已拆（2026-10-02）→ 場景攻略而家係人格頁 #type 嘅一個 tab
-const SECTIONS = ["home","profile","test","result","about","hub","dims","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter"];
+const SECTIONS = ["home","profile","test","result","about","hub","dims","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter","pair"];
 
 let pass = 0, fail = 0;
 const chk = (n, ok, got) => { if (ok) pass++; else { fail++; console.log("✗ " + n + "   <- " + (got === undefined ? "" : got)); } };
@@ -50,6 +50,7 @@ const cases = [
   boot("下拉重整（原本停相處文章）", { lastSection: "socialArticle", lastNav: { id: "socialArticle", sKey: "WhatsAppGroup", articleType: "ENFP" } }),
   boot("下拉重整（last_section 壞值）", { lastSection: "someGarbageId", lastNav: { id: "someGarbageId" } }),
   boot("下拉重整（last_nav 壞 JSON）", { lastSection: "hub", lastNav: null }),
+  boot("下拉重整（原本停配對深入）", { lastSection: "pair", lastNav: { id: "pair", pairA: "INFP", pairB: "ENFP" } }),
 ];
 
 let done = 0;
@@ -82,6 +83,11 @@ setTimeout(() => {
       const panel = c.d.getElementById("typeTabScene");
       if (panel && !panel.classList.contains("hidden")) p2++;
       else { f2++; console.log("  ✗ 下拉重整後冇停喺場景 tab"); }
+    }
+    if (c.label.includes("配對深入")) {
+      const n = (c.d.getElementById("pairBody") || {}).innerHTML || "";
+      if (n.length > 300) p2++; else { f2++; console.log("  ✗ 配對頁下拉重整後內容冇晒！長度 = " + n.length); }
+      if (visible.join() === "pair") p2++; else { f2++; console.log("  ✗ 配對頁重整後唔止一個畫面顯示：" + visible.join()); }
     }
     if (c.label.includes("維度詳解")) {
       const n = c.d.querySelectorAll("#dims .hub-letter-list > div").length;

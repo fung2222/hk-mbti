@@ -729,9 +729,6 @@ html.dk .hub-more-link,html.dk .hub-scene-back,html.dk .deep-ch,html.dk .deep-go
 html.dk .hub-row-chev{color:#C0A87A}
 .pr-sim + .pr-sim{border-top-color:rgba(255,255,255,.08)}
 .pr-sim-d,.pr-note{color:#A79E92}
-.pair-go{background:rgba(217,178,106,.12);border-color:rgba(217,178,106,.35);color:#D9B26A}
-.pair-ol li,.pair-ul li{color:#A79E92}
-.pair-x{color:#C0A87A}
 </style>
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
 <script data-goatcounter="https://fung2222.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -1149,6 +1146,11 @@ html.dk.dt #app .home-hero-copy p{color:#A79E92}
 html.dk.dt #dtTypeRows span{color:#C0A87A}
 html.dk.dt .dt-cta-ghost:hover{color:#C0A87A}
 
+
+/* 配對深入：黑夜色（2026-10-04 修 —— 之前誤放主 style 且冇 html.dk 前綴 → 光模式都變金黃字 ✗） */
+html.dk .pair-go{background:rgba(217,178,106,.12);border-color:rgba(217,178,106,.35);color:#D9B26A}
+html.dk .pair-ol li,html.dk .pair-ul li{color:#A79E92}
+html.dk .pair-x{color:#C0A87A}
 </style>
  <link rel="stylesheet" href="tailwind.css">
 </head>
@@ -4677,7 +4679,7 @@ if(!_pct.EI){
  if(_pct.EI) _pctNote = '<div class="text-[10px] text-gray-500 leading-relaxed mt-1">（同型參考：以下係你最近一次同型測試嘅維度分數。）</div>';
  }
 }
-const _noPctNote = '<div class="text-[11px] text-gray-500 leading-relaxed mt-1">呢條係修復前嘅舊紀錄，冇儲存維度分數。重新做一次測試，就會有返「傾向程度」同完整版個人化報告。</div>';
+const _noPctNote = '<div class="text-[11px] text-gray-500 leading-relaxed mt-1">呢條係修復前嘅舊紀錄，冇儲存維度分數。重新做一次測試，就會有返「傾向程度」同「你嘅個人化報告」。</div>';
 const closeNote = (r.closeAxes && r.closeAxes.length)
  ? `<p class="text-xs text-gray-500 mt-3">${r.closeAxes.join("、")} 軸接近中間（分數差 1 分內），呢幾條軸可能兩邊都似。</p>`
  : "";
@@ -6559,7 +6561,7 @@ window.openPair = function(a, b){
   document.getElementById("pairTitle").innerText = A + " × " + B;
   document.getElementById("pairCrumb").innerText = "配對深入 / " + A + (TA.cn ? "（" + TA.cn + "）" : "") + " × " + B + (B !== A && TB.cn ? "（" + TB.cn + "）" : "");
   if(!k){
-    body.innerHTML = '<div class="card p-6"><p class="text-sm text-gray-700 leading-relaxed">呢一對嘅深入內容仲喺度寫。而家已經有 <b>INFP</b> 同其他 15 型嘅配對，其他組合會陸續補上。</p></div>';
+    body.innerHTML = '<div class="card p-6"><p class="text-sm text-gray-700 leading-relaxed">呢一對嘅深入內容仲喺度寫，會分批陸續補上（而家已經有 8 個型嘅配對深入）。</p></div>';
     show("pair"); window.scrollTo(0, 0); return;
   }
   const d = (window.PAIRS || {})[k] || {};
