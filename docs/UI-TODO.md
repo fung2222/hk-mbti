@@ -84,8 +84,8 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 - ❌ **拆走一個 `section` 要一次過改 7 處**（本體／`show()` 清單／`window.openXxx`／hash `MAP`／`NAV`／`restoreNav` case／專屬 CSS＋dark＋test）；漏 `show()` 清單 → `null.classList` throw → **成個 render 鏈中途爆 = 用戶見空白**
 - ❌ **刪 `window.X = function` 區塊之前，一定要對比刪前刪後嘅函數清單**（`grep -o 'window\.[A-Za-z]\+ = function' | sort`）—— 共用 helper 會坐喺兩個頁面函數中間（`formatGuideHtml`／`formatTypeFullHtml` 就係咁被誤刪過）
 - ❌ **sub-page 唔共用 index.html 嘅 CSS** → 改全站性規則（頁底留白／overscroll／字型／間距）要 `grep -rn '<property>' *.html` 逐個檔改
-- ✅ 改完必跑：`sh tools/ui/run.sh`（15 檔 jsdom）、`python3 tools/preflight.py`(**32**)、`tools/desktop_layout_test.js`(**38**)、`tools/desktop_gate_test.js`(**34**)、`tools/deeplink_test.js`
+- ✅ 改完必跑：`sh tools/ui/run.sh`（**21 檔** jsdom）、`python3 tools/preflight.py`(**32**)、`tools/desktop_layout_test.js`(**56**)、`tools/desktop_gate_test.js`(**34**)、`tools/deeplink_test.js`、`tools/record_view_test.js`、`tools/voice_test.js`
 
 ## 測試（已永久保存入 repo）
-`sh tools/ui/run.sh` → **16 個** jsdom 回歸測試（app_feel 46、**backkey 30**、**back_nav 29**、boot_reload 25、dark_mode 60、dialogs_ab 30、hub_consolidation 69、hub_tiles 18、letter_card 13、letter_career 9、letter_dim 5、oneshot_delete 14、premium 168、reel 27、**type_tabs 67**、**back_nav 29**、version_card 13、wizard 14）
+`sh tools/ui/run.sh` → **21 個** jsdom 回歸測試（app_feel 46、back_nav 29、backkey 30、boot_reload 25、dark_mode 60、dialogs_ab 30、hub_consolidation **117**、hub_tiles 18、letter_card 22、letter_career 9、letter_dim 5、**mobile_debug_fixes 28**、oneshot_delete 14、premium **173**、reel **31**、result_page **51**、share_card **23**、type_pick 15、type_tabs 87、version_card 15、wizard 14）
 （首次需要：`npm i --prefix tools/ui jsdom`）＋ `tools/ui/start_flow_probe.js`（人手睇全流程）＋ `tools/ui/button_audit.js`（逐粒掣真撳捉 runtime 錯）
