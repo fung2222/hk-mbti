@@ -4,6 +4,8 @@ const ASSETS = [
   "/hk-mbti/index.html",
   "/hk-mbti/data.js",
   "/hk-mbti/social.js",
+  "/hk-mbti/pair-data.js",
+  "/hk-mbti/tailwind.css",
   "/hk-mbti/voice-data.js",
   "/hk-mbti/premium-data.js",
   "/hk-mbti/type-icons.js",
@@ -14,7 +16,9 @@ const ASSETS = [
 ];
 
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(() => {}));
+  // 注意：addAll 係「全部成功才算成功」——買一個檔 404 就會連累成個 precache。
+  // 改為逐個 add ＋ allSettled：任何一個失敗都唔會拖死其他（2026-10-04）。
+  e.waitUntil(caches.open(CACHE).then(c => Promise.allSettled(ASSETS.map(u => c.add(u)))).catch(() => {}));
   self.skipWaiting();
 });
 
