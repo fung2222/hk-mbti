@@ -69,3 +69,13 @@
 - 未寫嘅組合出「陸續補上」提示。
 - **下一批（等 Roy 拍板）**：其餘 15 個型各行 16 篇（≈ 240 篇）／或先補「最常撞嘅組合」。
 - 相關鐵律（寫法用型號唔用「你」、4 段結構、CTA 標準 markup、導覽要入堆疊）見 skill `hk-mbti-webapp/references/premium-tier.md`。
+
+
+---
+
+## 網站評分後嘅三項升級（2026-10-04 完成）
+
+1. **og:image**：新增 `og-image.png`（1200×630）；5 頁加 og:image／twitter card（之前分享出去冇預覽圖）。
+2. **SW precache 補漏**：`pair-data.js`、`tailwind.css` 入 ASSETS；install 改 `allSettled` 逐個 add。
+3. **Tailwind CDN → 靜態 CSS**：`tailwind.css`（12.8KB／gzip 3.4KB，取代 407KB CDN JS）；`<link>` 放 `</head>` 前（等同 CDN `document.head.append` 次序）；offline.html 唔加。
+- 未有計分但已知：`text-ink` 喺 index.html 係死 class（30 處，歷來，冇 rule）；要修會改外觀 → 等 Roy 決定。

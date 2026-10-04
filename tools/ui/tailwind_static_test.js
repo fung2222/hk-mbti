@@ -52,11 +52,19 @@ const toks=new Set();
   });
 });
 const isDefined=t=>css.includes("."+esc(t)) || siteCSS.includes("."+t);
-const misses=[...toks].filter(t=>TWRE.test(t.replace(/^!/,"")) && !isDefined(t) && !/[:]/.test(t));
-chk("★ 凡用到嘅 Tailwind class 都有對應 rule（唔准有漏）", misses.length===0, misses.join(" , "));
-// 兩個歷來死 class（CDN 年代一樣冇生效，唔係今次改動造成）
-chk("★ 已知死 class 只有 focus:border-gold／hover:bg-soft（唔影響今次改動）",
-    [ ...toks ].filter(t=>/^(focus:border-gold|hover:bg-soft)$/.test(t)).every(t=>!isDefined(t)));
+// 已知歷來死 class（CDN 年代一樣冇生效 → 唔准當成今次改動嘅漏網；亦唔准有新增）
+const KNOWN_DEAD=new Set(["text-ink","focus:border-gold","hover:bg-soft"]);
+const missAll=[...toks].filter(t=>TWRE.test(t.replace(/^!/,"")) && !isDefined(t) && !/[:]/.test(t) && !KNOWN_DEAD.has(t));
+chk("★ 凡用到嘅 Tailwind class 都有對應 rule（唔准有漏）", missAll.length===0, missAll.join(" , "));
+const deadNow=[...toks].filter(t=>TWRE.test(t.replace(/^!/,"")) && !isDefined(t) && !/[:]/.test(t));
+chk("★ 死 class 名單冇增長（現時已知："+[...KNOWN_DEAD].join("／")+"）",
+    deadNow.every(t=>KNOWN_DEAD.has(t)), deadNow.filter(t=>!KNOWN_DEAD.has(t)).join(" , "));
+// text-ink 只有 privacy.html 自己有定義；index.html 內用 30 次但冇 rule（歷來如此，CDN 年代一樣）
+const idxCSS=(read("index.html").match(/<style[^>]*>[\s\S]*?<\/style>/g)||[]).join("\n");
+chk("★ index.html 嘅 text-ink 依然冇 rule（歷來死 class；真係要修就要連 30 處一齊改，唔准臨時加 rule）",
+    !css.includes(".text-ink") && !idxCSS.includes(".text-ink"));
+chk("★ focus:border-gold／hover:bg-soft 依然冇 rule（同上，歷來死 class）",
+    ["focus:border-gold","hover:bg-soft"].every(t=>!css.includes("."+esc(t)) && !siteCSS.includes("."+t)));
 
 // ───────── 四、SW precache ─────────
 const sw=read("sw.js");
