@@ -49,12 +49,11 @@ const sims=[...full1.matchAll(/class="pr-sim-c">([A-Z]{4})</g)].map(m=>m[1]);
 chk("★ 已解鎖：出 3 個相似型", sims.length===3, sims.join(","));
 chk("★ 已解鎖：第 1 個＝你嘅結果（INTJ）＋標明「你嘅結果」", sims[0]==="INTJ" && /你嘅結果/.test(full1));
 const notes=[...full1.matchAll(/class="pr-note">([^<]+)</g)].map(m=>m[1]);
-chk("★ 已解鎖：5 條軸解釋 + 3 條盲點 = 8 段文字（3 盲點段含「注意」/「一半一半」）",
-    notes.length>=8, notes.length);
+chk("★ 已解鎖：D 卡有 3 條盲點段（5 條軸已改為免費，唔喺呢度）", notes.length===3, notes.length);
 chk("★ 已解鎖：盲點數量 = 3（獨立段落）", (full1.match(/你嘅 3 個盲點/g)||[]).length===1);
-chk("★ 已解鎖：5 條軸都出齊（E／S／T／J／T 標籤 ＋ %）", (full1.match(/\d+%/g)||[]).length>=10, (full1.match(/\d+%/g)||[]).length);
-chk("★ 已解鎖：軸百分比同免費版 r.pct 一致（唔自創數字）",
-    /40%/.test(full1) && /60%/.test(full1) && /35%/.test(full1) && /65%/.test(full1), "EI 40/60 + SN 35/65");
+chk("★ 已解鎖：D 卡唔再出軸 %（已移去免費卡）", !/你 5 條軸各自代表咩/.test(full1));
+chk("★ 免費卡軸 % 同 r.pct 一致（唔自創數字）",
+    /40%/.test(d.getElementById("personalityDetail").innerHTML) && /65%/.test(d.getElementById("personalityDetail").innerHTML));
 
 // deterministic：同一份答案跑兩次，輸出必須完全一樣
 const p1=JSON.stringify(w.personalReport(JSON.parse(JSON.stringify(R))));
@@ -145,6 +144,26 @@ const pR = d.getElementById("personalityDetail").innerHTML;
 chk("★ 重開 app 後開舊紀錄 → 靠 localStorage 都出返「傾向程度」", /你嘅傾向程度/.test(pR) && /40%/.test(pR));
 chk("★ 重開 app 後 → 有「同型參考」註腳（唔係靜靜當係嗰次）", /同型參考/.test(pR));
 chk("★ 重開 app 後 → D 卡都有返", /pr-sim-c/.test(d.getElementById("personalReport").innerHTML));
+
+
+// ───────── 六、2026-10-04 定位：維度 % 同「呢條軸代表咩」一律免費 ─────────
+w.localStorage.clear();
+w.renderResult(JSON.parse(JSON.stringify(R)));     // 免費版（未解鎖）
+const pdFree = d.getElementById("personalityDetail").innerHTML;
+chk("★ 免費版：5 條軸解釋全部出齊（唔止百分比）",
+    /能量主要向內/.test(pdFree) && /你習慣跳去/.test(pdFree) && /邊個做法最合理/.test(pdFree) && /你鍾意有計劃/.test(pdFree) && /情緒接收強/.test(pdFree));
+chk("★ 免費版：明寫「全部免費開放」", /全部免費開放/.test(pdFree));
+chk("★ 免費版：仍然冇洩漏完整版內容（D 卡仲係鎖住）", !/pr-sim-c/.test(d.getElementById("personalReport").innerHTML));
+w.localStorage.setItem(w.TIER_KEY, "full");
+w.renderResult(JSON.parse(JSON.stringify(R)));
+const dFull = d.getElementById("personalReport").innerHTML;
+chk("★ 完整版 D 卡：唔再重複 5 條軸（已經免費）", !/pr-axis/.test(dFull));
+chk("★ 完整版 D 卡：只賣「唔普通」嘅嘢（最似 3 型 ＋ 3 盲點）",
+    (dFull.match(/pr-sim-c/g) || []).length === 3 && (dFull.match(/pr-note/g) || []).length === 3);
+w.localStorage.removeItem(w.TIER_KEY);
+w.renderResult(JSON.parse(JSON.stringify(R)));
+chk("★ 鎖住嘅卡有講「5 條軸已經免費開放」（唔會呃人畀錢買免費嘢）",
+    /免費開放/.test(d.getElementById("personalReport").innerHTML));
 
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);

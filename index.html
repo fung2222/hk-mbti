@@ -4605,7 +4605,7 @@ window.renderPersonalReport = function(r){
   if(window.getTier() !== "full"){
     box.innerHTML = '<div class="card p-5 softbox">'
       + '<div class="softbox-title">完整版 · 你嘅個人化報告</div>'
-      + '<p class="softbox-sub">按你自己嘅答題計出嚟：最似你嘅 3 個型、3 個只屬於你嘅盲點、你 5 條軸逐條代表咩。</p>'
+      + '<p class="softbox-sub">按你自己嘅答題計出嚟，而且唔會同其他人一樣：最似你嘅 3 個型、3 個只屬於你嘅盲點。（5 條軸嘅百分比同解釋已經免費開放。）</p>'
       + '<button type="button" class="softbox-btn" onclick="unlockFull()">解鎖完整版</button>'
       + '</div>';
     return;
@@ -4614,17 +4614,10 @@ window.renderPersonalReport = function(r){
     const right = o.me ? "你嘅結果" : ("差 " + o.diff.length + " 個字母（" + o.diff.join("、") + "）");
     return '<div class="pr-sim"><span><span class="pr-sim-c">' + o.code + '</span> <span class="text-xs text-gray-500">' + o.name + '</span></span><span class="pr-sim-d">' + right + '</span></div>';
   }).join("");
-  const axisRows = d.axes.map(function(ax){
-    const domIsA = ax.pa >= ax.pb, dom = domIsA ? ax.a : ax.b, domPct = domIsA ? ax.pa : ax.pb;
-    const side = domIsA ? ax.al : ax.bl;
-    return '<div class="pr-axis"><div class="pr-axis-t"><span style="color:var(--ink)">' + side + ' ' + domPct + '%</span><span style="color:#6b6560">' + (domIsA?ax.pb:ax.pa) + '% ' + (domIsA?ax.bl:ax.al).replace(/^\S+ /,"") + '</span></div>'
-      + '<p class="pr-note">' + (window.PR_DOM[ax.k + "_" + dom] || "") + '</p></div>';
-  }).join("");
   box.innerHTML = '<div class="card p-4">'
     + '<div class="text-xs tracking-widest brand-gold font-bold mb-3">完整版 · 你嘅個人化報告</div>'
     + '<div class="sub-label">最似你嘅 3 個型</div>' + simRows
     + '<div class="sub-label mt-4">你嘅 3 個盲點</div>' + d.notes.map(function(n){ return '<p class="pr-note">' + n + '</p>'; }).join("")
-    + '<div class="sub-label mt-4">你 5 條軸各自代表咩</div>' + axisRows
     + '</div>';
 };
 window.renderResult = function(r){
@@ -4656,7 +4649,10 @@ if(!_pct.EI){
 }
 const _noPctNote = '<div class="text-[11px] text-gray-500 leading-relaxed mt-1">呢條係修復前嘅舊紀錄，冇儲存維度分數。重新做一次測試，就會有返「傾向程度」同完整版個人化報告。</div>';
 const _ac = {EI:"#E89A6B", SN:"#A86B7C", TF:"#3A4F6B", JP:"#6B5A8A", TA:"#8A7A5A"};
-const _row = function(lab, lv, rlab, rv, col){
+const _row = function(lab, lv, rlab, rv, col, k){
+ // 2026-10-04 Roy 定位：維度 % 同「呢條軸代表咩」屬普通資訊 → 一律免費
+ const _ka = String(lab).trim().charAt(0), _kb = String(rlab).trim().slice(-1);
+ const _domTxt = (window.PR_DOM && k && window.PR_DOM[k + "_" + (lv >= rv ? _ka : _kb)]) || "";
 if(typeof lv !== "number" || typeof rv !== "number") return "";
 const lWin = lv > rv, rWin = rv > lv;
 return `<div class="mb-3">
@@ -4668,16 +4664,17 @@ return `<div class="mb-3">
  <div style="position:absolute;top:0;bottom:0;background:${col};${lv >= rv ? "right:50%;" : "left:50%;"}width:${Math.abs(lv - 50)}%"></div>
  <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(26,26,26,.18)"></div>
  </div>
+ ${_domTxt ? `<div class="text-[11px] text-gray-500 leading-relaxed mt-2">${_domTxt}</div>` : ""}
  </div>`;
  };
 const pctBlock = (_pct.EI ? `<div class="card p-4 mb-4">
  <div class="text-xs tracking-widest brand-gold font-bold mb-3">你嘅傾向程度</div>
- ${_row("E 外向", _pct.EI[0], "內向 I", _pct.EI[1], _ac.EI)}
- ${_row("S 實感", _pct.SN[0], "直覺 N", _pct.SN[1], _ac.SN)}
- ${_row("T 思考", _pct.TF[0], "情感 F", _pct.TF[1], _ac.TF)}
- ${_row("J 判斷", _pct.JP[0], "感知 P", _pct.JP[1], _ac.JP)}
- ${_row("T 敏感", _pct.TA[0], "自信 A", _pct.TA[1], _ac.TA)}
- <div class="text-[10px] text-gray-500 leading-relaxed mt-1">百分比係你喺該軸兩邊嘅得分比例，唔代表好壞。中間幼線係 50%；分差 1 分以內嘅軸，我哋會下面另外提你。</div>${_pctNote}
+ ${_row("E 外向", _pct.EI[0], "內向 I", _pct.EI[1], _ac.EI, "EI")}
+ ${_row("S 實感", _pct.SN[0], "直覺 N", _pct.SN[1], _ac.SN, "SN")}
+ ${_row("T 思考", _pct.TF[0], "情感 F", _pct.TF[1], _ac.TF, "TF")}
+ ${_row("J 判斷", _pct.JP[0], "感知 P", _pct.JP[1], _ac.JP, "JP")}
+ ${_row("T 敏感", _pct.TA[0], "自信 A", _pct.TA[1], _ac.TA, "TA")}
+ <div class="text-[10px] text-gray-500 leading-relaxed mt-1">以下五條軸嘅百分比同解釋，全部免費開放。百分比係你喺該軸兩邊嘅得分比例，唔代表好壞。中間幼線係 50%；分差 1 分以內嘅軸，我哋會下面另外提你。</div>${_pctNote}
  <button type="button" class="mt-3 text-[11px] font-bold brand-gold" onclick="openMethod()">計分方法同限制 →</button>
  </div>` : _noPctNote);
 
