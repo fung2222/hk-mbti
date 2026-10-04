@@ -25,7 +25,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap');
-:root{--gold:#D4A95F;--gold-dim:#B8A878;--ink:#0a0a1a;--soft:#FAF8F3;}
+:root{--gold:#D4A95F;--gold-dim:#B8A878;--ink:#0a0a1a;--soft:#FAF8F3;--muted:#6b6560;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 /* 下拉重新整理開放（Roy 2026-10-01）：只喺測試進行中先鎖，內頁唔鎖 */
 body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
@@ -40,7 +40,7 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .tee-card img{width:100%;display:block;aspect-ratio:4/5;object-fit:cover;}
 .tee-card .body{padding:12px 14px 14px;}
 .tee-card .type-code{font-size:22px;font-weight:900;letter-spacing:0.02em;}
-.tee-card .vibe{font-size:13px;color:#6b6b6b;margin-top:2px;}
+.tee-card .vibe{font-size:13px;color:var(--muted);margin-top:2px;}
 .tee-card .price{font-size:14px;color:var(--gold);font-weight:700;margin-top:8px;}
 .tee-card .pill{display:inline-block;background:rgba(212,169,95,0.12);color:var(--ink);font-size:11px;padding:3px 8px;border-radius:6px;margin-top:4px;margin-right:3px;}
 .hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:white;padding:14px 16px 16px;text-align:left;position:relative;}
@@ -74,7 +74,7 @@ border:1px solid #E0D6BE;font-family:inherit;cursor:pointer;text-decoration:none
 .notice b{color:var(--ink);}
 .nav-home{display:inline-block;margin:14px;font-size:14px;color:rgba(255,255,255,0.7);text-decoration:none;}
 .nav-home:hover{color:white;}
-.footer-note{text-align:center;color:#888;font-size:12px;padding:24px 16px 16px;}
+.footer-note{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px 16px;}
 .filter-bar{display:flex;gap:8px;overflow-x:auto;padding:14px 16px;background:white;position:sticky;top:0;z-index:5;box-shadow:0 1px 0 rgba(0,0,0,0.05);}
 .filter-chip{flex-shrink:0;padding:8px 14px;background:#f3f3f3;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;border:none;}
 .filter-chip.active{background:var(--gold);color:var(--ink);}
@@ -147,7 +147,7 @@ border:1px solid #E0D6BE;font-family:inherit;cursor:pointer;text-decoration:none
 <style id="dark-layer">
 /* 黑夜模式 v2：由 html.dk 主導（跟系統／用戶撳掣揀）。鐵律：只改顏色，唔郁排版／尺寸。 */
 html.dk{color-scheme:dark}
-html.dk{--gold:#D9B26A;--gold-dim:#C9B489;--ink:#ECE7DE;--soft:#12161C;--dk-card:#181E26;}
+html.dk{--gold:#D9B26A;--gold-dim:#C9B489;--ink:#ECE7DE;--soft:#12161C;--muted:#A79E92;--dk-card:#181E26;}
 html.dk .hero{background:linear-gradient(135deg,#151C25 0%,#222B37 100%)}
 html.dk .bg-soft{background:rgba(217,178,106,.09)}
 html.dk .softbox{background:var(--dk-card);border-color:rgba(217,178,106,.2)}

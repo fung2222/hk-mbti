@@ -174,7 +174,7 @@ cursor:pointer;-webkit-appearance:none;appearance:none;
 /* 測試頁右上角控制 */
 .q-ctrl{
 display:inline-flex;align-items:center;background:none;border:0;padding:0;
-font-family:inherit;font-size:15px;font-weight:600;color:#9ca3af;
+font-family:inherit;font-size:15px;font-weight:600;color:#6b6560;
 cursor:pointer;-webkit-appearance:none;appearance:none;
 }
 .q-ctrl:active{opacity:.6;}
@@ -315,6 +315,12 @@ html.dk .deep-code{color:var(--tc-dk)}
 .home-acc-lock{margin-left:6px;font-size:10px;font-weight:700;color:#8B6F3D;background:rgba(212,169,95,.16);border-radius:5px;padding:2px 6px;vertical-align:2px}
 html.dk .home-acc-lock{color:#D8C69E;background:rgba(217,178,106,.18)}
 #deepChapterTitle{font-size:21px;white-space:normal;line-height:1.22;padding:0 3rem}
+/* 窄屏（≤379px，例如 iPhone SE 320）：標題左右留白收窄，令長標題唔會被截／折到爆列
+   36px 選單掣實際只食 44px，2.75rem(44px) 已經夠；章節標題再縮一級（21→19px）先裝得落 */
+@media (max-width:379px){
+.page-hero-row h1{padding:0 2.75rem}
+#deepChapterTitle{font-size:19px;padding:0 2.25rem}
+}
 html.dk .up-cmp th,html.dk .up-cmp td{border-bottom-color:rgba(255,255,255,.1)}
 html.dk .up-cmp th{color:#D8C69E}
 html.dk .up-cmp .no{color:#6E675C}
@@ -375,6 +381,7 @@ margin:0 0 12px;line-height:1.6;font-size:17px;color:#374151;
 }
 /* 完整版章節頁：內文要鬆（Roy 2026-10-01：太迫）—— 只 scope 落 #deepChapter，唔影響攻略頁 */
 #deepChapter .article-guide-body p{margin:0 0 16px;line-height:1.9;}
+.chapter-aside{color:#6b6560}
 #deepChapter .article-guide-body .article-guide-kicker{margin:28px 0 11px;font-size:15px;}
 #deepChapter .article-guide-body p:last-child{margin-bottom:0;}
 .article-guide-body ul,.article-guide-body ol.guide-list{
@@ -1015,6 +1022,7 @@ html.dm .home-hero{min-height:var(--dm-vh)}
 html.dm .home-hero-mbti{font-size:clamp(4.4rem, calc(var(--dm-vw) * 0.23), 6.6rem)}
 </style>
 <style id="dark-layer">
+html.dk .chapter-aside{color:#A79E92}
 /* 黑夜模式 v2：由 html.dk 主導（未揀過 = 跟系統；用戶撳掣揀過會記入 localStorage）。
    鐵律：只改顏色 → 唔准有 display / 尺寸 / 位置 / 動畫改動；
    16 型 16 色、分享卡 canvas、金標 icon 一律不變。 */
@@ -4225,7 +4233,7 @@ if(lbl) lbl.textContent = on ? "朗讀開" : "朗讀關";
 const icoOn = $("voiceOnIco"), icoOff = $("voiceOffIco");
 if(icoOn) icoOn.style.display = on ? "" : "none";
 if(icoOff) icoOff.style.display = on ? "none" : "";
-b.style.color = on ? "#C4922E" : "#9ca3af";
+b.style.color = on ? "#C4922E" : "#6b6560";
  };
 window.toggleVoice = function(){
 window.VOICE_ON = !window.VOICE_ON;
@@ -5591,7 +5599,7 @@ el.innerHTML = `
  <div class="text-ink"><span class="text-xs text-gray-500 font-bold">${verName}</span> <span class="text-sm font-bold">第 ${next} / ${total} 題</span></div>
  </div>
  <button type="button" id="resumeGo" class="btn-gold px-4 py-2.5 rounded-xl text-sm font-bold flex-shrink-0">開始</button>
- <button type="button" id="resumeDrop" aria-label="放棄進度" style="-webkit-appearance:none;appearance:none;background:none;border:0;color:#9ca3af;font-size:19px;cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0;"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+ <button type="button" id="resumeDrop" aria-label="放棄進度" style="-webkit-appearance:none;appearance:none;background:none;border:0;color:#6b6560;font-size:19px;cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0;"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
  </div>`;
 const go = $("resumeGo");
 const drop = $("resumeDrop");
@@ -6289,6 +6297,8 @@ const esc = function(x){
 return String(x).replace(/[&<>]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; });
  };
 const bold = function(x){ return esc(x).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>"); };
+// 單星 *…* = 旁白／心聲（次要色、唔斜體：CJK 斜體唔靚）
+const aside = function(x){ return x.replace(/\*([^*\n]+)\*/g, '<span class="chapter-aside">$1</span>'); };
 const blocks = String(raw).split(/\n\s*\n/).map(function(x){ return x.trim(); }).filter(Boolean);
 let html = "", listOpen = false;
 const closeList = function(){ if(listOpen){ html += "</ol>"; listOpen = false; } };
@@ -6298,17 +6308,17 @@ if(m){
 closeList();
 html += '<div class="article-guide-kicker">' + esc(m[1]) + '</div>';
 const rest = (m[2] || "").trim();
-if(rest) html += "<p>" + bold(rest) + "</p>";
+if(rest) html += "<p>" + aside(bold(rest)) + "</p>";
 return;
  }
 const lines = b.split(/\n/).map(function(x){ return x.trim(); }).filter(Boolean);
 if(lines.length === 1 && /^\d+[.、)]\s*/.test(lines[0])){
 if(!listOpen){ html += '<ol class="guide-list">'; listOpen = true; }
-html += "<li>" + bold(lines[0].replace(/^\d+[.、)]\s*/, "")) + "</li>";
+html += "<li>" + aside(bold(lines[0].replace(/^\d+[.、)]\s*/, ""))) + "</li>";
 return;
  }
 closeList();
-html += "<p>" + bold(b).replace(/\n/g, "<br>") + "</p>";
+html += "<p>" + aside(bold(b)).replace(/\n/g, "<br>") + "</p>";
  });
 closeList();
 return html;

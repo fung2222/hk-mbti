@@ -15,7 +15,7 @@
 <meta name="theme-color" content="#1E2A3B">
 <meta name="robots" content="noindex">
 <style>
-:root{--gold:#D4A95F;--ink:#0a0a1a;--soft:#FAF8F3;}
+:root{--gold:#D4A95F;--ink:#0a0a1a;--soft:#FAF8F3;--muted:#6b6560;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;}
 body{margin:0;padding:30px;background:var(--soft);color:var(--ink);display:flex;align-items:center;justify-content:center;
@@ -24,9 +24,9 @@ body{margin:0;padding:30px;background:var(--soft);color:var(--ink);display:flex;
 .wrap{width:100%;max-width:22rem;}
 .mark{width:46px;height:46px;stroke:var(--gold);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-bottom:22px;}
 h1{font-size:26px;font-weight:900;letter-spacing:-.02em;line-height:1.25;margin:0 0 10px;}
-p{font-size:15.5px;line-height:1.85;color:#4a4640;margin:0 0 14px;}
+p{font-size:15.5px;line-height:1.85;color:var(--ink);margin:0 0 14px;}
 ul{margin:0;padding-left:18px;}
-li{font-size:14.5px;line-height:1.85;color:#4a4640;margin-bottom:5px;}
+li{font-size:14.5px;line-height:1.85;color:var(--ink);margin-bottom:5px;}
 button{margin-top:26px;width:100%;border:0;border-radius:12px;padding:15px 18px;background:var(--ink);color:#fff;
   font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;}
 button:active{opacity:.85;}
@@ -35,10 +35,10 @@ button:active{opacity:.85;}
 <style id="dark-layer">
 /* 黑夜模式 v2：由 html.dk 主導（跟系統／用戶撳掣揀）。鐵律：只改顏色，唔郁排版／尺寸。 */
 html.dk{color-scheme:dark}
-html.dk{--gold:#D9B26A;--ink:#ECE7DE;--soft:#12161C;}
-html.dk p,html.dk li{color:#B4AC9F}
+html.dk{--gold:#D9B26A;--ink:#ECE7DE;--soft:#12161C;--muted:#A79E92;}
+html.dk p,html.dk li{color:var(--muted)}
 html.dk button{background:#D9B26A;color:#12161C}
-html.dk .mark-foot{color:#9A9388}
+html.dk .mark-foot{color:var(--muted)}
 </style>
 </head>
 <body>

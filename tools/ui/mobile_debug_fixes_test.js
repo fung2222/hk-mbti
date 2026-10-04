@@ -51,6 +51,27 @@ setTimeout(()=>{
     });
     chk('P2-1 全站冇 font-weight:800 / 500', bad.length===0, bad.join(','));
     chk('P2-1 字型 URL 載 600、唔載 500', /wght@400;600;700;900/.test(src) && !/wght@[^"']*\b500\b/.test(src));
+    // ── #1 窄屏標題（Roy 2026-10-04 批准）
+    chk('#1 有 ≤379px media query', /@media \(max-width:379px\)/.test(src));
+    chk('#1 窄屏收標題留白 4.5rem→2.75rem', /@media \(max-width:379px\)\{[\s\S]*?\.page-hero-row h1\{padding:0 2\.75rem\}/.test(src));
+    chk('#1 章節標題窄屏 21→19px／padding 2.25rem', /@media \(max-width:379px\)\{[\s\S]*?#deepChapterTitle\{font-size:19px;padding:0 2\.25rem\}/.test(src));
+        chk('#1 320px 算術：一般 '+(320-32-88)+'px 盒 ≥ 164；章節 '+(320-32-72)+'px 盒 ≥ 209', (320-32-88)>=164 && (320-32-72)>=209);
+    // ── #2 隨機灰統一（長文內文保留）
+    let greyBad=[];
+    ['record.html','stats.html','tee.html','privacy.html','offline.html','index.html'].forEach(fn=>{
+      const tt=fs.readFileSync(path.join(REPO,fn),'utf8');
+      ['#888','#555','#666','#6b6b6b','#4a4640','#9ca3af'].forEach(c=>{ if(new RegExp(':'+c+'\\b').test(tt)) greyBad.push(fn+':'+c); });
+      if(/var\(--muted\)/.test(tt) && !/--muted:/.test(tt)) greyBad.push(fn+':--muted 冇定義');
+      if(/--muted:/.test(tt) && !/--muted:#A79E92/.test(tt)) greyBad.push(fn+':黑夜 --muted 未定義');
+    });
+    chk('#2 隨機灰零殘留／--muted 日夜有定義', greyBad.length===0, greyBad.join(','));
+    chk('#2 長文內文 #374151 保留（唔整頁換色）', /#374151/.test(src));
+    // ── #4 單星 → 旁白款（唔斜體）
+    let starLeak=0, asideHits=0, chN=0;
+    for(const tt of w.TYPE_ORDER||[]){ const dd=(w.PREMIUM||{})[tt]; if(!dd||!dd.chapters) continue; dd.chapters.forEach(c=>{ chN++; const h=String(w.formatChapterHtml(c.b)); if(/\*/.test(h)) starLeak++; if(/chapter-aside/.test(h)) asideHits++; }); }
+    chk('#4 全 16 型 × 9 章（'+chN+'）零殘留星號', chN>=144 && starLeak===0, 'leak='+starLeak);
+    chk('#4 單星用 .chapter-aside（唔斜體）', asideHits>0 && /\.chapter-aside\{color:#6b6560\}/.test(src), asideHits);
+    chk('#4 dark 規則喺 #dark-layer', /html\.dk \.chapter-aside\{color:#A79E92\}/.test(src));
     chk('冇新 jsdom error', jerr.length===0, jerr.join(' | '));
     console.log("===== 全部通過（"+total+" 項）=====");
     process.exit(ok===total?0:1);

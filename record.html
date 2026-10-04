@@ -25,7 +25,7 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap');
-:root{--gold:#D4A95F;--gold-dim:#B8A878;--ink:#0a0a1a;--soft:#FAF8F3;}
+:root{--gold:#D4A95F;--gold-dim:#B8A878;--ink:#0a0a1a;--soft:#FAF8F3;--muted:#6b6560;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 /* 下拉重新整理開放（Roy 2026-10-01）：只喺測試進行中先鎖，內頁唔鎖 */
 body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
@@ -51,7 +51,7 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .hero-popover .sep{height:1px;background:rgba(255,255,255,0.12);margin:4px 0;}
 .section-title{font-size:18px;font-weight:900;margin:28px 16px 8px;display:flex;align-items:center;gap:8px;}
 .section-title:before{content:"";display:inline-block;width:4px;height:20px;background:var(--gold);border-radius:2px;}
-.section-note{margin:0 16px 12px;font-size:13px;color:#888;line-height:1.6;}
+.section-note{margin:0 16px 12px;font-size:13px;color:var(--muted);line-height:1.6;}
 .nav-home{display:inline-flex;align-items:center;gap:8px;margin:18px auto 12px;padding:8px 16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);border-radius:24px;font-size:14px;color:white;text-decoration:none;font-weight:700;transition:all 0.15s;}
 .nav-home:hover{background:rgba(212,169,95,0.2);border-color:var(--gold);transform:translateY(-1px);}
 .nav-home:active{transform:translateY(0);}
@@ -62,8 +62,8 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .history-main{flex:1;min-width:0;}
 .history-row{display:flex;align-items:center;gap:12px;}
 .history-name{font-weight:900;font-size:16px;}
-.history-mbti{font-size:13px;color:#555;margin-top:2px;}
-.history-meta{font-size:12px;color:#888;margin-top:4px;}
+.history-mbti{font-size:13px;color:var(--muted);margin-top:2px;}
+.history-meta{font-size:12px;color:var(--muted);margin-top:4px;}
 .history-actions{display:flex;gap:8px;margin-top:10px;justify-content:flex-start;}
 .history-actions button{
 width:36px;height:36px;padding:0;border-radius:10px;border:0;cursor:pointer;
@@ -79,8 +79,8 @@ display:flex;align-items:center;justify-content:center;
 .stat-pill.visited{border-color:var(--gold);background:rgba(212,169,95,0.08);}
 .stat-pill .code{font-weight:900;font-size:14px;display:block;margin-bottom:2px;}
 .stat-pill.visited .code{color:var(--gold);}
-.stat-pill .count{font-size:10px;color:#888;}
-.empty{text-align:center;color:#888;padding:30px 16px;font-size:14px;}
+.stat-pill .count{font-size:10px;color:var(--muted);}
+.empty{text-align:center;color:var(--muted);padding:30px 16px;font-size:14px;}
 .empty .ico{font-size:48px;opacity:0.4;margin-bottom:8px;}
 .softbox{background:#fff;border:1px solid rgba(212,169,95,.22);border-radius:16px;padding:26px 22px 24px;margin:0 16px 12px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.06);}
 .softbox-title{font-size:1.15rem;font-weight:900;letter-spacing:-.01em;color:var(--ink);line-height:1.35;margin:0;}
@@ -227,7 +227,7 @@ border:1px solid #E0D6BE;font-family:inherit;cursor:pointer;text-decoration:none
 <style id="dark-layer">
 /* 黑夜模式 v2：由 html.dk 主導（跟系統／用戶撳掣揀）。鐵律：只改顏色，唔郁排版／尺寸。 */
 html.dk{color-scheme:dark}
-html.dk{--gold:#D9B26A;--gold-dim:#C9B489;--ink:#ECE7DE;--soft:#12161C;
+html.dk{--gold:#D9B26A;--gold-dim:#C9B489;--ink:#ECE7DE;--soft:#12161C;--muted:#A79E92;
   --dk-card:#181E26;--dk-line:rgba(236,231,222,.13);}
 html.dk .hero{background:linear-gradient(135deg,#151C25 0%,#222B37 100%)}
 html.dk .bg-soft{background:rgba(217,178,106,.09)}
@@ -299,11 +299,11 @@ html.dk .softbox-btn.danger:hover{color:#F5BDB9}
  <div style="display:flex;justify-content:space-between;align-items:flex-end;">
  <div>
  <div class="summary-num" id="totalTests">0</div>
- <div style="font-size:13px;color:#666;margin-top:4px;">總共測試次數</div>
+ <div style="font-size:13px;color:var(--muted);margin-top:4px;">總共測試次數</div>
  </div>
  <div style="text-align:right;">
- <div class="summary-num" id="typesVisited">0<span style="font-size:18px;color:#888;"> / 16</span></div>
- <div style="font-size:13px;color:#666;margin-top:4px;">已探索類型</div>
+ <div class="summary-num" id="typesVisited">0<span style="font-size:18px;color:var(--muted);"> / 16</span></div>
+ <div style="font-size:13px;color:var(--muted);margin-top:4px;">已探索類型</div>
  </div>
  </div>
  <div class="stat-grid" id="statGrid" style="padding:0;margin-top:16px;"></div>
@@ -432,7 +432,7 @@ document.getElementById("totalTests").textContent = totalTests;
  
  // types visited
 const visited = Object.keys(counts).filter(k => (parseInt(counts[k],10)||0) > 0);
-document.getElementById("typesVisited").innerHTML = visited.length + '<span style="font-size:18px;color:#888;"> / 16</span>';
+document.getElementById("typesVisited").innerHTML = visited.length + '<span style="font-size:18px;color:var(--muted);"> / 16</span>';
  
  // history list — 編號固定 1..5（缺嘅就顯示 —）
 const histBox = document.getElementById("historyList");
