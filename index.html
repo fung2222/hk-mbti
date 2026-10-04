@@ -154,6 +154,14 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 .pr-note:before{content:"";position:absolute;left:2px;top:9px;width:5px;height:5px;border-radius:999px;background:var(--gold)}
 .pr-axis{margin-top:10px}
 .pr-axis-t{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:4px}
+/* 配對深入（B 模組，2026-10-04）*/
+.pair-go{font-size:11px;font-weight:700;color:#7C6B45;background:var(--soft);border:1px solid #E0D6BE;border-radius:8px;padding:3px 8px;white-space:nowrap}
+.pair-pairhead{font-size:22px;font-weight:900;color:var(--ink);letter-spacing:.02em}
+.pair-x{color:#A08A5C;font-weight:700}
+.pair-ol,.pair-ul{margin:0;padding-left:1.15rem}
+.pair-ol li,.pair-ul li{font-size:13px;line-height:1.75;color:#6b6560;margin-bottom:7px}
+.pair-ol li:last-child,.pair-ul li:last-child{margin-bottom:0}
+@media (min-width:768px){ html.dt #pair > *{max-width:760px;margin-left:auto;margin-right:auto} }
 .stat-bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
 .stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
 .page-hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:#fff;padding:14px 16px 16px;margin:-24px -16px 16px}
@@ -709,6 +717,9 @@ html.dk .hub-more-link,html.dk .hub-scene-back,html.dk .deep-ch,html.dk .deep-go
 html.dk .hub-row-chev{color:#C0A87A}
 .pr-sim + .pr-sim{border-top-color:rgba(255,255,255,.08)}
 .pr-sim-d,.pr-note{color:#A79E92}
+.pair-go{background:rgba(217,178,106,.12);border-color:rgba(217,178,106,.35);color:#D9B26A}
+.pair-ol li,.pair-ul li{color:#A79E92}
+.pair-x{color:#C0A87A}
 </style>
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
 <script data-goatcounter="https://fung2222.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -1859,7 +1870,18 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <!-- ========== SOCIAL HUB ========== -->
  
  <!-- ========== SOCIAL ARTICLE ========== -->
- <section id="socialArticle" class="hidden">
+ <section id="pair" class="hidden">
+  <div class="page-hero">
+    <div class="page-hero-row">
+      <button type="button" class="page-back" onclick="goBack()">返回</button>
+      <h1 id="pairTitle">配對深入</h1>
+    </div>
+    <p class="page-hero-sub" id="pairCrumb">配對深入</p>
+  </div>
+  <div id="pairBody"></div>
+</section>
+
+<section id="socialArticle" class="hidden">
  <div class="page-hero">
  <div class="page-hero-row">
  <button type="button" class="page-back" onclick="goBack()">返回</button>
@@ -2384,11 +2406,11 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
 
+ <!-- 個人化報告（屬「你」嘅內容：要喺「與你的朋友配對」之前） -->
+ <div id="personalReport" class="mb-4"></div>
  <div class="result-divider"></div>
 
  <div class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 10-8 0"/><circle cx="12" cy="7" r="3"/><path d="M5 21v-1a5 5 0 015-5h4a5 5 0 015 5v1"/></svg>與你的朋友配對</div>
- <!-- 完整版 D 模組：個人化報告（Roy 2026-10-04 指定入口＝結果頁）-->
-        <div id="personalReport" class="mb-4"></div>
         <div id="compatibility" class="space-y-2 text-sm"></div>
  </div>
  </div>
@@ -2427,7 +2449,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
 <!-- ====================== 60 題港式情境題庫 ====================== -->
 <script src="data.js"></script>
-<script src="social.js"></script>
+<script src="pair-data.js"></script>
+   <script src="social.js"></script>
 <script src="voice-data.js"></script>
 <script src="premium-data.js"></script>
 <script src="type-icons.js"></script>
@@ -3141,6 +3164,8 @@ rKey: window._lastRomanceScenario,
 type: window._lastType,
 typeFrom: window._typeFrom || null,
 letter: window._lastLetter,
+pairA: window._pairA || null,
+pairB: window._pairB || null,
 articleType: window._lastArticleType,
 deepType: window._deepType || null,
 deepCh: (typeof window._deepCh === "number" ? window._deepCh : 0),
@@ -4751,7 +4776,10 @@ if(ct) compatHtml += `
  <div class="font-bold text-sm flex items-center gap-1.5"><span class="cmp-ico" style="color:${(window.PALETTE && window.PALETTE[c] ? window.PALETTE[c].c1 : "currentColor")}">${window.getTypeIcon ? window.getTypeIcon(c) : ""}</span><span>${c} · ${ct.cn}</span></div>
  <div class="text-xs text-gray-500">${ct.slogan}</div>
  </div>
+ <div class="text-right">
  <div class="text-xs text-accent font-bold">${window.typeCompatPct(type, c)}% 夾</div>
+ <button type="button" class="pair-go mt-1" onclick="openPair('${type}','${c}')">睇你哋點相處</button>
+ </div>
  </div>
  `;
  });
@@ -5392,6 +5420,7 @@ if(id === "type"){
 if(prev && prev.type){ openType(prev.type, prev.typeFrom); return; }
 if(typeof window.openHub === "function"){ openHub(); return; }
  }
+if(id === "pair" && prev && prev.pairA && prev.pairB){ window.openPair(prev.pairA, prev.pairB); return; }
 if(id === "letter"){
 if(prev && prev.letter){ openLetter(prev.letter); return; }
 if(typeof window.openHub === "function"){ openHub(); return; }
@@ -6497,6 +6526,40 @@ closeList();
 return html;
 };
 
+// ====================== 配對深入（B 模組，Roy 2026-10-04 批准）======================
+// 內容：window.PAIRS（pair-data.js）。寫法用型號唔用「你」→ 邊個型讀都唔會錯。
+window.pairKey = function(a, b){
+  const x = String(a || "").toUpperCase(), y = String(b || "").toUpperCase();
+  const P = window.PAIRS || {};
+  if(!x || !y) return null;
+  if(P[x + "|" + y]) return x + "|" + y;
+  if(P[y + "|" + x]) return y + "|" + x;
+  return null;
+};
+window.openPair = function(a, b){
+  const A = String(a || "").toUpperCase(), B = String(b || "").toUpperCase();
+  const body = document.getElementById("pairBody");
+  if(!body) return;
+  window._pairA = A; window._pairB = B;
+  const k = window.pairKey(A, B);
+  const TA = (window.TYPES || {})[A] || {}, TB = (window.TYPES || {})[B] || {};
+  document.getElementById("pairTitle").innerText = A + " × " + B;
+  document.getElementById("pairCrumb").innerText = "配對深入 / " + A + (TA.cn ? "（" + TA.cn + "）" : "") + " × " + B + (B !== A && TB.cn ? "（" + TB.cn + "）" : "");
+  if(!k){
+    body.innerHTML = '<div class="card p-6"><p class="text-sm text-gray-700 leading-relaxed">呢一對嘅深入內容仲喺度寫。而家已經有 <b>INFP</b> 同其他 15 型嘅配對，其他組合會陸續補上。</p></div>';
+    show("pair"); window.scrollTo(0, 0); return;
+  }
+  const d = (window.PAIRS || {})[k] || {};
+  const sec = function(t){ return '<div class="text-xs tracking-widest brand-gold font-bold mb-3">' + t + '</div>'; };
+  body.innerHTML =
+    '<div class="card p-6 mb-4"><div class="pair-pairhead">' + A + ' <span class="pair-x">×</span> ' + B + '</div>'
+    + '<p class="text-sm text-gray-700 leading-relaxed mt-3">' + (d.spark || "") + '</p></div>'
+    + '<div class="card p-6 mb-4">' + sec("最容易撞嘅 3 個位") + '<ol class="pair-ol">' + (d.clash || []).map(function(x){ return "<li>" + x + "</li>"; }).join("") + '</ol></div>'
+    + '<div class="card p-6 mb-4">' + sec("各自要讓一步") + '<ul class="pair-ul">' + (d.give || []).map(function(x){ return "<li>" + x + "</li>"; }).join("") + '</ul></div>'
+    + '<div class="card p-6 mb-4"><p class="text-sm font-bold leading-relaxed" style="color:var(--ink)">' + (d.sum || "") + '</p></div>'
+    + '<div class="card mb-4 softbox">' + '<span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span><p class="softbox-sub">想知道自己 MBTI 人格？</p><button type="button" class="softbox-btn" onclick="goPickVersion()">立即測試</button></div>';
+  show("pair"); window.scrollTo(0, 0);
+};
 window.openSocialArticle = function(scenarioKey, type){
 const article = window.SOCIAL[scenarioKey].articles[type];
 const T = window.TYPES[type];
