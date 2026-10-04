@@ -4531,7 +4531,7 @@ if(prevResult){ try{ await generateCardImage(); }catch(e){} }   // 還原返結�
  }catch(e){}
 };
 
-// ====================== 完整版 D 模組：個人化報告（入口：結果頁，Roy 2026-10-04 定）======================
+// ====================== 個人化報告（入口：結果頁，Roy 2026-10-04；同日改為免費：Sakinorva 等免費出型別排名）======================
 // 純函數／deterministic：只讀 calcScore() 已經算好嘅 r.pct／r.closeAxes／r.mbti，零 Math.random
 window.PR_AXES = [
   {k:"EI", a:"E",  b:"I", al:"E 外向", bl:"內向 I"},
@@ -4602,20 +4602,12 @@ window.renderPersonalReport = function(r){
     if(same) d = window.personalReport(ls);
     if(!d){ box.innerHTML = ""; return; }
   }
-  if(window.getTier() !== "full"){
-    box.innerHTML = '<div class="card p-5 softbox">'
-      + '<div class="softbox-title">完整版 · 你嘅個人化報告</div>'
-      + '<p class="softbox-sub">按你自己嘅答題計出嚟，而且唔會同其他人一樣：最似你嘅 3 個型、3 個只屬於你嘅盲點。（5 條軸嘅百分比同解釋已經免費開放。）</p>'
-      + '<button type="button" class="softbox-btn" onclick="unlockFull()">解鎖完整版</button>'
-      + '</div>';
-    return;
-  }
   const simRows = d.similar.map(function(o){
     const right = o.me ? "你嘅結果" : ("差 " + o.diff.length + " 個字母（" + o.diff.join("、") + "）");
     return '<div class="pr-sim"><span><span class="pr-sim-c">' + o.code + '</span> <span class="text-xs text-gray-500">' + o.name + '</span></span><span class="pr-sim-d">' + right + '</span></div>';
   }).join("");
   box.innerHTML = '<div class="card p-4">'
-    + '<div class="text-xs tracking-widest brand-gold font-bold mb-3">完整版 · 你嘅個人化報告</div>'
+    + '<div class="text-xs tracking-widest brand-gold font-bold mb-3">你嘅個人化報告</div>'
     + '<div class="sub-label">最似你嘅 3 個型</div>' + simRows
     + '<div class="sub-label mt-4">你嘅 3 個盲點</div>' + d.notes.map(function(n){ return '<p class="pr-note">' + n + '</p>'; }).join("")
     + '</div>';
@@ -4674,7 +4666,7 @@ const pctBlock = (_pct.EI ? `<div class="card p-4 mb-4">
  ${_row("T 思考", _pct.TF[0], "情感 F", _pct.TF[1], _ac.TF, "TF")}
  ${_row("J 判斷", _pct.JP[0], "感知 P", _pct.JP[1], _ac.JP, "JP")}
  ${_row("T 敏感", _pct.TA[0], "自信 A", _pct.TA[1], _ac.TA, "TA")}
- <div class="text-[10px] text-gray-500 leading-relaxed mt-1">以下五條軸嘅百分比同解釋，全部免費開放。百分比係你喺該軸兩邊嘅得分比例，唔代表好壞。中間幼線係 50%；分差 1 分以內嘅軸，我哋會下面另外提你。</div>${_pctNote}
+ <div class="text-[10px] text-gray-500 leading-relaxed mt-1">百分比係你喺該軸兩邊嘅得分比例，唔代表好壞。中間幼線係 50%；分差 1 分以內嘅軸，我哋會下面另外提你。</div>${_pctNote}
  <button type="button" class="mt-3 text-[11px] font-bold brand-gold" onclick="openMethod()">計分方法同限制 →</button>
  </div>` : _noPctNote);
 

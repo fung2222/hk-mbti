@@ -34,10 +34,9 @@ w.renderResult(JSON.parse(JSON.stringify(R)));
 let box=d.getElementById("personalReport");
 const locked=box.innerHTML;
 chk("★ 未解鎖：出咗 D 卡片", locked.length>0);
-chk("★ 未解鎖：有標題「完整版 · 你嘅個人化報告」", /完整版 · 你嘅個人化報告/.test(locked));
-chk("★ 未解鎖：有「解鎖完整版」掣（onclick=unlockFull()）", /onclick="unlockFull\(\)"[^>]*>解鎖完整版</.test(locked));
-chk("★ 未解鎖：洩漏檢查 —— 唔准出現任何百分比／型號／盲點",
-    !/%/.test(locked) && !/INTJ|INTP|INFJ/.test(locked) && !/盲點：/.test(locked), locked.replace(/\s+/g," ").slice(0,120));
+chk("★ 免費版：標題係「你嘅個人化報告」（冇「完整版」字眼）", /你嘅個人化報告/.test(locked) && !/完整版/.test(locked));
+chk("★ 免費版：已經冇「解鎖完整版」掣（2026-10-04 開放免費）", !/解鎖完整版/.test(locked) && !/unlockFull\(\)/.test(locked));
+chk("★ 免費版：直接出齊內容（3 相似型 ＋ 3 盲點），唔再鎖", (locked.match(/pr-sim-c/g)||[]).length===3 && (locked.match(/pr-note/g)||[]).length===3);
 
 // 已解鎖
 w.localStorage.setItem(w.TIER_KEY,"full");
@@ -152,18 +151,17 @@ w.renderResult(JSON.parse(JSON.stringify(R)));     // 免費版（未解鎖）
 const pdFree = d.getElementById("personalityDetail").innerHTML;
 chk("★ 免費版：5 條軸解釋全部出齊（唔止百分比）",
     /能量主要向內/.test(pdFree) && /你習慣跳去/.test(pdFree) && /邊個做法最合理/.test(pdFree) && /你鍾意有計劃/.test(pdFree) && /情緒接收強/.test(pdFree));
-chk("★ 免費版：明寫「全部免費開放」", /全部免費開放/.test(pdFree));
-chk("★ 免費版：仍然冇洩漏完整版內容（D 卡仲係鎖住）", !/pr-sim-c/.test(d.getElementById("personalReport").innerHTML));
+chk("★ 冇「全部免費開放」呢句宣傳（Roy：唔要）", !/全部免費開放/.test(pdFree) && !RAW.includes("全部免費開放"));
+chk("★ 免費版都有齊個人化報告（已開放免費）", /pr-sim-c/.test(d.getElementById("personalReport").innerHTML));
 w.localStorage.setItem(w.TIER_KEY, "full");
 w.renderResult(JSON.parse(JSON.stringify(R)));
 const dFull = d.getElementById("personalReport").innerHTML;
 chk("★ 完整版 D 卡：唔再重複 5 條軸（已經免費）", !/pr-axis/.test(dFull));
-chk("★ 完整版 D 卡：只賣「唔普通」嘅嘢（最似 3 型 ＋ 3 盲點）",
+chk("★ D 卡內容＝最似 3 型 ＋ 3 盲點",
     (dFull.match(/pr-sim-c/g) || []).length === 3 && (dFull.match(/pr-note/g) || []).length === 3);
 w.localStorage.removeItem(w.TIER_KEY);
 w.renderResult(JSON.parse(JSON.stringify(R)));
-chk("★ 鎖住嘅卡有講「5 條軸已經免費開放」（唔會呃人畀錢買免費嘢）",
-    /免費開放/.test(d.getElementById("personalReport").innerHTML));
+chk("★ 收費點仍然係 9 章深入分析（冇被拆走）", RAW.includes('i > 0 && window.getTier() !== "full"'));
 
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);
