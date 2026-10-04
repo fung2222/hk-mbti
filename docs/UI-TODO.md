@@ -91,6 +91,7 @@ app 用瀏覽器**原生** `confirm()` / `alert()` ✗ → Android WebView 自�
 | **50** | **修：舊紀錄（修復前）完全冇「傾向程度」** —— 加 ① `lastScoreObj()`（記憶體→`localStorage.hkmbti_last_score`，重開 app 都頂得住）② 同型 → 用最近一次分數並**標明「同型參考」**（唔冒充嗰次）③ 唔同型 → 出一句說明叫重做 ④ `renderResult` 唔准用無數字嘅 `r` 覆寫 `_lastScoreObj` | 2026-10-04 | 完成（`personal_report_test.js` 44/44）|
 | **51** | **定位改：維度 %＋逐條解釋改為永久免費**（Roy 2026-10-04：對手免費嘅普通嘢我哋都免費）—— `_row` 加軸 key 出解釋、D 卡抽走軸區塊並明寫「已免費開放」；新文件 `docs/FREE-VS-PAID.md`（紅線＋B/C/D 重訂） | 2026-10-04 | 完成（測試 50/50）|
 | **52** | **個人化報告（最似 3 型＋3 盲點）改為完全免費**（查證：Sakinorva 免費出每型分數排名／PersonalityMax 免費完整結果 → 收費太普通）＋抽走「全部免費開放」宣傳句；收費點收窄為 **9 章深入分析**（第 2–9 章） | 2026-10-04 | 完成（測試 50/50）|
+| **53** | **修：「S/N 軸接近中間」提示放錯位置**（Roy 2026-10-04 報）—— 本來喺「性格刻度」下面（唔關事），搬入「你嘅傾向程度」卡 5 條軸下面；順手修 TDZ（`closeNote` 定義要喺 `pctBlock` 之前） | 2026-10-04 | 完成（測試 54/54）|
 
 ## 測試（已永久保存入 repo）
 `sh tools/ui/run.sh` → **21 個** jsdom 回歸測試（app_feel 46、back_nav 29、backkey 30、boot_reload 25、dark_mode 60、dialogs_ab 30、hub_consolidation **117**、hub_tiles 18、letter_card 22、letter_career 9、letter_dim 5、**mobile_debug_fixes 28**、oneshot_delete 14、premium **173**、reel **31**、result_page **51**、share_card **23**、type_pick 15、type_tabs 87、version_card 15、wizard 14）

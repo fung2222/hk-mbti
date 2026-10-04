@@ -163,5 +163,18 @@ w.localStorage.removeItem(w.TIER_KEY);
 w.renderResult(JSON.parse(JSON.stringify(R)));
 chk("★ 收費點仍然係 9 章深入分析（冇被拆走）", RAW.includes('i > 0 && window.getTier() !== "full"'));
 
+
+// ───────── 七、S/N 等「接近中間」提示要放喺「你嘅傾向程度」卡（Roy 2026-10-04 報放錯位置）─────────
+w.localStorage.clear();
+w.renderResult({mbti:"INTJ-T", pct:{EI:[40,60], SN:[51,49], TF:[70,30], JP:[80,20], TA:[62,38]}, closeAxes:["S/N"], score:{}, version:"life", totalQ:60});
+const pdPos = d.getElementById("personalityDetail").innerHTML;
+chk("★ 「軸接近中間」提示真係出咗", /軸接近中間/.test(pdPos));
+chk("★ 提示放喺「你嘅傾向程度」卡（即喺「性格刻度」之前）",
+    pdPos.indexOf("軸接近中間") > 0 && pdPos.indexOf("軸接近中間") < pdPos.indexOf("性格刻度"),
+    "note=" + pdPos.indexOf("軸接近中間") + " 刻度=" + pdPos.indexOf("性格刻度"));
+chk("★ 提示喺 5 條軸下面（唔會插喺軸上面）",
+    pdPos.indexOf("軸接近中間") > pdPos.indexOf("T 自信") && pdPos.indexOf("軸接近中間") < pdPos.indexOf("計分方法同限制"));
+chk("★ 性格刻度嗰組唔再出現提示", pdPos.indexOf("性格刻度") > 0 && pdPos.slice(pdPos.indexOf("性格刻度")).indexOf("軸接近中間") === -1);
+
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);
