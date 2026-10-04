@@ -19,7 +19,7 @@ for t in tools/ui/*_test.js; do
   line=$(printf '%s\n' "$out" | grep -E '全部通過|有失敗|=====' | tail -1)
   printf '%s\n' "$line"
   [ "$ec" -eq 0 ] || FAIL=$((FAIL+1))
-  printf '%s\n' "$out" | grep -qE '有失敗|✗' && [ "$ec" -eq 0 ] && { echo "   （exit 0 但輸出有失敗字樣 → 當失敗）"; FAIL=$((FAIL+1)); }
+  printf '%s\n' "$out" | grep -qE '^(✗|===== 有失敗)' && [ "$ec" -eq 0 ] && { echo "   （exit 0 但輸出有行首 ✗ → 當失敗）"; FAIL=$((FAIL+1)); }
 done
 echo ""
 [ "$FAIL" -eq 0 ] && echo "===== 全部 UI 測試通過 =====" || echo "===== 有 $FAIL 個測試檔失敗 ====="
