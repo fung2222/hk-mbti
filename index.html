@@ -29,7 +29,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&text=MBEIJSFNTP-A&display=swap">
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+HK:wght@400;600;700;900&display=swap');
 :root{
  --gold:#D4A95F;
  --ink:#1a1a1a;
@@ -194,7 +194,7 @@ html.dk .dim-pair .vs{color:#A79E92}
 .ad-overlay{position:fixed;inset:0;background:rgba(30,42,59,.62);z-index:300;display:flex;align-items:center;justify-content:center;padding:26px;}
 .ad-card{background:#1E2A3B;border:1px solid rgba(212,169,95,.28);border-radius:22px;width:100%;max-width:360px;padding:30px 26px 22px;box-shadow:0 24px 60px rgba(0,0,0,.45);animation:adIn .22s ease-out;}
 @keyframes adIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
-.ad-title{font-size:22px;font-weight:800;color:#fff;letter-spacing:.4px;line-height:1.35;}
+.ad-title{font-size:22px;font-weight:700;color:#fff;letter-spacing:.4px;line-height:1.35;}
 
 .ad-body{margin-top:14px;font-size:15px;line-height:1.85;color:rgba(255,255,255,.72);}
 .ad-body:empty{display:none;}
@@ -280,10 +280,10 @@ html.dk .tier-btn.is-full .tier-dot{background:#D9B26A}
 .up-cmp th,.up-cmp td{padding:9px 8px;text-align:left;border-bottom:1px solid rgba(30,42,59,.1);vertical-align:top}
 .up-cmp th{font-weight:700;font-size:11px;letter-spacing:.08em;color:#8B6F3D}
 .up-cmp td:last-child,.up-cmp th:last-child{text-align:center;width:70px}
-.up-cmp .yes{color:var(--gold);font-weight:800}
+.up-cmp .yes{color:var(--gold);font-weight:700}
 .up-cmp .no{color:#B9B2A6}
 .up-price{font-size:30px;font-weight:900;letter-spacing:-.02em}
-.up-cta{width:100%;height:48px;border:0;border-radius:12px;background:var(--gold);color:#1E2A3B;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
+.up-cta{width:100%;height:48px;border:0;border-radius:12px;background:var(--gold);color:#1E2A3B;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
 .up-cta:active{transform:scale(.985)}
 .up-cta[disabled]{opacity:.65;cursor:default}
 html.dk .up-cta{background:#D9B26A;color:#12161C}
@@ -312,7 +312,7 @@ html.dk .deep-star svg{fill:#D9B26A}
 html.dk .deep-go{color:#D8C69E}
 .deep-code{color:var(--tc);font-size:19px;letter-spacing:-.01em}
 html.dk .deep-code{color:var(--tc-dk)}
-.home-acc-lock{margin-left:6px;font-size:10px;font-weight:800;color:#8B6F3D;background:rgba(212,169,95,.16);border-radius:5px;padding:2px 6px;vertical-align:2px}
+.home-acc-lock{margin-left:6px;font-size:10px;font-weight:700;color:#8B6F3D;background:rgba(212,169,95,.16);border-radius:5px;padding:2px 6px;vertical-align:2px}
 html.dk .home-acc-lock{color:#D8C69E;background:rgba(217,178,106,.18)}
 #deepChapterTitle{font-size:21px;white-space:normal;line-height:1.22;padding:0 3rem}
 html.dk .up-cmp th,html.dk .up-cmp td{border-bottom-color:rgba(255,255,255,.1)}
@@ -570,7 +570,7 @@ margin-right:11px;
 .result-more-btn{-webkit-appearance:none;appearance:none;font-family:inherit;cursor:pointer;
  display:inline-flex;align-items:center;justify-content:center;
  background:rgba(232,93,93,.09);border:1px solid rgba(232,93,93,.4);color:var(--accent);
- font-weight:800;font-size:12px;letter-spacing:.02em;padding:6px 13px;border-radius:999px;
+ font-weight:700;font-size:12px;letter-spacing:.02em;padding:6px 13px;border-radius:999px;
  line-height:1.2;transition:background .15s ease,transform .12s ease}
 .result-more-btn:hover{background:rgba(232,93,93,.16)}
 .result-more-btn:active{transform:scale(.97)}
@@ -4280,12 +4280,16 @@ try{ speakQuestionSet(q); prefetchNextVoice(); }catch(e){}
 };
 
 window.selectOpt = function(i){
+// 280ms 動畫期內再撳：唔可以再排一次 idx++（否則靜靜跳題）
+if(state._advancing) return;
+state._advancing = true;
 state.answers[state.idx] = i;
 document.querySelectorAll("#qOptions .option").forEach((el, j) => {
 el.classList.toggle("selected", j === i);
  });
 saveProgress();
 setTimeout(() => {
+state._advancing = false;
 const max = state.maxQ || (state.deck ? state.deck.length : 60);
 if(state.idx < max - 1){
 state.idx++;
@@ -4627,7 +4631,7 @@ if(ct) compatHtml += `
  <div class="font-bold text-sm flex items-center gap-1.5"><span class="cmp-ico" style="color:${(window.PALETTE && window.PALETTE[c] ? window.PALETTE[c].c1 : "currentColor")}">${window.getTypeIcon ? window.getTypeIcon(c) : ""}</span><span>${c} · ${ct.cn}</span></div>
  <div class="text-xs text-gray-500">${ct.slogan}</div>
  </div>
- <div class="text-xs text-accent font-bold">${Math.floor(Math.random()*15+85)}% 夾</div>
+ <div class="text-xs text-accent font-bold">${window.typeCompatPct(type, c)}% 夾</div>
  </div>
  `;
  });
@@ -6304,7 +6308,7 @@ html += "<li>" + bold(lines[0].replace(/^\d+[.、)]\s*/, "")) + "</li>";
 return;
  }
 closeList();
-html += "<p>" + bold(b.replace(/\n/g, "<br>")) + "</p>";
+html += "<p>" + bold(b).replace(/\n/g, "<br>") + "</p>";
  });
 closeList();
 return html;
@@ -6453,6 +6457,15 @@ const r = window.lastResult || "INTJ";
 openType(r.substring(0,4), "result");
 };
 
+// 維度 hero 底色：淺色用淺色版；黑夜用維度色低透明（否則淺底淺字睇唔到）。
+// 抽成函數係因為切主題（toggleTheme／跟系統）時要即刻重上色，唔可以淨係切 class。
+window._applyLetterHeroBg = function(){
+const l = window._lastLetter, L = l && window.LETTERS[l];
+const el = document.getElementById("letterHero");
+if(!L || !el) return;
+const _dk = document.documentElement.classList.contains("dk");
+el.style.background = _dk ? (L.color + "2E") : L.light;
+};
 window.openLetter = function(letter){
 const L = window.LETTERS[letter];
 if(!L) return;
@@ -6462,8 +6475,7 @@ window._lastLetter = letter;
  $("letterShort").innerText = L.short;
  $("letterBreadcrumb").innerText = "維度 / " + L.letter;
  // 維度 hero 底色：淺色模式用淺色版；黑暗模式用維度色低透明（否則淺底淺字睇唔到）
- const _dk = document.documentElement.classList.contains("dk");
-  $("letterHero").style.background = _dk ? (L.color + "2E") : L.light;
+  window._applyLetterHeroBg();
  $("letterDesc").innerText = L.desc;
  $("letterStrength").innerHTML = L.strength.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
  $("letterWeakness").innerHTML = L.weakness.map(s => `<span class="scenario-badge bg-soft text-ink">${s}</span>`).join("");
@@ -6805,6 +6817,7 @@ function toggleTheme(){
   document.documentElement.classList.toggle("dk", d);
   try{ localStorage.setItem("hkmbti_theme", d ? "dark" : "light"); }catch(e){}
   syncThemeBtn();
+  try{ window._applyLetterHeroBg(); }catch(e){}
 }
 syncThemeBtn();
 try{
@@ -6814,6 +6827,7 @@ try{
     if(picked) return;   // 用戶自己揀過就唔跟系統
     document.documentElement.classList.toggle("dk", e.matches);
     syncThemeBtn();
+    try{ window._applyLetterHeroBg(); }catch(err){}
   };
   themeMq.addEventListener ? themeMq.addEventListener("change", onSysTheme) : themeMq.addListener(onSysTheme);
 }catch(e){}
