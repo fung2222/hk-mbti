@@ -144,6 +144,16 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 }
 .ver-btn.ver-lit .ver-chev{transform:rotate(180deg);background:var(--gold);color:var(--ink)}
 .ver-btn.ver-lit .ver-arrow{transform:translateX(4px)}
+/* 完整版 D 模組：個人化報告（入口：結果頁，2026-10-04） */
+.pr-sim{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:7px 0;font-size:14px}
+.pr-sim + .pr-sim{border-top:1px solid rgba(30,42,59,.07)}
+.pr-sim-c{font-weight:900;color:var(--ink);letter-spacing:.02em}
+.pr-sim-d{font-size:11px;font-weight:700;color:#6b6560;text-align:right;line-height:1.5}
+.pr-note{position:relative;margin:0 0 8px;padding-left:15px;font-size:13px;line-height:1.75;color:#6b6560}
+.pr-note:last-child{margin-bottom:0}
+.pr-note:before{content:"";position:absolute;left:2px;top:9px;width:5px;height:5px;border-radius:999px;background:var(--gold)}
+.pr-axis{margin-top:10px}
+.pr-axis-t{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:4px}
 .stat-bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
 .stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
 .page-hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:#fff;padding:14px 16px 16px;margin:-24px -16px 16px}
@@ -697,6 +707,8 @@ html.dk .hub-mode-btn.is-on{color:var(--ink)}
 html.dk .hub-type-hint,html.dk .hub-scene-n{color:#A79E92}
 html.dk .hub-more-link,html.dk .hub-scene-back,html.dk .deep-ch,html.dk .deep-go{color:#D8C69E}
 html.dk .hub-row-chev{color:#C0A87A}
+.pr-sim + .pr-sim{border-top-color:rgba(255,255,255,.08)}
+.pr-sim-d,.pr-note{color:#A79E92}
 </style>
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
 <script data-goatcounter="https://fung2222.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -2375,7 +2387,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="result-divider"></div>
 
  <div class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 10-8 0"/><circle cx="12" cy="7" r="3"/><path d="M5 21v-1a5 5 0 015-5h4a5 5 0 015 5v1"/></svg>與你的朋友配對</div>
- <div id="compatibility" class="space-y-2 text-sm"></div>
+ <!-- 完整版 D 模組：個人化報告（Roy 2026-10-04 指定入口＝結果頁）-->
+        <div id="personalReport" class="mb-4"></div>
+        <div id="compatibility" class="space-y-2 text-sm"></div>
  </div>
  </div>
 
@@ -4517,6 +4531,87 @@ if(prevResult){ try{ await generateCardImage(); }catch(e){} }   // 還原返結�
  }catch(e){}
 };
 
+// ====================== 完整版 D 模組：個人化報告（入口：結果頁，Roy 2026-10-04 定）======================
+// 純函數／deterministic：只讀 calcScore() 已經算好嘅 r.pct／r.closeAxes／r.mbti，零 Math.random
+window.PR_AXES = [
+  {k:"EI", a:"E",  b:"I", al:"E 外向", bl:"內向 I"},
+  {k:"SN", a:"S",  b:"N", al:"S 實感", bl:"直覺 N"},
+  {k:"TF", a:"T",  b:"F", al:"T 思考", bl:"情感 F"},
+  {k:"JP", a:"J",  b:"P", al:"J 判斷", bl:"感知 P"},
+  {k:"TA", a:"T",  b:"A", al:"T 敏感", bl:"自信 A"}
+];
+window.PR_DOM   = { "EI_E":"你嘅能量主要向外：同人傾、邊做邊講，你反而愈做愈精神。", "EI_I":"你嘅能量主要向內：獨處、諗清楚先講，你先真正回氣。", "SN_S":"你信眼前睇到、做過嘅嘢多過推演——具體例子同步驟最令你安心。", "SN_N":"你習慣跳去「件事可以變成點」，眼前細節反而排第二。", "TF_T":"做決定時，你會先問「邊個做法最合理」，感受排第二。", "TF_F":"做決定時，你會先問「咁樣對人好唔好」，邏輯排第二。", "JP_J":"你鍾意有計劃、有 deadline、有收尾；未決定嘅事會令你唔安樂。", "JP_P":"你鍾意留住選項、邊做邊改；太早鎖死會令你想走。", "TA_T":"你情緒接收強、對壓力同批評特別有感——呢條係天線，唔係弱點。", "TA_A":"你情緒穩定、抗壓高，唔容易俾外界拉走。" };
+window.PR_CLOSE = { "EI":"你 E／I 幾乎一半一半——你會覺得自己「唔似典型外向或內向」。呢個唔係冇性格，係你兩邊都用到：人多會充電，但都要自己一個嘅時間回氣。", "SN":"你 S／N 幾乎一半一半——你既睇實眼前，又會跳去想可能性；聽人講嘢時，你會同時想「佢講緊咩」同「佢想點」。", "TF":"你 T／F 幾乎一半一半——做決定時你會講道理，但又唔想傷人，所以最易覺得自己「兩邊唔係人」。你嘅難處唔係冇主見，係你兩邊都睇到。", "JP":"你 J／P 幾乎一半一半——你鍾意有計劃，但同時需要留一手；所以你經常「計劃好之後即場改」，呢個係彈性，唔係冇紀律。", "TA":"你 T／A 幾乎一半一半——你一時好淡定、一時又會被一句話刺到；呢個係你嘅敏感度，唔係情緒化。" };
+window.PR_MID   = { "EI":"你 E／I 偏中性——你唔係派對動物，亦唔係完全唔出聲；你係睇場合同人先決定開唔開。", "SN":"你 S／N 偏中性——你睇實細節之餘又會推演，所以兩邊嘅人都覺得你明白佢。", "TF":"你 T／F 偏中性——你講道理但唔冷血，所以你成日做朋友之間嘅中間人。", "JP":"你 J／P 偏中性——你做到計劃，又接受到臨時改，所以你成日幫人補位。", "TA":"你 T／A 偏中性——你唔算易爆，但都唔係完全無感。" };
+window.PR_SHARP = { "EI_E":"你嘅外向最明顯——你嘅本能係「講出嚟先諗清」。但遇到極內向嘅人，你會覺得佢「點解唔講」，其實佢只係未諗完。", "EI_I":"你嘅內向最明顯——你嘅本能係「諗清先講」。但遇到極外向嘅人，你會覺得佢「點解乜都講」，其實佢只係用講嘢嚟諗。", "SN_S":"你嘅實感最明顯——你信做過嘅嘢。但遇到直覺型，你會覺得佢「離地」，其實佢係先睇方向。", "SN_N":"你嘅直覺最明顯——你信方向同可能性。但遇到實感型，你會覺得佢「太保守」，其實佢係要落地。", "TF_T":"你嘅思考最明顯——你嘅本能係先講邏輯。但遇到情感型，你會覺得佢「唔講道理」，其實佢係先講感受。", "TF_F":"你嘅情感最明顯——你嘅本能係先顧人。但遇到思考型，你會覺得佢「唔近人情」，其實佢係想解決件事。", "JP_J":"你嘅判斷最明顯——你嘅本能係收尾同定案。但遇到感知型，你會覺得佢「拖」，其實佢係想留多啲選擇。", "JP_P":"你嘅感知最明顯——你嘅本能係留選項。但遇到判斷型，你會覺得佢「太急」，其實佢係想早啲安心。" };
+window.PR_BLIND = { "EI_E":"你嘅第二強項係外向——注意：你會唔覺意用「傾」去消化壓力，令身邊內向嘅人覺得好攰。", "EI_I":"你嘅第二強項係內向——注意：你會唔覺意收埋自己，令外向嘅人以為你有事、或者唔想理佢。", "SN_S":"你嘅第二強項係實感——注意：你會唔覺意太快講「唔得㗎」，扼殺咗未成形嘅新念頭。", "SN_N":"你嘅第二強項係直覺——注意：你會唔覺意跳步，令同事或家人覺得你「講嘢無尾」。", "TF_T":"你嘅第二強項係思考——注意：你會唔覺意答得太直接，對方聽到嘅係「你唔在乎我」。", "TF_F":"你嘅第二強項係情感——注意：你會唔覺意攬晒上身，應承咗啲自己其實做唔到嘅事。", "JP_J":"你嘅第二強項係判斷——注意：你會唔覺意想幫人「搞掂」，但對方可能淨係想呻下。", "JP_P":"你嘅第二強項係感知——注意：你會唔覺意拖到最後，令要配合你嘅人好緊。" };
+window.personalReport = function(r){
+  const x = r || window._lastScoreObj;
+  if(!x || !x.pct) return null;
+  const type4 = String(x.mbti || "").substring(0,4);
+  const axes = window.PR_AXES.map(function(ax){
+    const v = (x.pct && x.pct[ax.k]) || [50,50];
+    return {k:ax.k, a:ax.a, b:ax.b, al:ax.al, bl:ax.bl, pa:v[0], pb:v[1], d:Math.abs(v[0]-v[1])};
+  });
+  const main = axes.slice(0,4);
+  // 相似度：用「你嘅實際字母」做基準（唔可以假設你偏向每軸第一邊）
+  const sc = function(code){ let hit=0,sum=0; main.forEach(function(ax,i){
+    const mine = type4.charAt(i);
+    const minePct = (mine===ax.a) ? ax.pa : ax.pb;
+    const otherPct = (mine===ax.a) ? ax.pb : ax.pa;
+    if(code.charAt(i)===mine){ hit++; sum+=minePct; } else { sum+=otherPct; }
+  }); return {hit:hit,sum:sum}; };
+  const all = (window.TYPE_ORDER || []).slice().map(function(c){ const o=sc(c); return {code:c, hit:o.hit, sum:o.sum}; });
+  all.sort(function(m,n){ return (n.hit-m.hit) || (n.sum-m.sum) || (m.code<n.code?-1:1); });
+  const similar = all.slice(0,3).map(function(o){
+    const T = (window.TYPES || {})[o.code] || {};
+    const diff = [];
+    for(let i=0;i<4;i++){ const mine=type4.charAt(i), other=o.code.charAt(i);
+      if(mine!==other){ const ax=main[i];
+        diff.push(((mine===ax.a)?ax.al:ax.bl) + "／" + ((other===ax.a)?ax.al:ax.bl)); } }
+    return {code:o.code, name:T.name||"", diff:diff, me:(o.code===type4)};
+  });
+  // 3 條盲點：① 接近中間嘅軸（一半一半）或偏中性嘅軸 ② 最明顯嘅軸（本能 = 盲點來源） ③ 第二明顯嘅軸（做過龍嘅地方）
+  const bySharp = main.slice().sort(function(m,n){ return (n.d-m.d) || (m.k<n.k?-1:1); });
+  const notes = [];
+  const closeOnes = main.filter(function(ax){ return ax.d <= 12; }).sort(function(m,n){ return m.d-n.d; });
+  if(closeOnes.length) notes.push(window.PR_CLOSE[closeOnes[0].k]);
+  else { const mid = main.filter(function(ax){ return ax.d <= 30; }).sort(function(m,n){ return m.d-n.d; })[0];
+    if(mid) notes.push(window.PR_MID[mid.k]); }
+  notes.push(window.PR_SHARP[bySharp[0].k + "_" + (bySharp[0].pa>=bySharp[0].pb?bySharp[0].a:bySharp[0].b)]);
+  notes.push(window.PR_BLIND[bySharp[1].k + "_" + (bySharp[1].pa>=bySharp[1].pb?bySharp[1].a:bySharp[1].b)]);
+  return {axes:axes, similar:similar, notes:notes, type4:type4};
+};
+window.renderPersonalReport = function(r){
+  const box = document.getElementById("personalReport");
+  if(!box) return;
+  const d = window.personalReport(r);
+  if(!d){ box.innerHTML = ""; return; }
+  if(window.getTier() !== "full"){
+    box.innerHTML = '<div class="card p-5 softbox">'
+      + '<div class="softbox-title">完整版 · 你嘅個人化報告</div>'
+      + '<p class="softbox-sub">按你自己嘅答題計出嚟：最似你嘅 3 個型、3 個只屬於你嘅盲點、你 5 條軸逐條代表咩。</p>'
+      + '<button type="button" class="softbox-btn" onclick="unlockFull()">解鎖完整版</button>'
+      + '</div>';
+    return;
+  }
+  const simRows = d.similar.map(function(o){
+    const right = o.me ? "你嘅結果" : ("差 " + o.diff.length + " 個字母（" + o.diff.join("、") + "）");
+    return '<div class="pr-sim"><span><span class="pr-sim-c">' + o.code + '</span> <span class="text-xs text-gray-500">' + o.name + '</span></span><span class="pr-sim-d">' + right + '</span></div>';
+  }).join("");
+  const axisRows = d.axes.map(function(ax){
+    const domIsA = ax.pa >= ax.pb, dom = domIsA ? ax.a : ax.b, domPct = domIsA ? ax.pa : ax.pb;
+    const side = domIsA ? ax.al : ax.bl;
+    return '<div class="pr-axis"><div class="pr-axis-t"><span style="color:var(--ink)">' + side + ' ' + domPct + '%</span><span style="color:#6b6560">' + (domIsA?ax.pb:ax.pa) + '% ' + (domIsA?ax.bl:ax.al).replace(/^\S+ /,"") + '</span></div>'
+      + '<p class="pr-note">' + (window.PR_DOM[ax.k + "_" + dom] || "") + '</p></div>';
+  }).join("");
+  box.innerHTML = '<div class="card p-4">'
+    + '<div class="text-xs tracking-widest brand-gold font-bold mb-3">完整版 · 你嘅個人化報告</div>'
+    + '<div class="sub-label">最似你嘅 3 個型</div>' + simRows
+    + '<div class="sub-label mt-4">你嘅 3 個盲點</div>' + d.notes.map(function(n){ return '<p class="pr-note">' + n + '</p>'; }).join("")
+    + '<div class="sub-label mt-4">你 5 條軸各自代表咩</div>' + axisRows
+    + '</div>';
+};
 window.renderResult = function(r){
  // T/A 軸（第 5 條軸）：同完成時間同一行，唔另開 badge（卡入面已有 chip）
 try{
@@ -4600,6 +4695,7 @@ let detailHtml = `
  ${prosCons}
  `;
  $("personalityDetail").innerHTML = detailHtml;
+try{ window._lastScoreObj = r; window.renderPersonalReport(r); }catch(e){}
 
 const type = r.mbti.substring(0,4);
  // 場景配對：按字母重疊計分（唔再要求全中，否則 ENTJ 等會零著燈）
@@ -5715,6 +5811,7 @@ if(cta){ cta.disabled = true; cta.textContent = "解鎖中…"; }
 try{ localStorage.setItem(window.TIER_KEY, "full"); }catch(e){}
 window.renderTier();
 window.renderUpgradeState();
+try{ if(window._lastScoreObj) window.renderPersonalReport(window._lastScoreObj); }catch(e){}
 if(cta) cta.disabled = false;
 setTimeout(function(){ window.openDeep(); }, 260);
 };
