@@ -15,9 +15,10 @@ FAIL=0
 for t in tools/ui/*_test.js; do
   printf '%-42s ' "$(basename "$t")"
   out=$(node "$t" 2>&1)
+  ec=$?
   line=$(printf '%s\n' "$out" | grep -E '全部通過|有失敗|=====' | tail -1)
   printf '%s\n' "$line"
-  printf '%s\n' "$out" | grep -q '全部通過' || FAIL=$((FAIL+1))
+  [ "$ec" -eq 0 ] || FAIL=$((FAIL+1))
 done
 echo ""
 [ "$FAIL" -eq 0 ] && echo "===== 全部 UI 測試通過 =====" || echo "===== 有 $FAIL 個測試檔失敗 ====="

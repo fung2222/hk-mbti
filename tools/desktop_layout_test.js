@@ -56,9 +56,24 @@ for (const m of mediaBlocks) for (const r of m[2].matchAll(/([^{}]+)\{([^{}]*)\}
 }
 check("冇覆寫 section（#home 等）嘅 display 而唔寫 :not(.hidden)（會令 .hidden 失效）", hiddenBreakers.length === 0, hiddenBreakers.join(" | "));
 check("桌面：跑馬燈後 16 張複本隱藏", /html\.dt \.home-type-reel \.hub-type-card:nth-child\(n\+17\)\{display:none\}/.test(layer));
-check("桌面：16 型 4 欄 grid", /html\.dt \.home-type-reel\{[^}]*display:grid;grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/.test(layer));
+check("桌面／平板：16 型係橫向可滑滑輪，唔係 grid",
+  /html\.dt \.home-type-reel\{[^}]*display:flex[^}]*overflow-x:auto/.test(layer) &&
+  !/html\.dt \.home-type-reel\{[^}]*display:grid/.test(layer));
+check("滑輪左右箭嘴冇被桌面層收埋", !/html\.dt \.home-type-nav\{[^}]*display:\s*none/.test(layer));
+check("桌面／平板 #app 冇 padding-bottom:72px 死白", !/padding-bottom:\s*72px/.test(layer));
+check("寬度分級：平板 920 / 桌面 1120 / 1280 / 1440 各唔同",
+  ["--dt-w:min(920px,calc(100% - 40px))", "--dt-w:min(1120px,calc(100% - 64px))",
+   "--dt-w:min(1200px,calc(100% - 80px))", "--dt-w:min(1280px,calc(100% - 96px))"].every(s => layer.includes(s)));
 check("桌面：scenes-grid 真係 display:grid（舊版漏咗）", /html\.dt \.scenes-grid\{display:grid/.test(layer));
-check("桌面：探索更多真係 display:grid 4 欄", /html\.dt \.home-acc\{display:grid;grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/.test(layer));
+check("桌面：探索更多 5 欄（5 格唔會剩一格）", /html\.dt \.home-acc\{[^}]*grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/.test(layer));
+check("平板：探索更多 6 欄 span 2，尾兩格置中（3+2）",
+  /html\.dt \.home-acc\{[^}]*grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/.test(layer) &&
+  /html\.dt \.home-acc-item:nth-child\(5\)\{grid-column:2 \/ span 2\}/.test(layer) &&
+  /html\.dt \.home-acc-item:nth-child\(6\)\{grid-column:4 \/ span 2\}/.test(layer));
+check("內容頁唔再鎖 720px 窄柱", !/section:not\(#home\)\{max-width:720px/.test(layer));
+check("結果頁桌面用 grid 分欄", /html\.dt #result:not\(\.hidden\)\{[^}]*display:grid/.test(layer));
+check("百科格桌面 8 欄（唔係手機 4 欄放大）", /html\.dt #hub \.hub-type-grid[^{]*\{[^}]*repeat\(8,/.test(layer));
+check("深入分析目錄桌面／平板 3 欄（9 章唔會剩一格）", /html\.dt #deepList\{[^}]*repeat\(3,/.test(layer));
 check("桌面：導覽高亮用 :has()（唔使 JS）", /html\.dt:has\(#hub:not\(\.hidden\)\) #dtNav \[data-nav="hub"\]/.test(layer));
 check("手機摺疊 JS 仍然存在（toggleHomeAcc）", /toggleHomeAcc = function/.test(html));
 
@@ -91,9 +106,14 @@ setTimeout(() => {
   const nav = d.getElementById("dtNav");
   check("#dtNav 係 body 直系子女（sticky 全闊）", !!(nav && nav.parentElement === d.body));
   const links = nav ? nav.querySelectorAll(".dt-nav-links [data-nav]") : [];
-  check("#dtNav 4 個入口都有 data-nav（2026-10-01 清走光譜／相處攻略）", links.length === 4);
+  check("#dtNav 6 個入口都有 data-nav（加計分方法、私隱；冇光譜／相處）", links.length === 6, String(links.length));
+  check("#dtNav 7 個項目（6 個入口 + 開始測試）",
+    nav.querySelectorAll(".dt-nav-links [data-nav], .dt-nav-cta").length === 7);
+  check("#dtNav 有計分方法同限制同私隱聲明",
+    !!nav.querySelector('[data-nav="method"][onclick*="openMethod"]') &&
+    !!nav.querySelector('[data-nav="privacy"][onclick*="openPrivacy"]'));
   check("#dtNav 入口函數都存在（冇 stale 光譜／相處）",
-    ["openHub", "openAbout", "goPickVersion", "openPrivacy"].every(f => typeof dom.window[f] === "function") &&
+    ["openHub", "openAbout", "goPickVersion", "openPrivacy", "openMethod"].every(f => typeof dom.window[f] === "function") &&
     !!nav.querySelector('a[href="./stats.html"]') && !!nav.querySelector('a[href="./record.html"]') &&
     !nav.querySelector('[data-nav="spectrum"]') && !nav.querySelector('[data-nav="social"]'));
   check("#dtHeroCta 喺 .home-hero-copy 內（開始測試／性格百科）",
@@ -110,6 +130,16 @@ setTimeout(() => {
   check("場景卡 4 張", d.querySelectorAll(".scenes-grid .scene-cell").length === 4);
   check("探索更多已收窄（2026-10-01 方案 A 後：5 格，場景攻略已收埋入百科）", d.querySelectorAll("#homeAccordion .home-acc-item").length === 5, d.querySelectorAll("#homeAccordion .home-acc-item").length);
   check("桌面維持 4×2：deep 格喺桌面層隱藏", /html\.dt \.home-acc-item\[data-acc="deep"\]\{display:none\}/.test(layer));
+  check("鍵盤左右可以切滑輪（只喺 html.dt）", /ArrowLeft/.test(html) && /classList\.contains\("dt"\)/.test(html));
+  for (const f of ["record.html", "stats.html", "privacy.html"]) {
+    const sat = fs.readFileSync(path.join(REPO, f), "utf8");
+    const satLayer = (sat.match(/<style id="desktop-layer">([\s\S]*?)<\/style>/) || [])[1] || "";
+    check(f + " 有桌面層，而且寬度跟主站分級（920 / 1120）",
+      satLayer.includes("--dt-w:min(920px,calc(100% - 40px))") &&
+      satLayer.includes("--dt-w:min(1120px,calc(100% - 64px))"));
+  }
+  check("紀錄頁桌面歷史卡兩欄（平板仍然一欄）",
+    /html\.dt #historyList\{grid-template-columns:1fr 1fr\}/.test(fs.readFileSync(path.join(REPO, "record.html"), "utf8")));
 
   // ---------- 3. 開關 ----------
   const root = d.documentElement;

@@ -236,7 +236,7 @@ setTimeout(async ()=>{
   chk('第 1 章：下一章可用', $('#deepNext').disabled===false);
   chk('章節標示係完整版內容', /完整版/.test($('#deepChapterHead').textContent), $('#deepChapterHead').textContent);
   chk('章節內文有渲染（<p> 段落）', /<p>/.test($('#deepChapterBody').innerHTML), $('#deepChapterBody').innerHTML.slice(0,50));
-  chk('★ 章節頁型別卡有該型漸變色（唔係淨灰）', /rgb\(107, 78, 158\)/.test($('#deepChapterHero').style.background), $('#deepChapterHero').style.background);
+  chk('★ 章節頁型別卡有該型漸變色（唔係淨灰）', /linear-gradient/.test($('#deepChapterHero').style.background) && (/rgb\(107,\s*78,\s*158\)/.test($('#deepChapterHero').style.background) || /#6B4E9E/i.test($('#deepChapterHero').style.background)), $('#deepChapterHero').style.background);
   chk('型別目錄標題都有型色', /--tc:#6B4E9E/.test($('#deepList').innerHTML));
   w.deepStep(1);
   chk('撳下一章 → 2 / 9', $('#deepChapterCrumb').textContent==='INTJ · 2 / 9', $('#deepChapterCrumb').textContent);

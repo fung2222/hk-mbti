@@ -696,183 +696,265 @@ html.dk .hub-row-chev{color:#C0A87A}
 
 <style id="desktop-layer">
 /* ===================================================================
-   桌面（≥1024px）／平板（768–1023px）排版層 —— v3（2026-09-28 重做）
+   平板（768-1023）＋桌面（>=1024，含 1280 / 1440）排版層
    鐵律：
-   ① 每條規則都要 @media (min-width:…) ＋ html.dt 雙重把關（.dt 由 <head> gate script 加）
-   ② 唯一例外：下面一行「新增元素預設隱藏」—— 手機完全見唔到、一個 pixel 都唔郁
-   ③ 會被 JS 用 .hidden 收埋嘅元素（#home、各 section…）唔准覆寫 display；
-      真係要覆寫就一定要寫 :not(.hidden)（舊版 html.dt #home{display:grid} 蓋過 .hidden，
-      令主頁永遠收唔埋、測試頁／結果頁跌咗落主頁下面）
-   ④ 唔用 calc(50% - 50vw) 全闊色帶：桌面 #app 本身就係全闊，內容用 --dt-w 置中
+   1. 每條規則都要 @media (min-width) ＋ html.dt 雙重把關
+   2. 唯一例外：下面一行「新增元素預設隱藏」—— 手機完全見唔到
+   3. 會被 JS 用 .hidden 收埋嘅 section 唔准覆寫 display；
+      真係要覆寫就一定要寫 :not(.hidden)
+   4. 唔用 calc(50% - 50vw) 全闊色帶
+   5. 主頁 16 型必須係橫向可滑滑輪，唔准改成純 grid
+   兩個層唔係同一張放大：
+   - 平板：置中海報（文案置中、滑輪喺下面）、兩行導覽、探索更多 3+2
+   - 桌面：左右分欄 hero、單行導覽、探索更多 5 欄、內頁多分欄
    =================================================================== */
 #dtNav,#dtHeroCta,#dtTypeRows,#dtFoot{display:none}
 
-/* ── 平板 768–1023px：乾淨置中單欄（內容 720px；唔做兩欄），只修正跟手機版唔夾嘅位 ── */
-@media (min-width:768px) and (max-width:1023.98px){
-  html.dt #app{max-width:none}   /* 全闊：hero／跑馬燈／情景帶貼邊，同手機一樣唔會喺兩邊切斷 */
-  html.dt #app > section:not(#home),html.dt #homeBelow,html.dt #resumeBanner,html.dt #home > div.mb-4,
-  html.dt .home-more-up-wrap,html.dt .home-hero > div:first-child{width:100%;max-width:688px;margin-left:auto;margin-right:auto}
-  html.dt .home-hero{min-height:min(100dvh,880px);
-    background:radial-gradient(closest-side at 50% 42%,rgba(212,169,95,.42),rgba(212,169,95,.12) 55%,rgba(250,247,240,0))}
-  html.dt .scenes-head,html.dt .scenes-grid{max-width:600px}
-  html.dt .scenes-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 32px}
-  html.dt #versionList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-  html.dt #versionList > *{margin:0 !important}
-}
-
-/* ── 桌面 ≥1024px ── */
-@media (min-width:1024px){
-  html.dt{--dt-w:min(1200px,calc(100% - 80px))}
-
-  /* 外框：#app 全闊（冇 max-width／左右 padding），每段內容自己用 --dt-w 置中 */
-  html.dt #app{max-width:none;padding-left:0;padding-right:0;padding-bottom:72px}
-  /* 頁尾貼底：內容短（例如測試頁）都唔會浮喺半空 */
+/* ── 共用基礎（html.dt 且 >=768；平板同桌面都會中，細節由下面兩層覆寫） ── */
+@media (min-width:768px){
+  html.dt{--dt-w:min(920px,calc(100% - 40px));--dt-read:760px}
+  html.dt #app{max-width:none;padding-left:0;padding-right:0;padding-bottom:0}
   html.dt body{display:flex;flex-direction:column;min-height:100vh}
   html.dt body > #app{flex:1 0 auto;width:100%}
 
-  /* ── ① 頂部導覽（sticky）＋ 現時畫面高亮（:has，唔使 JS） ── */
   html.dt #dtNav{display:block;position:sticky;top:0;z-index:60;
-    background:rgba(250,247,240,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    background:rgba(250,247,240,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
     border-bottom:1px solid #EDE6D8}
-  html.dt .dt-nav-in{width:var(--dt-w);margin:0 auto;height:64px;display:flex;align-items:center;gap:32px}
+  html.dt .dt-nav-in{width:var(--dt-w);margin:0 auto;display:flex;align-items:center;gap:12px}
   html.dt .dt-nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);flex-shrink:0}
   html.dt .dt-nav-brand img{width:32px;height:32px;border-radius:9px}
   html.dt .dt-nav-brand span{font-size:18px;font-weight:900;letter-spacing:-.01em}
-  html.dt .dt-nav-links{display:flex;align-items:center;gap:30px;margin-left:auto;height:100%}
+  html.dt .dt-nav-links{display:flex;align-items:center;min-width:0}
   html.dt .dt-nav-links a,html.dt .dt-nav-links button{position:relative;display:flex;align-items:center;height:100%;
-    background:none;border:0;padding:0;cursor:pointer;font:inherit;font-size:15px;font-weight:700;
-    color:#6b6560;text-decoration:none;transition:color .15s}
+    background:none;border:0;padding:0;cursor:pointer;font:inherit;font-size:14px;font-weight:700;
+    color:#6b6560;text-decoration:none;white-space:nowrap;flex-shrink:0}
   html.dt .dt-nav-links a:hover,html.dt .dt-nav-links button:hover{color:var(--ink)}
-  html.dt .dt-nav-links a::after,html.dt .dt-nav-links button::after{content:"";position:absolute;left:0;right:0;bottom:-1px;
-    height:2px;border-radius:2px;background:var(--gold);transform:scaleX(0);transition:transform .2s}
+  html.dt .dt-nav-links a::after,html.dt .dt-nav-links button::after{content:"";position:absolute;left:0;right:0;bottom:0;
+    height:2px;border-radius:2px;background:var(--gold);transform:scaleX(0)}
   html.dt:has(#hub:not(.hidden)) #dtNav [data-nav="hub"],
   html.dt:has(#type:not(.hidden)) #dtNav [data-nav="hub"],
-  html.dt:has(#letter:not(.hidden)) #dtNav [data-nav="hub"]{color:var(--ink)}
+  html.dt:has(#letter:not(.hidden)) #dtNav [data-nav="hub"],
+  html.dt:has(#about:not(.hidden)) #dtNav [data-nav="about"],
+  html.dt:has(#method:not(.hidden)) #dtNav [data-nav="method"],
+  html.dt:has(#privacy:not(.hidden)) #dtNav [data-nav="privacy"]{color:var(--ink)}
   html.dt:has(#hub:not(.hidden)) #dtNav [data-nav="hub"]::after,
   html.dt:has(#type:not(.hidden)) #dtNav [data-nav="hub"]::after,
-  html.dt:has(#letter:not(.hidden)) #dtNav [data-nav="hub"]::after{transform:scaleX(1)}
+  html.dt:has(#letter:not(.hidden)) #dtNav [data-nav="hub"]::after,
+  html.dt:has(#about:not(.hidden)) #dtNav [data-nav="about"]::after,
+  html.dt:has(#method:not(.hidden)) #dtNav [data-nav="method"]::after,
+  html.dt:has(#privacy:not(.hidden)) #dtNav [data-nav="privacy"]::after{transform:scaleX(1)}
+  html.dt .dt-nav-tools{display:flex;align-items:center;gap:8px;flex-shrink:0}
   html.dt .dt-nav-cta,html.dt .dt-cta-gold{background:var(--gold);color:var(--ink);border:0;cursor:pointer;
-    font-family:inherit;font-weight:900;border-radius:12px;box-shadow:0 6px 18px rgba(212,169,95,.32);
-    transition:background .15s,transform .15s,box-shadow .15s}
-  html.dt .dt-nav-cta:hover,html.dt .dt-cta-gold:hover{background:#c89a4d;transform:translateY(-1px);box-shadow:0 10px 24px rgba(212,169,95,.38)}
-  html.dt .dt-nav-cta{flex-shrink:0;padding:10px 20px;font-size:14.5px}
+    font-family:inherit;font-weight:900;border-radius:12px}
+  html.dt .dt-nav-cta:hover,html.dt .dt-cta-gold:hover{background:#c89a4d}
+  html.dt .dt-nav-cta{flex-shrink:0;padding:10px 16px;font-size:14px}
 
-  /* ── ② Hero：左 5/12 文案；右 7/12 = 16 型 4×4 色牌（主角） ── */
   html.dt #home{overflow-x:clip}
-  html.dt .home-hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:56px;align-items:center;
-    width:var(--dt-w);min-height:0;margin:-24px auto 0;padding:72px 0 96px;background:none}
-  html.dt .home-hero > div:first-child{display:none}          /* 原本 logo 列：導覽已經有 */
-  html.dt .home-more-down{display:none}                       /* ▼：桌面唔使 */
-  html.dt .home-hero-copy{grid-column:1;grid-row:1;flex:none;position:relative;
-    text-align:left;align-items:flex-start;justify-content:center}
-  html.dt .home-hero-copy::before{content:"";position:absolute;z-index:-1;pointer-events:none;
-    left:-18%;top:-30%;width:120%;height:160%;
-    background:radial-gradient(closest-side,rgba(212,169,95,.30),rgba(212,169,95,.10) 55%,rgba(212,169,95,0))}
-  html.dt .home-hero-mbti{font-size:clamp(88px,8.6vw,140px);line-height:.92}
-  html.dt #app .home-hero-copy p{font-size:19px !important;line-height:1.9;color:#5c564f;margin-top:28px;text-align:left}
-  html.dt #dtHeroCta{display:flex;gap:26px;align-items:center;margin-top:40px}
-  html.dt .dt-cta-gold{padding:15px 30px;font-size:16px}
+  html.dt .home-hero{width:var(--dt-w);min-height:0;margin:0 auto;padding:28px 0 20px;background:none;box-sizing:border-box}
+  html.dt .home-hero > div:first-child{display:none}
+  html.dt .home-more-down{display:none}
+  html.dt .home-hero-copy{position:relative}
+  html.dt .home-hero-mbti{line-height:.92}
+  html.dt #dtHeroCta{display:flex;gap:22px;align-items:center;margin-top:28px}
+  html.dt .dt-cta-gold{padding:14px 26px;font-size:16px}
   html.dt .dt-cta-ghost{background:none;border:0;color:var(--ink);font-family:inherit;font-size:16px;font-weight:900;
-    cursor:pointer;padding:6px 2px;border-bottom:2px solid var(--gold);transition:color .15s}
-  html.dt .dt-cta-ghost:hover{color:#8B6F3D}
+    cursor:pointer;padding:6px 2px;border-bottom:2px solid var(--gold)}
+  html.dt .dt-cta-ghost:hover{color:#A08A5C}
 
-  html.dt .home-type-reel-wrap{grid-column:2;grid-row:1;margin:0;position:relative;isolation:isolate;
-    display:grid;grid-template-columns:minmax(0,1fr)}
-  html.dt .home-type-reel-wrap::before{content:"";position:absolute;z-index:-1;pointer-events:none;
-    left:-10%;right:-10%;top:-16%;bottom:-16%;
-    background:radial-gradient(closest-side,rgba(212,169,95,.34),rgba(212,169,95,.12) 60%,rgba(212,169,95,0))}
-  html.dt .home-type-nav{display:none}
-  html.dt .home-type-reel{grid-column:1;grid-row:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;
-    overflow:visible !important;padding:0;scroll-snap-type:none;scroll-behavior:auto}
-  html.dt .home-type-reel .hub-type-card{flex:none;width:auto;aspect-ratio:1/1;border-radius:16px;padding:10px 8px 14px;gap:5px}
-  html.dt .home-type-reel .hub-type-card:nth-child(n+17){display:none}   /* 跑馬燈後 16 張複本：桌面唔顯示 */
-  html.dt .home-type-reel .hub-type-card:hover:not(.is-on){transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.22)}
-  html.dt .home-type-reel .hub-type-card:hover .hub-type-go{opacity:1;pointer-events:auto}
-  html.dt .home-type-reel .hub-type-card{font-size:clamp(24px,2.1vw,32px)}
+  /* 16 型滑輪：橫向可滑，左右箭嘴常駐；後 16 張複本收埋（有限 16 張，唔係跑馬燈 grid） */
+  html.dt .home-type-reel-wrap{position:relative;display:flex;flex-direction:column;min-width:0;max-width:100%;margin:0}
+  html.dt .home-type-nav{opacity:1;pointer-events:auto;background:rgba(26,26,26,.48)}
+  html.dt .home-type-reel{display:flex;overflow-x:auto;overflow-y:hidden;gap:12px;min-width:0;width:100%;max-width:100%;
+    scroll-snap-type:x mandatory;scroll-behavior:auto;scrollbar-width:none;
+    padding:8px 2px 14px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+  html.dt .home-type-reel::-webkit-scrollbar{display:none}
+  html.dt .home-type-reel.is-auto{scroll-snap-type:x mandatory}
+  html.dt .home-type-reel .hub-type-card{font-size:clamp(22px,2vw,30px);flex:0 0 118px;width:118px;aspect-ratio:1/1;border-radius:14px;scroll-snap-align:start;padding:8px 6px 12px}
+  html.dt .home-type-reel .hub-type-card:nth-child(n+17){display:none}
+  html.dt .home-type-reel .hub-type-card:hover:not(.is-on){transform:translateY(-3px)}
   html.dt .home-type-reel .hub-type-code{font-size:1em}
   html.dt .home-type-reel .hub-type-cn{font-size:.5em}
-  html.dt .home-type-reel .hub-type-go{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);margin:0;
-    font-size:12px;padding:3px 10px;cursor:pointer;white-space:nowrap}
+  html.dt #dtTypeRows{display:flex;order:-1;gap:14px;margin:0 0 8px;flex-wrap:wrap}
+  html.dt #dtTypeRows span{font-size:12px;font-weight:700;letter-spacing:.12em;color:#A08A5C}
 
-  /* ── ③ 測試版本：獨立一段；4 張等高（1024–1279 2×2） ── */
-  html.dt #homeBelow{width:var(--dt-w);margin:0 auto;padding:0 0 96px;background:none;border-radius:0;box-shadow:none;
-    scroll-margin-top:88px}
-  html.dt #versionList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
-  html.dt #versionList > *{margin:0 !important;width:auto}
-  html.dt .ver-btn{min-height:112px;padding:24px 24px;border-radius:16px}
-  html.dt .ver-btn:not(.ver-lit):hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.08)}
-  html.dt #versionList .text-\[15px\]{font-size:18px}
-  html.dt #resumeBanner{width:var(--dt-w);margin:-72px auto 72px}
-
-  /* 三段標題（版本／情景／探索）：由細金字 kicker 改做大字標題 */
+  html.dt #homeBelow{width:var(--dt-w);margin:8px auto 0;padding:8px 0 40px;background:none;border-radius:0;box-shadow:none;scroll-margin-top:88px}
+  html.dt #versionList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  html.dt #versionList > *{margin:0;width:auto}
+  html.dt .ver-btn{min-height:104px;padding:20px 20px;border-radius:16px}
+  html.dt #resumeBanner{width:var(--dt-w);margin:0 auto 28px}
   html.dt #app #homeBelow > .text-xs:first-child,
   html.dt #app .scenes-head > .text-xs:first-child,
-  html.dt #app .home-acc-label{font-size:26px !important;line-height:1.3;letter-spacing:.01em;font-weight:900;
-    color:var(--ink);margin:0 0 28px;padding:0}
-  html.dt #app .scenes-head > .text-xs:first-child{margin-bottom:10px}
+  html.dt #app .home-acc-label{font-size:22px;line-height:1.3;letter-spacing:.01em;font-weight:900;color:var(--ink);margin:0 0 18px;padding:0}
   html.dt #homeBelow > .text-xs:first-child .scenes-title-ico,
   html.dt .scenes-head .scenes-title-ico,
-  html.dt .home-acc-label .scenes-title-ico{width:24px;height:24px;margin-right:10px;color:var(--gold);vertical-align:-4px}
+  html.dt .home-acc-label .scenes-title-ico{width:22px;height:22px;margin-right:8px;color:var(--gold);vertical-align:-4px}
 
-  /* ── ④ 港式日常情景：真全闊 --soft 色帶（#app 已全闊，唔使 vw），4 欄 ── */
-  html.dt .scenes-bleed{margin:0;padding:88px 0 96px;background:var(--soft)}
-  html.dt .scenes-head{max-width:none;width:var(--dt-w);margin:0 auto 32px}
-  html.dt #app .scenes-head > .text-sm{font-size:17px !important;font-weight:400;color:#6b6560;margin:0}
-  html.dt .scenes-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;max-width:none;width:var(--dt-w);margin:0 auto}
-  html.dt .scene-cell{gap:10px;padding:26px 24px 28px;border-radius:16px;background:rgba(255,255,255,.78);
-    box-shadow:0 4px 24px rgba(0,0,0,.04)}
-  html.dt .scene-title{flex-direction:column;align-items:flex-start;gap:14px}
-  html.dt .scene-ico{width:32px;height:32px}
+  html.dt .scenes-bleed{margin:0;padding:48px 0 52px;background:var(--soft)}
+  html.dt .scenes-head{max-width:none;width:var(--dt-w);margin:0 auto 20px}
+  html.dt #app .scenes-head > .text-sm{font-size:16px;font-weight:400;color:#6b6560;margin:0}
+  html.dt .scenes-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:none;width:var(--dt-w);margin:0 auto}
+  html.dt .scene-cell{gap:10px;padding:22px 20px 24px;border-radius:16px;background:rgba(255,255,255,.78)}
   html.dt .scene-name{font-size:18px;font-weight:900}
-  html.dt .scene-sub{font-size:15px;line-height:1.75}
+  html.dt .scene-sub{font-size:15px;line-height:1.7;color:#6b6560}
 
-  /* ── ⑤ 探索更多：4×2 方塊，等高，連結貼底；唔摺疊（手機風琴 JS 照留） ── */
-  html.dt #home > div.mb-4{width:var(--dt-w);margin:0 auto;padding:88px 0 8px}
-  html.dt .home-acc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;
-    background:none;border-radius:0;box-shadow:none;overflow:visible}
+  html.dt #home > div.mb-4{width:var(--dt-w);margin:0 auto;padding:48px 0 8px}
+  html.dt .home-acc{display:grid;gap:16px;background:none;border-radius:0;box-shadow:none;overflow:visible}
   html.dt .home-acc-label{grid-column:1/-1}
-  html.dt #app .home-acc-label{margin-bottom:8px}
-  html.dt .home-acc-item{display:flex;flex-direction:column;border:0;border-radius:16px;background:#fff;
-    padding:24px 24px 22px;box-shadow:0 4px 24px rgba(0,0,0,.05)}
-  /* 人格深入分析：桌面 4×2 維持 8 格（新入口唔加入桌面 grid） */
   html.dt .home-acc-item[data-acc="deep"]{display:none}
-  html.dt .home-acc-head{pointer-events:none;cursor:default;padding:0;gap:0;background:none !important}
+  html.dt .home-acc-item{display:flex;flex-direction:column;border:0;border-radius:16px;background:#fff;padding:22px 20px 20px}
+  html.dt .home-acc-head{pointer-events:none;cursor:default;padding:0;gap:0;background:none}
   html.dt .home-acc-chev{display:none}
-  html.dt .home-acc-title{font-size:18px;font-weight:900;letter-spacing:0}
-  html.dt .home-acc-item .home-acc-body{flex:1;display:flex;flex-direction:column;align-items:flex-start;
-    max-height:none;opacity:1;overflow:visible;padding:10px 0 0;transition:none}
-  html.dt .home-acc-desc{flex:1;font-size:15px;line-height:1.75;margin:0 0 18px}
-  html.dt .home-acc-go{margin-top:auto;padding:8px 16px;font-size:14px}
-  html.dt .home-more-up-wrap{display:none}                     /* ▲ Top：導覽 sticky，唔使 */
+  html.dt .home-acc-title{font-size:17px;font-weight:900;letter-spacing:0}
+  html.dt .home-acc-item .home-acc-body{flex:1;display:flex;flex-direction:column;align-items:flex-start;max-height:none;opacity:1;overflow:visible;padding:8px 0 0}
+  html.dt .home-acc-desc{flex:1;font-size:15px;line-height:1.7;margin:0 0 14px;color:#6b6560}
+  html.dt .home-acc-go{margin-top:auto;padding:8px 14px;font-size:14px}
+  html.dt .home-more-up-wrap{display:none}
 
-  /* ── ⑥ 頁尾（桌面限定） ── */
-  html.dt #dtFoot{display:block;border-top:1px solid #EDE6D8}
-  html.dt .dt-foot-in{width:var(--dt-w);margin:0 auto;height:72px;display:flex;align-items:center;justify-content:space-between;
-    font-size:14px;color:#8a8174}
-  html.dt .dt-foot-links{display:flex;gap:26px}
-  html.dt .dt-foot-links a,html.dt .dt-foot-links button{background:none;border:0;padding:0;font:inherit;color:#8a8174;
-    cursor:pointer;text-decoration:none}
+  html.dt #dtFoot{display:block;border-top:1px solid #EDE6D8;background:var(--paper)}
+  html.dt .dt-foot-in{width:var(--dt-w);margin:0 auto;min-height:56px;height:auto;padding:16px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:14px;color:#6b6560}
+  html.dt .dt-foot-links{display:flex;gap:22px;flex-wrap:wrap}
+  html.dt .dt-foot-links a,html.dt .dt-foot-links button{background:none;border:0;padding:0;font:inherit;font-weight:600;color:#6b6560;cursor:pointer;text-decoration:none}
   html.dt .dt-foot-links a:hover,html.dt .dt-foot-links button:hover{color:var(--ink)}
 
-  /* ── ⑦ 其他畫面：720px 置中欄；深藍頁頭（margin:-24px -16px）剛好同欄一樣闊 ── */
-  html.dt #app > section:not(#home){max-width:720px;margin-left:auto;margin-right:auto;padding-left:16px;padding-right:16px}
-  html.dt #app > section:not(#home) .page-hero{border-radius:0 0 18px 18px}
+  /* 內頁：脫離 448 / 720 窄柱。長文用 --dt-read，畫廊用 --dt-w */
+  html.dt #app > section:not(#home){max-width:var(--dt-w);margin-left:auto;margin-right:auto;padding-left:0;padding-right:0;padding-bottom:28px}
+  html.dt #test,html.dt #profile,html.dt #about,html.dt #method,html.dt #privacy,html.dt #upgrade,html.dt #dims{max-width:var(--dt-read)}
+  html.dt #app > section:not(#home) .page-hero{margin:0 0 20px;border-radius:18px;padding:18px 22px 16px}
+  html.dt .page-hero-row{gap:12px}
+  html.dt .page-hero-row h1{position:static;padding:0;font-size:20px;line-height:1.35;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  html.dt .page-hero-sub{font-size:14px;text-align:left;margin:8px 0 0}
+  html.dt .page-menu-wrap{display:none}
+  html.dt #app > section:not(#home) .text-sm{font-size:16px}
+  html.dt #app > section:not(#home) .text-xs{font-size:14px}
+  html.dt #app > section:not(#home) .text-\[10px\],
+  html.dt #app > section:not(#home) .text-\[11px\]{font-size:13px}
+  html.dt .article-guide-body p,html.dt .article-guide-body li{font-size:17px;line-height:1.8}
+  html.dt .hub-mode-btn{font-size:15px;padding:10px 14px}
+  html.dt .type-tab-switch .hub-mode-btn{font-size:15px;padding:10px 12px}
+  html.dt #hub > .hub-mode-switch{max-width:440px;margin-left:auto;margin-right:auto}
+  html.dt #type > .type-tab-switch,html.dt .type-tab-switch{max-width:560px;margin-left:auto;margin-right:auto}
+  html.dt .hub-bleed,html.dt .result-bleed{margin-left:0;margin-right:0;border-radius:18px}
+  html.dt .hub-bleed-inner,html.dt .result-bleed-inner{max-width:none;width:100%}
+  html.dt .hub-type-hint,html.dt .scene-go-d,html.dt .deep-ch{font-size:13px}
+  html.dt .deep-t{font-size:16px}
+  html.dt #typeHero,html.dt #socialArticleHero,html.dt #romanceArticleHero,html.dt #deepChapterHero,html.dt #letterHero{padding:32px 28px;border-radius:20px}
+  html.dt #typeHero .type-hero-row,html.dt #socialArticleHero .type-hero-row,html.dt #romanceArticleHero .type-hero-row,html.dt #deepChapterHero .type-hero-row{max-width:680px;margin:0 auto}
+  html.dt #typeBig,html.dt #socialArticleType,html.dt #romanceArticleType,html.dt #deepChapterType{font-size:56px}
+  html.dt #typeName,html.dt #socialArticleCn,html.dt #romanceArticleCn,html.dt #deepChapterCn{font-size:22px}
+  html.dt #typeSlogan{font-size:16px}
+  html.dt #letterBig{font-size:80px}
+  html.dt #letterTitle{font-size:28px}
+  html.dt .type-nav{width:40px;height:40px}
+  html.dt .type-nav svg{width:26px;height:26px}
+  html.dt #qText{font-size:20px}
+  html.dt .option{font-size:16px;padding:1.05rem 1.25rem}
+  html.dt #deepList{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  html.dt #deepList > .card:first-child{grid-column:1/-1}
+  html.dt #deepList > .deep-item{margin:0;width:auto}
+  html.dt #deepList > .deep-foot-row{grid-column:1/-1}
+  html.dt .deep-nav-btn{height:46px;font-size:15px}
+  html.dt #shareHint,html.dt #shareStatus{font-size:13px}
+  html.dt .softbox-title,html.dt .hub-sec-title{font-size:20px}
+  html.dt .sub-label{font-size:16px}
 }
 
-/* ── 大螢幕 ≥1280px：版本卡一行 4 張；16 型左邊加氣質組別標籤 ── */
+/* ── 平板 768-1023：置中海報，滑輪喺文案下面；探索更多 3+2 ── */
+@media (min-width:768px) and (max-width:1023.98px){
+  html.dt{--dt-w:min(920px,calc(100% - 40px));--dt-read:760px}
+  html.dt .dt-nav-in{flex-wrap:wrap;height:auto;padding:10px 0 8px;gap:8px 12px}
+  html.dt .dt-nav-links{order:5;flex:1 0 100%;margin-left:0;height:40px;gap:18px;overflow-x:auto;scrollbar-width:none}
+  html.dt .dt-nav-cta{margin-left:auto}
+  html.dt .home-hero{display:flex;flex-direction:column;align-items:stretch;padding:36px 0 12px}
+  html.dt .home-hero-copy{text-align:center;align-items:center}
+  html.dt .home-hero-copy::before{content:"";position:absolute;z-index:-1;pointer-events:none;left:10%;right:10%;top:-20%;height:140%;
+    background:radial-gradient(closest-side,rgba(212,169,95,.28),rgba(212,169,95,0))}
+  html.dt .home-hero-mbti{font-size:clamp(64px,10vw,96px);text-align:center}
+  html.dt #app .home-hero-copy p{font-size:17px;line-height:1.8;color:#6b6560;margin-top:16px;text-align:center}
+  html.dt #dtHeroCta{justify-content:center}
+  html.dt .home-type-reel-wrap{width:100%;margin-top:28px}
+  html.dt #dtTypeRows{justify-content:center}
+  html.dt .home-acc{grid-template-columns:repeat(6,minmax(0,1fr))}
+  html.dt .home-acc-item{grid-column:span 2}
+  html.dt .home-acc-item:nth-child(5){grid-column:2 / span 2}
+  html.dt .home-acc-item:nth-child(6){grid-column:4 / span 2}
+  html.dt #hub .hub-type-grid,html.dt #deepList .hub-type-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  html.dt #socialArticle,html.dt #romanceArticle,html.dt #deepChapter{max-width:min(840px,var(--dt-w))}
+}
+
+/* ── 桌面 >=1024：左右分欄 hero、單行導覽、探索更多 5 欄、內頁多分欄 ── */
+@media (min-width:1024px){
+  html.dt{--dt-w:min(1120px,calc(100% - 64px));--dt-read:800px}
+  html.dt .dt-nav-in{flex-wrap:nowrap;height:64px;padding:0;gap:16px}
+  html.dt .dt-nav-links{order:0;flex:1 1 auto;width:auto;margin-left:auto;height:100%;gap:14px;overflow-x:auto;scrollbar-width:none}
+  html.dt .dt-nav-links::-webkit-scrollbar{display:none}
+  html.dt .dt-nav-cta{margin-left:0;padding:10px 18px}
+  html.dt .home-hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:48px;align-items:center;padding:48px 0 36px}
+  html.dt .home-hero-copy{grid-column:1;grid-row:1;text-align:left;align-items:flex-start;justify-content:center}
+  html.dt .home-hero-copy::before{content:"";position:absolute;z-index:-1;pointer-events:none;left:-12%;top:-28%;width:120%;height:160%;
+    background:radial-gradient(closest-side,rgba(212,169,95,.30),rgba(212,169,95,0))}
+  html.dt .home-hero-mbti{font-size:clamp(76px,7.2vw,112px);text-align:left}
+  html.dt #app .home-hero-copy p{font-size:18px;line-height:1.85;color:#6b6560;margin-top:22px;text-align:left}
+  html.dt #dtHeroCta{justify-content:flex-start;margin-top:32px}
+  html.dt .home-type-reel-wrap{grid-column:2;grid-row:1;margin:0}
+  html.dt #dtTypeRows{justify-content:flex-end}
+  html.dt .home-type-reel .hub-type-card{flex-basis:124px;width:124px}
+  html.dt .scenes-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+  html.dt .scenes-bleed{padding:64px 0 68px}
+  html.dt .home-acc{grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+  html.dt #app #homeBelow > .text-xs:first-child,
+  html.dt #app .scenes-head > .text-xs:first-child,
+  html.dt #app .home-acc-label{font-size:26px;margin-bottom:22px}
+  html.dt #hub .hub-type-grid,html.dt #deepList .hub-type-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:8px}
+  html.dt #hubDims .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  html.dt #hubSceneList{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+  html.dt #hubSceneList > .card{margin:0}
+  html.dt #typeBig,html.dt #socialArticleType,html.dt #romanceArticleType,html.dt #deepChapterType{font-size:64px}
+  html.dt #letter:not(.hidden){display:grid;grid-template-columns:minmax(260px,340px) minmax(0,1fr);gap:16px 28px;align-items:start}
+  html.dt #letter > .page-hero{grid-column:1/-1}
+  html.dt #letterHero{grid-column:1;grid-row:2 / span 5}
+  html.dt #letter > .softbox{grid-column:1/-1}
+  html.dt #letterBig{font-size:96px}
+  html.dt #typeTabBasic:not(.hidden){display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:16px;align-items:start}
+  html.dt #typeTabBasic > .article-guide,html.dt #typeTabBasic > #typeProsCons{grid-column:1/-1}
+  html.dt #typeSceneList{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+  html.dt #typeSceneList > .text-xs{grid-column:1/-1}
+  html.dt #typeSceneList > .card{margin:0}
+  html.dt .article-guide{max-width:var(--dt-read)}
+  html.dt #type .article-guide,html.dt #letter .article-guide{margin-left:auto;margin-right:auto}
+  html.dt .article-guide-body p,html.dt .article-guide-body li{font-size:18px;line-height:1.85}
+  html.dt #socialArticle,html.dt #romanceArticle,html.dt #deepChapter{max-width:min(860px,var(--dt-w))}
+  html.dt #result:not(.hidden){display:grid;grid-template-columns:minmax(280px,380px) minmax(0,1fr);column-gap:36px;align-items:start;
+    grid-template-areas:"hero hero" "meta analysis" "card analysis" "btns analysis" "status analysis" "hint analysis" "scene scene" "cta cta" "note note"}
+  html.dt #result > .page-hero{grid-area:hero}
+  html.dt #result > .text-center{grid-area:meta}
+  html.dt #result > .mx-auto{grid-area:card;width:100%;max-width:360px;justify-self:center}
+  html.dt #result > .mb-2{grid-area:btns}
+  html.dt #result > #shareStatus{grid-area:status}
+  html.dt #result > #shareHint{grid-area:hint}
+  html.dt #result > .result-bleed{grid-area:analysis;margin:0}
+  html.dt #result > .card.p-5{grid-area:scene}
+  html.dt #result > .softbox{grid-area:cta}
+  html.dt #result > p{grid-area:note}
+  html.dt #qText{font-size:22px}
+  html.dt .option{font-size:17px}
+}
+
+/* ── >=1280：版本卡一行 4 張、關係卡 4 欄、再闊一檔 ── */
 @media (min-width:1280px){
+  html.dt{--dt-w:min(1200px,calc(100% - 80px));--dt-read:820px}
+  html.dt .dt-nav-links{gap:20px}
+  html.dt .dt-nav-links a,html.dt .dt-nav-links button{font-size:15px}
+  html.dt .home-hero{column-gap:64px}
+  html.dt .home-type-reel .hub-type-card{flex-basis:136px;width:136px}
   html.dt #versionList{grid-template-columns:repeat(4,minmax(0,1fr))}
-  html.dt .home-hero{column-gap:72px}
-  html.dt .home-type-reel-wrap{grid-template-columns:auto minmax(0,1fr);column-gap:20px}
-  html.dt .home-type-reel{grid-column:2}
-  html.dt .home-type-reel .hub-type-card{aspect-ratio:5/4}
-  html.dt #dtTypeRows{display:grid;grid-column:1;grid-row:1;grid-template-rows:repeat(4,minmax(0,1fr));row-gap:14px}
-  html.dt #dtTypeRows span{align-self:center;text-align:right;font-size:13px;font-weight:700;letter-spacing:.14em;color:#8a7a5a}
+  html.dt .type-rel-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 
-/* ── 超闊 ≥1440px：內容闊 1280 ── */
+/* ── >=1440：內容闊 1280，閱讀欄再鬆一檔 ── */
 @media (min-width:1440px){
-  html.dt{--dt-w:min(1280px,calc(100% - 96px))}
+  html.dt{--dt-w:min(1280px,calc(100% - 96px));--dt-read:840px}
+  html.dt .home-type-reel .hub-type-card{flex-basis:144px;width:144px}
+  html.dt .home-hero-mbti{font-size:120px}
 }
 </style>
 
@@ -1018,6 +1100,12 @@ html.dk .pros-box.is-wk .pros-ico{stroke:#A79E92}
 html.dk .deep-foot-btn{background:var(--dk-card);border-color:var(--dk-line);color:var(--ink)}
 html.dk .deep-foot-btn:hover{background:var(--dk-hover)}
 html.dk .type-rel-item{color:#A79E92}
+html.dk.dt #dtNav{background:rgba(18,22,28,.92);border-bottom-color:rgba(236,231,222,.13)}
+html.dk.dt #dtFoot{background:var(--paper);border-top-color:rgba(236,231,222,.13)}
+html.dk.dt .dt-foot-in,html.dk.dt .dt-foot-links a,html.dk.dt .dt-foot-links button{color:#A79E92}
+html.dk.dt #app .home-hero-copy p{color:#A79E92}
+html.dk.dt #dtTypeRows span{color:#C0A87A}
+html.dk.dt .dt-cta-ghost:hover{color:#C0A87A}
 
 </style>
 </head>
@@ -1031,6 +1119,12 @@ html.dk .type-rel-item{color:#A79E92}
    <button type="button" data-nav="about" onclick="openAbout()">關於港式 MBTI</button>
    <a href="./stats.html" data-nav="stats">香港16型統計</a>
    <a href="./record.html" data-nav="record">我的紀錄</a>
+   <button type="button" data-nav="method" onclick="openMethod()">計分方法同限制</button>
+   <button type="button" data-nav="privacy" onclick="openPrivacy()">私隱聲明</button>
+  </span>
+  <span class="dt-nav-tools">
+   <button type="button" class="tier-btn" id="dtTierBtn" onclick="openUpgrade()" aria-label="免費版"><span class="tier-dot"></span><span id="dtTierLabel">免費版</span></button>
+   <button type="button" class="home-menu-btn theme-btn" id="dtThemeBtn" onclick="toggleTheme()" aria-label="切換日頭 / 黑夜模式"></button>
   </span>
   <button type="button" class="dt-nav-cta" onclick="goPickVersion()">開始測試</button>
  </div>
@@ -2302,6 +2396,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="dt-foot-in">
   <span>港式 MBTI · 版本 v2.0</span>
   <span class="dt-foot-links">
+   <button type="button" onclick="openMethod()">計分方法同限制</button>
    <button type="button" onclick="openPrivacy()">私隱聲明</button>
    <a href="./stats.html">香港統計</a>
    <a href="./record.html">我的紀錄</a>
@@ -5567,6 +5662,12 @@ const full = window.getTier() === "full";
 l.textContent = full ? "完整版" : "免費版";
 b.classList.toggle("is-full", full);
 b.setAttribute("aria-label", full ? "完整版 · 睇人格深入分析" : "免費版 · 睇完整版有咩");
+const db = document.getElementById("dtTierBtn"), dl = document.getElementById("dtTierLabel");
+if(db && dl){
+dl.textContent = l.textContent;
+db.classList.toggle("is-full", full);
+db.setAttribute("aria-label", b.getAttribute("aria-label"));
+}
 // 「探索更多」內嘅入口同步（免費用戶顯示「完整版」鎖標籤）
 };
 window.renderUpgradeState = function(){
@@ -6505,15 +6606,18 @@ if(w > 0){
 }
  };
 const tick = () => {
+const onDt = document.documentElement.classList.contains("dt");
 if(!paused && !window._homeReelHold){
-let v = AUTO_V;
+let v = onDt ? 0 : AUTO_V;
 if(Math.abs(spinV) > AUTO_V){
   v = spinV;
   spinV *= 0.955;                              // 快速轉之後慢慢減速 → 停返自轉速度
   if(Math.abs(spinV) <= AUTO_V) spinV = 0;
 }
+if(v){
 reel.scrollLeft += v;
-wrapLoop();
+if(!onDt) wrapLoop();
+}
  }
 requestAnimationFrame(tick);
  };
@@ -6553,6 +6657,19 @@ reel.classList.add("is-auto");
 hideSoon();
  });
  });
+document.addEventListener("keydown", ev => {
+if(!document.documentElement.classList.contains("dt")) return;
+if(ev.key !== "ArrowLeft" && ev.key !== "ArrowRight") return;
+const home = document.getElementById("home");
+if(!home || home.classList.contains("hidden")) return;
+const ae = document.activeElement;
+if(ae && (ae.tagName === "INPUT" || ae.tagName === "TEXTAREA" || ae.tagName === "SELECT" || ae.isContentEditable)) return;
+ev.preventDefault();
+spinV = (ev.key === "ArrowLeft" ? -1 : 1) * 26;
+paused = false;
+clearTimeout(resumeT);
+reel.classList.add("is-auto");
+});
 document.addEventListener("visibilitychange", () => {
 if(document.hidden) pauseAuto();
 else resumeAuto();
@@ -6679,9 +6796,11 @@ function syncThemeBtn(){
   var b = document.getElementById("themeBtn");
   var m = document.querySelector('meta[name="theme-color"]');
   if(m) m.setAttribute("content", themeIsDark() ? "#12161C" : "#1E2A3B");
-  if(!b) return;
-  b.innerHTML = themeIsDark() ? THEME_SUN : THEME_MOON;
-  b.setAttribute("aria-label", themeIsDark() ? "轉日頭模式" : "轉黑夜模式");
+  var icon = themeIsDark() ? THEME_SUN : THEME_MOON;
+  var label = themeIsDark() ? "轉日頭模式" : "轉黑夜模式";
+  if(b){ b.innerHTML = icon; b.setAttribute("aria-label", label); }
+  var d = document.getElementById("dtThemeBtn");
+  if(d){ d.innerHTML = icon; d.setAttribute("aria-label", label); }
 }
 function toggleTheme(){
   var d = !themeIsDark();

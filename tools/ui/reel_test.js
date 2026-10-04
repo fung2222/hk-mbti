@@ -50,7 +50,7 @@ setTimeout(()=>{
   chk('reel 仍然係 overflow-x:auto + 隱藏 scrollbar', /\.home-type-reel\{[^}]*overflow-x:auto/.test(src));
   chk('仍然有 is-auto class（自動模式）', /reel\.classList\.add\("is-auto"\)/.test(src));
   chk('左右箭嘴仍然存在', !!$('.home-type-nav.is-l') && !!$('.home-type-nav.is-r'));
-  chk('桌面層轉輪規則冇被郁（html.dt .home-type-reel）', /html\.dt \.home-type-reel\{grid-column:1;grid-row:1;display:grid/.test(src));
+  chk('桌面層轉輪維持橫向可滑（唔係 grid）', /html\.dt \.home-type-reel\{[^}]*display:flex[^}]*overflow-x:auto/.test(src) && !/html\.dt \.home-type-reel\{[^}]*display:grid/.test(src));
   chk('桌面隱藏複本規則仍在（nth-child(n+17)）', /html\.dt \.home-type-reel \.hub-type-card:nth-child\(n\+17\)\{display:none\}/.test(src));
 
   // ---------- jsdom 真跑：32 張卡（16 + 16 複本 = 無限輪基礎）----------

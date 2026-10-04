@@ -116,6 +116,45 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
    把 app 自己用咗 viewport 單位嘅規則還原成裝置真實值（--dm-vw／--dm-vh 由 script 寫入），
    其他一律唔動 → 還原出嚟同正常手機版一模一樣。 */
 </style>
+<style id="desktop-layer">
+/* 衛星頁桌面／平板層：只喺 html.dt 生效，手機唔郁。唔加 dtNav（呢頁冇 openX 函數，用返自己嘅 hero）。 */
+#dtNav,#dtHeroCta,#dtTypeRows,#dtFoot{display:none}
+@media (min-width:768px){
+  html.dt{--dt-w:min(920px,calc(100% - 40px));--dt-read:760px}
+  html.dt .hero{padding:22px 0 18px}
+  html.dt .hero-row{max-width:var(--dt-w);margin:0 auto;min-height:48px}
+  html.dt .hero-row h1{font-size:22px}
+  html.dt .hero p,html.dt .hero-sub{font-size:15px}
+  html.dt .wrap,html.dt main{max-width:var(--dt-read);padding:24px 8px 56px}
+  html.dt .section-title{max-width:var(--dt-w);margin:32px auto 10px;font-size:22px}
+  html.dt .section-note{max-width:var(--dt-w);margin:0 auto 14px;font-size:15px;color:#6b6560}
+  html.dt #historyList{max-width:var(--dt-w);margin:0 auto;display:grid;grid-template-columns:1fr;gap:12px;padding:0 8px}
+  html.dt .history-item{margin:0}
+  html.dt .history-name{font-size:18px}
+  html.dt .history-mbti{font-size:15px;color:#6b6560}
+  html.dt .stat-grid{max-width:var(--dt-w);margin:0 auto;padding:0 8px}
+  html.dt .summary-card,html.dt .softbox{max-width:var(--dt-w);margin-left:auto;margin-right:auto}
+  html.dt .empty{font-size:16px;color:#6b6560}
+  html.dt .wrap .text-xs,html.dt main .text-xs{font-size:14px}
+  html.dt main h1{font-size:28px}
+  html.dt main h2{font-size:20px}
+  html.dt main p,html.dt main li{font-size:17px;line-height:1.8}
+}
+@media (min-width:1024px){
+  html.dt{--dt-w:min(1120px,calc(100% - 64px));--dt-read:800px}
+  html.dt .wrap,html.dt main{max-width:var(--dt-read)}
+  html.dt #historyList{grid-template-columns:1fr 1fr}
+  html.dt .section-title{font-size:26px}
+  html.dt .hero-row h1{font-size:24px}
+}
+@media (min-width:1280px){
+  html.dt{--dt-w:min(1200px,calc(100% - 80px));--dt-read:820px}
+}
+@media (min-width:1440px){
+  html.dt{--dt-w:min(1280px,calc(100% - 96px));--dt-read:840px}
+}
+</style>
+
 <style id="dark-layer">
 /* 黑夜模式 v2：由 html.dk 主導（跟系統／用戶撳掣揀）。鐵律：只改顏色，唔郁排版／尺寸。 */
 html.dk{color-scheme:dark}
