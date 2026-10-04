@@ -115,7 +115,7 @@ setTimeout(() => {
   check("#dtNav 係 body 直系子女（sticky 全闊）", !!(nav && nav.parentElement === d.body));
   const links = nav ? nav.querySelectorAll(".dt-nav-links [data-nav]") : [];
   check("#dtNav 6 個入口都有 data-nav（加計分方法、私隱；冇光譜／相處）", links.length === 6, String(links.length));
-  check("#dtNav 7 個項目（6 個入口 + 開始測試）",
+  check("#dtNav 7 個項目（6 個入口 + 立即測試）",
     nav.querySelectorAll(".dt-nav-links [data-nav], .dt-nav-cta").length === 7);
   check("#dtNav 有計分方法同限制同私隱聲明",
     !!nav.querySelector('[data-nav="method"][onclick*="openMethod"]') &&
@@ -124,7 +124,7 @@ setTimeout(() => {
     ["openHub", "openAbout", "goPickVersion", "openPrivacy", "openMethod"].every(f => typeof dom.window[f] === "function") &&
     !!nav.querySelector('a[href="./stats.html"]') && !!nav.querySelector('a[href="./record.html"]') &&
     !nav.querySelector('[data-nav="spectrum"]') && !nav.querySelector('[data-nav="social"]'));
-  check("#dtHeroCta 喺 .home-hero-copy 內（開始測試／性格百科）",
+  check("#dtHeroCta 喺 .home-hero-copy 內（立即測試／性格百科）",
     !!d.querySelector(".home-hero-copy #dtHeroCta") &&
     !!d.querySelector('#dtHeroCta [onclick*="goPickVersion"]') && !!d.querySelector('#dtHeroCta [onclick*="openHub"]'));
   const foot = d.getElementById("dtFoot");

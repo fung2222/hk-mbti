@@ -72,6 +72,11 @@ setTimeout(()=>{
     chk('#4 全 16 型 × 9 章（'+chN+'）零殘留星號', chN>=144 && starLeak===0, 'leak='+starLeak);
     chk('#4 單星用 .chapter-aside（唔斜體）', asideHits>0 && /\.chapter-aside\{color:#6b6560\}/.test(src), asideHits);
     chk('#4 dark 規則喺 #dark-layer', /html\.dk \.chapter-aside\{color:#A79E92\}/.test(src));
+    // CTA 統一（Roy 2026-10-04：Icon ＋「想知道自己 MBTI 人格？」＋「立即測試」；結果頁例外）
+    chk('CTA 標題統一 ×8（想知道自己 MBTI 人格？）＋冇舊文案', (src.match(/>想知道自己 MBTI 人格？<\/p>/g)||[]).length>=8 && !/想確認自己 MBTI 人格？/.test(src));
+    chk('CTA 按鈕統一 ×14（立即測試）＋冇「立即選擇測試版本」「立即進行」', (src.match(/>立即測試</g)||[]).length>=14 && !/立即選擇測試版本/.test(src) && !/>立即進行</.test(src));
+    chk('每個 CTA 有 Icon（cta-bulb）＋結果頁「立即開始」保留', (src.match(/cta-bulb/g)||[]).length>=8 && (src.match(/>立即開始</g)||[]).length===1);
+    chk('子頁 CTA 亦統一（stats／privacy 立即測試）', ['stats.html','privacy.html'].every(fn=>/>立即測試<\/a>/.test(fs.readFileSync(path.join(REPO,fn),'utf8'))));
     chk('冇新 jsdom error', jerr.length===0, jerr.join(' | '));
     console.log("===== 全部通過（"+total+" 項）=====");
     process.exit(ok===total?0:1);

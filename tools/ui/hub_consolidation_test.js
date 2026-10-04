@@ -22,8 +22,8 @@ chk("★ 16 型色卡（hub-bleed）下間距＝12px（Roy 2026-10-02 兩輪：2
 chk("★ 文章頁（相處／拍拖／章節）色卡同上內文距離夠（文章頁 26px 留白）", (src.match(/class="card p-6 mb-\[26px\]"/g)||[]).length===3, (src.match(/mb-\[26px\]/g)||[]).length+" 處");
 chk("★ 場景文章頁底卡已整張刪（連舊 +9px 規則一併清走）", !/softbox-tight/.test(src) && !/article-more-list/.test(src));
 chk("★ 非主頁垂直間距統一 16px（卡片同非卡容器一致）", !/\.(article-guide|wiz-facts)\{[^}]*margin:[^;}]*20px/.test(src) && /\.article-guide\{margin:0 4px 16px/.test(src) && /\.type-rel-grid\{[^}]*margin-bottom:16px\}/.test(src));
-chk("★ 全站測試入口文案統一：「想確認自己 MBTI 人格？」（唔准有舊文案）", !/睇完想試/.test(src) && (src.match(/想確認自己 MBTI 人格？/g) || []).length >= 8, (src.match(/想確認自己 MBTI 人格？/g) || []).length + " 處");
-chk("★ 全站測試入口按鈕統一：「立即選擇測試版本」（唔准有舊按鈕字）", !/返主頁開始測試/.test(src) && !/>選擇測試版本</.test(src) && (src.match(/立即選擇測試版本/g) || []).length >= 8, (src.match(/立即選擇測試版本/g) || []).length + " 處");
+chk("★ 全站測試入口文案統一：「想知道自己 MBTI 人格？」（唔准有舊文案；Roy 2026-10-04 改）", !/想確認自己 MBTI 人格？/.test(src) && (src.match(/想知道自己 MBTI 人格？/g) || []).length >= 8, (src.match(/想確認自己 MBTI 人格？/g) || []).length + " 處");
+chk("★ 全站測試入口按鈕統一：「立即測試」（唔准有舊按鈕字；Roy 2026-10-04 改）", !/返主頁開始測試/.test(src) && !/>選擇測試版本</.test(src) && !/立即選擇測試版本/.test(src) && (src.match(/>立即測試</g) || []).length >= 14, (src.match(/立即選擇測試版本/g) || []).length + " 處");
 chk("★「立即開始」只准出現一次，而且喺結果頁「挑戰再測一次」卡入面（Roy 2026-10-02 指定）", (function(){
   const hits = src.match(/>立即開始</g) || [];
   const i = src.indexOf("挑戰再測一次"), k = src.indexOf(">立即開始<");
@@ -35,11 +35,11 @@ chk("★ 光譜 5 段齊（E/I、S/N、T/F、J/P、T/A）", (function(){ const m
 chk("★ 光譜段有「唔係…」澄清句", /唔係「內向 = 怕醜」/.test(src) && /唔係「P 型 = 散漫」/.test(src));
 // ⚠️ 用字數窗口好脆弱：2026-10-02 喺 CTA 文案上面加咗發光燈泡 span（~650 字）→ 舊窗口 {0,160} 掃唔到。
 //    改成切出成個 #hubCta 卡再驗，唔靠字數。
-chk("★ 測試入口卡有「選擇測試版本」掣", (function(){
+chk("★ 測試入口卡有「立即測試」掣", (function(){
   const i = src.indexOf('id="hubCta"');
   if(i < 0) return false;
   const seg = src.slice(i, src.indexOf("</div>", src.indexOf("goPickVersion", i)) + 6);
-  return /選擇測試版本/.test(seg) && /goPickVersion\(\)/.test(seg);
+  return /立即測試/.test(seg) && /goPickVersion\(\)/.test(seg);
 })());
 // Roy 2026-10-01：百科「由人格睇」次序 = 4 維度卡 → 16 型卡 → 比較工具 → 測試入口（最底）
 chk("★ 百科「由人格睇」次序：16 型卡 → 比較工具 → 測試入口（最底）", (function(){
@@ -89,7 +89,7 @@ chk("★ 測試入口用 goPickVersion（去主頁揀版本位）", (function(){
   const i = src.indexOf('id="hubCta"');
   return i > 0 && /goPickVersion\(\)/.test(src.slice(i, i + 1200));
 })());
-chk("★ 百科兩個模式各有測試入口，舊「返主頁開始測試」已清", (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return !/返主頁開始測試/.test(hub) && (hub.match(/選擇測試版本/g) || []).length === 2; })(), (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return "舊掣 " + ((hub.match(/返主頁開始測試/g) || []).length) + " 個、測試版本 " + ((hub.match(/選擇測試版本/g) || []).length) + " 個"; })());
+chk("★ 百科兩個模式各有測試入口，舊「返主頁開始測試」已清", (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return !/返主頁開始測試/.test(hub) && (hub.match(/立即測試/g) || []).length === 2; })(), (function(){ const i = src.indexOf('<section id="hub"'); const hub = src.slice(i, src.indexOf('</section>', i)); return "舊掣 " + ((hub.match(/返主頁開始測試/g) || []).length) + " 個、立即測試 " + ((hub.match(/選擇立即測試 /g) || []).length) + " 個"; })());
 chk("★ 人格頁有 4 個分頁掣（性格／關係／場景／深入）", (function(){
   const i = src.indexOf('id="typeTabSwitch"'); if(i < 0) return false;
   const seg = src.slice(i, src.indexOf("</div>", i));

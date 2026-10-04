@@ -126,17 +126,17 @@ setTimeout(async ()=>{
   chk('★ 黑大字係深色大字（19px / 900 / var(--ink)）', /\.deep-lead\{font-size:19px;font-weight:900;[^}]*color:var\(--ink\)/.test(src));
   chk('★ 版頭卡片有「有咩睇」同「有咩用」兩句', /核心動機/.test($('#deep #deepIntro').textContent) && /點相處/.test($('#deep #deepIntro').textContent));
   chk('★ 16 型格下面有測試入口卡', (function(){ const c=$('#deep #deepCta'), g=$('#deepTypeGrid'); return !!c && !!g && (g.compareDocumentPosition(c) & 4) > 0; })());
-  chk('★ 測試入口文案同人格分頁一致（想確認自己 MBTI 人格？）', /想確認自己 MBTI 人格？/.test($('#deep #deepCta').textContent), $('#deep #deepCta').textContent.trim());
+  chk('★ 測試入口文案同人格分頁一致（想知道自己 MBTI 人格？）', /想知道自己 MBTI 人格？/.test($('#deep #deepCta').textContent), $('#deep #deepCta').textContent.trim());
   chk('★ 16 型格同下面卡片有距離（hub-bleed margin-bottom 12px；Roy 2026-10-02 要緊啲）', /\.hub-bleed\{margin:0 -16px 12px/.test(src));
   chk('★ 上面卡片同 16 型格有距離（mb-4）', /<div class="card p-4 mb-4">/.test(src));
-  chk('★ 測試入口掣去揀版本頁（goPickVersion）', /onclick="goPickVersion\(\)">立即選擇測試版本/.test(src));
+  chk('★ 測試入口掣去揀版本頁（goPickVersion）', /onclick="goPickVersion\(\)">立即測試/.test(src));
   chk('★ 入型別目錄時測試入口一齊收埋', /deepCta"[\s\S]{0,90}display = "none"/.test(src));
   chk('★ 返 16 型層時測試入口出返', /deepCta"[\s\S]{0,120}display = ""/.test(src));
   chk('★ 已清走舊 .deep-intro / .deep-chips CSS（唔留死碼）', !/\.deep-intro\{/.test(src) && !/\.deep-intro-sub\{/.test(src) && !/\.deep-chips\{/.test(src));
   // ---------- 人格分頁最底 CTA（Roy 2026-10-01）----------
-  chk('★ 人格分頁最底文案改咗（想確認自己 MBTI 人格？）', /想確認自己 MBTI 人格？/.test(src));
-  chk('★ 測試入口文案全站統一（想確認自己 MBTI 人格？）', (src.match(/想確認自己 MBTI 人格？/g) || []).length >= 8 && !/睇完想試/.test(src));
-  chk('★ 測試入口按鈕全站統一（立即選擇測試版本）', (src.match(/立即選擇測試版本/g) || []).length >= 8 && !/返主頁開始測試/.test(src));
+  chk('★ 人格分頁最底文案改咗（想知道自己 MBTI 人格？）', /想知道自己 MBTI 人格？/.test(src));
+  chk('★ 測試入口文案全站統一（想知道自己 MBTI 人格？）', (src.match(/想知道自己 MBTI 人格？/g) || []).length >= 8 && !/睇完想試/.test(src));
+  chk('★ 測試入口按鈕全站統一（立即測試；Roy 2026-10-04 改）', (src.match(/>立即測試</g) || []).length >= 14 && !/立即選擇測試版本/.test(src) && !/返主頁開始測試/.test(src));
   chk('★ goPickVersion 存在（show home + 捲到 #homeBelow）', /window\.goPickVersion = function\(\)\{[\s\S]{0,260}show\("home"\)[\s\S]{0,200}homeBelow/.test(src));
   // ---------- 全站「大寫字母／型別碼」字型一致性（Roy 2026-10-01：檢查全站色卡用返 Archivo Black）----------
   chk('★ 色卡 4 字母 .hub-type-code 用 Archivo Black', /\.hub-type-code\{\s*\nfont-family:'Archivo Black'/.test(src));

@@ -1,5 +1,5 @@
 
-// 版本卡：撳卡(著燈+展開) → 撳「立即進行」→ 入測試（2026-09-29 還原）
+// 版本卡：撳卡(著燈+展開) → 撳「立即測試」→ 入測試（2026-09-29 還原）
 const fs=require('fs'), path=require('path');
 const {JSDOM, VirtualConsole}=require('jsdom');
 const REPO=path.resolve(__dirname,'../..');
@@ -24,16 +24,16 @@ setTimeout(()=>{
   });
   const rc=cards.find(x=>x.getAttribute('data-ver')==='record');
   chk('紀錄卡 onclick = selectRecord()', !!rc && rc.getAttribute('onclick')==='selectRecord()', rc&&rc.getAttribute('onclick'));
-  chk('卡入面 4 粒「立即進行／查看紀錄」掣仲喺度', d.querySelectorAll('.ver-hint').length===4, d.querySelectorAll('.ver-hint').length);
+  chk('卡入面 4 粒「立即測試／查看紀錄」掣仲喺度', d.querySelectorAll('.ver-hint').length===4, d.querySelectorAll('.ver-hint').length);
 
   let opened=null; w.openProfile=function(v){ opened=v; };
   const life=cards.find(x=>x.getAttribute('data-ver')==='life');
   const lifeCta=d.querySelector('.ver-btn[data-ver="life"] .ver-hint');
   click(life);
   chk('撳「生活版」卡一下 → 只著燈（唔會即刻入）', life.classList.contains('ver-lit') && opened===null, 'lit='+life.classList.contains('ver-lit')+' opened='+opened);
-  chk('著燈後「立即進行」掣先會出現（CSS .ver-lit .ver-hint）', /\.ver-btn\.ver-lit \.ver-hint/.test(src));
+  chk('著燈後「立即測試」掣先會出現（CSS .ver-lit .ver-hint）', /\.ver-btn\.ver-lit \.ver-hint/.test(src));
   click(lifeCta);
-  chk('★ 再撳「立即進行」→ 入 60 題流程（還原成功）', opened==='life', 'opened='+opened);
+  chk('★ 再撳「立即測試」→ 入 60 題流程（還原成功）', opened==='life', 'opened='+opened);
   // 再撳同一張卡 = 收返（toggle）— 用未入過嘅 advanced 卡
   const adv=cards.find(x=>x.getAttribute('data-ver')==='advanced');
   click(adv); const lit1=adv.classList.contains('ver-lit');
