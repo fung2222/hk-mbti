@@ -30,6 +30,11 @@
 .softbox-title{font-size:1.15rem;font-weight:900;letter-spacing:-.01em;color:var(--ink);line-height:1.35;margin:0;}
 .softbox-sub{font-size:.95rem;color:#6b6560;margin:8px 0 0;line-height:1.6;}
 .softbox-sub:first-child{margin-top:0;}
+/* 最底 CTA 嘅發光燈泡（同主站一致；只改顏色／光影，唔郁尺寸位置） */
+.cta-bulb{display:block;width:30px;height:30px;margin:0 auto 6px;color:var(--gold);
+ filter:drop-shadow(0 0 5px rgba(200,162,76,.55)) drop-shadow(0 0 13px rgba(200,162,76,.28))}
+.cta-bulb svg{width:100%;height:100%;display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
 .softbox-btn{
 display:inline-flex;align-items:center;justify-content:center;gap:2px;
 margin-top:18px;padding:13px 28px;border-radius:999px;
@@ -197,7 +202,8 @@ html.dk .stat-pill .count{color:#9A9388}
  <div id="typeStats" class="space-y-2"></div>
  <p class="text-xs text-gray-500 mt-4 pt-3" style="border-top:1px solid #eee;">基線參考常見 16 型分佈 143,021 樣本量級；按香港人口約 750 萬換算，屬估算值。唔係全港實時普查。</p>
  <div class="softbox" style="margin:20px 0 0;">
- <p class="softbox-sub">睇完想試？返主頁揀版本開始</p>
+ <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
+ <p class="softbox-sub">想知道自己 MBTI 人格？</p>
  <a href="./" class="softbox-btn">立即測試</a>
  </div>
 </div>

@@ -77,6 +77,10 @@ setTimeout(()=>{
     chk('CTA 按鈕統一 ×14（立即測試）＋冇「立即選擇測試版本」「立即進行」', (src.match(/>立即測試</g)||[]).length>=14 && !/立即選擇測試版本/.test(src) && !/>立即進行</.test(src));
     chk('每個 CTA 有 Icon（cta-bulb）＋結果頁「立即開始」保留', (src.match(/cta-bulb/g)||[]).length>=8 && (src.match(/>立即開始</g)||[]).length===1);
     chk('子頁 CTA 亦統一（stats／privacy 立即測試）', ['stats.html','privacy.html'].every(fn=>/>立即測試<\/a>/.test(fs.readFileSync(path.join(REPO,fn),'utf8'))));
+    chk('子頁 CTA 都有 Icon（cta-bulb）＋標題統一＋冇舊句', ['stats.html','privacy.html'].every(fn=>{
+      const tt=fs.readFileSync(path.join(REPO,fn),'utf8');
+      return /cta-bulb/.test(tt) && /\.cta-bulb\{display:block/.test(tt) && /想知道自己 MBTI 人格？/.test(tt) && !/睇完想試/.test(tt);
+    }));
     chk('冇新 jsdom error', jerr.length===0, jerr.join(' | '));
     console.log("===== 全部通過（"+total+" 項）=====");
     process.exit(ok===total?0:1);
