@@ -110,7 +110,7 @@ chk("★ hashtag 基線 1172 → 同卡底距 ≥ 100px、同分數條底 1120 �
     return 1280 - 1172 >= 100 && 1172 - barBottom >= 40;
   })());
 chk("★ 分數列上移 24px（960 → 936）令底部有空間", /let y = 936;/.test(HTML) && !/let y = 960;/.test(HTML));
-chk("★ CARD_FONT_ID 已 bump（舊紀錄縮圖會自動重畫）", /CARD_FONT_ID = "archivo-ta4"/.test(HTML));
+chk("★ CARD_FONT_ID 已 bump（舊紀錄縮圖會自動重畫）", /CARD_FONT_ID = "archivo-ta5"/.test(HTML));
   console.log("===== 分享卡版面測試 " + ok + "/" + total + "=====");
   process.exit(ok===total?0:1);
 })();
