@@ -44,6 +44,8 @@ run_gate "run.sh (jsdom UI 全套)"               sh tools/ui/run.sh
 run_gate "desktop_layout_test"                  node tools/desktop_layout_test.js
 run_gate "desktop_gate_test"                    node tools/desktop_gate_test.js
 run_gate "deeplink_test"                        node tools/deeplink_test.js
+run_gate "record_view_test（紀錄頁兩個渠道）"      node tools/record_view_test.js
+run_gate "voice_test（朗讀開關）"                  node tools/voice_test.js
 # 真 Chrome 幾何（約 30 秒）—— 冇 Chrome 就 fail（fail-closed，唔可以靜靜當通過）
 if [ -x "$CHROME" ]; then
   run_gate "desktop_render_test（真 Chrome 幾何）" "$PWPY" tools/desktop_render_test.py

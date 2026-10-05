@@ -29,12 +29,13 @@ sh tools/ui/run.sh                  # 24 檔 jsdom / 971 斷言（總數由 run.
 node tools/desktop_layout_test.js   # 56 項（鐵律 + DOM）
 node tools/desktop_gate_test.js     # 34 項
 node tools/deeplink_test.js
+node tools/record_view_test.js      # 紀錄頁兩個渠道
+node tools/voice_test.js            # 朗讀開關
 python3 tools/desktop_render_test.py   # 49 項，真 Chrome 幾何（需要 CHROME + playwright；冇 Chrome 即 fail）
 ```
 唔入 push 閘（慢／易 flaky），但**改過桌面層一定要另外跑**：
 ```bash
 python3 tools/mobile_zero_impact.py    # 手機零影響：像素對比（約 5 分鐘）
-node tools/record_view_test.js && node tools/voice_test.js
 ```
 「手機零影響」嘅基準係 **現行 index.html 剝走桌面層**（唔係 v2.0.0 —— 之後有好多同桌面無關嘅改動）。
 
