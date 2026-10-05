@@ -40,5 +40,5 @@ setTimeout(()=>{
   console.log('   → 問卷畫面: '+[...d.querySelectorAll('section')].filter(s=>!s.classList.contains('hidden')).map(s=>s.id).join(','));
   console.log('   → state: name='+w.state.displayName+' nick='+w.state.nickname+' gender='+w.state.gender+' version='+w.state.version);
   console.log('   → JS 錯誤: '+(jerr.length?JSON.stringify(jerr.slice(0,3)):'冇'));
-  process.exit(0);
+  process.exit(jerr.length?1:0);   // 2026-10-05：有 JS 錯誤就 exit 1
 }, 1400);

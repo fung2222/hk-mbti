@@ -1,7 +1,7 @@
 // 自動生成 — 唔好手改。重生：python3 tools/gen_voice.py
 // key = index.html 題庫原本嘅字（未經正規化），前端直接 Q_AUDIO[q.t] lookup；
 // 搵唔到就 fallback 用 speechSynthesis（見 index.html speakQuestion）。
-// ⚠️ O_AUDIO 係「純選項文字」，唔包字母 — 字母由 L_AUDIO 跟 o.l 播，
+// 注意：O_AUDIO 係「純選項文字」，唔包字母 — 字母由 L_AUDIO 跟 o.l 播，
 //    因為 buildDeck 會打亂選項次序再重派 A/B/C/D。
 window.Q_AUDIO = {
   "朋友生日飯／小型派對，你最典型會點做？": "audio/q/e8b6ba6c44bd.mp3",

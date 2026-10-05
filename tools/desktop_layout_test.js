@@ -74,10 +74,11 @@ check("寬度分級：平板 920 / 桌面 1120 / 1280 / 1440 各唔同",
    "--dt-w:min(1200px,calc(100% - 80px))", "--dt-w:min(1280px,calc(100% - 96px))"].every(s => layer.includes(s)));
 check("桌面：scenes-grid 真係 display:grid（舊版漏咗）", /html\.dt \.scenes-grid\{display:grid/.test(layer));
 check("桌面：探索更多 5 欄（5 格唔會剩一格）", /html\.dt \.home-acc\{[^}]*grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/.test(layer));
-check("平板：探索更多 6 欄 span 2，尾兩格置中（3+2）",
+check("平板：探索更多 6 欄 span 2，尾兩格置中（3+2）；用 nth-last-child 唔用 nth-child",
   /html\.dt \.home-acc\{[^}]*grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/.test(layer) &&
-  /html\.dt \.home-acc-item:nth-child\(5\)\{grid-column:2 \/ span 2\}/.test(layer) &&
-  /html\.dt \.home-acc-item:nth-child\(6\)\{grid-column:4 \/ span 2\}/.test(layer));
+  /html\.dt \.home-acc-item:nth-last-child\(2\)\{grid-column:2 \/ span 2\}/.test(layer) &&
+  /html\.dt \.home-acc-item:nth-last-child\(1\)\{grid-column:4 \/ span 2\}/.test(layer) &&
+  !/\.home-acc-item:nth-child\(/.test(layer));
 check("內容頁唔再鎖 720px 窄柱", !/section:not\(#home\)\{max-width:720px/.test(layer));
 check("結果頁桌面用 grid 分欄", /html\.dt #result:not\(\.hidden\)\{[^}]*display:grid/.test(layer));
 check("百科格桌面 8 欄（唔係手機 4 欄放大）", /html\.dt #hub \.hub-type-grid[^{]*\{[^}]*repeat\(8,/.test(layer));

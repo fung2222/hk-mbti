@@ -4,7 +4,7 @@
   1. 每個 HTML 檔嘅 inline <script> 逐個 block 語法檢查（node --check）
   2. 版本號一致：VERSION / manifest.json / sw.js cache / index.html chrome 文字
   3. 每個 onclick="fn(...)" 都有對應 window.fn 或 function fn 定義
-  4. emoji 殘留（只准 ✓ ✗ ▼ ▲ → ·）
+  4. emoji 殘留：HTML ＋ 獨立 .js（只准 ✓ ✗ ▼ ▲ → · …）
   5. manifest.json 係有效 JSON
 用法：python3 tools/preflight.py        （exit 0 = 全部過，exit 1 = 有問題）
 """
@@ -27,6 +27,13 @@ def read(p):
 
 def html_files():
     return sorted(f for f in os.listdir(ROOT) if f.endswith(".html"))
+
+
+def js_files():
+    # 獨立 .js（data.js／pair-data.js／social.js／voice-data.js…）一樣要守「冇 emoji」；
+    # 2026-10-05：之前只掃 HTML → JS 註解嘅 ⚠️ 係空閘。
+    return sorted(f for f in os.listdir(ROOT)
+                  if f.endswith(".js") and os.path.isfile(os.path.join(ROOT, f)))
 
 
 # ---------- 1. inline script 語法 ----------
@@ -74,9 +81,9 @@ for f in html_files():
     else:
         notes.append("%s onclick %d 個全部有定義" % (f, len(used)))
 
-# ---------- 4. emoji 殘留 ----------
+# ---------- 4. emoji 殘留（HTML ＋ 獨立 .js）----------
 EMOJI = re.compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\u2190-\u21FF\u2B00-\u2BFF\uFE0F]")
-for f in html_files():
+for f in html_files() + js_files():
     src = read(f)
     bad = sorted({c for c in EMOJI.findall(src) if c not in ALLOWED_SYMBOLS})
     if bad:

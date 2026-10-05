@@ -19,6 +19,11 @@ layer = m.group(1)
 body = re.sub(r"<style[\s\S]*?</style>", "", html)
 
 fails = []
+# 風琴格嘅排版唔准用 nth-child —— #homeAccordion 第一個 child 係 label，
+# nth-child(5)/(6) 會打中 label 偏移（2026-10-05 審計發現；已改用 nth-last-child）
+for m in re.finditer(r'\.home-acc-item:nth-child\(', layer):
+    fails.append("桌面層用 .home-acc-item:nth-child(...) —— label 係第一個 child，會偏移；請用 nth-last-child")
+    print("✗ .home-acc-item:nth-child 偏移陷阱")
 # 每個 data-* 屬性 selector，HTML 內必須有實際元素帶住該屬性值
 for attr, val in sorted(set(re.findall(r'\[(data-[a-z-]+)="([^"]+)"\]', layer))):
     if not re.search(r'%s="%s"' % (re.escape(attr), re.escape(val)), body):

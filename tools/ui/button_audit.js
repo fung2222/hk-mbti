@@ -14,7 +14,7 @@ function audit(file){
            .replace(/<script src="([^"]+\.js)"><\/script>/g,(m,f)=>fs.existsSync(path.join(REPO,f))?'<script>\n'+fs.readFileSync(path.join(REPO,f),'utf8')+'\n</script>':'');
   const errs=[];
   const vc=new VirtualConsole();
-  vc.on('jsdomError',e=>{const m=String(e.message||e); if(!/scrollTo|Not implemented|Could not load|css/i.test(m)) errs.push('load: '+m.slice(0,110));});
+  vc.on('jsdomError',e=>{const m=String(e.message||e); if(!/scrollTo|scrollIntoView|createObjectURL|Not implemented|Could not load|css/i.test(m)) errs.push('load: '+m.slice(0,110));});
   const dom=new JSDOM(html,{runScripts:'dangerously',pretendToBeVisual:true,url:'https://fung2222.github.io/hk-mbti/'+(file==='index.html'?'':'record.html?x=1'),virtualConsole:vc,
     beforeParse(w){
       w.alert=()=>{}; w.confirm=()=>false;
@@ -44,13 +44,15 @@ function audit(file){
   }, 1200));
 }
 (async()=>{
+  let bad=0;
   for(const f of ['index.html','record.html','stats.html','tee.html','privacy.html']){
     const r=await audit(f);
+    if(r.errs.length||r.bar.length) bad++;
     console.log(`\n===== ${f}：撳咗 ${r.count} 粒掣 =====`);
     console.log('  載入錯誤:', r.errs.length? r.errs.slice(0,3).join(' | ') : '冇');
     console.log('  撳掣拋錯:', r.bar.length? '' : '冇 ✓');
     r.bar.slice(0,12).forEach(x=>console.log('    ✗ '+x));
     if(r.bar.length>12) console.log(`    …仲有 ${r.bar.length-12} 個`);
   }
-  process.exit(0);
+  process.exit(bad?1:0);   // 2026-10-05：有拋錯／載入錯誤就 exit 1，唔再無條件當成功
 })();

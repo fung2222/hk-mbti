@@ -912,8 +912,11 @@ html.dk .hub-row-chev{color:#C0A87A}
   html.dt #dtTypeRows{justify-content:center}
   html.dt .home-acc{grid-template-columns:repeat(6,minmax(0,1fr))}
   html.dt .home-acc-item{grid-column:span 2}
-  html.dt .home-acc-item:nth-child(5){grid-column:2 / span 2}
-  html.dt .home-acc-item:nth-child(6){grid-column:4 / span 2}
+  /* 平板 3+2：最後兩格放第二行置中。用 nth-last-child 而唔係 nth-child ——
+     #homeAccordion 第一個 child 係 label，nth-child(5)/(6) 會打中 label 偏移；
+     用 nth-last-child 就算加格／搬 label 都唔會錯位。 */
+  html.dt .home-acc-item:nth-last-child(2){grid-column:2 / span 2}
+  html.dt .home-acc-item:nth-last-child(1){grid-column:4 / span 2}
   html.dt #hub .hub-type-grid,html.dt #deepList .hub-type-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
   html.dt #socialArticle,html.dt #romanceArticle,html.dt #deepChapter{max-width:min(840px,var(--dt-w))}
 }
