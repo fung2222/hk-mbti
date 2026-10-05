@@ -800,7 +800,7 @@ html.dk .hub-row-chev{color:#C0A87A}
     cursor:pointer;padding:6px 2px;border-bottom:2px solid var(--gold)}
   html.dt .dt-cta-ghost:hover{color:#A08A5C}
 
-  /* 16 型滑輪：橫向可滑，左右箭嘴常駐；後 16 張複本收埋（有限 16 張，唔係跑馬燈 grid） */
+  /* 16 型滑輪：橫向可滑，左右箭嘴常駐；32 張（前 16 唯一 + 後 16 複本）做無縫循環 */
   html.dt .home-type-reel-wrap{position:relative;display:flex;flex-direction:column;min-width:0;max-width:100%;margin:0}
   html.dt .home-type-nav{opacity:1;pointer-events:auto;background:rgba(26,26,26,.48)}
   html.dt .home-type-reel{display:flex;overflow-x:auto;overflow-y:hidden;gap:12px;min-width:0;width:100%;max-width:100%;
@@ -838,7 +838,6 @@ html.dk .hub-row-chev{color:#C0A87A}
   html.dt #home > div.mb-4{width:var(--dt-w);margin:0 auto;padding:48px 0 8px}
   html.dt .home-acc{display:grid;gap:16px;background:none;border-radius:0;box-shadow:none;overflow:visible}
   html.dt .home-acc-label{grid-column:1/-1}
-  html.dt .home-acc-item[data-acc="deep"]{display:none}
   html.dt .home-acc-item{display:flex;flex-direction:column;border:0;border-radius:16px;background:#fff;padding:22px 20px 20px}
   html.dt .home-acc-head{pointer-events:none;cursor:default;padding:0;gap:0;background:none}
   html.dt .home-acc-chev{display:none}

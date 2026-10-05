@@ -137,7 +137,8 @@ setTimeout(() => {
   check("版本卡 4 張", d.querySelectorAll("#versionList .ver-btn").length === 4);
   check("場景卡 4 張", d.querySelectorAll(".scenes-grid .scene-cell").length === 4);
   check("探索更多已收窄（2026-10-01 方案 A 後：5 格，場景攻略已收埋入百科）", d.querySelectorAll("#homeAccordion .home-acc-item").length === 5, d.querySelectorAll("#homeAccordion .home-acc-item").length);
-  check("桌面維持 4×2：deep 格喺桌面層隱藏", /html\.dt \.home-acc-item\[data-acc="deep"\]\{display:none\}/.test(layer));
+  check("桌面風琴係 grid（唔摺疊），格數 == 格仔數",
+    /html\.dt \.home-acc\{display:grid/.test(layer) && d.querySelectorAll("#homeAccordion .home-acc-item").length > 1);
   check("鍵盤左右可以切滑輪（只喺 html.dt）", /ArrowLeft/.test(html) && /classList\.contains\("dt"\)/.test(html));
   for (const f of ["record.html", "stats.html", "privacy.html"]) {
     const sat = fs.readFileSync(path.join(REPO, f), "utf8");

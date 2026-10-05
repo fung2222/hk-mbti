@@ -5,7 +5,7 @@
 
 ## 30 秒版
 - **桌面層**（2026-10-04 重做，tag `desktop-v3-2026-10-04`）：`index.html` 嘅 `<style id="desktop-layer">`。
-  ≥1024：sticky 導覽（6 入口＋主題／等級）→ hero（左文案／右 **16 型橫向滑輪**，卡片 **9/16 直角**、自動轉、32 張無縫）→ 版本卡（grid，`align-items:start`）→ 全闊情景帶 → 探索更多 6 欄 → 頁尾。
+  ≥1024：sticky 導覽（6 入口＋主題／等級）→ hero（左文案／右 **16 型橫向滑輪**，卡片 **9/16 直角**、自動轉、32 張無縫）→ 版本卡（grid，`align-items:start`）→ 全闊情景帶 → 探索更多 5 欄（桌面 repeat(5)）→ 頁尾。
   768–1023：**平板另一套**（內容 920、內頁寬度分級、唔係「放大的手機」）。
   ⚠️ 桌面 `#versionList` 係 grid，**一定要 `align-items:start`**，否則一格展開會拉高整行（＝用戶睇到「其他卡一齊展開」）。
 - **唔可以碰**：手機版任何排版 ✗。所有桌面規則必須 `@media (min-width:…)` **＋** `html.dt`；
@@ -15,15 +15,26 @@
 - **一定要用真瀏覽器睇**：1920 / 1440 / 1280 / 1024 / 768 / 390px。
 
 ## 改完一定要跑
+**出貨一律用出貨閘（唔准自己 `git push`）**：
+```bash
+sh tools/ship.sh "commit message"   # 以下閘任何一個紅就拒絕 commit + push；閘數由腳本自己數
+```
+佢會跑：
 ```bash
 export NODE_PATH=<jsdom node_modules>
-sh tools/ui/run.sh                  # 21 檔 jsdom（含 mobile_debug_fixes_test）
+python3 tools/gate_refs.py          # 靜態：工具引用嘅 UI 函數必須存在（捉已刪函數）＋ py_compile / node --check
+python3 tools/gate_design.py        # 靜態：桌面層冇死 selector（CSS [data-*="x"] 冇對應元素即紅）
+python3 tools/preflight.py          # 32 項
+sh tools/ui/run.sh                  # 24 檔 jsdom / 971 斷言（總數由 run.sh 自己印，唔靠人手加）
 node tools/desktop_layout_test.js   # 56 項（鐵律 + DOM）
 node tools/desktop_gate_test.js     # 34 項
-node tools/deeplink_test.js && node tools/record_view_test.js && node tools/voice_test.js
-python3 tools/preflight.py          # 32 項
-python3 tools/desktop_render_test.py   # 45 項，真 Chrome 位置
-python3 tools/mobile_zero_impact.py    # 手機零影響：54 張截圖 0 pixel 差異
+node tools/deeplink_test.js
+python3 tools/desktop_render_test.py   # 49 項，真 Chrome 幾何（需要 CHROME + playwright；冇 Chrome 即 fail）
+```
+唔入 push 閘（慢／易 flaky），但**改過桌面層一定要另外跑**：
+```bash
+python3 tools/mobile_zero_impact.py    # 手機零影響：像素對比（約 5 分鐘）
+node tools/record_view_test.js && node tools/voice_test.js
 ```
 「手機零影響」嘅基準係 **現行 index.html 剝走桌面層**（唔係 v2.0.0 —— 之後有好多同桌面無關嘅改動）。
 

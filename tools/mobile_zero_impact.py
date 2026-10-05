@@ -6,7 +6,7 @@
   1. 由 index.html 剝走桌面層（style#desktop-layer、style#desktop-mode-fix、gate script、
      nav#dtNav、div#dtHeroCta、div#dtTypeRows、footer#dtFoot）→ 「基準版」（放喺臨時資料夾）
   2. 真 Chrome（Playwright）分別開「現行版」同「基準版」，
-     9 個畫面 × 手機闊度（預設 360 / 390 / 430），隨機數固定（每次操作前 reseed）
+     每個畫面 × 手機闊度（預設 360 / 390 / 430），隨機數固定（每次操作前 reseed）
   3. 逐 pixel 比較，任何一格唔同都當失敗
 
 注意：正確基準係「現行版剝走桌面層」，唔係 git tag v2.0.0 —— v2.0.0 之後有好多同桌面無關嘅
@@ -68,8 +68,8 @@ async def render(base, out, tag, widths):
                     await pg.screenshot(path=f, full_page=full); shots.append(os.path.basename(f))
             await pg.goto(base + "index.html", wait_until="networkidle"); await pg.wait_for_timeout(1200)
             await snap("home")
-            for name, js in [("hub", "openHub()"), ("type-INFJ", "openType('INFJ','hub')"), ("spectrum", "openSpectrum()"),
-                             ("social", "openSocial()"), ("about", "openAbout()"), ("profile", "goVersion('bb')")]:
+            for name, js in [("hub", "openHub()"), ("type-INFJ", "openType('INFJ','hub')"),
+                             ("about", "openAbout()"), ("profile", "goVersion('bb')")]:
                 await pg.evaluate(js); await pg.wait_for_timeout(600); await snap(name)
                 await pg.evaluate("goHome()"); await pg.wait_for_timeout(300)
             await pg.evaluate("__reseed();startTestWithVersion('bb')"); await pg.wait_for_timeout(1000)
@@ -92,6 +92,13 @@ def main():
     ap.add_argument("--keep", default="")
     a = ap.parse_args()
     widths = [int(x) for x in a.widths.split(",")]
+    # fail-closed：所有會 evaluate 嘅 window 函數必須存在（缺即大聲死，唔好跑到第 4 個畫面先爆）
+    needed = ["openHub", "openType", "openAbout", "goVersion", "goHome", "startTestWithVersion"]
+    with open(os.path.join(REPO, "index.html"), encoding="utf-8") as fh:
+        html_src = fh.read()
+    missing = [f for f in needed if not re.search(r"window\." + re.escape(f) + r"\s*=", html_src)]
+    if missing:
+        raise SystemExit("✗ 工具引用嘅 window 函數唔存在（已刪？）：" + ", ".join(missing))
     from PIL import Image, ImageChops
     import numpy as np
     tmp = tempfile.mkdtemp(prefix="hkmbti-zero-")
@@ -114,7 +121,7 @@ def main():
             bad += 1; print("✗ %s 尺寸唔同 %s vs %s" % (f, x.size, y.size)); continue
         n = int((np.asarray(ImageChops.difference(x, y)).sum(axis=2) > 0).sum())
         if n: bad += 1; print("✗ %s 有 %d 個 pixel 唔同" % (f, n))
-    print("比較 %d 張截圖（%d 畫面 × %s px × full/viewport）" % (len(cur), 9, a.widths))
+    print("比較 %d 張截圖（%d 畫面 × %s px × full/viewport）" % (len(cur), len(cur) // (len(widths) * 2), a.widths))
     if not a.keep: shutil.rmtree(tmp, ignore_errors=True)
     print("✓ 手機零影響：全部 0 pixel 差異" if bad == 0 else "✗ %d 張有差異" % bad)
     sys.exit(0 if bad == 0 else 1)

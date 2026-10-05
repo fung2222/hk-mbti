@@ -8,3 +8,7 @@ _palette_*.png
 node_modules/
 package-lock.json
 dev/
+
+# Python 快取（gate py_compile 會產生）
+__pycache__/
+*.pyc

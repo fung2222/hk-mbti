@@ -52,13 +52,13 @@ Live：<https://fung2222.github.io/hk-mbti/>
 | `index.html` line **~541** | `<style id="desktop-layer">` ← **桌面／平板排版全部喺呢度** |
 | `index.html` line **~733** | `<head>` gate script（加 `html.dt`、寫 `--sbw`、`.dm` 還原）—— **5 個 html 一致，唔好改** |
 | `index.html` line **~775** | `<style id="desktop-mode-fix">`（`.dm` 專用，唔好改）|
-| `index.html` line **~786** | `<nav id="dtNav">` 桌面導覽；5 個入口帶 `data-nav`（hub／spectrum／social／stats／record）|
+| `index.html` line **~786** | `<nav id="dtNav">` 桌面導覽；6 個入口帶 `data-nav`（about／hub／method／privacy／stats／record）|
 | `index.html` line **~1646** | `<div id="dtHeroCta">` hero 兩粒 CTA（喺 `.home-hero-copy` 內）|
 | `index.html` line **~1655** | `<div id="dtTypeRows">` 16 型左邊 4 個組別標籤（分析家／外交家／守護者／探索者）|
 | `index.html` line **~1993** | `<footer id="dtFoot">` 桌面頁尾（`#app` 後面）|
-| `tools/desktop_render_test.py` | **真 Chrome 位置測試**（45 項）|
-| `tools/mobile_zero_impact.py` | **手機零影響像素測試**（9 畫面 × 360/390/430）|
-| `tools/desktop_layout_test.js` | 靜態鐵律 + DOM 假設（jsdom，37 項）|
+| `tools/desktop_render_test.py` | **真 Chrome 幾何測試**（49 項；2026-10-05 重寫成「意圖斷言」）|
+| `tools/mobile_zero_impact.py` | **手機零影響像素測試**（7 畫面 × 360/390/430；唔入 push 閘，改桌面層要手動跑）|
+| `tools/desktop_layout_test.js` | 靜態鐵律 + DOM 假設（jsdom，56 項）|
 | `tools/desktop_gate_test.js` | gate 開關（34 項，14 情境）|
 | `tools/build_desktop_demo.py` | （按需）重建 standalone demo；**`demo/desktop-full.html` 已於 2026-10-04 刪除**（Roy 話唔再用）|
 
@@ -72,22 +72,22 @@ Live：<https://fung2222.github.io/hk-mbti/>
 | 闊度（且有 `html.dt`）| 版式 |
 |---|---|
 | < 768 或冇 `.dt` | **手機版（完全冇郁）** |
-| 768–1023（平板）| 乾淨單欄：`#app` 全闊、內容 688px 置中；hero／跑馬燈／情景帶貼邊；hero 高度上限 880px、光暈改 `closest-side`（冇硬邊）；版本卡 2×2；情景 2 欄；探索更多保留手機風琴；**冇**導覽／頁尾 |
+| 768–1023（平板）| 乾淨單欄：`#app` 全闊、內容 688px 置中；hero／跑馬燈／情景帶貼邊；hero 高度上限 880px、光暈改 `closest-side`（冇硬邊）；版本卡 2×2；情景 2 欄；探索更多 3+2 置中；**有**導覽／頁尾（2026-10-04 起平板另一套）|
 | ≥ 1024（桌面）| 下面嘅完整版式；內容闊 `--dt-w = min(1200px, 100% − 80px)` |
 | ≥ 1280 | 版本卡一行 4 張；16 型左邊顯示組別標籤；hero 欄距 72px |
 | ≥ 1440 | `--dt-w = min(1280px, 100% − 96px)` |
 
 ### 桌面主頁（由上至下）
-1. **導覽 `#dtNav`**：sticky 64px、毛玻璃；品牌 + 5 入口 + 金色「開始測試」（`goPickVersion` → 捲去版本段，`scroll-margin-top:88px` 避開導覽）。
+1. **導覽 `#dtNav`**：sticky 64px、毛玻璃；品牌 + 6 入口 + 金色「開始測試」（`goPickVersion` → 捲去版本段，`scroll-margin-top:88px` 避開導覽）。
    現時畫面高亮用 CSS `:has()`（例：`html.dt:has(#hub:not(.hidden)) #dtNav [data-nav="hub"]`），**冇加 JS**。
 2. **Hero**：`.home-hero` 自己做 grid `5fr / 7fr`（唔再用 `display:contents`）。
-   左：大字 MBTI（`clamp(88px,8.6vw,140px)`）+ 原文案 + 兩粒 CTA；右：**16 型 4×4 色牌（主角）**。
-   - 卡填滿格仔（`width:auto`、1024–1279 正方、≥1280 `5/4`）；圓角 16px；hover 上浮 + 顯示「進入」pill；**撳一下揀（is-on）照舊**
-   - 跑馬燈後 16 張複本 `:nth-child(n+17){display:none}`；跑馬燈 JS 照跑，但 grid `overflow:visible !important` → scrollLeft 冇效果，唔會郁（冇改 JS）
+   左：大字 MBTI（`clamp(88px,8.6vw,140px)`）+ 原文案 + 兩粒 CTA；右：**16 型橫向滑輪（主角，32 張＝前 16 唯一 + 後 16 複本）**。
+   - 卡 **9/16 直角**（`border-radius:0`、`aspect-ratio:9/16`）；橫向可滑（`overflow-x:auto`）；hover 上浮 + 顯示「進入」pill；**撳一下揀（is-on）照舊**
+   - 32 張（前 16 唯一 + 後 16 複本）做無縫循環；自動轉 + 左右箭嘴；**唔可以再隱藏複本**（隱藏 = 無縫循環做唔到）
    - 光暈：`::before` + `radial-gradient(closest-side, …)` → 邊緣淡到 0，冇硬邊；`#home{overflow-x:clip}` 防止光暈撐出橫向 scroll
 3. **測試版本 `#homeBelow`**：獨立一段、去咗白卡外框；細金字 kicker 改做 26px 大字標題；4 張等高卡（`#versionList > *{margin:0 !important}` 抵銷 Tailwind `space-y` 造成嘅錯位）。
 4. **港式日常情景**：`.scenes-bleed` 真全闊 `var(--soft)` 色帶；標題 + 副題；4 欄白色方塊（icon 喺上）。
-5. **探索更多**：`.home-acc` 4×2 grid；每格白色圓角方塊、等高、連結 `margin-top:auto` 貼底；桌面唔摺疊（`pointer-events:none`），手機風琴 JS 保留。
+5. **探索更多**：`.home-acc` 桌面 `repeat(5)` 一行 5 格（平板 `repeat(6)` + span 2 做 3+2 置中）；每格白色圓角方塊、等高、連結 `margin-top:auto` 貼底；桌面唔摺疊（`pointer-events:none`），手機風琴 JS 保留。
 6. ▼／▲ Top 按鈕桌面隱藏；**頁尾 `#dtFoot`**：版本 + 私隱聲明／香港統計／我的紀錄；`body` 桌面變 flex column，頁尾永遠貼底。
 
 ### 其他畫面（桌面）
