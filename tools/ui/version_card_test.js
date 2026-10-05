@@ -25,16 +25,19 @@ setTimeout(()=>{
   const rc=cards.find(x=>x.getAttribute('data-ver')==='record');
   chk('紀錄卡 onclick = selectRecord()', !!rc && rc.getAttribute('onclick')==='selectRecord()', rc&&rc.getAttribute('onclick'));
 
-  // ---------- Roy 2026-10-05：第二個 ▼（固定螢幕底）→ 撳去「多種港式日常情景」----------
+  // ---------- Roy 2026-10-05：第二個 ▼（放喺版本卡最底）→ 撳去「多種港式日常情景」----------
+  // 註：初版做成 position:fixed 浮動；Roy 澄清要「喺卡片最底、睇落似螢幕最底」→ 改返正常位置。
   const nd=d.querySelector('.home-next-down');
   chk('★ 有第二個 ▼（home-next-down）', !!nd);
   chk('★ 第二個 ▼ onclick = scrollHomeScenes()', !!nd && nd.getAttribute('onclick')==='scrollHomeScenes()', nd&&nd.getAttribute('onclick'));
   chk('★ scrollHomeScenes 已定義 ＋ 目標係 .scenes-bleed（多種港式日常情景）',
       /window\.scrollHomeScenes = function\(\)/.test(src) && /querySelector\("#home \.scenes-bleed"\)/.test(src));
-  chk('★ 第二個 ▼ 預設收埋（靠 .is-show 才出現）', /\.home-next-down\{[^}]*opacity:0[^}]*pointer-events:none/.test(src));
-  chk('★ 桌面層收埋第二個 ▼（html.dt .home-more-down{display:none} 同一個 class）',
-      /html\.dt \.home-more-down\{display:none\}/.test(src));
-  chk('★ 版本卡底部留空間（唔會被固定 ▼ 遮住）', /#homeBelow\{margin-bottom:76px\}/.test(src));
+  chk('★ 第二個 ▼ 係正常位置（唔准 position:fixed 浮動）＋ 緊貼版本卡下面',
+      /\.home-next-down\{margin-top:14px\}/.test(src) && !/\.home-next-down[^{]*\{[^}]*position:fixed/.test(src));
+  chk('★ 第二個 ▼ 位置：版本卡（#homeBelow）之後、情景帶之前',
+      src.indexOf('id="homeBelow"') > -1
+      && src.indexOf('id="homeBelow"') < src.indexOf('class="home-more-down home-next-down"')
+      && src.indexOf('class="home-more-down home-next-down"') < src.indexOf('class="scenes-bleed"'));
   chk('卡入面 4 粒「立即測試／查看紀錄」掣仲喺度', d.querySelectorAll('.ver-hint').length===4, d.querySelectorAll('.ver-hint').length);
 
   // ---------- Roy 2026-10-05：3 個測試版本各加一個獨特線條 icon（「我的記錄」唔加）----------

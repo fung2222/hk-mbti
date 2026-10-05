@@ -205,28 +205,23 @@ async def run():
         check("390: 撳 ▼ 之後版本卡喺輪盤下面（y > 輪盤底）",
               bool(dv) and dv["verTop"] > dv["reelBottom"], str(dv))
         await _c3.close()
-        # Roy 2026-10-05：第二個 ▼（固定喺螢幕底）—— 撳去「多種港式日常情景」。
-        # 顯示條件：① 輪盤已貼頂 ② 情景帶仲未貼頂 ③ 版本卡底未侵入 ▼ 佔用區（唔可以遮住張卡）
+        # Roy 2026-10-05：第二個 ▼ —— 放喺版本卡最底（正常位置，唔係浮動），
+        # 睇落似螢幕最底；撳 → 捲到「多種港式日常情景」。
         _c4, _p4, _e4 = await page(390, 844, 390, 844, True)
-        nd0 = await _p4.evaluate("() => document.querySelector('.home-next-down').classList.contains('is-show')")
-        check("390: 未撳主頁 ▼ 之前，第二個 ▼ 要收埋", nd0 is False, str(nd0))
         await _p4.evaluate("() => document.querySelector('.home-hero .home-more-down').click()")
         await _p4.wait_for_timeout(1400)
-        nd1 = await _p4.evaluate("""() => { const btn = document.querySelector('.home-next-down');
-          const b = btn.getBoundingClientRect(); const vb = document.getElementById('homeBelow').getBoundingClientRect();
-          return {show: btn.classList.contains('is-show'),
-                  fixed: getComputedStyle(btn).position === 'fixed',
-                  btnTop: Math.round(b.top), verBottom: Math.round(vb.bottom)}; }""")
-        check("390: 撳主頁 ▼ 之後，第二個 ▼ 出現（position:fixed 釘喺螢幕底）",
-              bool(nd1) and nd1["show"] and nd1["fixed"], str(nd1))
-        check("390: 第二個 ▼ 唔可以遮住版本卡（版本卡底 < ▼ 頂）",
-              bool(nd1) and nd1["verBottom"] < nd1["btnTop"], str(nd1))
+        nd1 = await _p4.evaluate("""() => { const nd = document.querySelector('.home-next-down');
+          const nb = nd.getBoundingClientRect(); const vb = document.getElementById('homeBelow').getBoundingClientRect();
+          return {pos: getComputedStyle(nd).position, ndTop: Math.round(nb.top),
+                  verBottom: Math.round(vb.bottom), below: Math.round(nb.top) >= Math.round(vb.bottom),
+                  visible: Math.round(nb.bottom) <= window.innerHeight}; }""")
+        check("390: 第二個 ▼ 喺版本卡最底（正常位置 static，唔係浮動）",
+              bool(nd1) and nd1["pos"] == "static" and nd1["below"], str(nd1))
+        check("390: 撳主頁 ▼ 之後，第二個 ▼ 喺螢幕內見到", bool(nd1) and nd1["visible"], str(nd1))
         await _p4.evaluate("() => document.querySelector('.home-next-down').click()")
         await _p4.wait_for_timeout(1500)
-        nd2 = await _p4.evaluate("""() => { const sc = document.querySelector('#home .scenes-bleed').getBoundingClientRect();
-          return {scenesTop: Math.round(sc.top), show: document.querySelector('.home-next-down').classList.contains('is-show')}; }""")
-        check("390: 撳第二個 ▼ → 捲到「多種港式日常情景」貼頂", abs(nd2["scenesTop"]) <= 30, str(nd2))
-        check("390: 捲到情景帶之後，第二個 ▼ 消失", nd2["show"] is False, str(nd2))
+        nd2 = await _p4.evaluate("() => Math.round(document.querySelector('#home .scenes-bleed').getBoundingClientRect().top)")
+        check("390: 撳第二個 ▼ → 捲到「多種港式日常情景」貼頂", abs(nd2) <= 30, str(nd2))
         await _c4.close()
         await b.close()
     srv.shutdown()

@@ -550,18 +550,10 @@ background:none;border:0;cursor:pointer;color:#8a7a5a;
  -webkit-appearance:none;appearance:none;font-family:inherit;
 font-size:14px;line-height:1;font-weight:700;opacity:.7;
 }
-/* Roy 2026-10-05：第二個 ▼（複製主頁嗰個）—— 固定喺螢幕最底，
-   只喺「輪盤 + 版本卡」呢一屏出現（捲到「多種港式日常情景」就消失）。
-   所以 #homeBelow 要留底部空間，否則細機「我的記錄」卡會被個 ▼ 遮住。 */
-.home-next-down{
-position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));
-margin:0;transform:translateX(-50%);z-index:60;
-opacity:0;pointer-events:none;border-radius:999px;
-background:rgba(255,253,247,.92);box-shadow:0 4px 14px rgba(0,0,0,.10);
-padding:8px 20px;transition:opacity .28s ease;
-}
-.home-next-down.is-show{opacity:.94;pointer-events:auto}
-#homeBelow{margin-bottom:76px}
+/* Roy 2026-10-05：第二個 ▼（複製主頁嗰個）——
+   放喺版本卡最底（正常位置，唔係浮動），睇落就似螢幕最底；
+   撳 → 去「多種港式日常情景」。捲過咗就自然跟內容離開畫面。 */
+.home-next-down{margin-top:14px}
 .home-more-up-wrap{
 display:flex;align-items:center;justify-content:center;
 padding:28px 0 40px;
@@ -1123,7 +1115,6 @@ html.dk.dt .dt-nav-links a,html.dk.dt .dt-nav-links button{color:#A79E92}
 html.dk .mth-lead,html.dk .mth-axis p,html.dk .mth-step p,html.dk .mth-notes p,html.dk .mth-notes-p,html.dk .mth-limits p{color:#D9D2C6}
 html.dk .article-guide-body p,html.dk .article-guide-body li,html.dk .pros-item{color:#D9D2C6}
 html.dk .ver-chev,html.dk .home-acc-chev,html.dk .home-more-down,html.dk.dt #dtTypeRows span{color:#B9A97F}
-html.dk .home-next-down{background:rgba(28,28,28,.9);color:#B9A97F;box-shadow:0 4px 14px rgba(0,0,0,.4)}
 html.dk .text-gray-400{color:#9A9388}
 html.dk .text-gray-500{color:#A79E92}
 html.dk .text-gray-600{color:#C2BAAD}
@@ -2212,7 +2203,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="resumeBanner" class="hidden"></div>
 
 <!-- Roy 2026-10-05：第二個 ▼（複製主頁嗰個）→ 撳去「多種港式日常情景」。
-     只喺「輪盤 + 版本卡」呢一屏出現（見 JS 嘅 is-show）。 -->
+     放喺版本卡最底（正常位置，唔係浮動），睇落就似螢幕最底。 -->
  <button type="button" class="home-more-down home-next-down" onclick="scrollHomeScenes()" aria-label="睇港式日常情景">▼</button>
  <div class="scenes-bleed">
  <div class="scenes-head">
@@ -5425,34 +5416,6 @@ const el = document.querySelector("#home .scenes-bleed");
 if(!el) return;
 el.scrollIntoView({behavior:"smooth", block:"start"});
 };
-/* 新 ▼ 幾時出現：① 輪盤已捲到貼頂（＝撳過主頁 ▼）② 情景帶仲未入到畫面 */
-(function(){
-const btn = document.querySelector(".home-next-down");
-const reelWrap = document.getElementById("homeTypeReelWrap");
-const scenes = document.querySelector("#home .scenes-bleed");
-const home = document.getElementById("home");
-const below = document.getElementById("homeBelow");
-if(!btn || !reelWrap || !home || btn.dataset.bound === "1") return;
-btn.dataset.bound = "1";
-let raf = 0;
-const upd = () => {
-raf = 0;
-if(home.classList.contains("hidden")){ btn.classList.remove("is-show"); return; }
-const r = reelWrap.getBoundingClientRect();
-const s = scenes ? scenes.getBoundingClientRect() : null;
-const vb = below ? below.getBoundingClientRect() : null;
-/* 顯示條件（三個都要）：
-   ① 輪盤已捲到貼頂（＝撳過主頁 ▼）② 情景帶仲未貼頂（捲到嗰度就消失）
-   ③ 版本卡底未進入個 ▼ 佔用嘅底部區（否則會遮住「我的記錄」卡）*/
-const on = r.top <= 8
-        && (!s || s.top > 8)
-        && (!vb || vb.bottom < window.innerHeight - 50);
-btn.classList.toggle("is-show", on);
-};
-window.addEventListener("scroll", () => { if(!raf) raf = requestAnimationFrame(upd); }, {passive:true});
-window.addEventListener("resize", upd);
-upd();
-})();
 // 結果頁「再測一次」：返主頁，捲到 3 個版本卡（唔直接開測）
 window.scrollHomeTop = function(){
 const hero = document.querySelector("#home .home-hero");
