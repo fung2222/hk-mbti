@@ -70,6 +70,8 @@ fi
 
 if [ -z "$(git status --porcelain)" ]; then echo "== 冇改動，唔需要出貨 =="; exit 0; fi
 
+echo "== 將入 commit 嘅檔 =="
+git status --short
 git add -A || exit 1
 git commit -q -m "$MSG" || exit 1
 git push origin main || exit 1
