@@ -168,6 +168,16 @@ async def run():
         check("390: 「睇下面內容」▼ 喺首屏見到（唔可以再被推到畫面底）",
               bool(dd) and dd["inCopy"] and dd["bottom"] < dd["vh"] - 20, str(dd))
         await ctx.close()
+        # Roy 2026-10-05：一開 app 就要見到「成個」16 型輪盤（唔可以被推出螢幕底）。
+        # 靠 .home-hero 底部 padding（輪盤底離螢幕底 52px）＋ copy flex:1 吸收剩餘空間。
+        for _w, _h in [(390, 844), (390, 700), (360, 600)]:
+            _c, _p, _e = await page(_w, _h, _w, _h, True)
+            rr = await _p.evaluate("""() => { const e = document.getElementById('homeTypeReelWrap');
+              if(!e) return null; const r = e.getBoundingClientRect();
+              return {bottom: Math.round(r.bottom), vh: window.innerHeight, h: Math.round(r.height)}; }""")
+            check("%d×%d: 16 型輪盤首屏完整（唔可以被推出螢幕）" % (_w, _h),
+                  bool(rr) and rr["bottom"] <= rr["vh"], str(rr))
+            await _c.close()
         await b.close()
     srv.shutdown()
     print("\n" + ("✓ 全部通過（%d 項）" % passed if passed == total else "✗ %d / %d 項失敗" % (total - passed, total)))
