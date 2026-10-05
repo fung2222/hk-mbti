@@ -129,7 +129,7 @@ cd <repo>
 node tools/desktop_layout_test.js   # 37 項：鐵律 + DOM 假設 + 開關
 node tools/desktop_gate_test.js     # 34 項：14 個開關情境
 node tools/deeplink_test.js && node tools/record_view_test.js && node tools/voice_test.js
-python3 tools/preflight.py          # 20 項（pre-push hook 會跑）
+python3 tools/preflight.py          # 32 項（pre-push hook 會連 gate_refs／gate_design 一齊跑）
 
 # 真 Chrome（pip install playwright pillow numpy；Chrome 預設 /usr/bin/google-chrome，可 CHROME=… 改）
 python3 tools/desktop_render_test.py    # 45 項：真實位置（1440/1024 版式、冇橫向 scroll、#home 收得埋）

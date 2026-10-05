@@ -1,9 +1,20 @@
 #!/usr/bin/env sh
-# git pre-push hook：push 之前自動跑體檢，唔過就唔准推。
+# git pre-push hook：push 之前跑「毫秒級」靜態檢查，唔過就唔准推。
+#   只放零／極低成本嘅檢查 —— 全套 10 套閘（含 jsdom、真 Chrome）由 tools/ship.sh 負責。
+#   放慢嘢喺呢度會製造「為咗快而繞過」嘅誘因。
 # 安裝（每部 clone 做一次）：git config core.hooksPath .githooks
-python3 tools/preflight.py || {
-  echo ""
-  echo "✗ Preflight 未過，push 終止。修好之後再 push（或用 git push --no-verify 硬推）。"
-  exit 1
-}
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+for gate in tools/gate_refs.py tools/gate_design.py tools/preflight.py; do
+  if ! out=$(python3 "$gate" 2>&1); then
+    echo ""
+    echo "✗ push 終止：$gate 未過"
+    printf '%s\n' "$out" | tail -25
+    echo ""
+    echo "（修好之後再 push；緊急時 git push --no-verify 可硬推）"
+    exit 1
+  fi
+done
+
+echo "✓ push 前靜態檢查通過（gate_refs ＋ gate_design ＋ preflight）"
 exit 0
