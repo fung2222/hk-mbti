@@ -158,6 +158,15 @@ async def run():
         check("390: 手機冇 .dt；導覽／頁尾／組別標籤全部 display:none",
               not g["dt"] and not g["nav"] and not g["foot"] and not g["rows"],
               (g["dt"], g["navDisp"], g["footDisp"], g["rowsDisp"]))
+        # Roy 2026-10-05：「睇下面內容」▼ 原本喺 .home-hero-copy 之外（reel-wrap 之後），
+        # 被 copy 嘅 flex:1 推到畫面最底 → 手機一入 app 睇唔到，用戶唔知下面仲有內容。
+        # 修法＝移入 copy（描述文字下面）。呢條守住佢，唔准再搬出去。
+        dd = await pg.evaluate("""() => { const e = document.querySelector('.home-more-down');
+          if(!e) return null; const r = e.getBoundingClientRect();
+          return {top: Math.round(r.top), bottom: Math.round(r.bottom), vh: window.innerHeight,
+                  inCopy: !!e.closest('.home-hero-copy')}; }""")
+        check("390: 「睇下面內容」▼ 喺首屏見到（唔可以再被推到畫面底）",
+              bool(dd) and dd["inCopy"] and dd["bottom"] < dd["vh"] - 20, str(dd))
         await ctx.close()
         await b.close()
     srv.shutdown()
