@@ -69,6 +69,12 @@ setTimeout(()=>{
   chk('卡片仍然可撳（openType）', /openType\('INTJ','home'\)/.test(reel.innerHTML));
   chk('頁面零 JS error', jerr.length===0, jerr.slice(0,2).join(' | '));
 
+  // ---------- ★ 主頁高度：下拉重新整理之後唔可以令輪盤貼底（Roy 2026-10-05 實報）----------
+  // dvh 係 dynamic：下拉後工具列收埋會報大 ~48px → hero 變高 → 輪盤被推到底（像素量度：距底 266px → 122px）
+  // 所以要用 svh（small viewport ＝ 最細值，唔會變），並保留一行 dvh 做舊瀏覽器 fallback。
+  chk('★ .home-hero 用 svh（唔淨係 dvh）—— 防下拉重新整理後輪盤貼底',
+      /\.home-hero\{[^}]*min-height:100dvh;\s*min-height:100svh;/s.test(src));
+
   console.log(`\n${ok===total?'===== 全部通過':'===== 有失敗'}（${ok}/${total}）=====`);
   process.exit(ok===total?0:1);
 },600);

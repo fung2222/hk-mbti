@@ -275,7 +275,12 @@ border:1px solid #E0D6BE;border-radius:.75rem;padding:.55rem 1rem;cursor:pointer
 .home-hero{
 margin:-24px -16px 12px;
 padding:24px 20px max(46px, env(safe-area-inset-bottom));
+/* 高度用 svh（small viewport，＝工具列顯示時嘅最細值）而唔用 dvh：
+   dvh 係 dynamic，下拉重新整理後工具列收埋會報大 ~48px → hero 跟住變高 → 16 型輪盤被推到底、貼住螢幕底
+   （Roy 2026-10-05 實報，像素量度：正常距底 266px → 下拉後 122px，差 48px）。
+   第一行 dvh 做舊瀏覽器 fallback，第二行 svh 一支援就 override，令兩個狀態永遠一致。 */
 min-height:100dvh;
+min-height:100svh;
 box-sizing:border-box;
 display:flex;
 flex-direction:column;
