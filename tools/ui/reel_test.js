@@ -17,6 +17,11 @@ setTimeout(()=>{
 
   // ---------- 靜態：速度／機制 ----------
   chk('自轉速度 = 0.441（原本 0.42，+5%）', /const AUTO_V = 0\.441;/.test(src));
+  // Roy 2026-10-05：舊斷言只驗「code 有冇寫 0.441」→ 完全捉唔到「輪盤根本唔轉」（假綠）。
+  // 真兇：scrollLeft 喺部分環境會被 round 成整數 → reel.scrollLeft += 0.441 等於 += 0。
+  // 真正「會轉」嘅驗證喺 tools/desktop_render_test.py（真 Chrome 量 scrollLeft 隨時間變化）。
+  chk('★ 自轉唔可以直接 scrollLeft += v（會被 round 成 0）→ 必須經 reelAcc 累積器',
+      /let reelAcc = 0;/.test(src) && /reelAcc \+= v;/.test(src) && !/reel\.scrollLeft \+= v;/.test(src));
   chk('唔再硬寫 scrollLeft += 0.42', !/scrollLeft \+= 0\.42;/.test(src));
   chk('★ 有「殘餘速度」spinV 機制', /let spinV = 0;/.test(src));
   chk('★ 快速轉之後每 frame 減速（×0.955）', /spinV \*= 0\.955;/.test(src));
@@ -53,7 +58,11 @@ setTimeout(()=>{
   chk('桌面層轉輪維持橫向可滑（唔係 grid）', /html\.dt \.home-type-reel\{[^}]*display:flex[^}]*overflow-x:auto/.test(src) && !/html\.dt \.home-type-reel\{[^}]*display:grid/.test(src));
   chk('桌面唔准再隱藏複本（要 32 張先可以無縫循環）', !/nth-child\(n\+17\)\{display:none\}/.test(src));
   chk('桌面滑輪一樣自動轉（唔准 onDt ? 0）', /let v = AUTO_V;/.test(src) && !/onDt \? 0/.test(src) && !/onDt/.test(src));
-  chk('桌面自轉一樣會 wrapLoop（到中間就回捲，唔會飄到盡頭）', /wrapLoop\(\);\s*\n\s*\}\s*\nrequestAnimationFrame\(tick\)/.test(src) || /if\(v\)\{\s*reel\.scrollLeft \+= v;\s*wrapLoop\(\);/.test(src));
+  // 意圖：tick 內自轉時一定要 call wrapLoop()（唔可以飄到盡頭）。
+  // 註：2026-10-05 加咗 reelAcc 累積器（scrollLeft 會被 round），結構多咗層 if
+  //     → 唔好再綁死排版，用「if(v){ … wrapLoop(); … requestAnimationFrame(tick)」嘅意圖檢查。
+  chk('桌面自轉一樣會 wrapLoop（到中間就回捲，唔會飄到盡頭）',
+      /if\(v\)\{[\s\S]{0,500}?wrapLoop\(\);[\s\S]{0,300}?requestAnimationFrame\(tick\)/.test(src));
   chk('桌面滑輪卡係 9/16 直角（唔准 aspect-ratio:1/1 ／ border-radius:14px）',
       !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*aspect-ratio:1\/1/.test(src) && !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*border-radius:14px/.test(src)
       && /\.hub-type-card\{\s*aspect-ratio:9\/16;border-radius:0/.test(src));

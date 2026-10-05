@@ -808,7 +808,7 @@ html.dk .hub-row-chev{color:#C0A87A}
   /* 16 型滑輪：橫向可滑，左右箭嘴常駐；32 張（前 16 唯一 + 後 16 複本）做無縫循環 */
   html.dt .home-type-reel-wrap{position:relative;display:flex;flex-direction:column;min-width:0;max-width:100%;margin:0}
   html.dt .home-type-nav{opacity:1;pointer-events:auto;background:rgba(26,26,26,.48)}
-  html.dt .home-type-reel{display:flex;overflow-x:auto;overflow-y:hidden;gap:12px;min-width:0;width:100%;max-width:100%;
+  html.dt .home-type-reel{display:flex;overflow-x:auto;overflow-y:hidden;gap:6px;min-width:0;width:100%;max-width:100%;
     scroll-snap-type:x mandatory;scroll-behavior:auto;scrollbar-width:none;
     padding:8px 2px 14px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
   html.dt .home-type-reel::-webkit-scrollbar{display:none}
@@ -6801,6 +6801,7 @@ if(!wrap || !reel || wrap.dataset.bound === "1") return;
 wrap.dataset.bound = "1";
 let hideT, resumeT, paused = false;
 let spinV = 0;                    // 「俄羅斯輪盤」殘餘速度（撳箭嘴／flick 之後快速轉，再慢慢減速）
+let reelAcc = 0;                  // 小數累積器（scrollLeft 會被 round 成整數 —— 見 tick 內註釋）
 const AUTO_V = 0.441;             // 自轉速度（原本 0.42，+5%）
 const show = () => { clearTimeout(hideT); wrap.classList.add("is-press"); };
 const hideSoon = () => {
@@ -6844,8 +6845,16 @@ if(Math.abs(spinV) > AUTO_V){
   if(Math.abs(spinV) <= AUTO_V) spinV = 0;
 }
 if(v){
-reel.scrollLeft += v;
-wrapLoop();
+/* 重要：唔可以直接 `reel.scrollLeft += v`：部分環境會將 scrollLeft round 成整數
+   → += 0.441 每次都變成 += 0 → 輪盤完全唔動（2026-10-05 Roy 報「桌面版輪盤唔自動轉」，
+   像素量度確認 scrollLeft 設 1000.441 讀返 1000）。所以自己累積小數，夠 1px 才真正寫入。 */
+reelAcc += v;
+const step = Math.trunc(reelAcc);
+if(step !== 0){
+  reel.scrollLeft += step;
+  reelAcc -= step;
+  wrapLoop();
+}
 }
  }
 requestAnimationFrame(tick);

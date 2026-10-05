@@ -178,6 +178,18 @@ async def run():
             check("%d×%d: 16 型輪盤首屏完整（唔可以被推出螢幕）" % (_w, _h),
                   bool(rr) and rr["bottom"] <= rr["vh"], str(rr))
             await _c.close()
+        # Roy 2026-10-05（桌面兩報）：① 輪盤完全唔自動轉（scrollLeft 被 round 成整數
+        #   → reel.scrollLeft += 0.441 等於 += 0）② 桌面卡片間距要收窄一半（12 → 6px）。
+        # 呢條係唯一真正驗「會轉」嘅測試（jsdom 冇 scroll 行為）。
+        _c2, _p2, _e2 = await page(1440, 900, 1440, 900)
+        g0 = await _p2.evaluate("""() => { const r = document.getElementById('homeTypeReel');
+          return {sl: r.scrollLeft, gap: getComputedStyle(r).columnGap}; }""")
+        await _p2.wait_for_timeout(2000)
+        sl1 = await _p2.evaluate("() => document.getElementById('homeTypeReel').scrollLeft")
+        check("1440: 桌面輪盤會自動轉（唔可以被 scrollLeft rounding 卡死）",
+              abs(sl1 - g0["sl"]) > 20, "%s → %s" % (g0["sl"], sl1))
+        check("1440: 桌面卡片間距 = 6px（Roy：收窄一半）", g0["gap"] == "6px", g0["gap"])
+        await _c2.close()
         await b.close()
     srv.shutdown()
     print("\n" + ("✓ 全部通過（%d 項）" % passed if passed == total else "✗ %d / %d 項失敗" % (total - passed, total)))

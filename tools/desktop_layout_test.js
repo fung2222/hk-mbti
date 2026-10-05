@@ -57,8 +57,11 @@ for (const m of mediaBlocks) for (const r of m[2].matchAll(/([^{}]+)\{([^{}]*)\}
 check("冇覆寫 section（#home 等）嘅 display 而唔寫 :not(.hidden)（會令 .hidden 失效）", hiddenBreakers.length === 0, hiddenBreakers.join(" | "));
 check("桌面：複本唔再隱藏（32 張先可以無縫循環，唔會飄到盡頭）",
   !/nth-child\(n\+17\)\{display:none\}/.test(layer));
+// 意圖：一律 AUTO_V（唔准 onDt 例外）＋ 自轉時一定 call wrapLoop()。
+// 註：2026-10-05 加咗 reelAcc 小數累積器（scrollLeft 會被 round 成整數 → += 0.441 等於 += 0）
+//     → 唔好再綁死「reel.scrollLeft += v; 緊接 wrapLoop();」嘅排版。
 check("桌面：滑輪自動轉（tick 一律用 AUTO_V ＋ 一律 wrapLoop）",
-  /let v = AUTO_V;/.test(html) && !/onDt/.test(html) && /reel\.scrollLeft \+= v;\s*\n?\s*wrapLoop\(\);/.test(html.replace(/\r/g,"")));
+  /let v = AUTO_V;/.test(html) && !/onDt/.test(html) && /reelAcc \+= v;/.test(html) && /wrapLoop\(\);/.test(html));
 check("桌面：滑輪卡係 9/16 直角（唔要正方形／圓角）",
   !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*aspect-ratio:1\/1/.test(layer) &&
   !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*border-radius/.test(layer));
