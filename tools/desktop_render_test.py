@@ -190,6 +190,21 @@ async def run():
               abs(sl1 - g0["sl"]) > 20, "%s → %s" % (g0["sl"], sl1))
         check("1440: 桌面卡片間距 = 6px（Roy：收窄一半）", g0["gap"] == "6px", g0["gap"])
         await _c2.close()
+        # Roy 2026-10-05：撳 ▼ 要捲到「16 式輪盤貼螢幕最頂」，下面緊接版本卡
+        #（原本直接跳去版本卡，輪盤被跳過）
+        _c3, _p3, _e3 = await page(390, 844, 390, 844, True)
+        await _p3.evaluate("() => document.querySelector('.home-more-down').click()")
+        await _p3.wait_for_timeout(1500)
+        dv = await _p3.evaluate("""() => { const rw = document.getElementById('homeTypeReelWrap');
+          const vl = document.getElementById('versionList');
+          return {reelTop: Math.round(rw.getBoundingClientRect().top),
+                  reelBottom: Math.round(rw.getBoundingClientRect().bottom),
+                  verTop: Math.round(vl.getBoundingClientRect().top)}; }""")
+        check("390: 撳 ▼ 之後 16 型輪盤貼螢幕最頂（0 ≤ y ≤ 40）",
+              bool(dv) and 0 <= dv["reelTop"] <= 40, str(dv))
+        check("390: 撳 ▼ 之後版本卡喺輪盤下面（y > 輪盤底）",
+              bool(dv) and dv["verTop"] > dv["reelBottom"], str(dv))
+        await _c3.close()
         await b.close()
     srv.shutdown()
     print("\n" + ("✓ 全部通過（%d 項）" % passed if passed == total else "✗ %d / %d 項失敗" % (total - passed, total)))

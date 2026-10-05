@@ -26,6 +26,20 @@ setTimeout(()=>{
   chk('紀錄卡 onclick = selectRecord()', !!rc && rc.getAttribute('onclick')==='selectRecord()', rc&&rc.getAttribute('onclick'));
   chk('卡入面 4 粒「立即測試／查看紀錄」掣仲喺度', d.querySelectorAll('.ver-hint').length===4, d.querySelectorAll('.ver-hint').length);
 
+  // ---------- Roy 2026-10-05：3 個測試版本各加一個獨特線條 icon（「我的記錄」唔加）----------
+  const icos=[...d.querySelectorAll('.ver-btn .ver-ico')];
+  chk('★ 3 個測試版本卡各有 1 個 icon（我的記錄冇）', icos.length===3, icos.length);
+  chk('★ 3 個 icon 圖案互不相同（每個獨特）', new Set(icos.map(s=>s.innerHTML.trim())).size===3,
+      icos.map(s=>s.innerHTML.trim()).join(' | ').slice(0,90));
+  chk('三個 icon 分別喺 life／advanced／bb 卡內',
+      ['life','advanced','bb'].every(v=>!!d.querySelector('.ver-btn[data-ver="'+v+'"] .ver-ico')));
+  chk('「我的記錄」卡冇 icon（Roy 指定）', !d.querySelector('.ver-btn[data-ver="record"] .ver-ico'));
+  chk('icon 用線條風格（stroke:currentColor + fill:none）＋跟版本 accent 色',
+      /\.ver-ico\{[^}]*stroke:currentColor[^}]*fill:none/.test(src) &&
+      /\.ver-btn\[data-ver="life"\] \.ver-ico\{color:#C4922E\}/.test(src) &&
+      /\.ver-btn\[data-ver="advanced"\] \.ver-ico\{color:#8A9099\}/.test(src) &&
+      /\.ver-btn\[data-ver="bb"\] \.ver-ico\{color:#A96A2B\}/.test(src));
+
   let opened=null; w.openProfile=function(v){ opened=v; };
   const life=cards.find(x=>x.getAttribute('data-ver')==='life');
   const lifeCta=d.querySelector('.ver-btn[data-ver="life"] .ver-hint');

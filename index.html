@@ -64,6 +64,11 @@ html{background:var(--paper)}
 /* 港式日常情景 · 滿板設計（無卡片） */
 .scenes-title-ico{display:inline-block;width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-right:6px;vertical-align:-2px;}
 .rbtn-ico{display:inline-block;width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;margin-right:5px;vertical-align:-3px;}
+.ver-ico{display:inline-block;width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+/* 版本卡 icon 跟住該版本嘅 accent 色（金／銀／銅），同 .ver-arrow 一致 */
+.ver-btn[data-ver="life"] .ver-ico{color:#C4922E}
+.ver-btn[data-ver="advanced"] .ver-ico{color:#8A9099}
+.ver-btn[data-ver="bb"] .ver-ico{color:#A96A2B}
 .brand-gold{display:inline-flex !important;align-items:center;white-space:nowrap;}
 .scenes-bleed{margin:0 -16px 16px;padding:28px 20px 24px;background:linear-gradient(180deg,#fff,var(--paper));}
 .scenes-head{max-width:26rem;margin:0 auto;text-align:left;}
@@ -2148,7 +2153,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
- <div class="text-[15px] font-black text-ink">生活版（完整測試）</div>
+ <div class="text-[15px] font-black text-ink flex items-center gap-2"><svg class="ver-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7h11M9 12h11M9 17h11"/><path d="M4.6 7h.01M4.6 12h.01M4.6 17h.01"/></svg><span>生活版（完整測試）</span></div>
  <div class="text-xs text-gray-600 mt-0.5">60 題 · 5 分鐘 · 最準確</div>
  <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('life')">立即測試</button>
  </div>
@@ -2158,7 +2163,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div data-ver="advanced" onclick="selectVersion('advanced')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
- <div class="text-[15px] font-black text-ink">進階版（快速版）</div>
+ <div class="text-[15px] font-black text-ink flex items-center gap-2"><svg class="ver-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 6.5 13.5h4.6L11 21l7-10.5h-4.6z"/></svg><span>進階版（快速版）</span></div>
  <div class="text-xs text-gray-600 mt-0.5">30 題 · 3 分鐘 · 平衡選擇</div>
  <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('advanced')">立即測試</button>
  </div>
@@ -2168,7 +2173,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div data-ver="bb" onclick="selectVersion('bb')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
- <div class="text-[15px] font-black text-ink">BB 版（極簡版）</div>
+ <div class="text-[15px] font-black text-ink flex items-center gap-2"><svg class="ver-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.6"/></svg><span>BB 版（極簡版）</span></div>
  <div class="text-xs text-gray-600 mt-0.5">10 題 · 1 分鐘 · 純粹試下</div>
  <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('bb')">立即測試</button>
  </div>
@@ -5392,7 +5397,9 @@ document.body.removeChild(ta);
 };
 
 window.scrollHomeBelow = function(){
-const el = $("homeBelow");
+/* Roy 2026-10-05：▼ 由「直接跳去版本卡」改為捲到「16 式輪盤貼螢幕最頂」，
+   令輪盤喺最頂、下面緊接版本卡（用戶一按就見到色卡 + 可以揀版本）。 */
+const el = $("homeTypeReelWrap") || $("homeBelow");
 if(!el) return;
 el.scrollIntoView({behavior:"smooth", block:"start"});
 };
