@@ -6563,7 +6563,8 @@ window.openPair = function(a, b){
   document.getElementById("pairTitle").innerText = A + " × " + B;
   document.getElementById("pairCrumb").innerText = "配對深入 / " + A + (TA.cn ? "（" + TA.cn + "）" : "") + " × " + B + (B !== A && TB.cn ? "（" + TB.cn + "）" : "");
   if(!k){
-    body.innerHTML = '<div class="card p-6"><p class="text-sm text-gray-700 leading-relaxed">呢一對嘅深入內容仲喺度寫，會分批陸續補上（而家已經有 8 個型嘅配對深入）。</p></div>';
+    var _pc = Object.keys(window.PAIRS || {}).length;
+    body.innerHTML = '<div class="card p-6"><p class="text-sm text-gray-700 leading-relaxed">呢一對嘅深入內容仲喺度寫。而家已經有 ' + _pc + ' 對組合寫好咗，會陸續補上。</p></div>';
     show("pair"); window.scrollTo(0, 0); return;
   }
   const d = (window.PAIRS || {})[k] || {};

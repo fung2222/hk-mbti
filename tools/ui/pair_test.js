@@ -64,14 +64,20 @@ w.openPair("ENFP","INFP");
 chk("★ 反方向（ENFP × INFP）拎到同一篇內容（pairKey 雙向）",
     /最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));
 
-// 未寫嘅組合要優雅收場 —— 唔可以寫死某一對（分批寫落去會陸續變成「已寫」），要由資料動態搵一對真未寫嘅
-const T4=w.TYPE_ORDER||[];
-let unwritten=null;
-outer: for(const x of T4) for(const y of T4){ if(x!==y && !P[x+"|"+y] && !P[y+"|"+x]){ unwritten=[x,y]; break outer; } }
-chk("★ 搵到一對真未寫嘅組合（測試前提）", !!unwritten, "16 型已經全部寫滿");
-w.openPair(unwritten[0], unwritten[1]);
-chk("★ 未寫嘅組合（"+unwritten[0]+" × "+unwritten[1]+"）→ 出「陸續補上」提示，唔會空白／爆",
+// 未寫嘅組合要優雅收場 —— 唔可以寫死某一對，要由資料動態搵。
+// 2026-10-05：136 對全部寫齊之後已經冇「真未寫」組合 → 改為臨時抽走一對嚟測（測完即還原），
+// 咁樣無論配對寫到幾多成，呢條測試都永遠有意義。
+const _all=Object.keys(P);
+const _victim=_all[_all.length-1];
+const _ab=_victim.split("|");
+const _saved=P[_victim];
+delete P[_victim];
+w.openPair(_ab[0], _ab[1]);
+chk("★ 未寫嘅組合（臨時抽走 "+_victim+"）→ 出「陸續補上」提示，唔會空白／爆",
     /仲喺度寫/.test(d.getElementById("pairBody").innerHTML) && !d.getElementById("pair").classList.contains("hidden"));
+chk("★ 提示文案嘅對數係動態計（唔會寫死型數）", /對組合寫好咗/.test(d.getElementById("pairBody").innerHTML));
+P[_victim]=_saved;
+chk("★ 還原之後同一對搵得返內容", w.pairKey(_ab[0],_ab[1])===_victim);
 
 // 結果頁入口掣
 w.localStorage.clear();
@@ -121,6 +127,17 @@ chk("★ 守門：show() 畫面清單覆蓋全部 section[id]（" + allSec.lengt
 const SIMP_ONLY="为们这说会时让还过对觉东车买卖来见听问间无发样门机长网岁点热闹爱气头实际亲记认识语读写学习义举优势应该处达与专业";
 const simp=keys.filter(k=>new RegExp("["+SIMP_ONLY+"]").test(JSON.stringify(P[k])));
 chk("★ 內容零簡體專用字（繁體／港式用字）", simp.length===0, simp.slice(0,4).join(" , "));
+
+// 不變量 5：所有兩兩組合都要有深入內容（2026-10-05 寫齊 136/136）
+// 型號清單由 window.TYPES 動態取 —— 將來加型號而漏寫配對，呢條即刻紅
+const ROWS=Object.keys(w.TYPES||{}).filter(x=>/^[EI][NS][TF][JP]$/.test(x));
+const miss=[];
+for(let i=0;i<ROWS.length;i++)for(let j=i;j<ROWS.length;j++){
+  const a=ROWS[i], b=ROWS[j];
+  if(!(a+"|"+b in P) && !(b+"|"+a in P)) miss.push(a+"×"+b);
+}
+chk("★ 16 型全部兩兩組合都有深入內容（"+ROWS.length+" 型 → 應該 "+((ROWS.length*(ROWS.length+1))/2)+" 對）",
+    miss.length===0, "缺 "+miss.length+" 對："+miss.slice(0,6).join(" , "));
 
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);
