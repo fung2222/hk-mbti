@@ -552,8 +552,11 @@ font-size:14px;line-height:1;font-weight:700;opacity:.7;
 }
 /* Roy 2026-10-05：第二個 ▼（複製主頁嗰個）——
    放喺版本卡最底（正常位置，唔係浮動），睇落就似螢幕最底；
-   撳 → 去「多種港式日常情景」。捲過咗就自然跟內容離開畫面。 */
-.home-next-down{margin-top:14px}
+   撳 → 去「多種港式日常情景」。捲過咗就自然跟內容離開畫面。
+   Roy 2026-10-05 追加：想「移高少少」→ 原本計算上距離 16px（#homeBelow 嘅 mb-4 16px），
+   收窄到 6px（兩邊各 6px，margin 合併後 = 6px）。 */
+#homeBelow{margin-bottom:6px}
+.home-next-down{margin-top:6px}
 .home-more-up-wrap{
 display:flex;align-items:center;justify-content:center;
 padding:28px 0 40px;
