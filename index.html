@@ -1138,6 +1138,10 @@ html.dk .page-hero{background:linear-gradient(135deg,#151C25 0%,#222B37 100%)}
 html.dk .ad-card{background:#1A2431}
 /* v3 補漏（Roy 2026-09-29：仲有白色位）— 只補色，唔郁排版 */
 html.dk .card{background:var(--dk-card);box-shadow:0 4px 24px rgba(0,0,0,.42)}
+/* 2026-10-06 Roy 報「色調太淺好難睇」：呢張卡唔係 .card，所以 html.dk .card 蓋唔到佢嘅
+   淺忌廉漸變；但卡內文字跟 html.dk .text-gray-700 變淺 → 淺字淺底（實測對比 1.2，睇唔到）。
+   呢度畀佢一個同色系深底（唔改色相），日光模式完全不變。 */
+html.dk .about-cmp-card{background-image:linear-gradient(180deg,#232B35,#181E26);border-color:rgba(217,178,106,.5)}
 html.dk .option{background:var(--dk-card);border-color:var(--dk-line2)}
 html.dk .option.selected .option-letter{background:var(--gold);color:#12161C}
 html.dk .glass{background:rgba(24,30,38,.72)}
@@ -1490,7 +1494,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <li>結果多講特質列表，少講「喺香港點同人夾」</li>
  </ul>
  </div>
- <div class="rounded-xl p-3 border-2 border-gold bg-gradient-to-b from-yellow-50 to-white">
+ <div class="about-cmp-card rounded-xl p-3 border-2 border-gold bg-gradient-to-b from-yellow-50 to-white">
  <div class="font-bold mb-1 brand-gold">本站廣東話版</div>
  <ul class="list-disc pl-4 text-gray-700 space-y-0.5">
  <li><b>情境題</b>：多種港式日常（茶餐廳、港鐵、便利店、返工、相處…）</li>

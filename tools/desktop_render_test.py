@@ -255,6 +255,39 @@ async def run():
         check("1440: 強項／弱項 下面有 >=16px 留白（桌面層冇 override 走）",
               bool(sp5) and sp5["gap"] >= 16, str(sp5))
         await _c5.close()
+
+        # 2026-10-06 Roy 報「色調太淺好難睇」：關於頁「本站廣東話版」卡唔係 .card，
+        # 黑夜模式蓋唔到佢個淺忌廉漸變 -> 卡內文字變淺 = 淺字淺底（實測對比 1.2）。
+        _c6, _p6, _e6 = await page(390, 844, 390, 844, True)
+        dk_res = {}
+        for _mode in ("dark", "light"):
+            await _p6.evaluate("(m)=>{ document.documentElement.classList.toggle('dk', m==='dark'); try{window.openAbout();}catch(e){} }", _mode)
+            await _p6.wait_for_timeout(300)
+            dk_res[_mode] = await _p6.evaluate("""() => {
+          const card=document.querySelector('#about .about-cmp-card');
+          if(!card) return null;
+          const cs=getComputedStyle(card);
+          const cols=(cs.backgroundImage.match(/rgba?[(][^)]+[)]/g)||[]).map(c=>c.match(/[0-9.]+/g).map(Number).slice(0,3));
+          if(!cols.length) return {noGradient:true};
+          const lum=p=>{const q=p.map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});return 0.2126*q[0]+0.7152*q[1]+0.0722*q[2];};
+          const cr=(a,b)=>{const x=lum(a),y=lum(b);const hi=Math.max(x,y),lo=Math.min(x,y);return (hi+0.05)/(lo+0.05);};
+          const rgb=el=>(getComputedStyle(el).color.match(/[0-9.]+/g)||[]).map(Number).slice(0,3);
+          const worst=el=>Math.min(...cols.map(c=>cr(rgb(el),c)));
+          return {stops:cols.map(c=>c.map(Math.round)), mean:Math.round(cols.map(c=>(c[0]+c[1]+c[2])/3).reduce((a,b)=>a+b,0)/cols.length),
+                  titleCr:Math.round(worst(card.querySelector('.font-bold'))*100)/100,
+                  liCr:Math.round(worst(card.querySelector('li'))*100)/100};
+        }""")
+        check("黑夜：關於頁「本站廣東話版」卡係深底（唔可以淺底留喺黑夜）",
+              bool(dk_res["dark"]) and dk_res["dark"].get("mean") is not None and dk_res["dark"]["mean"] < 120,
+              str(dk_res["dark"]))
+        check("黑夜：卡內標題對比 >= 4.5（金標喺深底讀得到）",
+              bool(dk_res["dark"]) and dk_res["dark"].get("titleCr", 0) >= 4.5, str(dk_res["dark"]))
+        check("黑夜：卡內文對比 >= 4.5",
+              bool(dk_res["dark"]) and dk_res["dark"].get("liCr", 0) >= 4.5, str(dk_res["dark"]))
+        check("日光：卡底仍然係原本淺忌廉漸變（唔准改走日光設計）",
+              bool(dk_res["light"]) and dk_res["light"].get("mean") is not None and dk_res["light"]["mean"] > 200,
+              str(dk_res["light"]))
+        await _c6.close()
         await b.close()
     srv.shutdown()
     print("\n" + ("✓ 全部通過（%d 項）" % passed if passed == total else "✗ %d / %d 項失敗" % (total - passed, total)))
