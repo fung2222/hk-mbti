@@ -53,6 +53,7 @@ echo "== 出貨閘 =="
 run_gate "gate_refs（靜態：UI 函數存在＋語法）" python3 tools/gate_refs.py
 run_gate "gate_design（靜態：死 selector）"     python3 tools/gate_design.py
 run_gate "preflight"                            python3 tools/preflight.py
+run_gate "question_audit（題庫 109 條結構／計分／文法／重複）" node tools/question_audit.js
 # jsdom 全套
 run_gate "run.sh (jsdom UI 全套)"               sh tools/ui/run.sh
 run_gate "desktop_layout_test"                  node tools/desktop_layout_test.js

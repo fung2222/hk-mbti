@@ -100,6 +100,13 @@ Object.keys(ALTS).forEach(k => {
 });
 Object.keys(altDupText).forEach(t => { if(altDupText[t] > 1) out.altIssues.push(`重複 alt 文字 ×${altDupText[t]}：「${t}」`); });
 
+// 題目文字完全重複（跨題）—— 原本只查選項，題目撞字冇人捉（2026-10-05 RED 驗證發現）
+const qSeen = {};
+Q.forEach((q, i) => { const t = String(q.t).trim(); (qSeen[t] = qSeen[t] || []).push(i + 1); });
+Object.keys(qSeen).forEach(t => {
+  if (qSeen[t].length > 1) out.dup.push(`題目重複 ×${qSeen[t].length}：「${t.slice(0, 16)}」(#${qSeen[t].join(", #")})`);
+});
+
 out.counts.total = Q.length;
 out.counts.alts = altCount;
 out.counts.altKeys = Object.keys(ALTS).length;
@@ -108,3 +115,14 @@ out.counts.altKeys = Object.keys(ALTS).length;
 ["lens","dup"].forEach(k => { out[k] = out[k].slice(0, 15); });
 out.altIssues = out.altIssues.slice(0, 20);
 console.log(JSON.stringify(out, null, 1));
+
+// 硬錯誤（結構／計分／文法／重複）→ 非零 exit，令出貨閘真係攔得住。
+// lens／altIssues 屬警告（變體換句話說、字數差）→ 唔 fail。
+// 歷史：本檔一直冇 process.exit，所以無論捉到幾多問題都 rc=0，加入 ship.sh 等於假綠（2026-10-05 靠 RED 驗證捉到）。
+const hard = ["struct","scoring","grammar","dup"]
+  .flatMap(k => out[k].filter(x => x !== "（0）").map(x => `${k}: ${x}`));
+if (hard.length) {
+  console.error(`✗ 題庫硬錯誤 ${hard.length} 項（結構／計分／文法／重複）：`);
+  hard.slice(0, 10).forEach(x => console.error("   " + x));
+  process.exit(1);
+}

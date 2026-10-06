@@ -124,7 +124,7 @@ def collect_items(questions, alts=None, voice=DEFAULT_VOICE, rate="+0%"):
             oraw = (opt.get("t") or "").strip()
             if not oraw or ("o", oraw) in seen:
                 continue
-            # ⚠️ 唔加字母前綴：buildDeck 會打亂選項次序再重派 A/B/C/D
+            # 注意：唔加字母前綴：buildDeck 會打亂選項次序再重派 A/B/C/D
             ospoken = normalize(oraw)
             seen.add(("o", oraw))
             items.append(("o", oraw, ospoken,
@@ -184,7 +184,7 @@ def write_map(items):
     lines = ["// 自動生成 — 唔好手改。重生：python3 tools/gen_voice.py",
              "// key = index.html 題庫原本嘅字（未經正規化），前端直接 Q_AUDIO[q.t] lookup；",
              "// 搵唔到就 fallback 用 speechSynthesis（見 index.html speakQuestion）。",
-             "// ⚠️ O_AUDIO 係「純選項文字」，唔包字母 — 字母由 L_AUDIO 跟 o.l 播，",
+             "// 注意：O_AUDIO 係「純選項文字」，唔包字母 — 字母由 L_AUDIO 跟 o.l 播，",
              "//    因為 buildDeck 會打亂選項次序再重派 A/B/C/D。",
              "window.Q_AUDIO = {"]
     for kind, raw, _spoken, path in items:
