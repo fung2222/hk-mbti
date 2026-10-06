@@ -128,7 +128,15 @@ setTimeout(async ()=>{
   chk('★ 16 型格下面有測試入口卡', (function(){ const c=$('#deep #deepCta'), g=$('#deepTypeGrid'); return !!c && !!g && (g.compareDocumentPosition(c) & 4) > 0; })());
   chk('★ 測試入口文案同人格分頁一致（想知道自己 MBTI 人格？）', /想知道自己 MBTI 人格？/.test($('#deep #deepCta').textContent), $('#deep #deepCta').textContent.trim());
   chk('★ 16 型格同下面卡片有距離（hub-bleed margin-bottom 12px；Roy 2026-10-02 要緊啲）', /\.hub-bleed\{margin:0 -16px 12px/.test(src));
-  chk('★ 上面卡片同 16 型格有距離（mb-4）', /<div class="card p-4 mb-4">/.test(src));
+  // 2026-10-06 修：原本只 grep `<div class="card p-4 mb-4">`，咁啱撞中「傾向程度卡」嘅 class
+// （該卡已搬入 #personalReport）→ 假綠/假紅。改為指名真正嘅元素。
+chk('★ 上面卡片同 16 型格有距離（deepIntro 有 mb-4）',
+    /<div class="card p-4 mb-4" id="deepIntro">/.test(src));
+chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (function(){
+    const a = $('#deep #deepIntro'), b = $('#deep #deepTypeGrid');
+    if(!a || !b) return false;
+    return (a.compareDocumentPosition(b) & 4) > 0;   // b 喺 a 之後
+})());
   chk('★ 測試入口掣去揀版本頁（goPickVersion）', /onclick="goPickVersion\(\)">立即測試/.test(src));
   chk('★ 入型別目錄時測試入口一齊收埋', /deepCta"[\s\S]{0,90}display = "none"/.test(src));
   chk('★ 返 16 型層時測試入口出返', /deepCta"[\s\S]{0,120}display = ""/.test(src));

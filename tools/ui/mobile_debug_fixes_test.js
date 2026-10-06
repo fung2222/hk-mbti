@@ -82,7 +82,8 @@ setTimeout(()=>{
       return /cta-bulb/.test(tt) && /\.cta-bulb\{display:block/.test(tt) && /想知道自己 MBTI 人格？/.test(tt) && !/睇完想試/.test(tt);
     }));
     chk('冇新 jsdom error', jerr.length===0, jerr.join(' | '));
-    console.log("===== 全部通過（"+total+" 項）=====");
+    console.log(ok===total ? "===== 全部通過（"+total+" 項）====="
+        : "===== 有失敗（"+ok+"/"+total+"）=====");
     process.exit(ok===total?0:1);
   }, 420);
   }, 300);

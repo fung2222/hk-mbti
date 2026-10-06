@@ -55,8 +55,8 @@ const notes=[...full1.matchAll(/class="pr-note">([^<]+)</g)].map(m=>m[1]);
 chk("★ 已解鎖：D 卡有 3 條盲點段（5 條軸已改為免費，唔喺呢度）", notes.length===3, notes.length);
 chk("★ 已解鎖：盲點數量 = 3（獨立段落）", (full1.match(/你嘅 3 個盲點/g)||[]).length===1);
 chk("★ 已解鎖：D 卡唔再出軸 %（已移去免費卡）", !/你 5 條軸各自代表咩/.test(full1));
-chk("★ 免費卡軸 % 同 r.pct 一致（唔自創數字）",
-    /40%/.test(d.getElementById("personalityDetail").innerHTML) && /65%/.test(d.getElementById("personalityDetail").innerHTML));
+chk("★ 傾向程度 % 同 r.pct 一致（唔自創數字；2026-10-06 已搬入個人化報告卡）",
+    /40%/.test(d.getElementById("personalReport").innerHTML) && /65%/.test(d.getElementById("personalReport").innerHTML));
 
 // deterministic：同一份答案跑兩次，輸出必須完全一樣
 const p1=JSON.stringify(w.personalReport(JSON.parse(JSON.stringify(R))));
@@ -106,7 +106,7 @@ const afterD = d.getElementById("personalReport").innerHTML;
 const afterPct = d.getElementById("personalityDetail").innerHTML;
 chk("★ 真跑：出入紀錄之後 D 卡仲在（唔再消失）", afterD.length > 0 && /pr-sim-c/.test(afterD), "長度=" + afterD.length);
 chk("★ 真跑：D 卡內容同之前一模一樣（3 個相似型＋數字）", afterD === beforeD, "before=" + beforeD.length + "B after=" + afterD.length + "B");
-chk("★ 真跑：傾向程度 % 都返嚟（同一個 root cause）", /你嘅傾向程度/.test(afterPct) && /65%/.test(afterPct));
+chk("★ 真跑：傾向程度 % 都返嚟（同一個 root cause）", /你嘅傾向程度/.test(afterD) && /65%/.test(afterD));
 chk("★ 真跑：仲係結果頁（冇被踢走）", /id="result"/.test(d.body.innerHTML) && !d.getElementById("result").classList.contains("hidden"));
 
 
@@ -116,17 +116,17 @@ w.localStorage.setItem(w.TIER_KEY, "full");
 w.renderResult(JSON.parse(JSON.stringify(R)));            // 令 _lastScoreObj = 今次（INTJ）
 w.localStorage.setItem("hkmbti_history", JSON.stringify([{id:"old1", mbti:"INTJ-T", timestamp:Date.now(), version:"life"}]));
 w.viewHistoryResult("0");
-const pOld = d.getElementById("personalityDetail").innerHTML;
-chk("★ 舊紀錄（冇 pct）＋同型 → 「傾向程度」用最後一次分數頂住", /你嘅傾向程度/.test(pOld) && /40%/.test(pOld) && /65%/.test(pOld));
+const prOld = d.getElementById("personalReport").innerHTML;
+chk("★ 舊紀錄（冇 pct）＋同型 → 「傾向程度」用最後一次分數頂住", /你嘅傾向程度/.test(prOld) && /40%/.test(prOld) && /65%/.test(prOld));
 chk("★ 舊紀錄（冇 pct）＋同型 → D 卡都出返", /pr-sim-c/.test(d.getElementById("personalReport").innerHTML));
-chk("★ 舊紀錄（冇 pct）＋同型 → 唔會出「修復前舊紀錄」說明", !/修復前嘅舊紀錄/.test(pOld));
+chk("★ 舊紀錄（冇 pct）＋同型 → 唔會出「修復前舊紀錄」說明", !/修復前嘅舊紀錄/.test(prOld));
 
 w.localStorage.setItem("hkmbti_history", JSON.stringify([{id:"old2", mbti:"ENFP-A", timestamp:Date.now(), version:"life"}]));
 w.viewHistoryResult("0");
 const pOther = d.getElementById("personalityDetail").innerHTML;
 const dOther = d.getElementById("personalReport").innerHTML;
-chk("★ 舊紀錄（冇 pct）＋唔同型 → 唔准亂套 %（冇「你嘅傾向程度」）", !/你嘅傾向程度/.test(pOther));
-chk("★ 舊紀錄（冇 pct）＋唔同型 → 出「修復前舊紀錄」說明句", /修復前嘅舊紀錄/.test(pOther));
+chk("★ 舊紀錄（冇 pct）＋唔同型 → 唔准亂套 %（冇「你嘅傾向程度」）", !/你嘅傾向程度/.test(dOther));
+chk("★ 舊紀錄（冇 pct）＋唔同型 → 出「修復前舊紀錄」說明句", /修復前嘅舊紀錄/.test(dOther));
 chk("★ 舊紀錄（冇 pct）＋唔同型 → D 卡唔會殘留上一個型嘅內容", !/pr-sim-c/.test(dOther), dOther.slice(0, 80));
 
 
@@ -143,19 +143,19 @@ w.saveResult();                                        // 產生 hkmbti_last_sco
 w._lastScoreObj = null;                                // 模擬「完全閂 app 再開」：記憶體清空
 w.localStorage.setItem("hkmbti_history", JSON.stringify([{id:"old3", mbti:"INTJ-T", timestamp:Date.now(), version:"life"}]));
 w.viewHistoryResult("0");
-const pR = d.getElementById("personalityDetail").innerHTML;
-chk("★ 重開 app 後開舊紀錄 → 靠 localStorage 都出返「傾向程度」", /你嘅傾向程度/.test(pR) && /40%/.test(pR));
-chk("★ 重開 app 後 → 有「同型參考」註腳（唔係靜靜當係嗰次）", /同型參考/.test(pR));
+const prR = d.getElementById("personalReport").innerHTML;
+chk("★ 重開 app 後開舊紀錄 → 靠 localStorage 都出返「傾向程度」", /你嘅傾向程度/.test(prR) && /40%/.test(prR));
+chk("★ 重開 app 後 → 有「同型參考」註腳（唔係靜靜當係嗰次）", /同型參考/.test(prR));
 chk("★ 重開 app 後 → D 卡都有返", /pr-sim-c/.test(d.getElementById("personalReport").innerHTML));
 
 
 // ───────── 六、2026-10-04 定位：維度 % 同「呢條軸代表咩」一律免費 ─────────
 w.localStorage.clear();
 w.renderResult(JSON.parse(JSON.stringify(R)));     // 免費版（未解鎖）
-const pdFree = d.getElementById("personalityDetail").innerHTML;
-chk("★ 免費版：5 條軸解釋全部出齊（唔止百分比）",
-    /能量主要向內/.test(pdFree) && /你習慣跳去/.test(pdFree) && /邊個做法最合理/.test(pdFree) && /你鍾意有計劃/.test(pdFree) && /情緒接收強/.test(pdFree));
-chk("★ 冇「全部免費開放」呢句宣傳（Roy：唔要）", !/全部免費開放/.test(pdFree) && !RAW.includes("全部免費開放"));
+const prFree = d.getElementById("personalReport").innerHTML;
+chk("★ 免費版：5 條軸解釋全部出齊（唔止百分比；2026-10-06 已搬入個人化報告卡）",
+    /能量主要向內/.test(prFree) && /你習慣跳去/.test(prFree) && /邊個做法最合理/.test(prFree) && /你鍾意有計劃/.test(prFree) && /情緒接收強/.test(prFree));
+chk("★ 冇「全部免費開放」呢句宣傳（Roy：唔要）", !/全部免費開放/.test(prFree) && !RAW.includes("全部免費開放"));
 chk("★ 免費版都有齊個人化報告（已開放免費）", /pr-sim-c/.test(d.getElementById("personalReport").innerHTML));
 w.localStorage.setItem(w.TIER_KEY, "full");
 w.renderResult(JSON.parse(JSON.stringify(R)));
@@ -168,17 +168,46 @@ w.renderResult(JSON.parse(JSON.stringify(R)));
 chk("★ 收費點仍然係 9 章深入分析（冇被拆走）", RAW.includes('i > 0 && window.getTier() !== "full"'));
 
 
-// ───────── 七、S/N 等「接近中間」提示要放喺「你嘅傾向程度」卡（Roy 2026-10-04 報放錯位置）─────────
+// ───────── 七、「接近中間」提示 + 傾向程度位置（2026-10-06 Roy：傾向程度搬入個人化報告卡）─────────
 w.localStorage.clear();
 w.renderResult({mbti:"INTJ-T", pct:{EI:[40,60], SN:[51,49], TF:[70,30], JP:[80,20], TA:[62,38]}, closeAxes:["S/N"], score:{}, version:"life", totalQ:60});
-const pdPos = d.getElementById("personalityDetail").innerHTML;
-chk("★ 「軸接近中間」提示真係出咗", /軸接近中間/.test(pdPos));
-chk("★ 提示放喺「你嘅傾向程度」卡（即喺「性格刻度」之前）",
-    pdPos.indexOf("軸接近中間") > 0 && pdPos.indexOf("軸接近中間") < pdPos.indexOf("性格刻度"),
-    "note=" + pdPos.indexOf("軸接近中間") + " 刻度=" + pdPos.indexOf("性格刻度"));
+const prPos = d.getElementById("personalReport").innerHTML;
+const pdPos2 = d.getElementById("personalityDetail").innerHTML;
+chk("★ 「軸接近中間」提示真係出咗", /軸接近中間/.test(prPos));
+chk("★ 提示放喺「你嘅傾向程度」節（即喺「計分方法同限制」之前）",
+    prPos.indexOf("軸接近中間") > 0 && prPos.indexOf("軸接近中間") < prPos.indexOf("計分方法同限制"),
+    "note=" + prPos.indexOf("軸接近中間") + " 方法=" + prPos.indexOf("計分方法同限制"));
 chk("★ 提示喺 5 條軸下面（唔會插喺軸上面）",
-    pdPos.indexOf("軸接近中間") > pdPos.indexOf("T 自信") && pdPos.indexOf("軸接近中間") < pdPos.indexOf("計分方法同限制"));
-chk("★ 性格刻度嗰組唔再出現提示", pdPos.indexOf("性格刻度") > 0 && pdPos.slice(pdPos.indexOf("性格刻度")).indexOf("軸接近中間") === -1);
+    prPos.indexOf("軸接近中間") > prPos.indexOf("T 敏感") && prPos.indexOf("軸接近中間") < prPos.indexOf("計分方法同限制"));
+chk("★ 性格刻度嗰組唔再出現提示", pdPos2.indexOf("性格刻度") > 0 && pdPos2.slice(pdPos2.indexOf("性格刻度")).indexOf("軸接近中間") === -1);
+
+// ───────── 八、2026-10-06 Roy 結構調整的守門（防止日後改壞）─────────
+chk("★ 傾向程度喺 #personalReport 卡內（唔再獨立開框喺 #personalityDetail）",
+    prPos.indexOf("你嘅傾向程度") > 0 && pdPos2.indexOf("你嘅傾向程度") === -1);
+chk("★ 傾向程度係報告卡內最後一節（喺「你嘅 3 個盲點」之後）",
+    prPos.indexOf("你嘅 3 個盲點") > 0 && prPos.indexOf("你嘅 3 個盲點") < prPos.indexOf("你嘅傾向程度"));
+chk("★ 個人化報告卡內有齊：最似 3 型 + 3 盲點 + 傾向程度",
+    /pr-sim-c/.test(prPos) && /pr-note/.test(prPos) && /你嘅傾向程度/.test(prPos));
+chk("★ pctBlockHtml 係共用函數（唔再喺 renderResult 內硬寫）",
+    RAW.includes("window.pctBlockHtml = function") && !/const pctBlock = \(_pct\.EI/.test(RAW));
+chk("★ 傾向程度卡冇 card class（唔再獨立卡框）",
+    !/class="card[^"]*"[^>]*>[\s\S]{0,80}你嘅傾向程度/.test(prPos));
+// 「睇你哋點相處」入口：由 84x26px 細淡掣 → 全闊金色實心掣
+chk("★ 「睇你哋點相處」掣 CSS 係全闊（width:100%）", /\.pair-go\{[^}]*width:100%/.test(RAW));
+chk("★ 「睇你哋點相處」掣 CSS 有金色底（gradient + var(--gold)）",
+    /\.pair-go\{[^}]*linear-gradient[^}]*var\(--gold\)/.test(RAW));
+chk("★ 「睇你哋點相處」掣唔再係舊嘅細淡樣式（11px / #7C6B45 / --soft）",
+    !/\.pair-go\{[^}]*font-size:11px/.test(RAW) && !/\.pair-go\{[^}]*background:var\(--soft\)/.test(RAW));
+// 用真 DOM 檢查（regex 會橫跨 closing tags，唔可靠）
+w.localStorage.clear();
+w.renderResult(JSON.parse(JSON.stringify(R)));
+const _go = d.querySelector(".pair-go");
+chk("★ 掣存在且有 openPair handler", !!_go && /openPair\('/.test(_go.getAttribute("onclick")||""));
+chk("★ 掣唔再擠喺 .text-right 角落（改咗整行下面）", !!_go && !_go.closest(".text-right"));
+chk("★ 掣係配對行嘅獨立一行（parent 就係配對行）",
+    !!_go && !!_go.parentElement && /py-2\.5/.test(_go.parentElement.className) && _go.parentElement.querySelectorAll(".pair-go").length===1);
+chk("★ 配對行仍然有型號 / % 夾 / slogan",
+    !!_go && !!_go.parentElement && /% 夾/.test(_go.parentElement.textContent) && /pr|slogan|·/.test(_go.parentElement.textContent));
 
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);

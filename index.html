@@ -171,7 +171,8 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 .pr-axis{margin-top:10px}
 .pr-axis-t{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:4px}
 /* 配對深入（B 模組，2026-10-04）*/
-.pair-go{font-size:11px;font-weight:700;color:#7C6B45;background:var(--soft);border:1px solid #E0D6BE;border-radius:8px;padding:3px 8px;white-space:nowrap}
+/* 2026-10-06 Roy：原本 84x26px、11px、淡米底 → 太細太淡（喺 350px 行內只佔 24%）→ 改全闊金色實心 */
+.pair-go{display:block;width:100%;margin-top:8px;font-size:13px;font-weight:700;color:#3A2E14;background:linear-gradient(180deg,#E8C87A,var(--gold));border:0;border-radius:10px;padding:10px 12px;text-align:center;letter-spacing:.01em;box-shadow:0 1px 2px rgba(26,26,26,.10)}
 .pair-pairhead{font-size:22px;font-weight:900;color:var(--ink);letter-spacing:.02em}
 .pair-x{color:#A08A5C;font-weight:700}
 .pair-ol,.pair-ul{margin:0;padding-left:1.15rem}
@@ -1168,7 +1169,7 @@ html.dk.dt .dt-cta-ghost:hover{color:#C0A87A}
 
 
 /* 配對深入：黑夜色（2026-10-04 修 —— 之前誤放主 style 且冇 html.dk 前綴 → 光模式都變金黃字 ✗） */
-html.dk .pair-go{background:rgba(217,178,106,.12);border-color:rgba(217,178,106,.35);color:#D9B26A}
+html.dk .pair-go{background:linear-gradient(180deg,#D9B26A,#B8934C);color:#1A1A1A}
 html.dk .pair-ol li,html.dk .pair-ul li{color:#A79E92}
 html.dk .pair-x{color:#C0A87A}
 </style>
@@ -4617,6 +4618,58 @@ window.lastScoreObj = function(){
  }catch(e){}
  return window._lastScoreObj || null;
 };
+// ====================== 傾向程度卡（2026-10-06 Roy：由「性格分析」搬入「你嘅個人化報告」合併）======================
+// 原本係 renderResult 內嘅獨立卡（582px 高），Roy 2026-10-06 指佢同個人化報告同性質 →
+// 搬入同一張卡做一節，唔再獨立開框；「性格刻度」同「強項／弱項」自然上移約 595px。
+window.pctBlockHtml = function(r){
+  r = r || {};
+  let pct = r.pct || {};
+  let pctNote = "";
+  const noNote = '<div class="text-[11px] text-gray-500 leading-relaxed">呢條係修復前嘅舊紀錄，冇儲存維度分數。重新做一次測試，就會有返「傾向程度」同「你嘅個人化報告」。</div>';
+  // 舊紀錄（修復前）冇存分數：同型可以參考「最近一次測試」嘅分數；唔同型唔准亂套
+  if(!pct.EI){
+    const ls = (typeof window.lastScoreObj === "function") ? window.lastScoreObj() : null;
+    if(ls && String(ls.mbti||"").substring(0,4) === String(r.mbti||"").substring(0,4)){
+      pct = (ls.pct || {});
+      if(pct.EI) pctNote = '<div class="text-[10px] text-gray-500 leading-relaxed mt-1">（同型參考：以下係你最近一次同型測試嘅維度分數。）</div>';
+    }
+  }
+  if(!pct.EI) return noNote;
+  const ac = {EI:"#E89A6B", SN:"#A86B7C", TF:"#3A4F6B", JP:"#6B5A8A", TA:"#8A7A5A"};
+  const row = function(lab, lv, rlab, rv, col, k){
+    // 2026-10-04 Roy 定位：維度 % 同「呢條軸代表咩」屬普通資訊 → 一律免費
+    const _ka = String(lab).trim().charAt(0), _kb = String(rlab).trim().slice(-1);
+    const _domTxt = (window.PR_DOM && k && window.PR_DOM[k + "_" + (lv >= rv ? _ka : _kb)]) || "";
+    if(typeof lv !== "number" || typeof rv !== "number") return "";
+    const lWin = lv > rv, rWin = rv > lv;
+    return `<div class="mb-3">
+      <div class="flex justify-between text-[11px] mb-1">
+        <span class="${lWin ? "font-bold text-ink" : "text-gray-500"}">${lab} ${lv}%</span>
+        <span class="${rWin ? "font-bold text-ink" : "text-gray-500"}">${rv}% ${rlab}</span>
+      </div>
+      <div class="relative h-2 rounded-full overflow-hidden bg-soft">
+        <div style="position:absolute;top:0;bottom:0;background:${col};${lv >= rv ? "right:50%;" : "left:50%;"}width:${Math.abs(lv - 50)}%"></div>
+        <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(26,26,26,.18)"></div>
+      </div>
+      ${_domTxt ? `<div class="text-[11px] text-gray-500 leading-relaxed mt-2">${_domTxt}</div>` : ""}
+    </div>`;
+  };
+  const closeNote = (r.closeAxes && r.closeAxes.length)
+    ? `<p class="text-xs text-gray-500 mt-3">${r.closeAxes.join("、")} 軸接近中間（分數差 1 分內），呢幾條軸可能兩邊都似。</p>`
+    : "";
+  return `<div class="mt-4 pt-4 border-t border-gray-100">
+    <div class="text-xs tracking-widest brand-gold font-bold mb-3">你嘅傾向程度</div>
+    ${row("E 外向", pct.EI[0], "內向 I", pct.EI[1], ac.EI, "EI")}
+    ${row("S 實感", pct.SN[0], "直覺 N", pct.SN[1], ac.SN, "SN")}
+    ${row("T 思考", pct.TF[0], "情感 F", pct.TF[1], ac.TF, "TF")}
+    ${row("J 判斷", pct.JP[0], "感知 P", pct.JP[1], ac.JP, "JP")}
+    ${row("T 敏感", pct.TA[0], "自信 A", pct.TA[1], ac.TA, "TA")}
+    ${closeNote}
+    <div class="text-[10px] text-gray-500 leading-relaxed mt-1">百分比係你喺該軸兩邊嘅得分比例，唔代表好壞。中間幼線係 50%；分差 1 分以內嘅軸，下面會另外提你。</div>${pctNote}
+    <button type="button" class="mt-3 text-[11px] font-bold brand-gold" onclick="openMethod()">計分方法同限制 →</button>
+  </div>`;
+};
+
 window.personalReport = function(r){
   const x = r || window._lastScoreObj;
   if(!x || !x.pct) return null;
@@ -4663,7 +4716,12 @@ window.renderPersonalReport = function(r){
     const ls = (typeof window.lastScoreObj === "function") ? window.lastScoreObj() : window._lastScoreObj;
     const same = ls && r && String(ls.mbti||"").substring(0,4) === String(r.mbti||"").substring(0,4);
     if(same) d = window.personalReport(ls);
-    if(!d){ box.innerHTML = ""; return; }
+    if(!d){
+      // 2026-10-06：搬入傾向程度之後，呢度唔可以再淨係清空 ——
+      // 冇報告數據時仍要出「修復前舊紀錄」說明（原本由 personalityDetail 嗰邊負責）
+      box.innerHTML = window.pctBlockHtml(r);
+      return;
+    }
   }
   const simRows = d.similar.map(function(o){
     const right = o.me ? "你嘅結果" : ("差 " + o.diff.length + " 個字母（" + o.diff.join("、") + "）");
@@ -4673,6 +4731,7 @@ window.renderPersonalReport = function(r){
     + '<div class="text-xs tracking-widest brand-gold font-bold mb-3">你嘅個人化報告</div>'
     + '<div class="sub-label">最似你嘅 3 個型</div>' + simRows
     + '<div class="sub-label mt-4">你嘅 3 個盲點</div>' + d.notes.map(function(n){ return '<p class="pr-note">' + n + '</p>'; }).join("")
+    + window.pctBlockHtml(r)
     + '</div>';
 };
 window.renderResult = function(r){
@@ -4703,39 +4762,8 @@ if(!_pct.EI){
  }
 }
 const _noPctNote = '<div class="text-[11px] text-gray-500 leading-relaxed mt-1">呢條係修復前嘅舊紀錄，冇儲存維度分數。重新做一次測試，就會有返「傾向程度」同「你嘅個人化報告」。</div>';
-const closeNote = (r.closeAxes && r.closeAxes.length)
- ? `<p class="text-xs text-gray-500 mt-3">${r.closeAxes.join("、")} 軸接近中間（分數差 1 分內），呢幾條軸可能兩邊都似。</p>`
- : "";
-const _ac = {EI:"#E89A6B", SN:"#A86B7C", TF:"#3A4F6B", JP:"#6B5A8A", TA:"#8A7A5A"};
-const _row = function(lab, lv, rlab, rv, col, k){
- // 2026-10-04 Roy 定位：維度 % 同「呢條軸代表咩」屬普通資訊 → 一律免費
- const _ka = String(lab).trim().charAt(0), _kb = String(rlab).trim().slice(-1);
- const _domTxt = (window.PR_DOM && k && window.PR_DOM[k + "_" + (lv >= rv ? _ka : _kb)]) || "";
-if(typeof lv !== "number" || typeof rv !== "number") return "";
-const lWin = lv > rv, rWin = rv > lv;
-return `<div class="mb-3">
- <div class="flex justify-between text-[11px] mb-1">
- <span class="${lWin ? "font-bold text-ink" : "text-gray-500"}">${lab} ${lv}%</span>
- <span class="${rWin ? "font-bold text-ink" : "text-gray-500"}">${rv}% ${rlab}</span>
- </div>
- <div class="relative h-2 rounded-full overflow-hidden bg-soft">
- <div style="position:absolute;top:0;bottom:0;background:${col};${lv >= rv ? "right:50%;" : "left:50%;"}width:${Math.abs(lv - 50)}%"></div>
- <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(26,26,26,.18)"></div>
- </div>
- ${_domTxt ? `<div class="text-[11px] text-gray-500 leading-relaxed mt-2">${_domTxt}</div>` : ""}
- </div>`;
- };
-const pctBlock = (_pct.EI ? `<div class="card p-4 mb-4">
- <div class="text-xs tracking-widest brand-gold font-bold mb-3">你嘅傾向程度</div>
- ${_row("E 外向", _pct.EI[0], "內向 I", _pct.EI[1], _ac.EI, "EI")}
- ${_row("S 實感", _pct.SN[0], "直覺 N", _pct.SN[1], _ac.SN, "SN")}
- ${_row("T 思考", _pct.TF[0], "情感 F", _pct.TF[1], _ac.TF, "TF")}
- ${_row("J 判斷", _pct.JP[0], "感知 P", _pct.JP[1], _ac.JP, "JP")}
- ${_row("T 敏感", _pct.TA[0], "自信 A", _pct.TA[1], _ac.TA, "TA")}
- ${closeNote}
- <div class="text-[10px] text-gray-500 leading-relaxed mt-1">百分比係你喺該軸兩邊嘅得分比例，唔代表好壞。中間幼線係 50%；分差 1 分以內嘅軸，下面會另外提你。</div>${_pctNote}
- <button type="button" class="mt-3 text-[11px] font-bold brand-gold" onclick="openMethod()">計分方法同限制 →</button>
- </div>` : _noPctNote);
+// 2026-10-06 Roy：「你嘅傾向程度」搬入「你嘅個人化報告」合併（唔再獨立開框）
+const pctBlock = "";  // 內容改由 window.pctBlockHtml() 產生，喺 #personalReport 卡內顯示
 
 const scoreBars = (t.score || []).map(s => {
 const num = (s.match(/\d+/) || ["0"])[0];
@@ -4766,7 +4794,6 @@ let detailHtml = `
  <div class="flex gap-2 flex-wrap mt-3">
  ${t.tags.map(tag => `<span class="scenario-badge bg-soft text-ink">${tag}</span>`).join("")}
  </div>
- ${pctBlock}
  <div class="mt-4 pt-4 border-t border-gray-100">
  <div class="sub-label">性格刻度</div>
  ${scoreBars}
@@ -4809,15 +4836,17 @@ let compatHtml = "";
 t.compat.forEach((c, i) => {
 const ct = window.TYPES[c];
 if(ct) compatHtml += `
- <div class="flex items-center gap-3 py-2.5" style="${i ? "border-top:1px solid rgba(30,42,59,.06)" : ""}">
+ <div class="py-2.5" style="${i ? "border-top:1px solid rgba(30,42,59,.06)" : ""}">
+ <div class="flex items-center gap-3">
  <div class="flex-1">
  <div class="font-bold text-sm flex items-center gap-1.5"><span class="cmp-ico" style="color:${(window.PALETTE && window.PALETTE[c] ? window.PALETTE[c].c1 : "currentColor")}">${window.getTypeIcon ? window.getTypeIcon(c) : ""}</span><span>${c} · ${ct.cn}</span></div>
  <div class="text-xs text-gray-500">${ct.slogan}</div>
  </div>
  <div class="text-right">
  <div class="text-xs text-accent font-bold">${window.typeCompatPct(type, c)}% 夾</div>
- <button type="button" class="pair-go mt-1" onclick="openPair('${type}','${c}')">睇你哋點相處</button>
  </div>
+ </div>
+ <button type="button" class="pair-go" onclick="openPair('${type}','${c}')">睇你哋點相處 →</button>
  </div>
  `;
  });
