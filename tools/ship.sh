@@ -4,16 +4,30 @@
 # 2026-10-04 加：之前試過見到 28/29 都照 push，所以把閘寫入程式碼。
 # 2026-10-05 加：靜態守門 A／B（捉「引用已刪函數」同「死 selector」，毫秒級）＋真 Chrome 幾何閘；
 #                 閘數由 run_gate 自己數，唔再寫死（上一版寫死「5 項」，加閘時會對唔上）。
+# 2026-10-05 加：jsdom 由 scratch 搬入 repo（tools/ui/node_modules）—— scratch 會被定時清理，2026-10-05 真係消失過一次，
+#                 令全部 jsdom 測試跑唔到（閘形同虛設）。依家優先搵 repo 內，scratch 只做最後 fallback。
 set -u
 cd "$(dirname "$0")/.." || exit 1
-: "${NODE_PATH:=/opt/data/profiles/apps/cache/scratch/harness/node_modules}"
+if [ -z "${NODE_PATH:-}" ]; then
+  if [ -d tools/ui/node_modules/jsdom ]; then
+    NODE_PATH="$PWD/tools/ui/node_modules"
+  else
+    NODE_PATH=/opt/data/profiles/apps/cache/scratch/harness/node_modules
+  fi
+fi
 export NODE_PATH
-: "${PLAYWRIGHT_BROWSERS_PATH:=/opt/data/profiles/apps/cache/scratch/pw/browsers}"
+: "${PLAYWRIGHT_BROWSERS_PATH:=/opt/data/profiles/apps/cache/pw/browsers}"
 export PLAYWRIGHT_BROWSERS_PATH
+if [ -z "${CHROME:-}" ]; then
+  CHROME=$(ls -d /opt/data/profiles/apps/cache/pw/browsers/*/chrome-linux*/chrome 2>/dev/null | tail -1)
+fi
 : "${CHROME:=/opt/data/profiles/apps/cache/scratch/pw/browsers/chromium-1243/chrome-linux64/chrome}"
 if [ ! -x "$CHROME" ] && [ -x /usr/bin/google-chrome ]; then CHROME=/usr/bin/google-chrome; fi
 export CHROME
-: "${PWPY:=/opt/data/profiles/apps/cache/scratch/pwpy/bin/python}"
+if [ -z "${PWPY:-}" ]; then
+  if [ -x /opt/data/profiles/apps/cache/pwpy/bin/python ]; then PWPY=/opt/data/profiles/apps/cache/pwpy/bin/python
+  else PWPY=/opt/data/profiles/apps/cache/scratch/pwpy/bin/python; fi
+fi
 if [ ! -x "$PWPY" ]; then PWPY=python3; fi
 
 MSG="${1:-}"

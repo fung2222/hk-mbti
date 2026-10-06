@@ -139,5 +139,21 @@ for(let i=0;i<ROWS.length;i++)for(let j=i;j<ROWS.length;j++){
 chk("★ 16 型全部兩兩組合都有深入內容（"+ROWS.length+" 型 → 應該 "+((ROWS.length*(ROWS.length+1))/2)+" 對）",
     miss.length===0, "缺 "+miss.length+" 對："+miss.slice(0,6).join(" , "));
 
+// 不變量 6：配對文案唔准用「你」指讀者（規格：用型號 ＋「嘅人」講）—— 台詞『…』「…」內除外。
+// 根因：同一篇兩個方向嘅用戶都會讀到，用「你」一定有一半人睇錯（skill premium-tier.md 第 501 行）。
+// 分批改：`DUENI_ROWS` = 已改完嘅型號行；改完一行就加落去，全部改完就變 null（驗全檔）。
+const DUENI_ROWS = ["INFP"];   // null = 全檔都改完
+const stripQ = s => s.replace(/[『「][^』」]*[』」]/g, "");
+const dueni = [];
+for (const [k, v] of Object.entries(P)) {
+  if (DUENI_ROWS && !DUENI_ROWS.some(r => k.startsWith(r + "|"))) continue;
+  const look = (sec, s) => { if (s && stripQ(s).indexOf("你") >= 0) dueni.push(k + "/" + sec); };
+  look("spark", v.spark); look("sum", v.sum);
+  (v.clash || []).forEach(s => look("clash", s));
+  (v.give || []).forEach(s => look("give", s));
+}
+chk("★ 配對文案零「你」（" + (DUENI_ROWS ? "已改：" + DUENI_ROWS.join("、") : "全檔") + "；台詞除外）",
+    dueni.length === 0, dueni.slice(0, 5).join(" , "));
+
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);
