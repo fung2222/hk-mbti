@@ -222,7 +222,39 @@ async def run():
         await _p4.wait_for_timeout(1500)
         nd2 = await _p4.evaluate("() => Math.round(document.querySelector('#home .scenes-bleed').getBoundingClientRect().top)")
         check("390: 撳第二個 ▼ → 捲到「多種港式日常情景」貼頂", abs(nd2) <= 30, str(nd2))
+        # 2026-10-06 Roy：強項／弱項 下面要有留白（原本同下面「個人化報告」黐實 0px）
+        # 量度意圖（留白 >= 16px），唔黐死某個實作（margin 出邊度做都得）
+        RESULT_FIX = {"mbti":"INFP-A","pct":{"EI":[40,60],"SN":[35,65],"TF":[70,30],"JP":[80,20],"TA":[62,38]},
+                      "closeAxes":[],"score":{},"version":"life","totalQ":60,"name":"Roy"}
+        await _p4.evaluate("(r)=>{ window.renderResult(r); window.show('result'); }", RESULT_FIX)
+        await _p4.wait_for_timeout(400)
+        sp = await _p4.evaluate("""() => {
+          const boxes=[...document.querySelectorAll('#personalityDetail .pros-box')];
+          const last=boxes[boxes.length-1], pr=document.getElementById('personalReport');
+          if(!last||!pr) return null;
+          const gr=last.closest('.pros-grid');
+          return {gap:Math.round(pr.getBoundingClientRect().top-last.getBoundingClientRect().bottom),
+                  marB:gr?getComputedStyle(gr).marginBottom:null, n:boxes.length};
+        }""")
+        check("390: 強項／弱項 下面有 >=16px 留白（唔同下面張卡黐實）",
+              bool(sp) and sp["gap"] >= 16, str(sp))
         await _c4.close()
+
+        # 桌面層最容易自己 override 間距 -> 同一條意圖喺 1440 再驗一次
+        _c5, _p5, _e5 = await page(1440, 900, 1920, 1080)
+        await _p5.evaluate("(r)=>{ window.renderResult(r); window.show('result'); }", RESULT_FIX)
+        await _p5.wait_for_timeout(400)
+        sp5 = await _p5.evaluate("""() => {
+          const boxes=[...document.querySelectorAll('#personalityDetail .pros-box')];
+          const last=boxes[boxes.length-1], pr=document.getElementById('personalReport');
+          if(!last||!pr) return null;
+          const gr=last.closest('.pros-grid');
+          return {gap:Math.round(pr.getBoundingClientRect().top-last.getBoundingClientRect().bottom),
+                  marB:gr?getComputedStyle(gr).marginBottom:null, n:boxes.length};
+        }""")
+        check("1440: 強項／弱項 下面有 >=16px 留白（桌面層冇 override 走）",
+              bool(sp5) and sp5["gap"] >= 16, str(sp5))
+        await _c5.close()
         await b.close()
     srv.shutdown()
     print("\n" + ("✓ 全部通過（%d 項）" % passed if passed == total else "✗ %d / %d 項失敗" % (total - passed, total)))

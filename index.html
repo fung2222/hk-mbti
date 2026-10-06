@@ -507,6 +507,11 @@ font-size:1em;letter-spacing:0;line-height:1;white-space:nowrap;
 .pros-box .pros-item{align-items:center}
 .pros-box.is-str .pros-ico{stroke:#9A8149}
 .pros-box.is-wk .pros-ico{stroke:#8A837A}
+/* 2026-10-06 Roy：強項／弱項下面要有留白（原本同下面「個人化報告」黐實 0px）。
+   注意：唔可以靠 Tailwind 嘅 mb-4 —— #personalityDetail 有 space-y-3，佢條
+   `.space-y-3>:not([hidden])~:not([hidden]){margin-bottom:0}` 特異度(0,3,0) 高過
+   `.mb-4`(0,1,0) → mb-4 會被靜靜蓋成 0（2026-10-06 親手撞到）。要用 id 級 selector。 */
+#personalityDetail .pros-grid{margin-bottom:16px}
 .deep-foot-row{display:flex;gap:8px;margin-top:8px}
 .deep-foot-btn{flex:1 1 0;display:flex;align-items:center;justify-content:center;border:1px solid #E7DCC4;background:#fff;border-radius:999px;padding:11px 4px;font-size:12px;font-weight:700;color:var(--ink);text-decoration:none;font-family:inherit;cursor:pointer;line-height:1.2;text-align:center}
 .deep-foot-btn:hover{background:#faf7f2}
@@ -4783,7 +4788,7 @@ const prosCol = (title, items, kind, bg) => `
  ${items.slice(0,4).map(x => `<div class="pros-item">${window.prosIconHtml(x)}<span>${x}</span></div>`).join("")}
  </div>`;
 const prosCons = (strengths.length || weaknesses.length) ? `
- <div class="mt-4 grid grid-cols-2 gap-3">
+ <div class="pros-grid mt-4 grid grid-cols-2 gap-3">
  ${prosCol("強項", strengths, "str", "rgba(212,169,95,.06)")}
  ${prosCol("弱項", weaknesses, "wk", "rgba(30,42,59,.03)")}
  </div>` : "";
