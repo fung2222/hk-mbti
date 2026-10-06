@@ -32,8 +32,8 @@ setTimeout(()=>{
   chk('★ 第二個 ▼ onclick = scrollHomeScenes()', !!nd && nd.getAttribute('onclick')==='scrollHomeScenes()', nd&&nd.getAttribute('onclick'));
   chk('★ scrollHomeScenes 已定義 ＋ 目標係 .scenes-bleed（多種港式日常情景）',
       /window\.scrollHomeScenes = function\(\)/.test(src) && /querySelector\("#home \.scenes-bleed"\)/.test(src));
-  chk('★ 第二個 ▼ 係正常位置（唔准 position:fixed 浮動）＋ 貼近版本卡下面',
-      /\.home-next-down\{margin-top:6px\}/.test(src) && /#homeBelow\{margin-bottom:6px\}/.test(src)
+  chk('★ 第二個 ▼ 係正常位置（唔准 position:fixed 浮動）＋ 貼近版本卡下面、下面留空間',
+      /\.home-next-down\{margin-top:6px;margin-bottom:16px\}/.test(src) && /#homeBelow\{margin-bottom:6px\}/.test(src)
       && !/\.home-next-down[^{]*\{[^}]*position:fixed/.test(src));
   chk('★ 第二個 ▼ 位置：版本卡（#homeBelow）之後、情景帶之前',
       src.indexOf('id="homeBelow"') > -1
