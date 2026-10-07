@@ -21,8 +21,13 @@ REPO = os.environ.get("HKMBTI_REPO") or os.path.abspath(os.path.join(os.path.dir
 CHROME = os.environ.get("CHROME", "/usr/bin/google-chrome")
 BLOCK = ("goatcounter", "gc.zgo.at", "googlesyndication", "googletagmanager", "google-analytics")
 passed = total = 0
+# ONLY=<關鍵字> 只跑名含該關鍵字嘅斷言（快速迭代用；唔相關嘅唔計入 total，唔影響 exit code）
+# 例：ONLY=弱項 python3 tools/desktop_render_test.py
+ONLY = os.environ.get("ONLY", "").strip()
 def check(name, ok, extra=""):
     global passed, total
+    if ONLY and ONLY not in name:
+        return
     total += 1; passed += bool(ok)
     print(("✓ " if ok else "✗ ") + name + ("" if ok else "   ← " + str(extra)))
 
@@ -310,7 +315,8 @@ async def run():
         await _c6.close()
         await b.close()
     srv.shutdown()
-    print("\n" + ("✓ 全部通過（%d 項）" % passed if passed == total else "✗ %d / %d 項失敗" % (total - passed, total)))
+    _scope = ("（ONLY=%s 局部）" % ONLY) if ONLY else ""
+    print("\n" + ("✓ 全部通過（%d 項）%s" % (passed, _scope) if passed == total else "✗ %d / %d 項失敗%s" % (total - passed, total, _scope)))
     sys.exit(0 if passed == total else 1)
 
 asyncio.run(run())

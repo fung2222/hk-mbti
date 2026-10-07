@@ -17,21 +17,24 @@
 ## 改完一定要跑
 **出貨一律用出貨閘（唔准自己 `git push`）**：
 ```bash
-sh tools/ship.sh "commit message"   # 以下閘任何一個紅就拒絕 commit + push；閘數由腳本自己數
+sh tools/ship.sh "commit message"   # 以下閘任何一個紅就拒絕 commit + push；閘數同斷言數一律由腳本自己印
+SHIP_DRY=1 sh tools/ship.sh x        # 乾跑：只跑閘、唔 commit／push（驗閘／驗 RED 用）
 ```
-佢會跑：
+**11 套閘，分兩批並行**（實測序列 252.6 秒 → 並行 107.2 秒；快閘紅約 6.7 秒即拒絕，唔跑慢閘）。佢會跑：
 ```bash
 export NODE_PATH=<jsdom node_modules>
 python3 tools/gate_refs.py          # 靜態：工具引用嘅 UI 函數必須存在（捉已刪函數）＋ py_compile / node --check
 python3 tools/gate_design.py        # 靜態：桌面層冇死 selector（CSS [data-*="x"] 冇對應元素即紅）
-python3 tools/preflight.py          # 32 項
-sh tools/ui/run.sh                  # 24 檔 jsdom / 971 斷言（總數由 run.sh 自己印，唔靠人手加）
-node tools/desktop_layout_test.js   # 56 項（鐵律 + DOM）
-node tools/desktop_gate_test.js     # 34 項
+python3 tools/preflight.py          # 32 項（含所有 HTML inline script 語法檢查）
+sh tools/ui/run.sh                  # 24 檔 jsdom（斷言總數由 run.sh 自己印，唔准寫死）
+node tools/question_audit.js         # 題庫 109 條（結構／計分／文法／重複）
+node tools/desktop_layout_test.js   # 鐵律 + DOM（項數由腳本自己印）
+node tools/desktop_gate_test.js
 node tools/deeplink_test.js
 node tools/record_view_test.js      # 紀錄頁兩個渠道
 node tools/voice_test.js            # 朗讀開關
-python3 tools/desktop_render_test.py   # 49 項，真 Chrome 幾何（需要 CHROME + playwright；冇 Chrome 即 fail）
+python3 tools/desktop_render_test.py   # 真 Chrome 幾何（項數由腳本自己印；需要 CHROME + playwright；冇 Chrome 即 fail）
+                                       #   快速迭代：ONLY=<關鍵字> 只跑名含該關鍵字嘅斷言（例如 ONLY=弱項）
 ```
 唔入 push 閘（慢／易 flaky），但**改過桌面層一定要另外跑**：
 ```bash

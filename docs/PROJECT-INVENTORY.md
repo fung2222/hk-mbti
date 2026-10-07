@@ -60,7 +60,7 @@
 - `tools/extract_bank.js` — 由 index.html 抽 `QUESTIONS` / `Q_ALTS` 做純 JSON（Python 唔使自己 parse JS）
 - `tools/gen_voice.py` — 生成／更新朗讀音檔（見 §11）
 - `tools/voice_test.js` — 朗讀邏輯離線測試（stub DOM，唔需要瀏覽器）
-- `.githooks/pre-push` — push 前自動跑**毫秒級靜態檢查**（`gate_refs` → `gate_design` → `preflight`）；全套 10 套閘（含 jsdom／真 Chrome）由 `tools/ship.sh` 負責。只放零成本檢查 —— 放慢嘢會製造「為咗快而繞過」嘅誘因（`--no-verify` 可硬推）
+- `.githooks/pre-push` — push 前自動跑**毫秒級靜態檢查**（`gate_refs` → `gate_design` → `preflight`）；全套 11 套閘（含 jsdom／真 Chrome）由 `tools/ship.sh` 負責，兩批並行（序列 252.6 秒 → 並行 107.2 秒）。只放零成本檢查 —— 放慢嘢會製造「為咗快而繞過」嘅誘因（`--no-verify` 可硬推）
 
 ---
 
