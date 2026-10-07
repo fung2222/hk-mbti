@@ -36,9 +36,9 @@ UI 就用呢幾樣：grep、讀改動區同父層、`getComputedStyle`、截圖�
 
 只准 `sh tools/ship.sh "msg"`。唔准自己 `git push`。閘寫入程式碼，唔全綠就拒絕。只信每個閘自己嘅 exit code，唔好睇「冇輸出」就當過。
 
-兩批並行，保護力不變。快閘紅約 6.7 秒就停，唔跑慢閘。上線仍要全套綠（而家 11 套，數字由腳本自己數）。紅過之後，push 前必須再全綠一次。一輪只 push 一次。
+兩批並行。快閘紅約 6.7 秒就停，唔跑慢閘。上線仍要全套綠（而家 11，跟腳本數）。紅過之後，push 前必須再全綠一次。一輪只 push 一次。
 
-ship 會先列出將入 commit 嘅檔，先至 `git add -A`。有唔相關檔就停。之後自動對 live `index.html` md5（Pages 有時 5 至 10 分鐘）；唔中會講明，唔會死等。未對上就照實講，唔好講已更新。
+ship 會先列出將入 commit 嘅檔，先至 `git add -A`。有唔相關檔就停。之後自動對 live `index.html` md5（Pages 有時 5 至 10 分鐘，唔中會講明）。未對上就照實講。
 
 Roy confirm 之後先 backup 同 tag。未 confirm 唔准 tag、唔准 bump 版本。要佢完全閂 app 再開，先算睇過 live。
 
