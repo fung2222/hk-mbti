@@ -312,6 +312,34 @@ async def run():
         check("日光：卡底仍然係原本淺忌廉漸變（唔准改走日光設計）",
               bool(dk_res["light"]) and dk_res["light"].get("mean") is not None and dk_res["light"]["mean"] > 200,
               str(dk_res["light"]))
+        # 2026-10-07 日光模式金標加深：日光要 >= 4.5；黑夜要保持原本淺金（唔准被日光規則漏入）
+        _GOLDJS = """() => {
+          const parse=s=>{const m=(s||'').match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);if(!m)return null;const p=[+m[1],+m[2],+m[3]];return {c:p,a:m[4]===undefined?1:+m[4]};};
+          const lum=c=>{const q=c.map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});return 0.2126*q[0]+0.7152*q[1]+0.0722*q[2];};
+          const cr=(a,b)=>{const x=lum(a),y=lum(b),hi=Math.max(x,y),lo=Math.min(x,y);return (hi+0.05)/(lo+0.05);};
+          const stops=g=>{if(!g||g==='none')return null;const m=g.match(/rgba?\([^)]+\)/g)||[];return m.map(parse).filter(x=>x&&x.a>0.05).map(x=>x.c);};
+          const bgs=el=>{const out=[];let n=el;
+            while(n&&n.nodeType===1){const st=stops(getComputedStyle(n).backgroundImage); if(st)st.forEach(c=>out.push(c));
+              const b=parse(getComputedStyle(n).backgroundColor); if(b&&b.a>0.9){out.push(b.c);break;} n=n.parentElement;}
+            if(!out.length)out.push([255,255,255]); return out;};
+          const els=[...document.querySelectorAll('#about .brand-gold')];
+          let min=99,n=0,col=null;
+          els.forEach(el=>{const cs=getComputedStyle(el); const c=parse(cs.color); if(!c)return; n++;
+            if(!col)col=cs.color;
+            bgs(el).forEach(b=>{const k=cr(c.c,b); if(k<min)min=k;});});
+          return {n:n, min:Math.round(min*100)/100, color:col};
+        }"""
+        await _p6.evaluate("()=>{document.documentElement.classList.remove('dk');}")
+        await _p6.wait_for_timeout(200)
+        _gl = await _p6.evaluate(_GOLDJS)
+        check("日光：關於頁金色標籤對比 >= 4.5（以前 2.11，淺金落米底睇唔到）",
+              bool(_gl) and _gl.get("n", 0) > 0 and _gl.get("min", 0) >= 4.5, str(_gl))
+        await _p6.evaluate("()=>{document.documentElement.classList.add('dk');}")
+        await _p6.wait_for_timeout(200)
+        _gd = await _p6.evaluate(_GOLDJS)
+        check("黑夜：金色標籤仍然係原本淺金 #D9B26A（唔准被日光加深規則漏入）",
+              bool(_gd) and "217, 178, 106" in str(_gd.get("color")), str(_gd))
+        check("黑夜：金色標籤對比 >= 4.5", bool(_gd) and _gd.get("min", 0) >= 4.5, str(_gd))
         await _c6.close()
         await b.close()
     srv.shutdown()

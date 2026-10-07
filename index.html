@@ -753,6 +753,25 @@ html.dk .hub-more-link,html.dk .hub-scene-back,html.dk .deep-ch,html.dk .deep-go
 html.dk .hub-row-chev{color:#C0A87A}
 .pr-sim + .pr-sim{border-top-color:rgba(255,255,255,.08)}
 .pr-sim-d,.pr-note{color:#A79E92}
+
+/* ===== 2026-10-07 日光模式：金色「文字／圖示」加深到可讀（對比 >= 4.5）=====
+   原因：日光模式 --gold (#D4A95F) 喺白／米底只有 2.0-2.2，遠低於標準 4.5。
+   原則：只改「文字同箭嘴」嘅顏色；金色邊框、金底按鈕、進度條、金底 active 狀態一律保持原本金色。
+   夜晚模式（html.dk）完全唔受影響（佢自己用 --gold:#D9B26A，喺深底上已達 7.17）。 */
+:root:not(.dk) .brand-gold{color:#756440}
+:root:not(.dk) .up-cmp .yes{color:#756440}
+:root:not(.dk) .article-guide-kicker{color:#756440}
+:root:not(.dk) .cta-bulb{color:#756440}
+:root:not(.dk) .share-btn{color:#756440}
+:root:not(.dk) .deep-nav-btn.is-mid{color:#756440}
+:root:not(.dk) .home-more-down{color:#756440}
+/* 箭嘴：只改「收起」狀態；打開時係金底＋深字，唔可以覆蓋 */
+:root:not(.dk) .ver-btn:not(.ver-lit) .ver-chev{color:#756440}
+:root:not(.dk) .home-acc-item:not(.open) .home-acc-chev{color:#756440}
+/* 方法頁維度大字（19px）：只喺日光模式暗化「顯示」，唔改任何數據色（結果頁色條共用同一隻色） */
+:root:not(.dk) .mth-key{filter:brightness(.62)}
+/* 桌面層：金標前面嘅線條 icon 唔可以漏（佢有自己嘅 color 規則） */
+:root:not(.dk) .home-acc-label .scenes-title-ico{color:#756440}
 </style>
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
 <script data-goatcounter="https://fung2222.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
