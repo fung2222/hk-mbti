@@ -1142,6 +1142,10 @@ html.dk .card{background:var(--dk-card);box-shadow:0 4px 24px rgba(0,0,0,.42)}
    淺忌廉漸變；但卡內文字跟 html.dk .text-gray-700 變淺 → 淺字淺底（實測對比 1.2，睇唔到）。
    呢度畀佢一個同色系深底（唔改色相），日光模式完全不變。 */
 html.dk .about-cmp-card{background-image:linear-gradient(180deg,#232B35,#181E26);border-color:rgba(217,178,106,.5)}
+/* 2026-10-06 Roy：黑夜模式「弱項」欄睇落冇底（原底色係 3% 深藍，喺深底上實測只差 1 度 = 睇唔到）
+   → 同「強項」欄一樣畀返一個可見嘅中性底色，令左右兩欄一致。日光模式唔受影響。
+   注意：個底寫喺 inline style，所以要用 !important 蓋。 */
+html.dk .pros-box.is-wk{background:rgba(236,231,222,.055) !important}
 html.dk .option{background:var(--dk-card);border-color:var(--dk-line2)}
 html.dk .option.selected .option-letter{background:var(--gold);color:#12161C}
 html.dk .glass{background:rgba(24,30,38,.72)}

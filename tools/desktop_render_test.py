@@ -238,6 +238,26 @@ async def run():
         }""")
         check("390: 強項／弱項 下面有 >=16px 留白（唔同下面張卡黐實）",
               bool(sp) and sp["gap"] >= 16, str(sp))
+        # 2026-10-06 Roy：黑夜模式「弱項」欄原本睇落冇底（inline 3% 深藍喺深底上 = 0）
+        # 意圖：兩個框都要同頁面底有可見差別（唔綁死某個顏色值）
+        for _mode, _need in (("dark", 0.003), ("light", 0.003)):
+            await _p4.evaluate("(m)=>{ document.documentElement.classList.toggle('dk', m==='dark'); }", _mode)
+            await _p4.evaluate("(r)=>{ window.renderResult(r); window.show('result'); }", RESULT_FIX)
+            await _p4.wait_for_timeout(350)
+            _pb = await _p4.evaluate("""() => {
+          const lum=c=>{const q=c.map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});return 0.2126*q[0]+0.7152*q[1]+0.0722*q[2];};
+          const parse=s=>{const m=(s||'').match(/rgba?[(]([^)]+)[)]/);if(!m)return null;const p=m[1].split(',').map(Number);return {c:[p[0],p[1],p[2]],a:p.length>3?p[3]:1};};
+          const blend=(f,b,a)=>f.map((v,i)=>v*a+b[i]*(1-a));
+          const pb=parse(getComputedStyle(document.body).backgroundColor); const page=pb?pb.c:[255,255,255];
+          const one=k=>{const el=document.querySelector('#personalityDetail .pros-box.is-'+k); if(!el) return null;
+            const o=parse(getComputedStyle(el).backgroundColor); const vis=o?blend(o.c,page,o.a):page;
+            return Math.round(Math.abs(lum(vis)-lum(page))*10000)/10000;};
+          return {str:one('str'), wk:one('wk')};
+        }""")
+            check("%s: 強項欄有可見底色框（同頁面底有差別）" % _mode,
+                  bool(_pb) and _pb["str"] is not None and _pb["str"] >= _need, str(_pb))
+            check("%s: 弱項欄有可見底色框（唔可以其中一欄消失）" % _mode,
+                  bool(_pb) and _pb["wk"] is not None and _pb["wk"] >= _need, str(_pb))
         await _c4.close()
 
         # 桌面層最容易自己 override 間距 -> 同一條意圖喺 1440 再驗一次
