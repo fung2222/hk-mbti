@@ -2,9 +2,8 @@
 /**
  * voice_test.js — 朗讀（audio + fallback）離線測試
  *
- * 因為 host 冇瀏覽器（見 apps profile：唔可以開 headless browser），
- * 呢個 script 用 stub 模擬 DOM／audio／speechSynthesis，真係行 index.html 裏面
- * 抽出嚟嘅朗讀邏輯，而唔係只做 grep。
+ * 用 stub 模擬 DOM／audio／speechSynthesis，真係行 index.html 裏面抽出嚟嘅朗讀邏輯，
+ * 而唔係只做 grep（真 Chrome 嘅幾何／版面驗證見 desktop_render_test.py）。
  *
  * 用法：node tools/voice_test.js
  * 離開碼：0 = 全部過；1 = 有問題（會列出）
@@ -54,7 +53,7 @@ const block = html.slice(bi, bj);
 
 function makeAudio(){
   const a = {
-    src: "", paused: true, listeners: {}, attrs: {},
+    src: "", paused: true, listeners: {}, attrs: {}, playbackRate: 1,
     addEventListener(t, fn){ (a.listeners[t] = a.listeners[t] || []).push(fn); },
     setAttribute(k, v){ a.attrs[k] = v; },
     play(){ a.paused = false; a.played.push(a.src); return Promise.resolve(); },
@@ -66,13 +65,14 @@ function makeAudio(){
 }
 let audio = null;
 const utterances = [];
+const rates = [];
 const sandbox = {
   console,
   document: { createElement(){ audio = makeAudio(); return audio; }, body: { appendChild(){} } },
   SpeechSynthesisUtterance: function(t){ this.text = t; },
   speechSynthesis: {
     cancel(){ sandbox._cancelled++; },
-    speak(u){ utterances.push(u.text); if(u.onend) u.onend(); },
+    speak(u){ utterances.push(u.text); rates.push(u.rate); if(u.onend) u.onend(); },
   },
   pickYueVoice: () => null,
   fetch: () => Promise.resolve(),
@@ -186,6 +186,17 @@ audio.played.length = 0;
 sandbox.speakQuestionSet(q0);
 if(utterances.length === 0 && audio.played.length === 0) ok.push("朗讀關：完全唔會播");
 else fail.push("朗讀關但仍然播咗嘢");
+
+// ---------- 7. 朗讀速度 1.35 倍（2026-10-07 Roy 要求）----------
+audio.playbackRate = 1;
+rates.length = 0;
+playAll(q0);
+if(audio.playbackRate === 1.35) ok.push("朗讀速度 1.35 倍：預錄 mp3 播嗰陣會設 playbackRate");
+else fail.push(`預錄 mp3 速度唔係 1.35（playbackRate=${audio.playbackRate}）`);
+sandbox.window.VOICE_ON = true;
+sandbox.speakQuestionSet({ t: "冇音檔嘅句子（量速度用）", o: [] });
+if(rates.length && rates[0] === 1.35) ok.push("朗讀速度 1.35 倍：系統 fallback 聲用同一速度");
+else fail.push(`fallback 速度唔係 1.35（rates=${JSON.stringify(rates)}）`);
 
 // ---------- 報告 ----------
 console.log("===== 朗讀離線測試 =====");

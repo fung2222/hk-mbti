@@ -4229,6 +4229,8 @@ return vs.slice().sort((a,b) => score(b) - score(a))[0];
 // 系統 speechSynthesis，所以改題目字／音檔未 push 都唔會壞。
 window.VOICE_AUDIO = null;
 window.VOICE_QUEUE = [];
+// 2026-10-07 Roy：朗讀速度 1.35 倍（預錄 mp3 同系統 fallback 都用呢個值）
+window.VOICE_RATE = 1.35;
 function voiceEl(){
 if(!window.VOICE_AUDIO){
 const a = document.createElement("audio");
@@ -4246,7 +4248,7 @@ function voiceFallbackSpeak(text){
 if(!window.speechSynthesis){ voiceNext(); return; }
 const u = new SpeechSynthesisUtterance(text);
 u.lang = "zh-HK";
-u.rate = 1.0;
+u.rate = window.VOICE_RATE;
 u.pitch = 1.05;
 const v = pickYueVoice();
 if(v) u.voice = v;
@@ -4261,6 +4263,7 @@ if(!item) return;
 if(item.src){
 const a = voiceEl();
 try{ a.src = item.src; }catch(e){ voiceFallbackSpeak(item.text); return; }
+try{ if(a.playbackRate !== window.VOICE_RATE) a.playbackRate = window.VOICE_RATE; }catch(e){}
 const p = a.play();
 if(p && p.catch) p.catch(function(err){
 // AbortError = 換下一題時自己打斷，唔算失敗
