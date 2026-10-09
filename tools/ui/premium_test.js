@@ -156,6 +156,9 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
   chk('★ 結果頁大字母 #typeBig 用 Archivo Black', /#typeBig\{font-family:'Archivo Black'/.test(src));
   chk('★ 維度分頁大字母 #letterBig 都用 Archivo Black（原本漏咗）', /#letterBig\{font-family:'Archivo Black'/.test(src));
   chk('★ 維度字母 .dim-pair button 用 Archivo Black', /\.dim-pair button\{[^}]*Archivo Black/.test(src));
+  // Roy 2026-10-10：測試前倒數 3-2-1 要同分享卡 4 個大字同一個字形（Archivo Black）
+  chk('★ 倒數 .cd-number 用 Archivo Black（同分享卡 4 大字同一字形）', /\.cd-number\{[^}]*font-family:'Archivo Black'/.test(src));
+  chk('★ Archivo Black webfont subset 有 1 2 3（唔加就靜默 fallback 返 Georgia，改咗等於冇改）', /family=Archivo\+Black&text=[A-Z-]+123/.test(src));
   chk('★ 文章牌匾 4 字母改用同 #typeBig 一組（text-5xl font-black）', ['socialArticleType','romanceArticleType','deepChapterType'].every(id=>new RegExp('class="text-5xl font-black mb-1" id="'+id+'"').test(src)));
   chk('★ 場景／章節牌匾已經唔用 .hub-type-code（只剩 16 型 hub 卡用）', !/class="hub-type-code" id="/.test(src));
   // Roy 2026-10-03：章節色卡要同人格頁色卡一模一樣 → 4 字母改用同 #typeBig 一組 class
