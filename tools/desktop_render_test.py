@@ -163,15 +163,42 @@ async def run():
         check("390: 手機冇 .dt；導覽／頁尾／組別標籤全部 display:none",
               not g["dt"] and not g["nav"] and not g["foot"] and not g["rows"],
               (g["dt"], g["navDisp"], g["footDisp"], g["rowsDisp"]))
-        # Roy 2026-10-05：「睇下面內容」▼ 原本喺 .home-hero-copy 之外（reel-wrap 之後），
-        # 被 copy 嘅 flex:1 推到畫面最底 → 手機一入 app 睇唔到，用戶唔知下面仲有內容。
-        # 修法＝移入 copy（描述文字下面）。呢條守住佢，唔准再搬出去。
-        dd = await pg.evaluate("""() => { const e = document.querySelector('.home-more-down');
-          if(!e) return null; const r = e.getBoundingClientRect();
-          return {top: Math.round(r.top), bottom: Math.round(r.bottom), vh: window.innerHeight,
-                  inCopy: !!e.closest('.home-hero-copy')}; }""")
-        check("390: 「睇下面內容」▼ 喺首屏見到（唔可以再被推到畫面底）",
+        # Roy 2026-10-07：hero 個 ▼ 改成「立即測試」金掣（跟桌面 .dt-cta-gold 一致）。
+        # 守門：① 要喺 hero copy 入面、首屏見得到（唔准再被推到畫面底）
+        #       ② 文字係「立即測試」 ③ 真係金底深字（對比 >= 4.5），唔准變返三角／透明
+        dd = await pg.evaluate("""() => { const e = document.querySelector('.home-cta-test');
+          if(!e) return null; const r = e.getBoundingClientRect(); const cs = getComputedStyle(e);
+          const lum = t => { const m=(t||'').match(/[0-9]+/g); if(!m) return null;
+            const q=[+m[0],+m[1],+m[2]].map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});
+            return 0.2126*q[0]+0.7152*q[1]+0.0722*q[2]; };
+          const L1=lum(cs.backgroundColor), L2=lum(cs.color);
+          return {text:e.textContent.trim(), bottom:Math.round(r.bottom), vh:window.innerHeight,
+                  inCopy:!!e.closest('.home-hero-copy'), bg:cs.backgroundColor, color:cs.color,
+                  cr:(L1!=null&&L2!=null)?Math.round(((Math.max(L1,L2)+0.05)/(Math.min(L1,L2)+0.05))*100)/100:null}; }""")
+        check("390: 「立即測試」掣喺 hero 首屏見到（唔可以被推到畫面底）",
               bool(dd) and dd["inCopy"] and dd["bottom"] < dd["vh"] - 20, str(dd))
+        check("390: hero 掣文字 = 「立即測試」", bool(dd) and dd["text"] == "立即測試", str(dd and dd["text"]))
+        check("390: 「立即測試」掣係金底深字（對比 >= 4.5）",
+              bool(dd) and dd["cr"] is not None and dd["cr"] >= 4.5, str(dd))
+        # 2026-10-07：桌面金掣喺黑夜模式原本用 var(--ink)（淺色）→ 對比 1.62 睇唔到。
+        # 涵蓋 hero「立即測試」（.dt-cta-gold）同 sticky 導覽嗰粒（.dt-nav-cta）。
+        _c5, _p5, _e5 = await page(1440, 900, 1440, 900)
+        await _p5.evaluate("() => document.documentElement.classList.add('dk')")
+        await _p5.wait_for_timeout(300)
+        gb = await _p5.evaluate("""() => {
+          const lum=t=>{const m=(t||'').match(/[0-9]+/g); if(!m) return null;
+            const q=[+m[0],+m[1],+m[2]].map(v=>{v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});
+            return 0.2126*q[0]+0.7152*q[1]+0.0722*q[2];};
+          const one=s=>{const e=document.querySelector(s); if(!e) return null; const cs=getComputedStyle(e);
+            const L1=lum(cs.backgroundColor), L2=lum(cs.color);
+            return {bg:cs.backgroundColor, color:cs.color,
+                    cr:(L1!=null&&L2!=null)?Math.round(((Math.max(L1,L2)+0.05)/(Math.min(L1,L2)+0.05))*100)/100:null};};
+          return {hero: one('.dt-cta-gold'), nav: one('.dt-nav-cta')}; }""")
+        check("黑夜桌面: hero 金掣文字對比 >= 4.5（原本 1.62，睇唔到）",
+              bool(gb) and bool(gb["hero"]) and gb["hero"]["cr"] >= 4.5, str(gb and gb.get("hero")))
+        check("黑夜桌面: 導覽金掣文字對比 >= 4.5（原本 1.62，睇唔到）",
+              bool(gb) and bool(gb["nav"]) and gb["nav"]["cr"] >= 4.5, str(gb and gb.get("nav")))
+        await _c5.close()
         await ctx.close()
         # Roy 2026-10-05：一開 app 就要見到「成個」16 型輪盤（唔可以被推出螢幕底）。
         # 靠 .home-hero 底部 padding（輪盤底離螢幕底 52px）＋ copy flex:1 吸收剩餘空間。
@@ -195,25 +222,28 @@ async def run():
               abs(sl1 - g0["sl"]) > 20, "%s → %s" % (g0["sl"], sl1))
         check("1440: 桌面卡片間距 = 6px（Roy：收窄一半）", g0["gap"] == "6px", g0["gap"])
         await _c2.close()
-        # Roy 2026-10-05：撳 ▼ 要捲到「16 式輪盤貼螢幕最頂」，下面緊接版本卡
-        #（原本直接跳去版本卡，輪盤被跳過）
+        # Roy 2026-10-07（改返 10-05 個決定）：撳「立即測試」→ 捲到「測試版本卡貼螢幕最頂」，
+        # 16 型輪盤要捲到畫面上面（唔再停留喺頂）。守門用生效幾何值，唔靠 class。
         _c3, _p3, _e3 = await page(390, 844, 390, 844, True)
-        await _p3.evaluate("() => document.querySelector('.home-more-down').click()")
+        await _p3.evaluate("() => document.querySelector('.home-cta-test').click()")
         await _p3.wait_for_timeout(1500)
-        dv = await _p3.evaluate("""() => { const rw = document.getElementById('homeTypeReelWrap');
-          const vl = document.getElementById('versionList');
-          return {reelTop: Math.round(rw.getBoundingClientRect().top),
+        dv = await _p3.evaluate("""() => { const hb = document.getElementById('homeBelow');
+          const rw = document.getElementById('homeTypeReelWrap');
+          const fv = document.querySelector('#versionList .ver-btn');
+          return {cardTop: Math.round(hb.getBoundingClientRect().top),
                   reelBottom: Math.round(rw.getBoundingClientRect().bottom),
-                  verTop: Math.round(vl.getBoundingClientRect().top)}; }""")
-        check("390: 撳 ▼ 之後 16 型輪盤貼螢幕最頂（0 ≤ y ≤ 40）",
-              bool(dv) and 0 <= dv["reelTop"] <= 40, str(dv))
-        check("390: 撳 ▼ 之後版本卡喺輪盤下面（y > 輪盤底）",
-              bool(dv) and dv["verTop"] > dv["reelBottom"], str(dv))
+                  firstVerTop: Math.round(fv.getBoundingClientRect().top)}; }""")
+        check("390: 撳「立即測試」之後 測試版本卡貼螢幕最頂（-8 ≤ y ≤ 40）",
+              bool(dv) and -8 <= dv["cardTop"] <= 40, str(dv))
+        check("390: 撳「立即測試」之後 16 型輪盤已捲到畫面上面（唔再係最頂）",
+              bool(dv) and dv["reelBottom"] <= 40, str(dv))
+        check("390: 撳「立即測試」之後 第一張版本卡喺螢幕內（即刻揀到）",
+              bool(dv) and 0 <= dv["firstVerTop"] <= 420, str(dv))
         await _c3.close()
         # Roy 2026-10-05：第二個 ▼ —— 放喺版本卡最底（正常位置，唔係浮動），
         # 睇落似螢幕最底；撳 → 捲到「多種港式日常情景」。
         _c4, _p4, _e4 = await page(390, 844, 390, 844, True)
-        await _p4.evaluate("() => document.querySelector('.home-hero .home-more-down').click()")
+        await _p4.evaluate("() => document.querySelector('.home-cta-test').click()")
         await _p4.wait_for_timeout(1400)
         nd1 = await _p4.evaluate("""() => { const nd = document.querySelector('.home-next-down');
           const nb = nd.getBoundingClientRect(); const vb = document.getElementById('homeBelow').getBoundingClientRect();
@@ -227,6 +257,24 @@ async def run():
         await _p4.wait_for_timeout(1500)
         nd2 = await _p4.evaluate("() => Math.round(document.querySelector('#home .scenes-bleed').getBoundingClientRect().top)")
         check("390: 撳第二個 ▼ → 捲到「多種港式日常情景」貼頂", abs(nd2) <= 30, str(nd2))
+        # Roy 2026-10-07：「上次未完成」卡同版本卡黐得太貼（原本 6px）→ 28px；
+        # 測試區下面個 ▼ 上下空間加大（上 20 / 下 32）。全部量生效值（唔靠 class 在唔在）。
+        await _p4.evaluate("""() => { try{ localStorage.setItem('hkmbti_test_progress',
+            JSON.stringify({version:'life', idx:5, answers:[0,0,0,0,0,0], deck:['a','b','c','d','e','f'], savedAt:Date.now()})); }catch(e){}
+          if(window.refreshResumeBanner) window.refreshResumeBanner(); }""")
+        await _p4.wait_for_timeout(300)
+        gp = await _p4.evaluate("""() => {
+          const card = document.getElementById('homeBelow').getBoundingClientRect();
+          const rb = document.getElementById('resumeBanner');
+          const nd = document.querySelector('.home-next-down');
+          if(rb.classList.contains('hidden')) return {err:'未完成卡冇顯示'};
+          const cs = getComputedStyle(nd);
+          return {gap: Math.round(rb.getBoundingClientRect().top - card.bottom),
+                  ndMt: cs.marginTop, ndMb: cs.marginBottom}; }""")
+        check("390: 「上次未完成」卡同版本卡之間 >= 24px（Roy：原本太貼唔好睇）",
+              bool(gp) and gp.get("gap", 0) >= 24, str(gp))
+        check("390: 測試區下面個 ▼ 上下空間 = 20px / 32px",
+              bool(gp) and gp.get("ndMt") == "20px" and gp.get("ndMb") == "32px", str(gp))
         # 2026-10-06 Roy：強項／弱項 下面要有留白（原本同下面「個人化報告」黐實 0px）
         # 量度意圖（留白 >= 16px），唔黐死某個實作（margin 出邊度做都得）
         RESULT_FIX = {"mbti":"INFP-A","pct":{"EI":[40,60],"SN":[35,65],"TF":[70,30],"JP":[80,20],"TA":[62,38]},

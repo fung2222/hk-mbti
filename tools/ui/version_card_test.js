@@ -32,9 +32,20 @@ setTimeout(()=>{
   chk('★ 第二個 ▼ onclick = scrollHomeScenes()', !!nd && nd.getAttribute('onclick')==='scrollHomeScenes()', nd&&nd.getAttribute('onclick'));
   chk('★ scrollHomeScenes 已定義 ＋ 目標係 .scenes-bleed（多種港式日常情景）',
       /window\.scrollHomeScenes = function\(\)/.test(src) && /querySelector\("#home \.scenes-bleed"\)/.test(src));
-  chk('★ 第二個 ▼ 係正常位置（唔准 position:fixed 浮動）＋ 貼近版本卡下面、下面留空間',
-      /\.home-next-down\{margin-top:6px;margin-bottom:16px\}/.test(src) && /#homeBelow\{margin-bottom:6px\}/.test(src)
+  chk('★ 第二個 ▼ 係正常位置（唔准 position:fixed 浮動）＋ 上下空間加大（Roy 2026-10-07：20/32）',
+      /\.home-next-down\{margin-top:20px;margin-bottom:32px\}/.test(src) && /#homeBelow\{margin-bottom:6px\}/.test(src)
       && !/\.home-next-down[^{]*\{[^}]*position:fixed/.test(src));
+  chk('★ 「上次未完成」卡上距 = 28px（Roy 2026-10-07：原本同版本卡黐實唔好睇）',
+      /#resumeBanner\{margin-top:28px/.test(src));
+
+  // ---------- Roy 2026-10-07：hero ▼ → 「立即測試」金掣，撳 → 捲到測試版本卡貼頂 ----------
+  const cta = d.querySelector('.home-cta-test');
+  chk('★ hero 有「立即測試」掣（取代原本個 ▼）', !!cta && cta.textContent.trim() === '立即測試', cta && cta.textContent.trim());
+  chk('★ 立即測試掣 onclick = scrollHomeBelow()', !!cta && cta.getAttribute('onclick') === 'scrollHomeBelow()', cta && cta.getAttribute('onclick'));
+  chk('★ 立即測試掣喺 hero copy 入面（唔准搬出去被推到畫面底）', !!cta && !!cta.closest('.home-hero-copy'));
+  chk('★ 立即測試掣隱藏於桌面（桌面本身有 #dtHeroCta 金掣）', /html\.dt \.home-cta-test\{display:none\}/.test(src));
+  chk('★ scrollHomeBelow 目標 = 測試版本卡 #homeBelow（唔再係 16 型輪盤）',
+      /window\.scrollHomeBelow = function\(\)/.test(src) && /const el = \$\("homeBelow"\)/.test(src));
   chk('★ 第二個 ▼ 位置：版本卡（#homeBelow）之後、情景帶之前',
       src.indexOf('id="homeBelow"') > -1
       && src.indexOf('id="homeBelow"') < src.indexOf('class="home-more-down home-next-down"')
