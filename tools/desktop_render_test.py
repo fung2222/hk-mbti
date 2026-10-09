@@ -271,6 +271,32 @@ async def run():
           const cs = getComputedStyle(nd);
           return {gap: Math.round(rb.getBoundingClientRect().top - card.bottom),
                   ndMt: cs.marginTop, ndMb: cs.marginBottom}; }""")
+        # Roy 2026-10-07：所有分頁「返去揀版本」入口都要同主頁「立即測試」一樣 ——
+        # 測試卡貼螢幕最頂、16 型色牌唔喺視線內。逐個分頁真係撳落去量落點（清單由 DOM 動態抽）。
+        _entries = await _p4.evaluate("""() => {
+          const out = [];
+          [...document.querySelectorAll('section')].filter(s => s.id !== 'home').forEach(sec => {
+            [...sec.querySelectorAll('button,a')].forEach(e => {
+              const t = (e.textContent || '').trim();
+              if (/(立即測試|立即開始)/.test(t)) out.push({sec: sec.id, oc: e.getAttribute('onclick') || ''});
+            });
+          });
+          return out; }""")
+        check("撳入口前：分頁入口清單非空（動態抽到）", bool(_entries) and len(_entries) >= 5, str(len(_entries) if _entries else 0))
+        for _e in (_entries or []):
+            # 忠實模擬真實流程：先跳去嗰頁，再撳入口（唔可以喺主頁直接 eval）
+            await _p4.evaluate("(sid) => { try{ window.show(sid); }catch(e){} }", _e["sec"])
+            await _p4.wait_for_timeout(320)
+            await _p4.evaluate("(oc) => { window.eval(oc); }", _e["oc"])
+            await _p4.wait_for_timeout(1200)
+            _lk = await _p4.evaluate("""() => {
+              const hb = document.getElementById('homeBelow').getBoundingClientRect();
+              const rw = document.getElementById('homeTypeReelWrap').getBoundingClientRect();
+              const hh = document.getElementById('home');
+              return {cardTop: Math.round(hb.top), reelBottom: Math.round(rw.bottom),
+                      homeShown: !hh.classList.contains('hidden')}; }""")
+            check("%s 入口 → 測試卡貼頂（0..40，卡頂唔可以被切）＋16 型色牌捲走（bottom<=40）" % _e["sec"],
+                  bool(_lk) and _lk["homeShown"] and 0 <= _lk["cardTop"] <= 40 and _lk["reelBottom"] <= 40, str(_lk))
         check("390: 「上次未完成」卡同版本卡之間 >= 24px（Roy：原本太貼唔好睇）",
               bool(gp) and gp.get("gap", 0) >= 24, str(gp))
         check("390: 測試區下面個 ▼ 上下空間 = 20px / 32px",

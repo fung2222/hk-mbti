@@ -52,6 +52,26 @@ setTimeout(()=>{
       && src.indexOf('class="home-more-down home-next-down"') < src.indexOf('class="scenes-bleed"'));
   chk('卡入面 4 粒「立即測試／查看紀錄」掣仲喺度', d.querySelectorAll('.ver-hint').length===4, d.querySelectorAll('.ver-hint').length);
 
+  // ---------- Roy 2026-10-07：全部分頁「返去揀版本」入口統一（測試卡貼頂、唔見 16 型色牌）----------
+  chk('★ 有共用落地函數 landOnVersionCards（block:"start" 貼頂）',
+      /window\.landOnVersionCards = function\(\)/.test(src) && /block:"start"/.test(src));
+  chk('★ 主頁「立即測試」掣同其他入口用同一個落地函數（唔准各自寫一套）',
+      /window\.scrollHomeBelow = function\(\)\{\s*window\.landOnVersionCards\(\);\s*\};/.test(src));
+  chk('★ goPickVersion 都用同一個落地函數 + 清 _homeScrollY（否則 show() 會還原舊位置）',
+      /window\.goPickVersion = function\(\)\{[\s\S]{0,160}?_homeScrollY = 0[\s\S]{0,160}?landOnVersionCards/.test(src));
+  // 動態清單：所有非主頁 section 內、文字含「立即測試／立即開始」嘅掣，一律要 goPickVersion()
+  const entryHs = [];
+  [...d.querySelectorAll('section')].filter(sec => sec.id !== 'home').forEach(sec => {
+    sec.querySelectorAll('button,a').forEach(e => {
+      const t = (e.textContent || '').trim();
+      if (!/(立即測試|立即開始)/.test(t)) return;
+      entryHs.push(sec.id + ':' + (e.getAttribute('onclick') || '(冇)'));
+    });
+  });
+  const badEntry = entryHs.filter(h => !/goPickVersion\(\)$/.test(h.split(':').slice(1).join(':')));
+  chk(`★ 分頁「返去揀版本」入口全部用 goPickVersion()（動態清單 ${entryHs.length} 個）`,
+      entryHs.length > 0 && badEntry.length === 0, badEntry.join(' | ') || entryHs.join(' | ').slice(0, 120));
+
   // ---------- Roy 2026-10-05：3 個測試版本各加一個獨特線條 icon（「我的記錄」唔加）----------
   const icos=[...d.querySelectorAll('.ver-btn .ver-ico')];
   chk('★ 3 個測試版本卡各有 1 個 icon（我的記錄冇）', icos.length===3, icos.length);

@@ -145,7 +145,11 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
   chk('★ 人格分頁最底文案改咗（想知道自己 MBTI 人格？）', /想知道自己 MBTI 人格？/.test(src));
   chk('★ 測試入口文案全站統一（想知道自己 MBTI 人格？）', (src.match(/想知道自己 MBTI 人格？/g) || []).length >= 8 && !/睇完想試/.test(src));
   chk('★ 測試入口按鈕全站統一（立即測試；Roy 2026-10-04 改）', (src.match(/>立即測試</g) || []).length >= 14 && !/立即選擇測試版本/.test(src) && !/返主頁開始測試/.test(src));
-  chk('★ goPickVersion 存在（show home + 捲到 #homeBelow）', /window\.goPickVersion = function\(\)\{[\s\S]{0,260}show\("home"\)[\s\S]{0,200}homeBelow/.test(src));
+  // 2026-10-07：由「驗字串排位」改成「驗行為」—— goPickVersion 要 show home ＋ 用共用落地位，
+  // 而共用落地位要瞄準 #homeBelow 而且 block:"start"（分頁入口同主頁掣一致）。
+  chk('★ goPickVersion ＝ show home ＋ 共用落地位（landOnVersionCards）',
+      /window\.goPickVersion = function\(\)\{[\s\S]{0,320}?show\("home"\)[\s\S]{0,120}?landOnVersionCards/.test(src)
+      && /window\.landOnVersionCards = function\(\)\{[\s\S]{0,200}?homeBelow[\s\S]{0,140}?block:"start"/.test(src));
   // ---------- 全站「大寫字母／型別碼」字型一致性（Roy 2026-10-01：檢查全站色卡用返 Archivo Black）----------
   chk('★ 色卡 4 字母 .hub-type-code 用 Archivo Black', /\.hub-type-code\{\s*\nfont-family:'Archivo Black'/.test(src));
   chk('★ .type-code-txt 強制繼承字型（包咗 span 都唔會跌返 body 字型）', /\.type-code-txt\{display:block;font-family:inherit;font-weight:inherit;font-size:inherit/.test(src));
