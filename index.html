@@ -188,9 +188,12 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 .hk-stats-item{background:rgba(212,169,95,.06);border-radius:10px;padding:10px 12px}
 .hk-stats-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
 .hk-stats-name{font-size:13px;font-weight:700}
-.hk-stats-pct{font-size:13px;font-weight:900;color:var(--ink)}
+.hk-stats-pct{font-size:18px;font-weight:900;color:var(--ink);letter-spacing:-.01em}
 .hk-stats-est{font-size:11px;color:#6b6560;margin-top:4px}
-.hk-stats-cta{display:inline-block;margin-top:14px;text-decoration:none}
+.hk-stats-foot{display:flex;justify-content:flex-end;margin-top:12px}
+.hk-stats-cta{display:inline-block;font-size:12px;font-weight:700;color:#8B6F3D;text-decoration:none;
+  border-bottom:1px solid rgba(139,111,61,.35);padding-bottom:1px}
+html.dk .hk-stats-cta{color:#D8C69E;border-bottom-color:rgba(216,198,158,.4)}
 html.dk #hk-stats .hk-stats-sub,html.dk #hk-stats .hk-stats-est{color:#A79E92}
 html.dk #hk-stats .hk-stats-item{background:#2A323C}
 .page-hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:#fff;padding:14px 16px 16px;margin:-24px -16px 16px}
@@ -903,7 +906,7 @@ html.dk .hub-row-chev{color:#C0A87A}
     grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);column-gap:48px;align-items:center}
   html.dt #hk-stats .hk-stats-sub{font-size:14px;margin-bottom:18px}
   html.dt #hk-stats .hk-stats-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-  html.dt #hk-stats .hk-stats-cta{margin-top:0}
+  html.dt #hk-stats .hk-stats-foot{margin-top:14px}
   html.dt .scenes-head{max-width:none;width:var(--dt-w);margin:0 auto 20px}
   html.dt #app .scenes-head > .text-sm{font-size:16px;font-weight:400;color:#6b6560;margin:0}
   html.dt .scenes-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:none;width:var(--dt-w);margin:0 auto}
@@ -2309,9 +2312,11 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <div class="hk-stats-head">
    <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M8 19v-6M12 19V9M16 19v-4"/></svg>香港分佈</div>
    <p class="hk-stats-sub">16 型公開分佈估算 · 對照香港人口約 <span id="hkStatsPop">—</span> 萬（基線樣本 <span id="hkStatsSample">—</span>）</p>
-   <a href="./stats.html" class="softbox-btn hk-stats-cta">睇完整 16 型分佈 →</a>
   </div>
-  <div class="hk-stats-list" id="hkStatsList"></div>
+  <div class="hk-stats-body">
+   <div class="hk-stats-list" id="hkStatsList"></div>
+   <div class="hk-stats-foot"><a href="./stats.html" class="hk-stats-cta">睇完整 16 型分佈 →</a></div>
+  </div>
  </div>
 
  <!-- 探索四欄 · 風琴式 -->

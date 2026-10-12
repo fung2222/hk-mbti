@@ -161,6 +161,12 @@ setTimeout(() => {
   check("#hk-stats 由 renderHomeStats 填內容（唔准寫死數字）",
     /window\.renderHomeStats = function\(\)/.test(html) && /id="hkStatsList"/.test(html));
   check("show('home') 會 render 香港分佈", /try\{ renderHomeStats\(\); \}catch\(e\)\{\}/.test(html));
+  const _hkList = hk && hk.querySelector("#hkStatsList");
+  const _hkCta = hk && hk.querySelector('a[href="./stats.html"]');
+  check("★ 香港分佈：按鈕喺 top 3 名單之後（Roy 2026-10-11：唔准夾喺中間）",
+    !!(_hkList && _hkCta && (_hkList.compareDocumentPosition(_hkCta) & 4)));   // 4 = FOLLOWING
+  check("★ 香港分佈：按鈕係簡約款（唔用 softbox-btn 大掣）",
+    !/class="[^"]*softbox-btn[^"]*hk-stats-cta/.test(html) && /class="hk-stats-cta"/.test(html));
   check("桌面層：#hk-stats 用 html.dt ＋ :not(.hidden)（.hidden 鐵律）",
     /html\.dt #hk-stats:not\(\.hidden\)/.test(layer));
   check("數值一致性：index.html 同 stats.html 嘅 STAT_BASE_PCT 完全一樣", (function(){
