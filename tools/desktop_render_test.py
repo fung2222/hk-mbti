@@ -189,22 +189,26 @@ async def run():
               if(!el) return {err:'冇 #hk-stats'};
               const items = [...el.querySelectorAll('.hk-stats-item')];
               const pcts = items.map(i => parseFloat((i.querySelector('.hk-stats-pct')||{}).textContent || '0'));
-              const a = el.querySelector('a[href="./stats.html"]');
+              const c = el.querySelector('a[href="./stats.html"]');
+              const acc = document.querySelector('#home .home-acc');
+              const lastIt = items[items.length-1];
+              const csC = c ? getComputedStyle(c) : null;
               return {hscroll: root.scrollWidth - root.clientWidth, items: items.length,
-                      desc: pcts.every((v,i,arr) => i===0 || arr[i-1] >= v), cta: !!a,
+                      desc: pcts.every((v,i,arr) => i===0 || arr[i-1] >= v), cta: !!c,
                       sample: (document.getElementById('hkStatsSample')||{}).textContent || '',
                       baseN: (window.STAT_BASE_N||0).toLocaleString("en-HK"),
-                      ctaBelow: (function(){ const c = el.querySelector('a[href="./stats.html"]');
-                        const it = items[items.length-1]; if(!c || !it) return false;
-                        return c.getBoundingClientRect().top >= it.getBoundingClientRect().bottom - 1; })(),
-                      ctaPlain: (function(){ const c = el.querySelector('a[href="./stats.html"]'); if(!c) return false;
-                        const cs = getComputedStyle(c);
-                        return (cs.backgroundColor === 'rgba(0, 0, 0, 0)' || cs.backgroundColor === 'transparent') &&
-                               cs.borderTopWidth === '0px' && cs.borderRadius === '0px'; })()}; }""")
+                      ctaBelow: !!(c && lastIt && c.getBoundingClientRect().top >= lastIt.getBoundingClientRect().bottom - 1),
+                      ctaPlain: !!(csC && (csC.backgroundColor === 'rgba(0, 0, 0, 0)' || csC.backgroundColor === 'transparent')
+                                  && csC.borderTopWidth === '0px' && csC.borderRadius === '0px'),
+                      gapToAcc: acc ? Math.round(acc.getBoundingClientRect().top - el.getBoundingClientRect().bottom) : -1};
+            }""")
             check("%d×%d: 香港分佈齊（3 項、樣本＝基線、按鈕喺卡下面＋簡約、冇橫向捲軸）" % (_W, _H),
                   bool(_hk) and _hk.get("items") == 3 and _hk.get("desc") and _hk.get("cta") and _hk.get("hscroll", 99) <= 1
                   and _hk.get("sample") == _hk.get("baseN")
                   and _hk.get("ctaBelow") and _hk.get("ctaPlain"), str(_hk))
+            _wantGap = 40 if _W <= 430 else 56
+            check("%d×%d: 香港分佈 → 探索更多 空間 = %dpx（Roy 2026-10-11：原本太逼）" % (_W, _H, _wantGap),
+                  abs(_hk.get("gapToAcc", -999) - _wantGap) <= 1, str(_hk.get("gapToAcc")))
             await _ch.close()
         # 2026-10-07：桌面金掣喺黑夜模式原本用 var(--ink)（淺色）→ 對比 1.62 睇唔到。
         # 涵蓋 hero「立即測試」（.dt-cta-gold）同 sticky 導覽嗰粒（.dt-nav-cta）。

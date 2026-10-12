@@ -182,7 +182,7 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 .stat-bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
 .stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
 /* 2026-10-11 Roy：首頁「香港分佈」摘要（內容由 renderHomeStats 動態填，唔准寫死數字） */
-#hk-stats{margin:30px 0 4px}
+#hk-stats{margin:30px 0 40px}   /* 2026-10-11 Roy：同「探索更多」中間原本只有 4px，太逼 → 40px */
 .hk-stats-sub{font-size:12px;color:#6b6560;margin:0 0 14px;line-height:1.7}
 .hk-stats-list{display:grid;gap:8px}
 .hk-stats-item{background:rgba(212,169,95,.06);border-radius:10px;padding:10px 12px}
@@ -915,6 +915,8 @@ html.dk .hub-row-chev{color:#C0A87A}
   html.dt .scene-sub{font-size:15px;line-height:1.7;color:#6b6560}
 
   html.dt #home > div.mb-4{width:var(--dt-w);margin:0 auto;padding:48px 0 8px}
+  /* 2026-10-11 Roy：香港分佈 → 探索更多 桌面空間 48 → 56px（只針對呢個 wrapper，唔影響版本卡） */
+  html.dt #home #hk-stats + div.mb-4{padding-top:56px}
   html.dt .home-acc{display:grid;gap:16px;background:none;border-radius:0;box-shadow:none;overflow:visible}
   html.dt .home-acc-label{grid-column:1/-1}
   html.dt .home-acc-item{display:flex;flex-direction:column;border:0;border-radius:16px;background:#fff;padding:22px 20px 20px}
