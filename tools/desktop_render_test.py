@@ -180,6 +180,24 @@ async def run():
         check("390: hero 掣文字 = 「立即測試」", bool(dd) and dd["text"] == "立即測試", str(dd and dd["text"]))
         check("390: 「立即測試」掣係金底深字（對比 >= 4.5）",
               bool(dd) and dd["cr"] is not None and dd["cr"] >= 4.5, str(dd))
+        # Roy 2026-10-11：首頁「香港分佈」摘要 —— 6 個尺寸都要冇橫向捲軸、內容齊，唔可以搞亂主頁其他鐵律。
+        for _W, _H in ((1920, 1080), (1440, 900), (1280, 800), (1024, 768), (768, 1024), (390, 844)):
+            _ch, _ph, _eh = await page(_W, _H, _W, _H, _W <= 430)
+            _hk = await _ph.evaluate("""() => {
+              const el = document.getElementById('hk-stats');
+              const root = document.documentElement;
+              if(!el) return {err:'冇 #hk-stats'};
+              const items = [...el.querySelectorAll('.hk-stats-item')];
+              const pcts = items.map(i => parseFloat((i.querySelector('.hk-stats-pct')||{}).textContent || '0'));
+              const a = el.querySelector('a[href="./stats.html"]');
+              return {hscroll: root.scrollWidth - root.clientWidth, items: items.length,
+                      desc: pcts.every((v,i,arr) => i===0 || arr[i-1] >= v), cta: !!a,
+                      sample: (document.getElementById('hkStatsSample')||{}).textContent || '',
+                      baseN: (window.STAT_BASE_N||0).toLocaleString("en-HK")}; }""")
+            check("%d×%d: 香港分佈摘要齊（3 項、百分比遞減、連去統計頁、樣本＝基線）＋冇橫向捲軸" % (_W, _H),
+                  bool(_hk) and _hk.get("items") == 3 and _hk.get("desc") and _hk.get("cta") and _hk.get("hscroll", 99) <= 1
+                  and _hk.get("sample") == _hk.get("baseN"), str(_hk))
+            await _ch.close()
         # 2026-10-07：桌面金掣喺黑夜模式原本用 var(--ink)（淺色）→ 對比 1.62 睇唔到。
         # 涵蓋 hero「立即測試」（.dt-cta-gold）同 sticky 導覽嗰粒（.dt-nav-cta）。
         _c5, _p5, _e5 = await page(1440, 900, 1440, 900)

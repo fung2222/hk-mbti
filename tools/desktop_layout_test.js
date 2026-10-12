@@ -154,6 +154,22 @@ setTimeout(() => {
   check("紀錄頁桌面歷史卡兩欄（平板仍然一欄）",
     /html\.dt #historyList\{grid-template-columns:1fr 1fr\}/.test(fs.readFileSync(path.join(REPO, "record.html"), "utf8")));
 
+  // ---------- 4. 香港分佈摘要（Roy 2026-10-11）----------
+  const hk = d.getElementById("hk-stats");
+  check("首頁有 #hk-stats（香港分佈摘要）而且喺 #home 入面", !!hk && !!hk.closest("#home"));
+  check("#hk-stats 連去完整統計頁（./stats.html）", !!hk && !!hk.querySelector('a[href="./stats.html"]'));
+  check("#hk-stats 由 renderHomeStats 填內容（唔准寫死數字）",
+    /window\.renderHomeStats = function\(\)/.test(html) && /id="hkStatsList"/.test(html));
+  check("show('home') 會 render 香港分佈", /try\{ renderHomeStats\(\); \}catch\(e\)\{\}/.test(html));
+  check("桌面層：#hk-stats 用 html.dt ＋ :not(.hidden)（.hidden 鐵律）",
+    /html\.dt #hk-stats:not\(\.hidden\)/.test(layer));
+  check("數值一致性：index.html 同 stats.html 嘅 STAT_BASE_PCT 完全一樣", (function(){
+    const g = f => { let t = ""; try{ t = fs.readFileSync(path.join(REPO, f), "utf8"); }catch(e){ return null; }
+      const m = t.match(/STAT_BASE_PCT\s*=\s*\{([\s\S]*?)\}/); if(!m) return null;
+      return (m[1].match(/[A-Z]{4}:\s*[\d.]+/g) || []).map(x => x.replace(/\s/g, "")).sort().join(","); };
+    const a = g("index.html"), b = g("stats.html");
+    return !!a && !!b && a === b; })());
+
   // ---------- 3. 開關 ----------
   const root = d.documentElement;
   root.classList.remove("dt"); dom.window.eval(gate);

@@ -181,6 +181,18 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 @media (min-width:768px){ html.dt #pair > *{max-width:760px;margin-left:auto;margin-right:auto} }
 .stat-bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden}
 .stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
+/* 2026-10-11 Roy：首頁「香港分佈」摘要（內容由 renderHomeStats 動態填，唔准寫死數字） */
+#hk-stats{margin:30px 0 4px}
+.hk-stats-sub{font-size:12px;color:#6b6560;margin:0 0 14px;line-height:1.7}
+.hk-stats-list{display:grid;gap:8px}
+.hk-stats-item{background:rgba(212,169,95,.06);border-radius:10px;padding:10px 12px}
+.hk-stats-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+.hk-stats-name{font-size:13px;font-weight:700}
+.hk-stats-pct{font-size:13px;font-weight:900;color:var(--ink)}
+.hk-stats-est{font-size:11px;color:#6b6560;margin-top:4px}
+.hk-stats-cta{display:inline-block;margin-top:14px;text-decoration:none}
+html.dk #hk-stats .hk-stats-sub,html.dk #hk-stats .hk-stats-est{color:#A79E92}
+html.dk #hk-stats .hk-stats-item{background:#2A323C}
 .page-hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:#fff;padding:14px 16px 16px;margin:-24px -16px 16px}
 .page-hero-row{position:relative;display:flex;align-items:center;min-height:44px}
 .page-hero-row h1{position:absolute;left:0;right:0;margin:0;padding:0 4.5rem;font-size:19px;font-weight:900;text-align:center;pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:44px;color:#fff}
@@ -886,6 +898,12 @@ html.dk .hub-row-chev{color:#C0A87A}
   html.dt .home-acc-label .scenes-title-ico{width:22px;height:22px;margin-right:8px;color:var(--gold);vertical-align:-4px}
 
   html.dt .scenes-bleed{margin:0;padding:48px 0 52px;background:var(--soft)}
+  /* 2026-10-11 Roy：首頁「香港分佈」摘要（桌面／平板：左文案、右數據） */
+  html.dt #hk-stats:not(.hidden){width:var(--dt-w);margin:0 auto;padding:52px 0 8px;display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);column-gap:48px;align-items:center}
+  html.dt #hk-stats .hk-stats-sub{font-size:14px;margin-bottom:18px}
+  html.dt #hk-stats .hk-stats-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  html.dt #hk-stats .hk-stats-cta{margin-top:0}
   html.dt .scenes-head{max-width:none;width:var(--dt-w);margin:0 auto 20px}
   html.dt #app .scenes-head > .text-sm{font-size:16px;font-weight:400;color:#6b6560;margin:0}
   html.dt .scenes-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:none;width:var(--dt-w);margin:0 auto}
@@ -1490,6 +1508,9 @@ window.refreshResumeBanner();
  }
 if(typeof window.renderTypeStats === "function"){
 window.renderTypeStats();
+ }
+if(typeof window.renderHomeStats === "function"){
+window.renderHomeStats();
  }
 if(typeof window.renderHubTypes === "function"){
 window.renderHubTypes();
@@ -2281,6 +2302,16 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="scene-sub">WhatsApp · 唱 K · 搬屋 · 相處 · 道歉</div>
  </div>
  </div>
+ </div>
+
+ <!-- 香港分佈（摘要）· 2026-10-11 Roy：首頁加一段短摘要，連去完整統計頁 -->
+ <div id="hk-stats">
+  <div class="hk-stats-head">
+   <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M8 19v-6M12 19V9M16 19v-4"/></svg>香港分佈</div>
+   <p class="hk-stats-sub">16 型公開分佈估算 · 對照香港人口約 <span id="hkStatsPop">—</span> 萬（基線樣本 <span id="hkStatsSample">—</span>）</p>
+   <a href="./stats.html" class="softbox-btn hk-stats-cta">睇完整 16 型分佈 →</a>
+  </div>
+  <div class="hk-stats-list" id="hkStatsList"></div>
  </div>
 
  <!-- 探索四欄 · 風琴式 -->
@@ -3337,6 +3368,7 @@ window.scrollTo(0,0);
 if(id === "home"){
 try{ loadHistory(); }catch(e){}
 try{ renderTypeStats(); }catch(e){}
+try{ renderHomeStats(); }catch(e){}
 try{ clearVersionUI(); }catch(e){}
  }
 // 下面幾頁嘅內容係 JS render 出嚟（唔喺 HTML 內）→ 一定要喺 show() 內重 render，
@@ -5243,6 +5275,7 @@ try{ local = JSON.parse(localStorage.getItem("hkmbti_type_counts")||"{}") || {};
 local[code] = (parseInt(local[code]||0,10)||0) + 1;
 localStorage.setItem("hkmbti_type_counts", JSON.stringify(local));
 try{ renderTypeStats(); }catch(e){}
+try{ renderHomeStats(); }catch(e){}
 };
 
 window.renderTypeStats = function(){
@@ -5278,6 +5311,33 @@ return `<div class="bg-soft rounded-lg p-2.5">
  }).join("");
 };
 
+window.renderHomeStats = function(){
+const box = document.getElementById("hkStatsList");
+if(!box || typeof getTypeStats !== "function") return;
+const st = getTypeStats();
+const total = st.total || 0;
+if(!total) return;
+const ranked = Object.keys(st.counts).sort((a,b) => st.counts[b] - st.counts[a]);
+const names = {};
+if(window.TYPES) Object.keys(window.TYPES).forEach(k => { names[k] = window.TYPES[k].cn || window.TYPES[k].name || k; });
+const pop = Math.round((window.HK_POP || 7500000) / 10000);
+const sEl = document.getElementById("hkStatsSample");
+if(sEl) sEl.textContent = (window.STAT_BASE_N || total).toLocaleString("en-HK");   // 顯示基線樣本（唔用 round 之後嘅總和，否則會同 stats.html 差 1 人）
+const pEl = document.getElementById("hkStatsPop");
+if(pEl) pEl.textContent = pop.toLocaleString("en-HK");
+const maxC = st.counts[ranked[0]] || 1;
+box.innerHTML = ranked.slice(0,3).map((code, i) => {
+const n = st.counts[code];
+const pct = n / total * 100;
+const hk = Math.round((window.HK_POP || 7500000) * (n / total));
+const bar = Math.max(8, Math.round(n / maxC * 100));
+const label = names[code] ? code + " " + names[code] : code;
+return '<div class="hk-stats-item">' +
+'<div class="hk-stats-top"><span class="hk-stats-name">' + (i+1) + '. ' + label + '</span><span class="hk-stats-pct">' + pct.toFixed(1) + '%</span></div>' +
+'<div class="stat-bar"><div class="stat-fill" style="width:' + bar + '%"></div></div>' +
+'<div class="hk-stats-est">約香港 ' + hk.toLocaleString("en-HK") + ' 人</div></div>';
+}).join("");
+};
 window.setShareStatus = function(msg){
 const el = $("shareStatus");
 if(el) el.innerText = msg;
