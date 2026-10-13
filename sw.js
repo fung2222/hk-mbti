@@ -38,11 +38,23 @@ self.addEventListener("install", e => {
 });
 
 self.addEventListener("activate", e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
-  );
+  // 2026-10-13（Grok 4.7 ＋ DeepSeek v4 Pro 審計 ＋ 業界標準做法）：
+  // 原本只刪「唔同 cache 名」嘅 cache → 同名 cache 入面嘅舊 HTML／缺失資產永遠唔會被清，
+  // 用戶就會「收到咗修復但仍然壞」（線上經典 bug：I Shipped a Fix. My Service Worker Kept Serving the Bug.）。
+  // 而家每次 activate（＝每次 sw.js 有改動）都做一次全量重置：
+  //   ① 刪走所有 cache（唔理 cache 名，保持版本字串一致）
+  //   ② 由網絡重新抓齊所有 ASSETS（cache:"reload" 繞過 HTTP cache）
+  // 咁樣就算之前 cache 缺檔／有舊 HTML，一更新 SW 就自動回復乾淨狀態。
+  e.waitUntil((async () => {
+    try {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(k => caches.delete(k)));
+      const c = await caches.open(CACHE);
+      await Promise.allSettled(ASSETS.map(u =>
+        fetch(u, { cache: "reload" }).then(r => (r && r.status === 200) ? c.put(u, r) : null)
+      ));
+    } catch (err) {}
+  })());
   self.clients.claim();
 });
 

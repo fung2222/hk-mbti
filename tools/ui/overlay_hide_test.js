@@ -39,5 +39,10 @@ chk('★ 每個靠 tailwind.css 嘅頁面都有自癒哨兵', noHeal.length===0,
 chk('★ 哨兵有防無限重載（sessionStorage 只試一次）', /sessionStorage\.getItem\(KEY\)/.test(fs.readFileSync(path.join(REPO,'index.html'),'utf8')));
 chk('★ 哨兵離線時唔郁（等連網先自癒）', /if\(!navigator\.onLine\) return;/.test(fs.readFileSync(path.join(REPO,'index.html'),'utf8')));
 chk('★ sw.js 封死 respondWith(undefined)（cache miss + 離線唔會 throw）', /Response\.error\(\)/.test(swsrc));
+
+chk('★ sw.js activate 做全量 cache 重置（唔止刪「唔同 cache 名」）',
+    /keys\.map\(k => caches\.delete\(k\)\)/.test(swsrc) && !/k !== CACHE/.test(swsrc));
+chk('★ sw.js activate 重置後會重新抓齊 ASSETS（cache:"reload"）',
+    /ASSETS\.map\(u =>/.test(swsrc) && /cache: "reload"/.test(swsrc.split('addEventListener("activate"')[1]||''));
 console.log(ok===total ? "===== 全部通過（"+total+" 項）=====" : "===== 有失敗（"+ok+"/"+total+"）=====");
 process.exit(ok===total?0:1);
