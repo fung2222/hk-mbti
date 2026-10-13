@@ -47,7 +47,7 @@
 
 1. 揀 `app-name.txt` 入面其中一個 name
 2. 揀 `short-desc.txt` 入面其中一個 short
-3. **`full-desc-play.txt` 直接複製貼到 Play**（純文字、冇 markdown、冇 emoji、1448 字元）；`full-desc.md` 係 source 稿，**唔好直接貼**（有 `**` 等 markdown）。⚠️ `full-desc-plain.txt` 係舊稿，唔准貼。
+3. **`full-desc-play.txt` 直接複製貼到 Play**（純文字、冇 markdown、冇 emoji；字數由 `wc -m` 自己數，唔好信文件寫死嘅數）；`full-desc.md` 係 source 稿，**唔好直接貼**（有 `**` 等 markdown）。⚠️ `full-desc-plain.txt` 係舊稿，唔准貼。
 4. 填 `content-rating.md` 答案
 5. 填 `data-safety.md` 答案
 6. `changelog.md` 最近版本拎一段

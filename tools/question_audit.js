@@ -21,7 +21,7 @@ const ALTS = grab("Q_ALTS");
 const AX = { "E/I":["E","I"], "S/N":["S","N"], "T/F":["T","F"], "J/P":["J","P"], "T/A":["T","A"] };
 const axisOf = d => { const h = String(d).split(" - ")[0].replace(/\s/g,""); return AX[h] ? h : ("?" + h); };
 
-const out = { counts:{}, sparse:[], struct:[], scoring:[], grammar:[], lens:[], dup:[], altIssues:[] };
+const out = { counts:{}, sparse:[], struct:[], scoring:[], grammar:[], lens:[], dup:[], altDup:[], altIssues:[] };
 
 // 2026-10-13 加：題庫唔准有空位（稀疏陣列）。
 // 血例：程式化插入題目物件時留低 `},,`，JS 會無聲當一個空位，forEach 會跳過
@@ -91,6 +91,11 @@ Object.keys(ALTS).forEach(k => {
     altCount++;
     const s = String(t).trim();
     if(!/？$/.test(s)) out.altIssues.push(`${k}[${j+1}] 冇「？」結尾`);
+    // 2026-10-13 加（硬錯誤）：變體唔可以同主問題一字不差。
+    // 血例：程式化換題目時，兩句變體直接抄咗題目本身 → 變體機制形同虛設（重玩時次次一模一樣），
+    // 但所有既有檢查（共同字、問號、長度）都係綠 → 一定要專門守。
+    if(prim && s === String(Q[prim[0]].t).trim())
+      out.altDup.push(`${k}[${j+1}] 變體同題目一字不差：「${s}」`);
     if(s.length < 8) out.altIssues.push(`${k}[${j+1}] 太短（${s.length}）`);
     const badNegAlt = (s.match(/唔安(?!樂)|唔滿(?!意)|唔足(?!夠)|唔穩(?!定)|唔確(?!定)/) || [])[0];
     if(badNegAlt) out.altIssues.push(`${k}[${j+1}] 否定詞用錯（「唔」+ 書面詞素）：${badNegAlt}`);
@@ -120,8 +125,8 @@ Object.keys(qSeen).forEach(t => {
 out.counts.total = Q.length;
 out.counts.alts = altCount;
 out.counts.altKeys = Object.keys(ALTS).length;
-["struct","scoring","grammar","lens","dup","sparse","altIssues"].forEach(k => { if(!out[k].length) out[k] = ["（0）"]; });
-["struct","scoring","grammar","sparse"].forEach(k => { out[k] = out[k].slice(0, 12); });
+["struct","scoring","grammar","lens","dup","sparse","altDup","altIssues"].forEach(k => { if(!out[k].length) out[k] = ["（0）"]; });
+["struct","scoring","grammar","sparse","altDup"].forEach(k => { out[k] = out[k].slice(0, 12); });
 ["lens","dup"].forEach(k => { out[k] = out[k].slice(0, 15); });
 out.altIssues = out.altIssues.slice(0, 20);
 console.log(JSON.stringify(out, null, 1));
@@ -129,7 +134,7 @@ console.log(JSON.stringify(out, null, 1));
 // 硬錯誤（結構／計分／文法／重複）→ 非零 exit，令出貨閘真係攔得住。
 // lens／altIssues 屬警告（變體換句話說、字數差）→ 唔 fail。
 // 歷史：本檔一直冇 process.exit，所以無論捉到幾多問題都 rc=0，加入 ship.sh 等於假綠（2026-10-05 靠 RED 驗證捉到）。
-const hard = ["struct","scoring","grammar","dup","sparse"]
+const hard = ["struct","scoring","grammar","dup","sparse","altDup"]
   .flatMap(k => out[k].filter(x => x !== "（0）").map(x => `${k}: ${x}`));
 if (hard.length) {
   console.error(`✗ 題庫硬錯誤 ${hard.length} 項（結構／計分／文法／重複）：`);
