@@ -10,6 +10,8 @@ const ASSETS = [
   "/hk-mbti/premium-data.js",
   "/hk-mbti/type-icons.js",
   "/hk-mbti/manifest.json",
+  "/hk-mbti/favicon.png",
+  "/hk-mbti/apple-touch-icon.png",
   "/hk-mbti/icon-192.png",
   "/hk-mbti/icon-512.png",
   "/hk-mbti/record.html",

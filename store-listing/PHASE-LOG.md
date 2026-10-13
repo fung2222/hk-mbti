@@ -58,7 +58,7 @@
 - **改動**：`index.html` 兩處
 - **位置 1**：line 846-849（主頁底部 · 統計 card 之後）
 - **位置 2**：line 947-950（結果頁底部 · 返回主頁之後）
-- **文案**：`⚠️ 本測試只係自我探索工具，唔係醫學診斷或專業心理評估。唔適合作僱傭、配對婚姻或貼標籤批評人嘅依據。`
+- **文案**：`注意： 本測試只係自我探索工具，唔係醫學診斷或專業心理評估。唔適合作僱傭、配對婚姻或貼標籤批評人嘅依據。`
 - **驗證**：5 段 inline scripts syntax OK，disclaimer 出現 2 次
 - **目的**：與 `store-listing/full-desc.md` 同源，Play 描述 + App 內一致
 
@@ -173,7 +173,7 @@ Working tree:                         clean (只有 icons-draft/ untracked，無
 
 ---
 
-## ⚠️ 重要決定記錄
+## 注意： 重要決定記錄
 
 | 決定 | Roy 揀 | 原因 |
 |------|--------|------|
@@ -215,3 +215,5 @@ Play Console:  https://play.google.com/console (**已註冊**；封閉測試 202
 
 本地 zip (不入 git):  /opt/data/hk-mbti-pwa-source-v1.7.0.zip
 ```
+
+> **2026-10-13 註**：`icons-draft/` 5 張設計草稿圖已經由 repo 移除（清理唔需要嘅素材；最終 icon 已經定案為 icon-192/512 ＋ maskable）。如需查閱舊草稿，由 git 歷史搵返（2026-10-13 之前嘅 commit）。
