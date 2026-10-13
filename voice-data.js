@@ -724,7 +724,7 @@ window.O_AUDIO = {
   "會，成日想確認自己外在狀態": "audio/o/caa45ad45c5a.mp3",
   "照鏡只係整理下儀容，唔會諗多": "audio/o/2b83df3b2602.mp3",
   "好少，唔會特別在意": "audio/o/bb02ef829fbc.mp3",
-  "出街或者見人前會 check 一次，其他時間唔會刻意": "audio/o/6a0231366e84.mp3",
+  "見人前會 check 一次，其他時間唔會": "audio/o/f155623c945d.mp3",
   "腦入面停唔到，自己同自己對話": "audio/o/60c37b3e7bd6.mp3",
   "換個姿勢就瞓得返": "audio/o/2c1f70f0c210.mp3",
   "攞電話覆 message 或者刷 feed": "audio/o/f3a821b840ea.mp3",
