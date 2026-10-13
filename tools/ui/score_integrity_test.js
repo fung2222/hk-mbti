@@ -82,6 +82,25 @@ setTimeout(() => {
   chk('★ C 隨機亂答 200 次：8 個字母出現比例全部喺 40–60%', bad.length===0,
       bad.map(L=>L+"="+share(L).toFixed(1)+"%").join(" ") || ["E","I","S","N","T","F","J","P"].map(L=>L+"="+share(L).toFixed(1)+"%").join(" "));
 
+  // ---------- E. 版本卡寫嘅題數 ↔ 實際抽題數（2026-10-13 新增） ----------
+  // 血例：豆包 AI 報告（冇入過網站）指出「UI 顯示 30 題但程式載入 31 題」係多題集前端常見錯。
+  // 本 app 冇呢個錯，但**冇任何守門** —— 改 perDim 就會靜靜同版本卡文案（60/30/10 題）脫鈎。
+  const sizes={}; ["life","advanced","bb"].forEach(v=>{ w.state._tb=null; sizes[v]=w.buildDeck(v).length; });
+  chk('★ E1 版本實際抽題數 = 60 / 30 / 10', sizes.life===60 && sizes.advanced===30 && sizes.bb===10, JSON.stringify(sizes));
+  chk('★ E2 版本卡寫嘅題數同實際抽題一致（防文案漂移）', (function(){
+        const d2=w.document;
+        return ["life","advanced","bb"].every(v=>{
+          const el=d2.querySelector('#versionList [data-ver="'+v+'"]');
+          if(!el) return false;
+          const m=(el.textContent||"").match(/(\d+)\s*題/);
+          return !!m && +m[1] === sizes[v];
+        });
+      })(), ["life","advanced","bb"].map(v=>{
+        const el=w.document.querySelector('#versionList [data-ver="'+v+'"]');
+        const m=el&&(el.textContent||"").match(/(\d+)\s*題/);
+        return v+"="+(m?m[1]:"?")+"/實際"+sizes[v];
+      }).join(" "));
+
   // ---------- D. 冇 JS error ----------
   chk('冇新 jsdom error', jerr.length===0, jerr.join(" | "));
 
