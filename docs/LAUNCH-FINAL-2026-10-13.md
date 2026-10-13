@@ -6,6 +6,53 @@
 
 ---
 
+# ★ 未完成事項總清單（唯一來源 · 2026-10-13 收工時核實）
+
+> **規矩**：以後所有開放事項以**呢一節**為準；其他舊文件（`UI-TODO.md`、`v2.0-release-pack.md`、
+> `freeze-log.md`、`PREMIUM-CONTENT-PLAN.md`、`PROJECT-REPORT-v1.7.md`、`MOBILE-DEBUG-REPORT.md`）
+> 嘅 ⏳ 標記已經過時，睇之前**先睇呢度**。
+
+## A. 要 Roy 做（Play Console 側，我做唔到）
+
+| # | 位置 | 做咩 | 狀態 |
+|---|---|---|---|
+| A1 | 商店上的內容 → 主要商店資訊 | 完整說明**再貼一次**（內容 = `store-listing/full-desc-play.txt`；今日刪咗「準確度有保證」，所以舊貼文要更新） | ⏳ 等你 |
+| A2 | 同上 | 換 **6 張 v2.0 截圖**（`store-listing/screenshots/01–06`），舊 5 張刪走 | ⏳ 等你 |
+| A3 | 同上 | 主題圖片換 `store-listing/feature-graphic-v2.png`（唔好上舊 `feature-graphic.png`） | ⏳ 等你 |
+| A4 | 應用程式內容 → 資料安全 | 「App 活動 → 頁面瀏覽」要加／確認（GoatCounter 匿名，5 頁都有） | ⏳ 等你 |
+| A5 | 應用程式完整性 | 睇下有冇「Play 應用程式簽署」→ 截圖俾我 | ⏳ 等你 |
+| A6 | — | **審核期內**：唔改封測設定、唔撳 Exit Pack、12 位測試員照每日開 app | 🔄 持續到審完 |
+
+## B. 等（未有得做，唔需要你決定）
+
+| # | 項 | 觸發條件 |
+|---|---|---|
+| B1 | Google **正式版本存取權審核結果**（2026-10-13 08:03 已交） | ≈7 日、有 email；有問題即刻截圖俾我 |
+| B2 | 接 **真 Play Billing**（product `hkmbti_full_analysis_unlocked` ＋還原購買），恢復升級頁價錢同購買流程 | 審核通過之後；**要新 versionCode**（計劃見 `docs/PREMIUM-CONTENT-PLAN.md`） |
+
+## C. 程式側（真係未做，但唔阻上架）
+
+| # | 項 | 出處 | 幾時做 |
+|---|---|---|---|
+| C1 | **A1 覆蓋缺口**：SW 更新時序、無障礙（真排版缺口已由 Chromium 解決） | 2026-10-05 審計 | 上架後（唔影響今次） |
+| C2 | **B 配對深入／C 場景深化** 嘅收費定位重新制定 | `docs/FREE-VS-PAID.md` | 上架後（賺錢設計，要你拍板） |
+| C3 | **Apple／iOS**（`APPLE-STORE-CHECKLIST.md`、`APPLE-STORE-PREP.md` 全部未做） | 你未申請 Apple | 你開口先做 |
+
+## D. 已核實「其實已經完成／唔再做」（唔係遺留，列明免混亂）
+
+| 項 | 實況 |
+|---|---|
+| `pair-data.js` 配對內容 | ✅ **136/136 全部寫齊**（舊文件寫「100 篇」係過期）；「用型號唔用你」守門已過（`pair_test.js`） |
+| 題目逐條核對（舊定義 v2.0 遺留） | ✅ 2026-10-13 兩輪完成（DeepSeek 109 條 + Grok 15 條修改包） |
+| `font-test.html` | ✅ 已經唔存在（舊 `freeze-log` 標記過期）|
+| 示範解鎖彈窗（HK$18） | ✅ 2026-10-13 已改 soft pitch |
+| 15 型 9 章內容、D 模組（個人化報告） | ✅ 已完成（舊 `PREMIUM-CONTENT-PLAN.md` 標記過期）|
+| Play 上架／.aab／versionCode 13 | ✅ 已完成（舊 `PROJECT-REPORT-v1.7.md` 標記過期）|
+| `PROJECT-REPORT-v1.7.md`（v1.7 freeze 報告） | 唔再寫（已被 session 文件取代）|
+| `DESKTOP-HANDOFF.md`「之後可以做」 | 上架後再講 |
+
+---
+
 ## 一、背景（當日狀態）
 
 | 項 | 值 |

@@ -162,4 +162,4 @@ P1-4／P1-5 都係真問題，但一個要切主題先中、一個係窄屏標�
 - 返回主路徑、解鎖閘、`articleStep`／`typeStep`／`letterStep` 唔加 history 層：探針實跑符合註解。
 - `formatGuideHtml` 嘅 `」。` 係正常句號，唔係多咗句號（探針初段 regex 誤中，已核對原文）。
 - emoji：preflight 32 通過。探針 regex 中咗註解入面嘅 `✓`（U+2713），唔係頁面 emoji。
-- C 組 HK$18 示範解鎖彈窗：`docs/UI-TODO.md` 未做第 1 項，上架前先改，今次唔當新 bug。
+- C 組 HK$18 示範解鎖彈窗：✅ **2026-10-13 已改 soft pitch**（拆走價錢／「經 Google Play 付款」／示範解鎖；見 `docs/LAUNCH-FINAL-2026-10-13.md`）。

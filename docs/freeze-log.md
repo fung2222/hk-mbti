@@ -19,7 +19,7 @@
   - 底部 CTA：8 個「探索更多」分頁統一 softbox；7 個掣改 `goPickVersion()`（一撳捲到版本卡 y=862）
   - 全站字體統一：字級 30→9 級、字重 6→4、行高 11→5（四個大字 Archivo Black 冇動）
   - GoatCounter 私人訪客統計（5 頁）＋私隱聲明新增第 5 節「瀏覽統計」；移除 `font-test.html`
-- **未做／注意**：Play 正式版未申請（12 testers × 14 日未完）｜Play Console 資料安全表要加「App 活動：頁面瀏覽」｜舊定義「v2.0＝題目逐條核對」未做（六項審計已全綠，要做留 v2.1）
+- **未做／注意**：Play 正式版未申請（12 testers × 14 日未完）｜Play Console 資料安全表要加「App 活動：頁面瀏覽」｜舊定義「v2.0＝題目逐條核對」✅ **2026-10-13 兩輪完成**（DeepSeek 109 條逐條 + Grok 15 條修改包）
 
 ## v1.9.0 · 2026-09-26
 - **tag**：`v1.9.0`（`d599b20`，annotated，已 push）
@@ -31,7 +31,8 @@
   - T/A 第 5 軸開始顯示：結果頁 badge（`#taBadge` + `#taNote`）、性格光譜頁第 5 段解說
   - 「上次未完成」續做卡返主頁即時顯示（唔使 reload）
   - 承接 v1.7.14 之後嘅 UI：16 型色卡同主頁 MBTI wordmark → Archivo Black；「立即睇睇其他攻略」改一行 3 粒掣、方塊 271→118px
-- **未做**：`font-test.html` 未刪（等 Roy 話事）｜Play 商店正式版未申請（等 12 testers 連續 14 日）
+- **未做**：`font-test.html` ✅ **已經唔存在**（2026-10-13 核實，舊標記過期）｜Play 商店正式版 ✅ **2026-10-13 08:03 已申請**（等審 ≈7 日）
+- ⚠️ 開放事項一律以 `docs/LAUNCH-FINAL-2026-10-13.md` 最頂「★ 未完成事項總清單」為準
 
 ## v1.7.14 · 2026-09-17（homepage polish freeze）
 - **tag**：`v1.7.14`（`afd56c6`）
