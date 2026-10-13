@@ -16,7 +16,7 @@ https://fung2222.github.io/hk-mbti/privacy.html
 | 問題 | 答案 |
 |------|------|
 | App 是否收集或分享用戶資料？ | **是** |
-| 收集嘅資料會加密傳輸？ | **不適用**（本地儲存） |
+| 收集嘅資料會加密傳輸？ | **是（HTTPS）** ← 2026-10-13 修正：GoatCounter 嘅頁面瀏覽計數**係經網絡傳送**（HTTPS 加密 ✓），所以唔可以答「不適用」|
 | 用戶可否要求刪除資料？ | **是** |
 
 ---
@@ -88,11 +88,12 @@ https://fung2222.github.io/hk-mbti/privacy.html
 **App activity**：
 
 ```
-☑ App interactions  (Test results, version, timestamp)
+☑ App interactions  (Test results, version, timestamp
+                     ＋ 匿名頁面瀏覽計數：GoatCounter，唔記 IP、唔用 cookie、同答案完全分開)
   → Collected: Yes
   → Shared: No
-  → User can delete: Yes
-  → Purpose: App functionality (history recall, last-5 record)
+  → User can delete: Yes（App 內「歷史紀錄」可逐筆或全部刪除）
+  → Purpose: App functionality (history recall, last-5 record) ＋ Analytics (anonymous page-view count)
 ```
 
 其他所有類別：**☑ No**
@@ -146,3 +147,19 @@ Play 審核員可能會 email 問：
   - 答：完全 self-contained，無第三方追蹤，符合 minimal data collection 原則
 
 預備呢啲答案喺心中，審核時間可由 7 日縮到 1–3 日。
+
+---
+
+## 八、2026-10-13 實際填表步驟（Roy 用 · 手機）
+
+1. Play Console → **應用程式內容** → **資料安全** → 撳「**管理**」／「開始」
+2. 問題：「你嘅應用程式會唔會收集或分享任何必要嘅使用者資料類型？」→ **是**
+3. 問題：「係唔係所有收集到嘅使用者資料都經過加密傳輸？」→ **是（HTTPS）**
+   （原因：GoatCounter 嘅頁面瀏覽計數經網絡傳送，用嘅係 HTTPS）
+4. 問題：「你係唔係有提供方法俾使用者要求刪除佢哋嘅資料？」→ **是**
+5. **資料類型**：
+   - **個人資料 → 姓名**：勾 ✅（可選、用戶自己填；唔分享；用途 = 應用程式功能）
+   - **應用程式活動 → 應用程式互動**：勾 ✅（測試結果／版本／時間 ＋ **匿名頁面瀏覽計數**；唔分享；用途 = 應用程式功能 ＋ 分析）
+   - **其他所有類別：一律「否」**（特別留意：健康資料一定「否」；裝置 ID 一定「否」）
+6. **私隱政策網址**：`https://fung2222.github.io/hk-mbti/privacy.html`
+7. 儲存 → 送出
