@@ -11,6 +11,7 @@
 > **規矩**：以後所有開放事項以**呢一節**為準；其他舊文件（`UI-TODO.md`、`v2.0-release-pack.md`、
 > `freeze-log.md`、`PREMIUM-CONTENT-PLAN.md`、`PROJECT-REPORT-v1.7.md`、`MOBILE-DEBUG-REPORT.md`）
 > 嘅 ⏳ 標記已經過時，睇之前**先睇呢度**。
+> **AI 評測報告**（Gemini／Meta／Qwen／其他）嘅覆核記錄同處理流程見 **`docs/AI-REVIEWS-LOG.md`**。
 
 ## A. 要 Roy 做（Play Console 側，我做唔到）
 
