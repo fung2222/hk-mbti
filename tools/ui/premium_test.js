@@ -258,7 +258,7 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
   chk('第 1 章：標題 = 你真正想要嘅嘢', $('#deepChapterTitle').textContent==='你真正想要嘅嘢', $('#deepChapterTitle').textContent);
   chk('第 1 章：上一章 disabled', $('#deepPrev').disabled===true);
   chk('第 1 章：下一章可用', $('#deepNext').disabled===false);
-  chk('章節標示係完整版內容', /完整版/.test($('#deepChapterHead').textContent), $('#deepChapterHead').textContent);
+  chk('章節標示用等級名「完整版」＋章號（例：完整版 · 第 1 章）', /完整版/.test($('#deepChapterHead').textContent), $('#deepChapterHead').textContent);
   chk('章節內文有渲染（<p> 段落）', /<p>/.test($('#deepChapterBody').innerHTML), $('#deepChapterBody').innerHTML.slice(0,50));
   chk('★ 章節頁型別卡有該型漸變色（唔係淨灰）', /linear-gradient/.test($('#deepChapterHero').style.background) && (/rgb\(107,\s*78,\s*158\)/.test($('#deepChapterHero').style.background) || /#6B4E9E/i.test($('#deepChapterHero').style.background)), $('#deepChapterHero').style.background);
   chk('型別目錄標題都有型色', /--tc:#6B4E9E/.test($('#deepList').innerHTML));

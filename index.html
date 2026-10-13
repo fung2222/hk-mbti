@@ -1773,7 +1773,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    <button type="button" class="page-back" onclick="goBack()">返回</button>
    <h1>人格深入分析</h1>
   </div>
-  <p class="page-hero-sub">完整版內容 · 16 種人格 × 9 章</p>
+  <p class="page-hero-sub">深入分析 · 16 種人格 × 9 章</p>
  </div>
  <div class="card p-4 mb-4" id="deepIntro">
   <h3 class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h6v6H4zM14 6h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>16 種人格深入分析</h3>
@@ -1817,7 +1817,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="article-guide">
-  <h3 class="text-xs tracking-widest brand-gold font-bold mb-3" id="deepChapterHead">完整版內容</h3>
+  <h3 class="text-xs tracking-widest brand-gold font-bold mb-3" id="deepChapterHead">深入分析</h3>
   <div id="deepChapterBody" class="article-guide-body"></div>
  </div>
 
@@ -2173,7 +2173,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <p>三個版本：10 題、30 題、60 題 — 每條軸分別抽 2、6、12 題。</p>
  <p>抽題時保持兩邊平衡：每次玩都隨機，但唔會偏埋一邊。</p>
  <p>同一條題目有機會用另一個問法出現（意思一樣、選項一樣）。</p>
- <p>題目越多，結果越穩定：60 題 &gt; 30 題 &gt; 10 題。</p>
+ <p>題目越多，涵蓋嘅生活情境越廣：60 題 &gt; 30 題 &gt; 10 題。</p>
  </div>
 
  <h2 class="mth-h">我哋做過嘅檢查</h2>
@@ -2231,7 +2231,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <div class="home-hero-copy">
  <div class="home-hero-mbti">MBTI</div>
- <p class="text-sm text-gray-600 leading-relaxed mt-5">60 題廣東話版 16 型人格測試<br>多種生活情景 · 港人嘅日常<br>5–10 分鐘完成測試</p>
+ <p class="text-sm text-gray-600 leading-relaxed mt-5">60 題廣東話版 16 型人格測試<br>多種生活情景 · 港人嘅日常<br>約 5 分鐘完成測試</p>
    <div id="dtHeroCta">
     <button type="button" class="dt-cta-gold" onclick="goPickVersion()">立即測試</button>
     <button type="button" class="dt-cta-ghost" onclick="openHub()">性格百科 →</button>
@@ -2256,7 +2256,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
  <div class="text-[15px] font-black text-ink flex items-center gap-2"><svg class="ver-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7h11M9 12h11M9 17h11"/><path d="M4.6 7h.01M4.6 12h.01M4.6 17h.01"/></svg><span>生活版（完整測試）</span></div>
- <div class="text-xs text-gray-600 mt-0.5">60 題 · 5 分鐘 · 最準確</div>
+ <div class="text-xs text-gray-600 mt-0.5">60 題 · 約 5 分鐘 · 題目最多</div>
  <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('life')">立即測試</button>
  </div>
  <span class="ver-chev" aria-hidden="true">▼</span>
@@ -6163,7 +6163,7 @@ const T = (window.TYPES && window.TYPES[t]) || {};
 const PL = window.getPalette(t);
 const _full = (window.getTier() === "full");
 box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]"><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span> · ' + (T.cn || "") + '</div>' +
-'<div class="text-xs text-gray-500 mt-1">' + d.chapters.length + ' 章 · ' + (_full ? "完整版內容" : "第 1 章免費，其餘要完整版") + '</div></div>' +
+'<div class="text-xs text-gray-500 mt-1">' + d.chapters.length + ' 章 · ' + (_full ? "深入分析" : "第 1 章免費，其餘要完整版") + '</div></div>' +
 d.chapters.map(function(c, i){
 const _tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
 return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" onclick="openDeepChapter(' + i + ')">' +
@@ -6511,7 +6511,7 @@ window.renderTypeTabs = function(code){
    db.innerHTML = '<div class="card p-5 mb-4"><div class="text-xs text-gray-500">呢一型嘅 9 章深入分析仲喺度寫，好快會有。</div></div>';
   } else {
    const _full = (window.getTier() === "full");
-   db.innerHTML = '<div class="text-xs text-gray-500 mb-3">' + dd.chapters.length + ' 章 · ' + (_full ? "完整版內容" : "第 1 章免費，其餘要完整版") + '</div>'
+   db.innerHTML = '<div class="text-xs text-gray-500 mb-3">' + dd.chapters.length + ' 章 · ' + (_full ? "深入分析" : "第 1 章免費，其餘要完整版") + '</div>'
     + dd.chapters.map(function(c, i){
      const tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
      return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" onclick="openDeepChapterFromType(' + i + ',\'' + code + '\')">'
