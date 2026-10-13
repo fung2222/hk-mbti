@@ -287,9 +287,9 @@ chk("★ icon 唔係一個公仔走天涯（16 型用到 >=6 個語意家族）"
   $("#typeNext").click(); await new Promise(r=>setTimeout(r,80));
   chk("★ 由結果頁入再轉型 → _typeFrom 保留（唔會被清走）", w._typeFrom==="result" && BIG()==="INTP", String(w._typeFrom)+"/"+BIG());
 
-  // ---------- 完整版 ----------
-  w.unlockFull();
-  await new Promise(r=>setTimeout(r,320));
+  // ---------- 完整版（2026-10-13：上架前冇得買，直接用 localStorage 模擬授權狀態）----------
+  w.localStorage.setItem("hkmbti_tier","full"); w.renderTier();
+  await new Promise(r=>setTimeout(r,60));
   w.openType("INTJ","hub"); btn("deep").click();
   chk("★ 完整版：深入 tab 唔再標「完整版」", d.querySelectorAll("#typeDeepBox .deep-tag").length===0, d.querySelectorAll("#typeDeepBox .deep-tag").length);
   chk("★ 完整版：冇解鎖掣", !/openUpgrade\(\)/.test($("#typeDeepBox").innerHTML));

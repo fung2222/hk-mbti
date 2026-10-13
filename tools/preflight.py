@@ -92,6 +92,34 @@ for f in html_files() + js_files():
         # （5373a96／4f03b11／4849d73／4809518），每次都係註解入面嘅 ⚠️。
         fails.append("%s 有 emoji／符號殘留：%s" % (f, " ".join("%s(U+%04X)" % (c, ord(c)) for c in bad)))
 
+# ---------- 6. 上架前紅線（2026-10-13 加）----------
+# 背景：Play 審核員會撳入 app 睇。
+#   ① 升級頁寫「HK$18／付款會經 Google Play 完成」，但一撳就出「示範版本：即刻解鎖」
+#      ＝ 自己承認未接付款系統 → 欺騙行為政策風險。上架前改 soft pitch，第 1 章照免費。
+#   ② 商店文案「準確度有保證」同 app 內「MBTI 係性格參考，唔係心理診斷」矛盾 → 誤導聲明風險。
+#   ③ 子頁字型 URL 載入 weight 500（全站禁令），index 已係 400;600;700;900。
+# 呢三條係「唔准再靜靜返轉頭」嘅硬規則，所以入 preflight（唔係只寫落文件）。
+LANDING_BANNED = ["HK$18", "示範版本", "付款會經 Google Play"]
+for kw in LANDING_BANNED:
+    if kw in idx:
+        fails.append("index.html 仍有上架前紅線字串：%s" % kw)
+for f in ("store-listing/full-desc-play.txt", "store-listing/full-desc-plain.txt",
+          "store-listing/full-desc.md"):
+    if os.path.exists(os.path.join(ROOT, f)) and "準確度有保證" in read(f):
+        fails.append("%s 仍有「準確度有保證」（同 app 內免責句矛盾）" % f)
+for f in html_files():
+    for m in re.finditer(r"fonts\.googleapis\.com/css2\?family=([^'\"]+)", read(f)):
+        if re.search(r"(?:^|;)500(?:;|$)", m.group(1)):
+            fails.append("%s 字型 URL 載入 weight 500（全站禁令，用 600）" % f)
+
+for f in ("store-listing/full-desc-play.txt", "store-listing/full-desc-plain.txt",
+          "store-listing/short-desc.txt", "store-listing/app-name.txt"):
+    if os.path.exists(os.path.join(ROOT, f)):
+        _bad = sorted({c for c in EMOJI.findall(read(f)) if c not in ALLOWED_SYMBOLS})
+        if _bad:
+            fails.append("%s 有 emoji（Play 文案要同 app 一致，唔准有）：%s"
+                         % (f, " ".join("%s(U+%04X)" % (c, ord(c)) for c in _bad)))
+
 # ---------- 5. JSON 有效 ----------
 for f in ("manifest.json",):
     try:

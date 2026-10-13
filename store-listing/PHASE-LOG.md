@@ -211,7 +211,7 @@ PWA:           https://fung2222.github.io/hk-mbti/
 Privacy:       https://fung2222.github.io/hk-mbti/privacy.html
 GitHub:        https://github.com/fung2222/hk-mbti
 PWABuilder:    https://www.pwabuilder.com/
-Play Console:  https://play.google.com/console  (Roy 仍未註冊)
+Play Console:  https://play.google.com/console (**已註冊**；封閉測試 2026-09-30 起，2026-10-13 已申請正式版本存取權，等審 ≈7 日)
 
 本地 zip (不入 git):  /opt/data/hk-mbti-pwa-source-v1.7.0.zip
 ```

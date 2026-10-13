@@ -2,7 +2,7 @@
 
 _最後整理：2026-09-26（v1.9.0）_
 
-全部資料 100% 留喺用戶部機，冇後端、冇 analytics。index.html / record.html / stats.html 共用同一個 origin，所以共用同一份 storage。
+全部測試資料 100% 留喺用戶部機，冇後端、冇帳號。**唯一會離開部機嘅係匿名頁面瀏覽計數**（GoatCounter：index／record／stats／tee／privacy 五頁各一個 script，只記頁面瀏覽數，唔記 IP、唔連答案）。index.html / record.html / stats.html 共用同一個 origin，所以共用同一份 storage。
 
 ## localStorage（長期）
 

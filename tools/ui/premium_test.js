@@ -61,7 +61,8 @@ setTimeout(async ()=>{
   // ---------- 撳等級掣 → 升級頁 ----------
   w.openUpgrade();
   chk('免費用戶撳等級掣 → 去 #upgrade', vis('upgrade') && !vis('home'), 'upgrade='+vis('upgrade'));
-  chk('升級頁有價錢 HK$18', /HK\$18/.test($('#upgrade .up-price').textContent));
+  chk('升級頁係 soft pitch：冇價錢、冇假付款（2026-10-13 上架前）', !/HK\$18/.test($('#upgrade').textContent) && !/示範版本/.test($('#upgrade').textContent) && !/經 Google Play/.test($('#upgrade').textContent), $('#upgradeBuy').textContent.replace(/\s+/g,' ').slice(0,80));
+  chk('升級頁 CTA 文字＝看完整分析', $('#upgradeCta').textContent.trim()==='看完整分析', $('#upgradeCta').textContent);
   chk('升級頁有免費／完整對比表', !!$('#upgrade table.up-cmp'));
   // ---------- 目錄全開放 + 第 1 章免費（Roy 2026-10-02）----------
   const _s=(ms)=>new Promise(r=>setTimeout(r,ms));
@@ -84,14 +85,22 @@ setTimeout(async ()=>{
   chk('★ 升級頁有提「第 1 章免費」', /第 1 章免費/.test($('#upgrade').textContent));
   chk('★ 對比表：免費欄寫住「第 1 章」', /<td class="yes">第 1 章<\/td>/.test(src));
 
-  // ---------- 示範解鎖 ----------
+  // ---------- 上架前 soft pitch（2026-10-13）：唔再示範解鎖 ----------
+  w.localStorage.setItem('hkmbti_tier','free'); w.renderTier();
   await w.unlockFull();
+  await new Promise(r=>setTimeout(r,60));
+  chk('★ 未解鎖撳 unlockFull 唔會寫 hkmbti_tier（唔再一撳即送）', w.localStorage.getItem('hkmbti_tier')!=='full', String(w.localStorage.getItem('hkmbti_tier')));
+  chk('★ 未解鎖撳 unlockFull 唔會入 deep', !vis('deep'), 'deep='+vis('deep'));
+
+  // ---------- 完整版（本機已有授權狀態；上架前冇得買，靠 localStorage 模擬）----------
+  w.localStorage.setItem('hkmbti_tier','full'); w.renderTier(); w.renderUpgradeState();
+  w.openDeep();
   await new Promise(r=>setTimeout(r,320));
-  chk('解鎖後 localStorage hkmbti_tier = full', w.localStorage.getItem('hkmbti_tier')==='full', w.localStorage.getItem('hkmbti_tier'));
-  chk('解鎖後等級掣變「完整版」', $('#tierLabel').textContent.trim()==='完整版', $('#tierLabel').textContent);
-  chk('解鎖後等級掣加 is-full（金色）', $('#tierBtn').classList.contains('is-full'));
-  chk('解鎖後升級頁 CTA 文字改變', /已解鎖/.test($('#upgradeCta').textContent), $('#upgradeCta').textContent);
-  chk('解鎖後自動去人格深入分析', vis('deep'), 'deep='+vis('deep'));
+  chk('完整版：localStorage hkmbti_tier = full', w.localStorage.getItem('hkmbti_tier')==='full', w.localStorage.getItem('hkmbti_tier'));
+  chk('完整版：等級掣變「完整版」', $('#tierLabel').textContent.trim()==='完整版', $('#tierLabel').textContent);
+  chk('完整版：等級掣加 is-full（金色）', $('#tierBtn').classList.contains('is-full'));
+  chk('完整版：升級頁 CTA 文字改變', /已解鎖/.test($('#upgradeCta').textContent), $('#upgradeCta').textContent);
+  chk('完整版：入到人格深入分析', vis('deep'), 'deep='+vis('deep'));
   chk('★ 解鎖後撳深入分析入口會直入（唔再彈升級頁）', (function(){ const before = vis('deep'); w.openType('ENFP','test'); w.openDeepFor('ENFP'); return vis('deep') && w._showing === 'deep'; })(), 'showing=' + w._showing);
   chk('★ 解鎖後人格頁深入 tab 唔再標「完整版」（內容已解鎖）', (function(){
     w.openType('ENFP','test');

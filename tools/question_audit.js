@@ -21,7 +21,17 @@ const ALTS = grab("Q_ALTS");
 const AX = { "E/I":["E","I"], "S/N":["S","N"], "T/F":["T","F"], "J/P":["J","P"], "T/A":["T","A"] };
 const axisOf = d => { const h = String(d).split(" - ")[0].replace(/\s/g,""); return AX[h] ? h : ("?" + h); };
 
-const out = { counts:{}, struct:[], scoring:[], grammar:[], lens:[], dup:[], altIssues:[] };
+const out = { counts:{}, sparse:[], struct:[], scoring:[], grammar:[], lens:[], dup:[], altIssues:[] };
+
+// 2026-10-13 加：題庫唔准有空位（稀疏陣列）。
+// 血例：程式化插入題目物件時留低 `},,`，JS 會無聲當一個空位，forEach 會跳過
+// → histogram 加起上嚟仍然係 109，但 QUESTIONS.length 會變大，
+// 用 index 抽題就會抽到 undefined（出空白題目）。呢種錯唔會令其他測試變紅，一定要專門守。
+if (Object.keys(Q).length !== Q.length)
+  out.sparse.push("length=" + Q.length + " 但實際只有 " + Object.keys(Q).length + " 條（有空位）");
+for (let _i = 0; _i < Q.length; _i++) {
+  if (!(_i in Q) || !Q[_i] || !Q[_i].d) out.sparse.push("#" + (_i + 1));
+}
 Q.forEach((q,i) => {
   const ax = axisOf(q.d); out.counts[ax] = (out.counts[ax]||0)+1;
   const [p1,p2] = AX[ax] || ["?","?"];
@@ -110,8 +120,8 @@ Object.keys(qSeen).forEach(t => {
 out.counts.total = Q.length;
 out.counts.alts = altCount;
 out.counts.altKeys = Object.keys(ALTS).length;
-["struct","scoring","grammar","lens","dup","altIssues"].forEach(k => { if(!out[k].length) out[k] = ["（0）"]; });
-["struct","scoring","grammar"].forEach(k => { out[k] = out[k].slice(0, 12); });
+["struct","scoring","grammar","lens","dup","sparse","altIssues"].forEach(k => { if(!out[k].length) out[k] = ["（0）"]; });
+["struct","scoring","grammar","sparse"].forEach(k => { out[k] = out[k].slice(0, 12); });
 ["lens","dup"].forEach(k => { out[k] = out[k].slice(0, 15); });
 out.altIssues = out.altIssues.slice(0, 20);
 console.log(JSON.stringify(out, null, 1));
@@ -119,7 +129,7 @@ console.log(JSON.stringify(out, null, 1));
 // 硬錯誤（結構／計分／文法／重複）→ 非零 exit，令出貨閘真係攔得住。
 // lens／altIssues 屬警告（變體換句話說、字數差）→ 唔 fail。
 // 歷史：本檔一直冇 process.exit，所以無論捉到幾多問題都 rc=0，加入 ship.sh 等於假綠（2026-10-05 靠 RED 驗證捉到）。
-const hard = ["struct","scoring","grammar","dup"]
+const hard = ["struct","scoring","grammar","dup","sparse"]
   .flatMap(k => out[k].filter(x => x !== "（0）").map(x => `${k}: ${x}`));
 if (hard.length) {
   console.error(`✗ 題庫硬錯誤 ${hard.length} 項（結構／計分／文法／重複）：`);
