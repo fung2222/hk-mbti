@@ -2,7 +2,16 @@ const fs = require("fs");
 const src = fs.readFileSync(process.argv[2] || "/opt/data/repos/hk-mbti/index.html", "utf8");
 
 function grab(name){
-  const i = src.indexOf("window." + name);
+  // 2026-10-13 修：只認「賦值定義」（window.X = ），唔可以認第一個提及 ——
+  // 其他地方引用 window.QUESTIONS 會令 grab 由嗰度 parse，題庫靜靜讀成 0 條（question_audit 照樣報綠 = 假綠）。
+  let i = -1, _from = 0;
+  while((_from = src.indexOf("window." + name, _from)) >= 0){
+    const _need = ("window." + name).length;
+    let _k = _from + _need;
+    while(_k < src.length && /\s/.test(src[_k])) _k++;
+    if(src[_k] === "="){ i = _from; break; }
+    _from += _need;
+  }
   const a = src.indexOf("[", i), o = src.indexOf("{", i);
   let start = (a >= 0 && (o < 0 || a < o)) ? a : o;
   let d = 0, q = null, j = start;
@@ -20,6 +29,13 @@ const Q = grab("QUESTIONS");
 const ALTS = grab("Q_ALTS");
 const AX = { "E/I":["E","I"], "S/N":["S","N"], "T/F":["T","F"], "J/P":["J","P"], "T/A":["T","A"] };
 const axisOf = d => { const h = String(d).split(" - ")[0].replace(/\s/g,""); return AX[h] ? h : ("?" + h); };
+
+// 2026-10-13：讀到 0 條一定要大聲失敗（唔可以當「冇問題」）。
+// 血例：grab 由「其他地方引用 window.QUESTIONS」開始 parse → 讀到 0 條，但 counts 空 = 全部檢查「零問題」→ rc=0（假綠）。
+if(!Q || !Q.length || Object.keys(Q).length !== Q.length){
+  console.error("✗ 題庫讀取失敗（讀到 " + ((Q && Q.length) || 0) + " 條）—— 檢查 index.html 有冇其他地方早過定義寫咗 window.QUESTIONS");
+  process.exit(1);
+}
 
 const out = { counts:{}, sparse:[], struct:[], scoring:[], grammar:[], lens:[], dup:[], altDup:[], altIssues:[] };
 

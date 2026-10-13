@@ -219,12 +219,47 @@ Roy 轉發一份第三方評審報告。母代理**逐項實測覆核**，結論
 1. **安裝提示加 `_isInstalledApp()` 判斷**（`display-mode: standalone` ＋ 已安裝過）→ 已安裝唔再彈 banner；banner 彈之前亦會再檢查一次。守門：`mobile_debug_fixes_test.js` 2 條（先見紅）；真 Chrome 行為驗證（已安裝→隱藏 ✓／未安裝→照彈 ✓，連對照組）。
 2. **192 maskable 圖示**：由現有 `icon-maskable.png` 生成 `icon-maskable-192.png`（**唔係**直接將原 192 標 maskable —— 咁樣 Android 會裁走 logo）。守門：`preflight.py` 第 7 節（icon src 必須存在 ＋ 最少一個 maskable；已做 RED 驗證）。
 
+### 5.8 第三方（Gemini）評測報告覆核 → 捉到 app 一個真錯誤（2026-10-13）
+
+Gemini 份報告**準確度高**（佢真係讀過本 app：茶餐廳／港鐵／颱風假、5 條軸、3 版本、計分方法頁都對得上）。但佢嘅「建議」大部分**已經做咗**：
+
+| 佢建議 | 實況 |
+|---|---|
+| 對 48%–52% 邊緣維度加「傾向不明顯」提示 | ✅ **已經有**（`closeAxes`／`closeNote`，「接近中間」提示喺傾向程度卡下面）|
+| 分享卡用 9:16 直排 | ✅ **已經係** 720×1280 = 9:16 |
+| 一鍵分享 | ✅ **已經有**（`navigator.share` 6 處；系統分享面板已包 Threads／IG）|
+| 加強離線快取 | 核心測驗**已經離線可用**（`sw.js` 17 項 precache）；**mp3 刻意唔 cache**（15 MB，離線時自動 fallback 系統語音）|
+| 首頁文字密度高、多用圖卡 | ✗ 唔跟（Roy 美學＝少卡框、大字、留空；加卡會變「功課紙」）|
+| 年齡層用語適配 | 內容擴充方向，上架後再講 |
+
+**但佢份報告令母代理查到 app 一個真錯誤** ✗：計分方法頁寫「**112** 條題目全部左右對稱」，實際題庫只得 **109 條**；同時「最長選項 **24** 字」實際係 **23 字**。
+
+→ 已修：兩個數字**改為由 `QUESTIONS` 動態填**（`id="mthSymN"`／`id="mthOptMax"`），真 Chrome 實測顯示 109 及 23 ✓。新守門：`preflight.py` 第 8 節（`mthSymN` 必須存在 ＋ 唔准寫死「N 條題目」；已做 RED 驗證）。
+
+### 5.9 出貨被閘擋（2026-10-13 收尾）→ 揭發工具一個「假綠」缺陷 ✗
+
+第一次出貨 5.8 嘅改動時，`voice_test` 爆 `Cannot read properties of undefined (reading 't')`，ship **正確拒絕出貨**（fail-fast 有效 ✓）。
+
+**根因**：我新加嘅掛載代碼寫咗 `window.QUESTIONS` 字串，而 4 個工具（`question_audit`／`voice_test`／`extract_bank`／`question_audit_detail`）都用「搵**第一個**提及 `window.X`」嘅方式定位題庫 → 搵到我嗰句 → 由嗰度 parse → **題庫讀成 0 條**。
+**更危險嘅係**：`question_audit` 讀到 0 條時，所有檢查都「零問題」→ **照樣 rc=0 報綠**（假綠 ✗✗），只有 `voice_test` 因為 crash 才揭發。
+
+**兩層修正**：
+1. `index.html` 掛載代碼改用 `typeof QUESTIONS !== "undefined"`（唔再出現 `window.QUESTIONS` 字串）。
+2. **4 個工具改成「只認賦值定義」（`window.X` 後面必須係 `=`）** ＋ `question_audit`／`question_audit_detail` 加 **「讀到 0 條即硬錯誤」**。
+
+**驗證**：修完 `voice_test` 12/12 ✓、`question_audit` 讀到 109 ✓、全套 jsdom 24 檔 / 1016 斷言 ✓；另做 RED 測試：故意寫返 `window.QUESTIONS` → 強化版 grab 仍然讀到 109 ✓（證明根因已封）。
+
 ---
 
 ## 六、新增／更新嘅守門（唔准再靜靜返轉頭）
 
 | 守門 | 內容 |
 |---|---|
+| `tools/question_audit.js`（**改**） | **只認賦值定義**：搵題庫要 `window.X` 後面跟 `=`，唔可以認「第一個提及」；＋ **讀到 0 條即硬錯誤（rc=1）**（血例：掛載代碼引用 `window.QUESTIONS` → 題庫讀成 0 條但全部檢查「零問題」→ 假綠）|
+| `tools/voice_test.js`、`tools/extract_bank.js`、`tools/question_audit_detail.js`（**改**） | 同上：grab 只認賦值定義 |
+| `tools/preflight.py` 第 7 節（**新**） | **manifest 圖示守門**：每個 icon `src` 必須真存在 ＋ 最少一個 `maskable`。已做 RED 驗證 |
+| `tools/preflight.py` 第 8 節（**新**） | **計分方法頁數字守門**：`id=mthSymN` 必須存在 ＋ 唔准寫死「N 條題目」（血例：文案寫 112、實際 109）。已做 RED 驗證 |
+| `tools/ui/mobile_debug_fixes_test.js`（**新 2 條**） | 安裝提示：已安裝（standalone／已裝過）唔會彈 banner；彈之前會再檢查。真 Chrome 行為驗證連對照組 |
 | `tools/preflight.py` 第 6 節（**新**） | `index.html` 唔准出現 `HK$18`／`示範版本`／`付款會經 Google Play`；3 個商店文案唔准出現「準確度有保證」；任何 HTML 字型 URL 唔准載入 weight 500 |
 | `tools/preflight.py`（**新**） | 對外商店文案（`full-desc-play.txt`／`short-desc.txt`／`app-name.txt`）唔准有 emoji |
 | `tools/ui/premium_test.js`（**改**） | 升級頁斷言改為「冇價錢／冇假付款」＋「CTA＝看完整分析」；**新增**「未解鎖撳 `unlockFull` 唔會寫 `hkmbti_tier`」＋「唔會入 deep」 |

@@ -119,6 +119,14 @@ for f in ("store-listing/full-desc-play.txt",
             fails.append("%s 有 emoji（Play 文案要同 app 一致，唔准有）：%s"
                          % (f, " ".join("%s(U+%04X)" % (c, ord(c)) for c in _bad)))
 
+# ---------- 8. 計分方法頁統計數字（2026-10-13 加）----------
+# 血例：文案寫死「112 條題目全部左右對稱」，但題庫改過（實際 109 條）→ 用戶見到錯數字。
+# 規則：呢類由資料決定嘅數字一定要有 id、由 JS 填；唔准寫死。
+if "mthSymN" not in idx:
+    fails.append("index.html 計分方法頁唔見 id=mthSymN（題目數要由 QUESTIONS 動態填）")
+if re.search(r'class="mth-n">\s*\d+\s*</span><span class="mth-l">條題目', idx):
+    fails.append("index.html 計分方法頁「條題目」數量仍然寫死（要用 id=mthSymN）")
+
 # ---------- 7. manifest 圖示（2026-10-13 加）----------
 # 血例：manifest 寫住一個唔存在嘅 icon 檔（或 maskable 標錯），上架／安裝時會靜靜降級。
 # 檢查：① 每個 icon src 真係存在於 repo root ② 至少要有一個 maskable（Android 自適應圖示）

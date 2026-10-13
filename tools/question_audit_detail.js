@@ -1,7 +1,16 @@
 const fs = require("fs");
 const src = fs.readFileSync("/opt/data/repos/hk-mbti/index.html", "utf8");
 function grab(name){
-  const i = src.indexOf("window." + name);
+  // 2026-10-13 修：只認「賦值定義」（window.X = ），唔可以認第一個提及 ——
+  // 其他地方引用 window.QUESTIONS 會令 grab 由嗰度 parse，題庫靜靜讀成 0 條（question_audit 照樣報綠 = 假綠）。
+  let i = -1, _from = 0;
+  while((_from = src.indexOf("window." + name, _from)) >= 0){
+    const _need = ("window." + name).length;
+    let _k = _from + _need;
+    while(_k < src.length && /\s/.test(src[_k])) _k++;
+    if(src[_k] === "="){ i = _from; break; }
+    _from += _need;
+  }
   const a = src.indexOf("[", i), o = src.indexOf("{", i);
   let start = (a >= 0 && (o < 0 || a < o)) ? a : o;
   let d = 0, q = null, j = start;

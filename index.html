@@ -1526,6 +1526,17 @@ window.renderTypeStats();
 if(typeof window.renderHomeStats === "function"){
 window.renderHomeStats();
  }
+// 2026-10-13：計分方法頁嘅統計數字唔准寫死。
+// 血例：文案寫「112 條題目全部左右對稱」，實際題庫只得 109 條 ✗（題庫改過，文案冇跟）。
+try{
+const _q = (typeof QUESTIONS !== "undefined" && QUESTIONS) ? QUESTIONS : [];
+const _sym = document.getElementById("mthSymN");
+if(_sym && _q.length) _sym.textContent = String(_q.length);
+let _maxLen = 0;
+_q.forEach(function(q){ (q.o || []).forEach(function(o){ _maxLen = Math.max(_maxLen, String(o.t || "").length); }); });
+const _mo = document.getElementById("mthOptMax");
+if(_mo && _maxLen) _mo.textContent = String(_maxLen);
+}catch(e){}
 if(typeof window.renderHubTypes === "function"){
 window.renderHubTypes();
  }
@@ -2167,10 +2178,10 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <h2 class="mth-h">我哋做過嘅檢查</h2>
  <div class="mth-stats">
- <div class="mth-stat"><span class="mth-n">112</span><span class="mth-l">條題目全部左右對稱</span></div>
+ <div class="mth-stat"><span class="mth-n" id="mthSymN">109</span><span class="mth-l">條題目全部左右對稱</span></div>
  <div class="mth-stat"><span class="mth-n">47.5–51.3%</span><span class="mth-l">隨機亂答時每個字母（理想 50%）</span></div>
  <div class="mth-stat"><span class="mth-n">4,800 次</span><span class="mth-l">模擬一致作答：0% 錯型</span></div>
- <div class="mth-stat"><span class="mth-n">24 字</span><span class="mth-l">最長選項；冇重複、冇同分</span></div>
+ <div class="mth-stat"><span class="mth-n"><span id="mthOptMax">24</span> 字</span><span class="mth-l">最長選項；冇重複、冇同分</span></div>
  </div>
 
  <h2 class="mth-h">限制（請留意）</h2>
