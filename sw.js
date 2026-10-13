@@ -43,6 +43,24 @@ self.addEventListener("fetch", e => {
   // 用 Cache API 存 media 唔穩（seek／range），545 個檔亦會撐大 cache。
   if(url.pathname.endsWith(".mp3")) return;
 
+  // 網頁字型（Google Fonts）：2026-10-13 加。血例 —— 真機驗收（飛行模式）發現
+  // 「入到 app 後字體變咗另一個」：Noto Sans HK 係 Android 嘅 fallback 字型，
+  // 之前靠網絡即時下載，離線就一定失敗 → 掉去系統字 → 字體走樣。
+  // 字型檔係 immutable（同一個 URL 永遠同一份），最適合 cache-first。
+  if(url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com"){
+    e.respondWith(
+      caches.match(e.request).then(cached => cached || fetch(e.request).then(net => {
+        // 跨域字型可能係 opaque response（status 0），兩種都要收
+        if(net && (net.status === 200 || net.type === "opaque")){
+          const clone = net.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone)).catch(() => {});
+        }
+        return net;
+      }).catch(() => cached))
+    );
+    return;
+  }
+
   // HTML documents + 朗讀對照表: network-first (永遠取 fresh 解決 stale cache)
   // voice-data.js 指住音檔路徑；佢一 stale 就會 404 → 跌返機械聲，所以一定要 network-first
   const isHTML = e.request.mode === "navigate" ||

@@ -106,6 +106,16 @@ setTimeout(()=>{
               && pop.textContent.trim()===stPop.trim() && sam.textContent.trim()===stSam.trim();
         })(), (function(){ const a=d.getElementById('hkStatsPop'), b=d.getElementById('hkStatsSample');
                            return (a?a.textContent:'?')+' / '+(b?b.textContent:'?'); })());
+    // ── 離線字型守門（2026-10-13 真機驗收發現）─────────────────────────
+    // 血例：飛行模式下開 app，「字體變咗另一個」✗ —— 因為 Noto Sans HK（Android 嘅
+    //       fallback 字型）靠 Google Fonts 即時下載，而 sw.js 完全冇 cache 字型。
+    //       同時 index.html 用 CSS @import（render-blocking）而唔係 <link>。
+    const _sw = fs.readFileSync(path.join(REPO,'sw.js'),'utf8');
+    chk('★ 離線字型：sw.js 有 Google Fonts cache-first 分支', /fonts\.gstatic\.com/.test(_sw) && /fonts\.googleapis\.com/.test(_sw) && /cache-first|immutable/.test(_sw));
+    chk('★ 空白彈窗防護：index.html 自己定義 #appDialog.hidden（唔靠 tailwind.css）',
+        /#appDialog\.hidden\s*\{\s*display\s*:\s*none/.test(src));
+    chk('★ 離線字型：index.html 唔准用 CSS @import 載字型（要用 <link>）',
+        !/@import\s+url\([^)]*fonts\.googleapis\.com/.test(src) && /<link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com/.test(src));
     chk('冇新 jsdom error', jerr.length===0, jerr.join(' | '));
     console.log(ok===total ? "===== 全部通過（"+total+" 項）====="
         : "===== 有失敗（"+ok+"/"+total+"）=====");
