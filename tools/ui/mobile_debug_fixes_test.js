@@ -87,6 +87,25 @@ setTimeout(()=>{
       return guard;
     })());
     chk('★ 安裝提示：banner 彈之前會再檢查一次（防 3 秒期間安裝咗）', /_isInstalledApp\(\)\)\s*return;[\s\S]{0,200}setTimeout/.test(src) || (src.match(/_isInstalledApp\(\)/g)||[]).length >= 3);
+    // ── 香港分佈數字：靜態 HTML 就要填好真值（2026-10-13 新增）────────────
+    // 血例：第三份 AI 報告（只用爬蟲讀 HTML、冇跑 JS）見到「對照香港人口約 — 萬（基線樣本 —）」，
+    //       誤報成「未完工」。真值其實由 JS 後填（750 / 143,021），但爬蟲同分享預覽
+    //       機械人睇嘅係原始 HTML —— 所以靜態就要放真數，程式照舊覆蓋。
+    const _stHtml = fs.readFileSync(path.join(REPO,'stats.html'),'utf8');
+    chk('★ 香港分佈：靜態 HTML 冇「—」佔位符（主頁 人口／樣本）',
+        !/id="hkStatsPop">—</.test(src) && !/id="hkStatsSample">—</.test(src));
+    chk('★ 香港分佈：靜態 HTML 冇「—」佔位符（統計頁 累積樣本）',
+        !/id="statTotal"[^>]*>—</.test(_stHtml));
+    chk('★ 香港分佈：載入後 人口／樣本 係數字，而且同靜態值一致（防漂移）', (function(){
+          const pop=d.getElementById('hkStatsPop'), sam=d.getElementById('hkStatsSample');
+          if(!pop||!sam) return false;
+          const stPop=(src.match(/id="hkStatsPop">([^<]+)</)||[])[1]||'';
+          const stSam=(src.match(/id="hkStatsSample">([^<]+)</)||[])[1]||'';
+          const num=v=>/^\d[\d,]*$/.test(String(v).trim());
+          return num(pop.textContent) && num(sam.textContent)
+              && pop.textContent.trim()===stPop.trim() && sam.textContent.trim()===stSam.trim();
+        })(), (function(){ const a=d.getElementById('hkStatsPop'), b=d.getElementById('hkStatsSample');
+                           return (a?a.textContent:'?')+' / '+(b?b.textContent:'?'); })());
     chk('冇新 jsdom error', jerr.length===0, jerr.join(' | '));
     console.log(ok===total ? "===== 全部通過（"+total+" 項）====="
         : "===== 有失敗（"+ok+"/"+total+"）=====");
