@@ -81,6 +81,12 @@ setTimeout(()=>{
       const tt=fs.readFileSync(path.join(REPO,fn),'utf8');
       return /cta-bulb/.test(tt) && /\.cta-bulb\{display:block/.test(tt) && /想知道自己 MBTI 人格？/.test(tt) && !/睇完想試/.test(tt);
     }));
+    chk('★ 安裝提示：已經裝咗（standalone／已安裝過）唔會再彈 banner', (function(){
+      if(!/display-mode:\s*standalone/.test(src)) return false;
+      const guard = /_isInstalledApp\(\)\)\s*return;/.test(src);   // beforeinstallprompt 開頭已經 early-return
+      return guard;
+    })());
+    chk('★ 安裝提示：banner 彈之前會再檢查一次（防 3 秒期間安裝咗）', /_isInstalledApp\(\)\)\s*return;[\s\S]{0,200}setTimeout/.test(src) || (src.match(/_isInstalledApp\(\)/g)||[]).length >= 3);
     chk('冇新 jsdom error', jerr.length===0, jerr.join(' | '));
     console.log(ok===total ? "===== 全部通過（"+total+" 項）====="
         : "===== 有失敗（"+ok+"/"+total+"）=====");

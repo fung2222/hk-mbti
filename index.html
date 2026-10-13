@@ -1286,7 +1286,15 @@ html.dk .pair-x{color:#C0A87A}
  <script>
  // ========== PWA Install Prompt ==========
 let deferredPrompt = null;
+// 2026-10-13 加：已經裝咗（standalone／之前裝過）就唔應該再彈安裝提示。
+function _isInstalledApp(){
+ try{
+  if(window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) return true;
+  return localStorage.getItem("hkmbti_installed") === "1";
+ }catch(e){ return false; }
+}
 window.addEventListener("beforeinstallprompt", e => {
+if(_isInstalledApp()) return; // 已安裝：唔攔 prompt、唔顯示 banner
 e.preventDefault();
 deferredPrompt = e;
  // 第二次 visit 先問（避免即時煩住用戶）
@@ -1295,6 +1303,7 @@ localStorage.setItem("hkmbti_visits", String(visitCount));
 const dismissed = localStorage.getItem("hkmbti_install_dismissed");
 if(visitCount >= 2 && !dismissed){
 setTimeout(() => {
+if(_isInstalledApp()) return; // 3 秒期間裝咗都唔彈
 document.getElementById("installBanner").classList.remove("hidden");
  }, 3000); // 3 秒後先彈
  }

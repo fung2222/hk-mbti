@@ -119,6 +119,26 @@ for f in ("store-listing/full-desc-play.txt",
             fails.append("%s 有 emoji（Play 文案要同 app 一致，唔准有）：%s"
                          % (f, " ".join("%s(U+%04X)" % (c, ord(c)) for c in _bad)))
 
+# ---------- 7. manifest 圖示（2026-10-13 加）----------
+# 血例：manifest 寫住一個唔存在嘅 icon 檔（或 maskable 標錯），上架／安裝時會靜靜降級。
+# 檢查：① 每個 icon src 真係存在於 repo root ② 至少要有一個 maskable（Android 自適應圖示）
+try:
+    _man = json.loads(read("manifest.json"))
+    _icons = _man.get("icons", [])
+    if not _icons:
+        fails.append("manifest.json 冇 icons")
+    _mask = 0
+    for _i in _icons:
+        _src = str(_i.get("src", ""))
+        if not os.path.exists(os.path.join(ROOT, _src)):
+            fails.append("manifest.json 指向唔存在嘅圖示：%s" % _src)
+        if "maskable" in str(_i.get("purpose", "")):
+            _mask += 1
+    if _mask == 0:
+        fails.append("manifest.json 冇任何 maskable icon（Android 安裝會用白底方圖）")
+except Exception as e:
+    fails.append("manifest.json icons 檢查失敗：%s" % e)
+
 # ---------- 5. JSON 有效 ----------
 for f in ("manifest.json",):
     try:
