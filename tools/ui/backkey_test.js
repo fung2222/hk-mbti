@@ -48,11 +48,11 @@ function pressBack(){
   chk('連續撳 4 次之後歷史長度冇縮短（唔會耗盡）', w.history.length>=lenBefore, `${lenBefore} -> ${w.history.length}`);
   chk('冇用 replaceState 做還原（要用 pushState）', replaces===0, `replaceState 被呼叫 ${replaces} 次`);
   console.log('--- 最後揀掣 ---');
-  d.getElementById('adCancel').onclick();
+  d.getElementById('adCancel').click();
   setTimeout(()=>{
     chk('撳「繼續測試」→ 留喺測試畫面', testHidden()===false && hid() && wentHome===false);
     pressBack().then(()=>{
-      d.getElementById('adOk').onclick();
+      d.getElementById('adOk').click();
       setTimeout(()=>{
         chk('撳「離開」→ 真係離開（goHome 有跑）', wentHome===true && hid());
         console.log('   pushes='+pushes+' replaces='+replaces+' history.length='+w.history.length);

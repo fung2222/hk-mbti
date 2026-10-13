@@ -181,6 +181,13 @@ html.dk .softbox-btn:hover{color:#D8C69E}
 html.dk .stat-pill .count{color:#9A9388}
 </style>
  <link rel="stylesheet" href="tailwind.css">
+<style>
+/* 2026-10-13 真機驗收修復（系統性）：.hidden 之前只喺 tailwind.css 定義 —— 一旦 tailwind.css
+   攞唔到（離線／SW cache 部分失敗），.ad-overlay／.cd-overlay 等浮層會自己現身，出現
+   「空白彈窗、撳咩都冇反應、只可強制關 app」嘅死局。呢條規則同 tailwind 完全一樣，
+   只係搬入頁面自己嘅樣式，令「隱藏」唔再依賴外部檔案。 */
+.hidden{display:none}
+</style>
 </head>
 <body>
 <div class="hero">

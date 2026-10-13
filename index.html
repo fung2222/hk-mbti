@@ -1251,6 +1251,13 @@ html.dk .pair-ol li,html.dk .pair-ul li{color:#A79E92}
 html.dk .pair-x{color:#C0A87A}
 </style>
  <link rel="stylesheet" href="tailwind.css">
+<style>
+/* 2026-10-13 真機驗收修復（系統性）：.hidden 之前只喺 tailwind.css 定義 —— 一旦 tailwind.css
+   攞唔到（離線／SW cache 部分失敗），.ad-overlay／.cd-overlay 等浮層會自己現身，出現
+   「空白彈窗、撳咩都冇反應、只可強制關 app」嘅死局。呢條規則同 tailwind 完全一樣，
+   只係搬入頁面自己嘅樣式，令「隱藏」唔再依賴外部檔案。 */
+.hidden{display:none}
+</style>
 </head>
 <body class="js-boot">
 <!-- 桌面／平板頂部導覽（只喺 html.dt 顯示；手機係 display:none） -->
@@ -4550,23 +4557,35 @@ window.appDialog = function(opts){
     o.textContent = opts.okText || "確定";
     c.style.display = opts.hideCancel ? "none" : "";
     ov.style.display = "flex";   // 2026-10-13：唔靠外部 CSS，冇 JS 就永遠唔會現身
-ov.classList.remove("hidden");
+    ov.classList.remove("hidden");
     window._adResolve = function(val){
-      window._adResolve = null;
-      ov.style.display = "none";
-ov.classList.add("hidden");
-      c.onclick = null; o.onclick = null; ov.onclick = null;
-      resolve(val);
+    window._adResolve = null;
+    ov.style.display = "none";
+    ov.classList.add("hidden");
+    resolve(val);
     };
-    c.onclick = function(){ if(window._adResolve) window._adResolve(false); };
-    o.onclick = function(){ if(window._adResolve) window._adResolve(true); };
-    ov.onclick = function(e){ if(e.target === ov && window._adResolve) window._adResolve(false); };
-  });
+    // 掣嘅點擊處理改為「載入時一次綁定」（見下面 IIFE）——唔再喺開嗰刻才綁。
+    });
 };
 // 單掣提示框（取代原生 alert：原生會顯示「fung2222.github.io 顯示」網址 ✗）
 window.appNotice = function(title, body){
-  return appDialog({ title: title || "", body: body || "", hideCancel: true, okText: "知道了" });
+return appDialog({ title: title || "", body: body || "", hideCancel: true, okText: "知道了" });
 };
+// 對話框掣：載入時一次綁定（2026-10-13 真機驗收修復）
+// 血例：之前三個 onclick 寫喺 appDialog 開嗰刻；一旦對話框因為任何未預期原因出現
+// （例如離線下拉更新後資源攞唔到），掣就冇綁到 → 用戶撳「取消／確定」完全冇反應，
+// 只可以強制關 app。而家無論佢點出現，兩粒掣同背景都一定撳得走。
+(function(){
+var ov = document.getElementById("appDialog"), c = document.getElementById("adCancel"), o = document.getElementById("adOk");
+if(!ov || !c || !o) return;
+function shut(val){
+if(window._adResolve){ var r = window._adResolve; window._adResolve = null; r(val); }
+else { ov.style.display = "none"; ov.classList.add("hidden"); }
+}
+c.addEventListener("click", function(e){ e.preventDefault(); e.stopPropagation(); shut(false); });
+o.addEventListener("click", function(e){ e.preventDefault(); e.stopPropagation(); shut(true); });
+ov.addEventListener("click", function(e){ if(e.target === ov){ e.preventDefault(); shut(false); } });
+})();
 
 // 返回鍵處理：測試中撳返回鍵 → 唔可以直接彈出去（防誤觸），要出同一個確認彈窗
 window.addEventListener("popstate", function(e){

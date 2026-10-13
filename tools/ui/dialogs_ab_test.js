@@ -27,18 +27,18 @@ setTimeout(()=>{
   chk('A1 刪除單筆 → 彈窗 + 標題', !hid() && d.getElementById('adTitle').textContent==='刪除這筆紀錄？');
   chk('A1 內容（書面語 + 第幾筆）', d.getElementById('adBody').textContent==='刪除後無法復原。（第 3 筆）', d.getElementById('adBody').textContent);
   chk('A1 掣 = 取消／刪除', d.getElementById('adCancel').textContent==='取消' && d.getElementById('adOk').textContent==='刪除');
-  d.getElementById('adCancel').onclick();
+  d.getElementById('adCancel').click();
   setTimeout(()=>{
     chk('A1 撳「取消」→ 冇刪', deleted===null && hid());
     w.deleteHistoryConfirm(2);
-    setTimeout(()=>{ d.getElementById('adOk').onclick();
+    setTimeout(()=>{ d.getElementById('adOk').click();
       setTimeout(()=>{ chk('A1 撳「刪除」→ 真係刪', deleted===2 && hid());
         // A2
         w.clearHistory();
         setTimeout(()=>{
           chk('A2 清除全部 → 書面語內容', !hid() && /所有測試紀錄與統計資料將一併刪除/.test(d.getElementById('adBody').textContent));
           chk('A2 掣 = 取消／全部清除', d.getElementById('adCancel').textContent==='取消' && d.getElementById('adOk').textContent==='全部清除');
-          d.getElementById('adCancel').onclick();
+          d.getElementById('adCancel').click();
           setTimeout(()=>{ chk('A2 撳「取消」收埋', hid());
 
             // A3（靜態驗證：resume 卡係動態生成）
@@ -54,7 +54,7 @@ setTimeout(()=>{
             setTimeout(()=>{
               chk('B 提示框：得返一粒掣（取消隱藏）+ 文字「知道了」', !hid() && d.getElementById('adCancel').style.display==='none' && d.getElementById('adOk').textContent==='知道了');
               chk('B 標題／內容正確', d.getElementById('adTitle').textContent==='測試標題' && d.getElementById('adBody').textContent==='測試內容');
-              d.getElementById('adOk').onclick();
+              d.getElementById('adOk').click();
               setTimeout(()=>{
                 chk('B 撳「知道了」收埋', hid());
                 chk('B 15 個原生 alert 已經清零（index）', !/(?<![.\w])alert\s*\(/.test(srcIndex));
@@ -75,7 +75,7 @@ setTimeout(()=>{
                 r.w.appDialog({title:'刪除這筆紀錄？',body:'刪除後無法復原。',cancelText:'取消',okText:'刪除'});
                 setTimeout(()=>{
                   chk('record 彈窗開到（內容正確）', !r.d.getElementById('appDialog').classList.contains('hidden') && r.d.getElementById('adOk').textContent==='刪除');
-                  r.d.getElementById('adOk').onclick();
+                  r.d.getElementById('adOk').click();
                   setTimeout(()=>{
                     chk('record 撳掣收得埋', r.d.getElementById('appDialog').classList.contains('hidden'));
                     console.log('   index jsdom 錯誤:', errs.filter(e=>!/scrollTo/.test(e)).length? errs.filter(e=>!/scrollTo/.test(e)).slice(0,2).join(' | '):'冇');

@@ -33,13 +33,13 @@ console.log('===== record.html 垃圾桶：撳一次即彈 =====');
         chk('撳一次 icon → 立即彈視窗', !hid());
         chk('彈窗標題 =「刪除這筆紀錄？」', d.getElementById('adTitle').textContent==='刪除這筆紀錄？');
         chk('icon 冇被改字（唔會出「再撳一次」）', (svg.textContent||'').indexOf('再撳')<0);
-        d.getElementById('adCancel').onclick();
+        d.getElementById('adCancel').click();
         setTimeout(()=>{
           chk('撳「取消」→ 紀錄照舊 2 筆', JSON.parse(w.localStorage.getItem('hkmbti_history')).length===2);
           tapIcon();
           setTimeout(()=>{
             chk('再撳一次 icon → 又即刻彈（唔使撳兩次）', !hid());
-            d.getElementById('adOk').onclick();
+            d.getElementById('adOk').click();
             setTimeout(()=>{
               const left=JSON.parse(w.localStorage.getItem('hkmbti_history')||'[]');
               chk('撳「刪除」→ 真係刪咗 1 筆', left.length===1, 'left='+left.length);
@@ -57,7 +57,7 @@ console.log('===== record.html 垃圾桶：撳一次即彈 =====');
                 setTimeout(()=>{
                   chk('撳一次 → 立即彈視窗（唔使撳兩次）', !hid2());
                   chk('彈窗有「第 1 筆」提示', /第 1 筆/.test(d2.getElementById('adBody').textContent));
-                  d2.getElementById('adCancel').onclick();
+                  d2.getElementById('adCancel').click();
                   setTimeout(()=>{
                     chk('撳「取消」收埋', hid2());
                     console.log('   index jsdom 錯誤:', i2.errs.length? i2.errs.slice(0,2).join(' | '):'冇');
