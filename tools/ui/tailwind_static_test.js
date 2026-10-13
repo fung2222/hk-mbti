@@ -83,11 +83,15 @@ PAGES.forEach(f=>{
   const t=read(f);
   chk("★ "+f+" 有 og:image 絕對網址", t.includes(`<meta property="og:image" content="${BASE}/og-image.png">`));
 });
-chk("★ index.html 有 og:image:width/height（1200×630）", read("index.html").includes('og:image:width" content="1200') && read("index.html").includes('og:image:height" content="630'));
-chk("★ 五頁都有 twitter:card=summary_large_image ＋ twitter:image", PAGES.every(f=>read(f).includes('name="twitter:card" content="summary_large_image"') && read(f).includes('name="twitter:image"')));
+const _png=fs.readFileSync(path.join(REPO,"og-image.png")); const _w=_png.readUInt32BE(16), _h=_png.readUInt32BE(20);
+chk("★ og-image.png 係真 PNG", _png.slice(1,4).toString()==="PNG", `${_w}x${_h}`);
+chk("★ og-image.png 係正方形（聊天 app 預覽唔會被裁切）", _w===_h, `${_w}x${_h}`);
+chk("★ index.html og:image:width/height 同實際檔案一致（動態比對，唔准寫死）", read("index.html").includes(`og:image:width" content="${_w}"`) && read("index.html").includes(`og:image:height" content="${_h}"`), `meta vs 檔案 ${_w}x${_h}`);
+const _card = _w===_h ? "summary" : "summary_large_image";
+chk("★ 五頁 twitter:card 統一，而且同圖片比例匹配（正方形→summary）", PAGES.every(f=>read(f).includes(`name="twitter:card" content="${_card}"`) && read(f).includes('name="twitter:image"')), "期望 "+_card);
 const png=fs.readFileSync(path.join(REPO,"og-image.png"));
 const w=png.readUInt32BE(16), h=png.readUInt32BE(20);
-chk("★ og-image.png 真係 1200×630 PNG", png.slice(1,4).toString()==="PNG" && w===1200 && h===630, `${png.slice(1,4)} ${w}x${h}`);
+
 chk("★ og-image.png 大細合理（<400KB）", png.length<400000, png.length);
 
 // ───────── 六、真跑：app 冇壞 ─────────

@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://fung2222.github.io/hk-mbti/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://fung2222.github.io/hk-mbti/og-image.png">
 <meta property="og:url" content="https://fung2222.github.io/hk-mbti/record.html">
 <link rel="icon" href="favicon.png">
@@ -261,6 +261,40 @@ html.dk .softbox-btn.danger:hover{color:#F5BDB9}
    只係搬入頁面自己嘅樣式，令「隱藏」唔再依賴外部檔案。 */
 .hidden{display:none}
 </style>
+
+<style>
+/* 手機／平板：hero 需要 position:relative（原本寫喺 inline style，2026-10-13 改為 CSS，
+   以免 inline 蓋過桌面層嘅 position:sticky）。 */
+.hero{position:relative}
+/* 2026-10-13 · 桌面層：同首頁 #dtNav 完全一致（Roy 揀 A）
+   只喺 html.dt 生效 → 手機零影響。必須排最後（同特異度後者勝）。
+   注意：原本 .hero-popover a 係 display:block（下拉選單用），
+   所以一定要覆寫做 inline-block，否則每個連結會霸滿一整行。 */
+html.dt .hero{
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  min-height:65px;padding:0 max(0px,calc((100% - var(--dt-w)) / 2));
+  background:rgba(250,247,240,.92);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border-bottom:1px solid #EDE6D8;
+  color:#1c1b19;position:sticky;top:0;z-index:60;
+}
+html.dk.dt .hero{background:rgba(18,22,28,.92);border-bottom-color:rgba(236,231,222,.13);color:#ECE7DE}
+html.dt .hero-row{min-height:0;margin:0;gap:16px;flex:0 0 auto;align-items:baseline}
+html.dt .hero-row h1{font-size:17px;font-weight:900;margin:0;color:inherit}
+html.dt .hero .back-nav{color:inherit;font-size:15px;opacity:.72}
+html.dt .hero p,html.dt .hero .hero-sub{display:none}
+html.dt .hero-menu{display:none}
+html.dt .hero-popover{
+  display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-end;
+  position:static;background:none;border:0;box-shadow:none;
+  padding:0;gap:20px;min-width:0;max-width:none;flex:0 1 auto;
+}
+html.dt .hero-popover a{
+  display:inline-block;width:auto;white-space:nowrap;
+  color:#4a463f;font-size:16px;text-decoration:none;padding:4px 0;
+}
+html.dk.dt .hero-popover a{color:#CFC9BE}
+</style>
 </head>
 <body>
 
@@ -277,7 +311,7 @@ html.dk .softbox-btn.danger:hover{color:#F5BDB9}
 </div>
 
 
-<div class="hero" style="position:relative;">
+<div class="hero">
  <div class="hero-row">
  <a href="./" class="back-nav" onclick="siteBack();return false;">返回</a>
  <h1>我的紀錄</h1>

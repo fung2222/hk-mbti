@@ -213,5 +213,48 @@ for w in warns:
     print("  ⚠", w)
 for x in fails:
     print("  ✗", x)
+
+
+# ===== 11. 分享圖（og:image）一致性 =====
+def _png_size(path):
+    import struct as _s
+    with open(path, "rb") as f:
+        head = f.read(33)
+    if head[:8] != b"\x89PNG\r\n\x1a\n":
+        return (0, 0)
+    w, h = _s.unpack(">II", head[16:24])
+    return (w, h)
+
+
+_og_problems = []
+_og_path = "og-image.png"
+if not os.path.exists(_og_path):
+    _og_problems.append("og-image.png 唔存在")
+else:
+    _ow, _oh = _png_size(_og_path)
+    _html = open("index.html", encoding="utf-8").read()
+    _w = re.search(r'og:image:width" content="(\d+)"', _html)
+    _h = re.search(r'og:image:height" content="(\d+)"', _html)
+    if not _w or not _h:
+        _og_problems.append("index.html 冇 og:image:width / height")
+    else:
+        if int(_w.group(1)) != _ow or int(_h.group(1)) != _oh:
+            _og_problems.append("og:image 標示 %sx%s 同實際檔案 %dx%d 唔一致（WhatsApp／FB 會裁錯）" % (_w.group(1), _h.group(1), _ow, _oh))
+    if _ow != _oh:
+        _og_problems.append("og-image.png 唔係正方形（%dx%d）—— 聊天 app 預覽會裁切" % (_ow, _oh))
+    if "og-image.png" not in _html:
+        _og_problems.append("index.html 冇引用 og-image.png")
+    if 'name="twitter:card" content="summary"' not in _html:
+        _og_problems.append("twitter:card 應該係 summary（正方形圖唔好用 summary_large_image）")
+
+print("\n===== 11. 分享圖（og:image）一致性 =====")
+if _og_problems:
+    for _p in _og_problems:
+        print("  FAIL " + _p)
+    FAILED.append("分享圖一致性")
+else:
+    print("  OK   og-image.png %dx%d（正方形）＋ meta 一致 ＋ twitter:card=summary" % (_ow, _oh))
+    notes.append("分享圖 og-image.png 正方形 ＋ meta 一致")
+
 print("===== %s =====" % ("全部通過（%d 項）" % len(notes) if not fails else "%d 項有問題" % len(fails)))
 sys.exit(1 if fails else 0)

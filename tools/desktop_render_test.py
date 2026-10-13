@@ -445,6 +445,39 @@ async def run():
               bool(_gd) and "217, 178, 106" in str(_gd.get("color")), str(_gd))
         check("黑夜：金色標籤對比 >= 4.5", bool(_gd) and _gd.get("min", 0) >= 4.5, str(_gd))
         await _c6.close()
+        # ── 2026-10-13 · 桌面頂欄一致性（stats.html／record.html 要同首頁同一款淺色 sticky 欄）──
+        # 守門理由：呢兩頁原本係深藍標題板（第二種風格）；改動之後假如有人再整返深藍、
+        # 或者 .hero-popover a 變返 display:block（每個連結霸一行），下面就會紅。
+        for _nm, _f in (("首頁", "index.html"), ("統計", "stats.html"), ("紀錄", "record.html")):
+            _dp = await b.new_page()
+            await _dp.goto(url, wait_until="networkidle")
+            await _dp.goto(url.rsplit("/", 1)[0] + "/" + _f, wait_until="networkidle")
+            await _dp.wait_for_timeout(1500)
+            _dr = await _dp.evaluate("""() => {
+              const bar=document.querySelector('#dtNav, .hero'); const cs=getComputedStyle(bar);
+              const links=[...document.querySelectorAll('#dtNav a, .hero-popover a')].filter(e=>e.offsetParent!==null);
+              const ys=links.map(a=>Math.round(a.getBoundingClientRect().y));
+              return {bg:cs.backgroundColor, h:Math.round(bar.getBoundingClientRect().height), pos:cs.position,
+                      n:links.length, rows: ys.length? (Math.max(...ys)-Math.min(...ys)) : -1};
+            }""")
+            check("桌面 %s：頂欄係淺米色（同一款，唔准再有深藍標題板）" % _nm, "250, 247, 240" in str(_dr.get("bg")), str(_dr))
+            check("桌面 %s：頂欄高度同首頁一致（~65px）" % _nm, 60 <= _dr.get("h", 0) <= 72, str(_dr))
+            check("桌面 %s：頂欄 sticky" % _nm, _dr.get("pos") == "sticky", str(_dr))
+            check("桌面 %s：選單連結全部同一行（唔准逐個掉行變成側欄；容許 30px 基線差）" % _nm, 0 <= _dr.get("rows", 999) <= 30, str(_dr))
+            await _dp.close()
+        for _nm, _f in (("統計", "stats.html"), ("紀錄", "record.html")):
+            _mp2 = await b.new_page(viewport={"width": 390, "height": 844})
+            await _mp2.goto(url, wait_until="networkidle")
+            await _mp2.goto(url.rsplit("/", 1)[0] + "/" + _f, wait_until="networkidle")
+            await _mp2.wait_for_timeout(1200)
+            _mr = await _mp2.evaluate("""() => {const h=document.querySelector('.hero'); const cs=getComputedStyle(h);
+              const pop=document.querySelector('.hero-popover');
+              return {dt:document.documentElement.className, bgimg:cs.backgroundImage.slice(0,15),
+                      popD:pop?getComputedStyle(pop).display:'n/a'};}""")
+            check("手機 %s：仍然係深藍漸變 hero（桌面改動唔准漏落手機）" % _nm,
+                  "linear-gradient" in str(_mr.get("bgimg")) and _mr.get("dt") == "" and _mr.get("popD") == "none", str(_mr))
+            await _mp2.close()
+
         await b.close()
     srv.shutdown()
     _scope = ("（ONLY=%s 局部）" % ONLY) if ONLY else ""
