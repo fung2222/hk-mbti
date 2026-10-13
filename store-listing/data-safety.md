@@ -2,7 +2,8 @@
 
 > **狀態**：✅ 站內私隱頁已完成（Step 1b-C · index.html `#privacy` section）
 > **狀態**：✅ 獨立 Privacy URL 已上線（Step 2a · `privacy.html`）
-> **Play Console 入口**：應用內容 → Data safety
+> **Play Console 入口**：應用程式內容 → 資料安全（官方直達：`https://play.google.com/console/app/app-content/summary`）
+> **2026-10-13 完成**：✅ 已按第一節＋第八節改好並儲存（收集 = 應用程式活動／應用程式互動；用途 = 數據分析；加密傳輸 = 是；分享 = 否）。提交前預覽已核對：（應用程式互動 · 數據分析）（資料在傳輸時加密）
 
 最終 Privacy URL：
 ```
