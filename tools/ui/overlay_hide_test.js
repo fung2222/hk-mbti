@@ -31,5 +31,13 @@ chk('★ sw.js install 用 cache:"reload"', /cache: "reload"/.test(swsrc.split('
 chk('★ sw.js HTML 導航 fetch 用 cache:"reload"', (swsrc.match(/cache: "reload"/g)||[]).length>=3, (swsrc.match(/cache: "reload"/g)||[]).length+' 處');
 chk('★ sw.js cache 失效會試齊兩條 key（/hk-mbti/ 同 /hk-mbti/index.html）',
     /caches\.match\("\/hk-mbti\/index\.html"/.test(swsrc) && /caches\.match\("\/hk-mbti\/"/.test(swsrc));
+
+// ---------- 自癒哨兵 ＋ respondWith(undefined) 洞（2026-10-13 DeepSeek v4 Pro 審計）----------
+const pagesAll=fs.readdirSync(REPO).filter(f=>f.endsWith('.html') && fs.readFileSync(path.join(REPO,f),'utf8').includes('tailwind.css'));
+const noHeal=pagesAll.filter(f=>!/hkmbti_selfheal/.test(fs.readFileSync(path.join(REPO,f),'utf8')));
+chk('★ 每個靠 tailwind.css 嘅頁面都有自癒哨兵', noHeal.length===0, noHeal.join(','));
+chk('★ 哨兵有防無限重載（sessionStorage 只試一次）', /sessionStorage\.getItem\(KEY\)/.test(fs.readFileSync(path.join(REPO,'index.html'),'utf8')));
+chk('★ 哨兵離線時唔郁（等連網先自癒）', /if\(!navigator\.onLine\) return;/.test(fs.readFileSync(path.join(REPO,'index.html'),'utf8')));
+chk('★ sw.js 封死 respondWith(undefined)（cache miss + 離線唔會 throw）', /Response\.error\(\)/.test(swsrc));
 console.log(ok===total ? "===== 全部通過（"+total+" 項）=====" : "===== 有失敗（"+ok+"/"+total+"）=====");
 process.exit(ok===total?0:1);

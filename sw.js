@@ -113,7 +113,10 @@ self.addEventListener("fetch", e => {
         }
         return net;
       }).catch(() => cached);
-      return cached || fetchPromise;
+      // 2026-10-13（DeepSeek v4 Pro 審計）：原本 return cached || fetchPromise —
+      // 離線 + cache miss 時 fetchPromise 會 resolve 成 undefined → respondWith(undefined) 會 throw，
+      // 連兜底都冇。加 Response.error() 封死呢個洞。
+      return cached || fetchPromise.then(function(r){ return r || Response.error(); });
     })
   );
 });

@@ -701,5 +701,36 @@ document.addEventListener("contextmenu", function(e){
   e.preventDefault();
 });
 </script>
+<script>
+/* 2026-10-13 自癒哨兵（Grok 4.7 ＋ DeepSeek v4 Pro 兩份獨立審計一致指向）：
+   SW 預快取曾經部分失敗時，cache 會缺 tailwind.css；而 index.html 靠 tailwind 做隱藏，
+   於是一離線就「排版散 ＋ 隱藏對話框走出嚟」。用戶冇能力清 cache，所以由 app 自己修：
+   偵測到 tailwind.css 冇生效 ＋ 而家有網絡 → 清走壞 cache ＋ 更新 SW ＋ 重新載入一次。
+   每個 session 只試一次（防無限重載）；離線時完全唔郁，等下次連網先自癒。 */
+(function(){
+  try{
+    window.addEventListener("load", function(){
+      setTimeout(function(){
+        try{
+          var link = document.querySelector('link[href*="tailwind.css"]');
+          var ok = !!(link && link.sheet && link.sheet.cssRules && link.sheet.cssRules.length > 0);
+          if(!link || ok) return;
+          if(!navigator.onLine) return;
+          var KEY="hkmbti_selfheal";
+          try{ if(sessionStorage.getItem(KEY)) return; sessionStorage.setItem(KEY,"1"); }catch(e){}
+          if(!(window.caches && navigator.serviceWorker)) return;
+          caches.keys().then(function(ks){
+            return Promise.all(ks.map(function(k){ return caches.delete(k); }));
+          }).then(function(){
+            return navigator.serviceWorker.getRegistration();
+          }).then(function(reg){ return reg && reg.update(); })
+            .then(function(){ location.reload(); })
+            .catch(function(){});
+        }catch(e){}
+      }, 1200);
+    });
+  }catch(e){}
+})();
+</script>
 </body>
 </html>
