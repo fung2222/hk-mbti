@@ -50,6 +50,7 @@
 | Play 上架／.aab／versionCode 13 | ✅ 已完成（舊 `PROJECT-REPORT-v1.7.md` 標記過期）|
 | `PROJECT-REPORT-v1.7.md`（v1.7 freeze 報告） | 唔再寫（已被 session 文件取代）|
 | `DESKTOP-HANDOFF.md`「之後可以做」 | 上架後再講 |
+| **舊文件清理（2026-10-13）** | 已刪 **8 份過時且冇引用嘅文件**：`store-listing/full-desc-plain.txt`（帶 emoji 舊稿，可被誤貼）、`store-listing/feature-graphic.png`＋`.svg`（舊主題圖／舊源）、`docs/closed-testing-playbook-2026-08-17.md`（封測已完成）、`docs/premium-sample-INTJ.md`、`docs/CONTENT-GAP-ANALYSIS.md`、`docs/MOBILE-DEBUG-BRIEF.md`、`docs/DESKTOP-REDESIGN-BRIEF.md`（已完成工作嘅舊 brief）。**保留**：`PROJECT-REPORT-v1.5–1.7`（skill 明定「留做歷史」）、`docs/audit/A1–A6`（守門證據來源）、`DESKTOP-HANDOFF.md`（改桌面層前要讀）、`freeze-log.md`（歷史 log）。所有刪除都用 `git rm`，`git log` 可以還原。|
 
 ---
 
@@ -142,7 +143,7 @@
 
 - 3 個文案檔：刪「準確度有保證」→ 「盡量平均覆蓋每一條維度」
 - `store-listing/README.md`：指向 **`full-desc-play.txt`**（純文字、冇 markdown、冇 emoji）＋ v2 素材（`feature-graphic-v2.png`、`screenshots/01–06`）；標明舊稿唔准貼
-- `full-desc-plain.txt`：清走 8 個殘留 emoji（避免誤貼）
+- `full-desc-plain.txt`：**已刪除**（帶 emoji 嘅舊稿，避免誤貼；`git log` 可還原）
 
 ### 5.3 其他一致性
 
@@ -215,7 +216,7 @@ Grok 4.7 交咗 **15 條修改包**（`fix-pack.json`）＋筆記，同時指出
 | 守門 | 內容 |
 |---|---|
 | `tools/preflight.py` 第 6 節（**新**） | `index.html` 唔准出現 `HK$18`／`示範版本`／`付款會經 Google Play`；3 個商店文案唔准出現「準確度有保證」；任何 HTML 字型 URL 唔准載入 weight 500 |
-| `tools/preflight.py`（**新**） | 對外商店文案（`full-desc-play.txt`／`full-desc-plain.txt`／`short-desc.txt`／`app-name.txt`）唔准有 emoji |
+| `tools/preflight.py`（**新**） | 對外商店文案（`full-desc-play.txt`／`short-desc.txt`／`app-name.txt`）唔准有 emoji |
 | `tools/ui/premium_test.js`（**改**） | 升級頁斷言改為「冇價錢／冇假付款」＋「CTA＝看完整分析」；**新增**「未解鎖撳 `unlockFull` 唔會寫 `hkmbti_tier`」＋「唔會入 deep」 |
 | `tools/ui/type_tabs_test.js`（**改**） | 完整版情境改用 `localStorage` 模擬授權狀態（上架前冇得買） |
 | `tools/question_audit.js`（**新**） | **稀疏陣列守門**：`Object.keys(Q).length !== Q.length` 就當硬錯誤（rc=1）。血例：程式化插入題目物件時留低 `},,`，JS 無聲當一個空位，`forEach` 會跳過 → 各軸 histogram 加起仍然 109，但 `QUESTIONS.length` 變 122，用 index 抽題會抽到空值。已做 RED 驗證（注入 `},,` → rc=1 捉到；還原 → rc=0） |

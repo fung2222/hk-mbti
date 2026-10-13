@@ -31,7 +31,7 @@
 
 | 檔案 | 規格 |
 |------|------|
-| `feature-graphic-v2.png` | 1024×500 PNG · **用呢張（v2.0 新介面）**；`feature-graphic.png` 係舊版，唔好上載 |
+| `feature-graphic-v2.png` | 1024×500 PNG · **用呢張（v2.0 新介面）** |
 | `screenshots/01-hero.png` ~ `06-encyclopedia.png` | 1170×2300 PNG · **v2.0 六張**（01 hero／02 test／03 result／04 share／05 scoring／06 encyclopedia）；舊版 `05-explore.png` 已經刪走 |
 
 ### 站內對應
@@ -47,11 +47,11 @@
 
 1. 揀 `app-name.txt` 入面其中一個 name
 2. 揀 `short-desc.txt` 入面其中一個 short
-3. **`full-desc-play.txt` 直接複製貼到 Play**（純文字、冇 markdown、冇 emoji；字數由 `wc -m` 自己數，唔好信文件寫死嘅數）；`full-desc.md` 係 source 稿，**唔好直接貼**（有 `**` 等 markdown）。⚠️ `full-desc-plain.txt` 係舊稿，唔准貼。
+3. **`full-desc-play.txt` 直接複製貼到 Play**（純文字、冇 markdown、冇 emoji；字數由 `wc -m` 自己數，唔好信文件寫死嘅數）；`full-desc.md` 係 source 稿，**唔好直接貼**（有 `**` 等 markdown）。
 4. 填 `content-rating.md` 答案
 5. 填 `data-safety.md` 答案
 6. `changelog.md` 最近版本拎一段
-7. 上載 `feature-graphic-v2.png`（唔好上舊嘅 `feature-graphic.png`）
+7. 上載 `feature-graphic-v2.png`
 8. 上載 `screenshots/01-hero.png` ~ `06-encyclopedia.png`（v2.0 六張）
 9. 填 Privacy URL = `https://fung2222.github.io/hk-mbti/privacy.html`
 10. **唔好貼 `keywords.txt`**（Play 冇呢欄）

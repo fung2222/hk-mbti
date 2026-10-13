@@ -103,8 +103,7 @@ LANDING_BANNED = ["HK$18", "示範版本", "付款會經 Google Play"]
 for kw in LANDING_BANNED:
     if kw in idx:
         fails.append("index.html 仍有上架前紅線字串：%s" % kw)
-for f in ("store-listing/full-desc-play.txt", "store-listing/full-desc-plain.txt",
-          "store-listing/full-desc.md"):
+for f in ("store-listing/full-desc-play.txt", "store-listing/full-desc.md"):
     if os.path.exists(os.path.join(ROOT, f)) and "準確度有保證" in read(f):
         fails.append("%s 仍有「準確度有保證」（同 app 內免責句矛盾）" % f)
 for f in html_files():
@@ -112,7 +111,7 @@ for f in html_files():
         if re.search(r"(?:^|;)500(?:;|$)", m.group(1)):
             fails.append("%s 字型 URL 載入 weight 500（全站禁令，用 600）" % f)
 
-for f in ("store-listing/full-desc-play.txt", "store-listing/full-desc-plain.txt",
+for f in ("store-listing/full-desc-play.txt",
           "store-listing/short-desc.txt", "store-listing/app-name.txt"):
     if os.path.exists(os.path.join(ROOT, f)):
         _bad = sorted({c for c in EMOJI.findall(read(f)) if c not in ALLOWED_SYMBOLS})
