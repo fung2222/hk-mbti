@@ -167,6 +167,38 @@ try:
 except Exception as e:
     fails.append("文案一致性檢查失敗：%s" % e)
 
+# ---------- 10. PWA 標準做法（2026-10-13 加，血例：離線彈窗查咗 5 輮）----------
+# 根因：SW cache 曾經部分失敗／殘留舊 HTML，而 activate 只刪「唔同 cache 名」→ 同名 cache
+# 永遠唔清 → 用戶「收到咗修復但仍然壞」（業界經典：I Shipped a Fix. My Service Worker Kept Serving the Bug.）。
+# 以下每一項都係業界標準做法；改 sw.js 時唔准倒退。
+try:
+    _sw = read("sw.js")
+    # 去註釋先檢查（否則註釋提到舊寫法就會假警報 —— 2026-10-13 血例）
+    _sw_code = "\n".join(l.split("//")[0] for l in _sw.split("\n"))
+    _checks = [
+        ('fetch(e.request, { cache: "reload" })', "HTML 導航一定要 network-first ＋ cache:'reload'（唔可以俾 HTTP cache 餵舊 HTML）"),
+        ("self.skipWaiting()", "要有 skipWaiting()"),
+        ("self.clients.claim()", "要有 clients.claim()"),
+        ("keys.map(k => caches.delete(k))", "activate 要全量 cache 重置（唔可以只刪「唔同 cache 名」）"),
+        ("Response.error()", "cache-first 分支要封死 respondWith(undefined)"),
+        ("hkmbti_selfheal", "要有自癒哨兵（偵測 tailwind.css 冇生效 → 清壞 cache ＋ 更新 SW）"),
+    ]
+    for _needle, _why in _checks:
+        _ok = (_needle in _sw_code) if _needle != "hkmbti_selfheal" else (_needle in read("index.html"))
+        if not _ok:
+            fails.append("PWA 標準倒退：%s（%s）" % (_needle, _why))
+    if "c.add(" in _sw_code:
+        fails.append("sw.js 用返 c.add()（會食 GitHub 嘅 max-age=600 → cache 殘留舊檔），要用 fetch({cache:'reload'})+put")
+    if "/hk-mbti/offline.html" not in _sw:
+        fails.append("sw.js ASSETS 要保留 offline.html（離線兜底頁）")
+    _tw_pages = [f for f in os.listdir(ROOT)
+                 if f.endswith(".html") and "tailwind.css" in read(f)]
+    for _f in _tw_pages:
+        if "\n.hidden{display:none}\n" not in read(_f):
+            fails.append("PWA 標準倒退：%s 冇自帶 .hidden{display:none}（tailwind.css 一失，隱藏元素會走出嚟）" % _f)
+except Exception as e:
+    fails.append("PWA 標準檢查失敗：%s" % e)
+
 # ---------- 5. JSON 有效 ----------
 for f in ("manifest.json",):
     try:
