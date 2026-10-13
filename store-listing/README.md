@@ -32,7 +32,9 @@
 | 檔案 | 規格 |
 |------|------|
 | `feature-graphic-v2.png` | 1024×500 PNG · **用呢張（v2.0 新介面）** |
-| `screenshots/01-hero.png` ~ `06-encyclopedia.png` | 1170×2300 PNG · **v2.0 六張**（01 hero／02 test／03 result／04 share／05 scoring／06 encyclopedia）；舊版 `05-explore.png` 已經刪走 |
+| `screenshots/*.png` | 1170×2300 PNG · **7 張（2026-10-13 由 Roy 真機截圖剪裁：剪走手機狀態欄、統一商店規格）** |
+| ↳ 次序 | 01-hero（主頁）／02-quiz（答題）／03-share（結果卡）／04-encyclopedia（16 型百科）／05-nickname（揀稱呼）／06-records（最近 5 次）／07-version（版本選擇）|
+| ↳ 注意 | 全部係真機截圖（同一部機），**唔好再混用舊嘅 Playwright 版**（風格唔一致）；舊 02–06 已於 2026-10-13 `git rm` |
 
 ### 站內對應
 
