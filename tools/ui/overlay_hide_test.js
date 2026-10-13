@@ -19,5 +19,17 @@ dlgPages.forEach(f=>{
   chk('★ '+f+'：撳掣一律關得（載入時一次綁定 shut()）', /function shut\(val\)/.test(s) && /ov\.style\.display = "none"/.test(s));
   chk('★ '+f+'：舊嘅開窗才綁定已清除', !/c\.onclick = function\(\)\{ if\(window\._adResolve\)/.test(s));
 });
+
+// ---------- SW 唔准 serve 舊 HTML（2026-10-13 Grok 4.7 審計）----------
+// 血例：GitHub Pages 送 cache-control: max-age=600；c.add() 會食 HTTP cache →
+//  SW 更新咗但 cache 入面嘅 index.html 仍然係舊版 → 離線 serve 舊 HTML → 空白彈窗。
+// 另：/hk-mbti/ 同 /hk-mbti/index.html 係兩條 key，失效時一定要兩條都試。
+const swRaw=fs.readFileSync(path.join(REPO,'sw.js'),'utf8');
+const swsrc=swRaw.replace(/\/\/[^\n]*/g,'');   // 去註釋，免得註釋提到舊寫法就誤報
+chk('★ sw.js 唔准用 c.add()（要用 fetch({cache:"reload"}) ＋ put）', !/c\.add\(/.test(swsrc));
+chk('★ sw.js install 用 cache:"reload"', /cache: "reload"/.test(swsrc.split('addEventListener("install"')[1]||''));
+chk('★ sw.js HTML 導航 fetch 用 cache:"reload"', (swsrc.match(/cache: "reload"/g)||[]).length>=3, (swsrc.match(/cache: "reload"/g)||[]).length+' 處');
+chk('★ sw.js cache 失效會試齊兩條 key（/hk-mbti/ 同 /hk-mbti/index.html）',
+    /caches\.match\("\/hk-mbti\/index\.html"/.test(swsrc) && /caches\.match\("\/hk-mbti\/"/.test(swsrc));
 console.log(ok===total ? "===== 全部通過（"+total+" 項）=====" : "===== 有失敗（"+ok+"/"+total+"）=====");
 process.exit(ok===total?0:1);

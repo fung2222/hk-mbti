@@ -22,7 +22,18 @@ const ASSETS = [
 self.addEventListener("install", e => {
   // 注意：addAll 係「全部成功才算成功」——買一個檔 404 就會連累成個 precache。
   // 改為逐個 add ＋ allSettled：任何一個失敗都唔會拖死其他（2026-10-04）。
-  e.waitUntil(caches.open(CACHE).then(c => Promise.allSettled(ASSETS.map(u => c.add(u)))).catch(() => {}));
+  //
+  // 2026-10-13（Grok 4.7 審計）：改用 fetch({cache:"reload"}) ＋ put，唔再用 c.add()。
+  // 原因：GitHub Pages 送 cache-control: max-age=600，c.add() 會食 HTTP cache →
+  // 就算 SW 更新咗，cache 入面嘅 index.html 都可能係舊版 → 離線時 serve 舊 HTML
+  // （真機驗收症狀：空白彈窗、掣撳唔到）。cache:"reload" 強制由網絡攞最新。
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => Promise.allSettled(ASSETS.map(u =>
+        fetch(u, { cache: "reload" }).then(r => (r && r.status === 200) ? c.put(u, r) : null)
+      )))
+      .catch(() => {})
+  );
   self.skipWaiting();
 });
 
@@ -72,7 +83,8 @@ self.addEventListener("fetch", e => {
 
   if(isHTML){
     e.respondWith(
-      fetch(e.request).then(net => {
+      // cache:"reload"：避免 GitHub Pages 嘅 max-age=600 將舊 HTML 由 HTTP cache 餵返嚟
+      fetch(e.request, { cache: "reload" }).then(net => {
         if(net && net.status === 200){
           const clone = net.clone();
           caches.open(CACHE).then(c => c.put(e.request, clone));
@@ -80,6 +92,10 @@ self.addEventListener("fetch", e => {
         return net;
       }).catch(() =>
         caches.match(e.request, {ignoreSearch:true})
+          // 2026-10-13：/hk-mbti/ 同 /hk-mbti/index.html 係兩條 key，ignoreSearch 唔會當佢哋同一份
+          // → 一定要兩條都試，否則一條舊咗就會 serve 舊 HTML（真機驗收症狀來源）
+          .then(c => c || caches.match("/hk-mbti/index.html", {ignoreSearch:true}))
+          .then(c => c || caches.match("/hk-mbti/", {ignoreSearch:true}))
           .then(c => c || caches.match("/hk-mbti/offline.html"))
           .then(c => c || new Response("暫時連唔到網絡，請檢查連線後再試。", {status:503, headers:{"Content-Type":"text/html;charset=utf-8"}}))
       )
@@ -90,7 +106,7 @@ self.addEventListener("fetch", e => {
   // 其他 assets (JS/CSS/圖): cache-first
   e.respondWith(
     caches.match(e.request).then(cached => {
-      const fetchPromise = fetch(e.request).then(net => {
+      const fetchPromise = fetch(e.request, { cache: "reload" }).then(net => {
         if(net && net.status === 200 && e.request.url.startsWith(self.location.origin)){
           const clone = net.clone();
           caches.open(CACHE).then(c => c.put(e.request, clone));
