@@ -112,6 +112,10 @@ setTimeout(()=>{
     //       同時 index.html 用 CSS @import（render-blocking）而唔係 <link>。
     const _sw = fs.readFileSync(path.join(REPO,'sw.js'),'utf8');
     chk('★ 離線字型：sw.js 有 Google Fonts cache-first 分支', /fonts\.gstatic\.com/.test(_sw) && /fonts\.googleapis\.com/.test(_sw) && /cache-first|immutable/.test(_sw));
+    chk('★ 空白彈窗防護：對話框 inline display:none ＋ appDialog 自己控制 display（冇 JS 就唔會現身）',
+        /id="appDialog"[^>]*style="display:none"/.test(src) && /ov\.style\.display = "flex"/.test(src) && /ov\.style\.display = "none"/.test(src));
+    chk('★ 暗色模式：性別選中狀態唔可以被 html.dk .gender-btn 蓋走',
+        /html\.dk \.gender-btn\.on\s*\{[^}]*border-color\s*:\s*var\(--gold\)/.test(src));
     chk('★ 空白彈窗防護：index.html 自己定義 #appDialog.hidden（唔靠 tailwind.css）',
         /#appDialog\.hidden\s*\{\s*display\s*:\s*none/.test(src));
     chk('★ 離線字型：index.html 唔准用 CSS @import 載字型（要用 <link>）',

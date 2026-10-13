@@ -231,6 +231,9 @@ cursor:pointer;-webkit-appearance:none;appearance:none;
 #nickGrid{justify-content:center;}
 .gender-btn{border:2px solid #e5e0d5;background:#fff;border-radius:16px;padding:18px 12px;font-size:19px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--ink);transition:all .15s;-webkit-appearance:none;appearance:none;}
 .gender-btn.on{border-color:var(--gold);background:rgba(212,169,95,.1);}
+/* 2026-10-13 真機驗收修復：暗色模式揀唔到性別睇唔到 —— html.dk .gender-btn（0,2,1）
+   緊接喺 .gender-btn.on（0,2,0）之後，specificity 較高，把金色選中樣式完全蓋走。 */
+html.dk .gender-btn.on{border-color:var(--gold);background:rgba(212,169,95,.18);}
 /* 4 個維度入口：兩個字母分開撳得（2026-09-29）。大字、無框、基線對齊、各自用返字母本身嘅顏色 */
 .dim-pair{display:inline-flex;align-items:baseline;gap:6px;line-height:1.35}
 .dim-pair button{padding:0;margin:0;border:0;background:none;font-family:'Archivo Black',Georgia,'Times New Roman',serif;font-weight:900;font-size:21px;letter-spacing:.3px;cursor:pointer;-webkit-appearance:none;appearance:none;transition:transform .12s;color:var(--dc,#1a1a1a)}
@@ -2475,7 +2478,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <!-- 通用 app 彈窗（取代原生 confirm／alert：原生會顯示「fung2222.github.io 顯示」網址 ✗）-->
- <div id="appDialog" class="ad-overlay hidden" role="dialog" aria-modal="true">
+ <div id="appDialog" class="ad-overlay hidden" style="display:none" role="dialog" aria-modal="true">
  <div class="ad-card">
  <div class="ad-title" id="adTitle"></div>
  <div class="ad-body" id="adBody"></div>
@@ -4546,10 +4549,12 @@ window.appDialog = function(opts){
     c.textContent = opts.cancelText || "取消";
     o.textContent = opts.okText || "確定";
     c.style.display = opts.hideCancel ? "none" : "";
-    ov.classList.remove("hidden");
+    ov.style.display = "flex";   // 2026-10-13：唔靠外部 CSS，冇 JS 就永遠唔會現身
+ov.classList.remove("hidden");
     window._adResolve = function(val){
       window._adResolve = null;
-      ov.classList.add("hidden");
+      ov.style.display = "none";
+ov.classList.add("hidden");
       c.onclick = null; o.onclick = null; ov.onclick = null;
       resolve(val);
     };
