@@ -113,3 +113,42 @@
 **規律**：**「事實描述」可靠度差好遠，但「問問題嘅角度」就算係 template 都有價值** —— 所以每次都要逐項實測，同時抽走佢問得靚嘅角度。
 
 **評分唔可比**：8.8（Meta）／9.1（Gemini）／7.4（Qwen）用嘅 rubric 完全唔同 → 分數高低唔代表 app 質素，唔好當 KPI。
+
+---
+
+## 9. Perplexity（2026-10-13 · Roy 轉發）
+
+**方法自述**：「我嘗試直接開網站、GitHub repo、GitHub API、raw.githubusercontent，**全部讀取失敗**；搜尋引擎亦搵唔到可核實索引內容」
+→ 所以 B 段 9 項**全部**自己標「未證實」，D 段 9 條發現每條亦寫「未證實：需原始碼／實測」。
+
+### ⓘ 核實結果：佢嘅方法自述係錯嘅（工具問題，非產品問題）
+實測（2026-10-13）：
+| 目標 | 實測 |
+|---|---|
+| `https://fung2222.github.io/hk-mbti/` | **HTTP 200** |
+| `https://github.com/fung2222/hk-mbti` | **HTTP 200** |
+| `https://raw.githubusercontent.com/fung2222/hk-mbti/main/index.html` | **HTTP 200**（380,757 bytes，內含 `window.QUESTIONS`）|
+| `https://api.github.com/repos/fung2222/hk-mbti` | **HTTP 200**（`visibility=public`）|
+| `sw.js` | **HTTP 200** |
+
+→ 佢列出嘅「引用」[1] 香港金管局名冊、[2] Charles & Keith、[6] Steam 個人檔案等**全部同本 app 無關** → 進一步證明佢搜唔到任何相關資料。
+
+### D 段逐條對照（佢講 vs 實況）
+| 佢嘅發現 | 實況 |
+|---|---|
+| 計分邊界未定義、打和／極端無處理 | **已有**：固定種子打和、整數加權（無浮點比較）、「接近中間」提示 3 處、`score_integrity_test.js`（一致作答 0% 錯型、亂答 200 次平衡）|
+| 答題進度可能唔存、關 app 會失 | **已有**：`hkmbti_test_progress` 逐題暫存、「上次未完成」續做卡、`boot_reload_test.js` 10 情境 |
+| Service Worker 會 serve 舊 cache | **已有**：network-first HTML ＋ `cache:"reload"` ＋ activate 全量 cache 重置 ＋ `skipWaiting` ＋ `clients.claim`（2026-10-13 離線 bug 已修好並加守門）|
+| 分享卡冇傳播 hook、只有尺寸 | **已有**：卡面大字類型、一句港式判語、3 條分數條、4 個 hashtag（見 Roy 真機截圖）|
+| 分佈數據冇來源、建議改寫「本站用戶數據」 | **已有免責**：頁面寫「唔係全港普查／基線參考…屬估算值」。佢嘅建議**係錯嘅**（本 app 唔係用自己用戶數據，照改反而變成假陳述）→ 唔採納 |
+| 語音 mp3 冇控件 | **已有**：每題有「朗讀開／關」掣 |
+| 規格無法核實（建議 README 放規格表）| 佢自己讀唔到；repo 其實公開。規格表對**真用戶零價值**，只方便 AI 審計 → 可做可唔做，唔建議為 AI 而做 |
+
+### 採納
+**0 項**。（唯一「可做可唔做」= README 規格表，對用戶無價值，暫不做。）
+
+### 準確度排名（9 份之中）
+**最低** —— 唯一一份不單止零核實，仲作出**錯誤事實陳述**（聲稱網站／repo 讀唔到），並用完全無關嘅引用充數。
+
+### 教訓（寫入 skill）
+> AI 報告開頭如果寫「全部讀取失敗」，**第一步係自己 curl 一次**驗證網站／repo 係唔係真嘅讀唔到 —— 唔好因為佢講「睇唔到」就當係產品問題。（2026-10-13）
