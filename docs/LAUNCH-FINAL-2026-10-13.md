@@ -341,3 +341,39 @@ Gemini 份報告**準確度高**（佢真係讀過本 app：茶餐廳／港鐵�
 1. 接 **真 Play Billing**（product `hkmbti_full_analysis_unlocked`）+ 還原購買 → 要**新 versionCode**
 2. 恢復升級頁價錢同購買流程（`docs/PREMIUM-CONTENT-PLAN.md`）
 3. 睇 Google 審核結果 email（≈7 日），有問題即刻截圖畀我
+
+---
+
+# ★ 2026-10-14 最新狀態（正式版已送審）
+
+## ✅ 今日完成
+| 時間 | 事件 |
+|---|---|
+| 10-13 08:03 | 申請正式版存取權 |
+| 10-14 15:57 | **Google 批准正式版存取權** ✓ |
+| 10-14 20:31 | **正式版（Production）已提交審核** ✓ —— 版本 13 (2.0.0)、國家/地區 177 個（全世界）、版本說明 zh-HK |
+| 10-14 20:31 | 資料安全表變更（收集應用程式活動／數據分析／傳輸加密）亦已發佈 ✓ |
+
+## 🕐 而家等緊
+- **Google 正式版審核**（1–7 日；首版通常 1–3 日）
+- 通過後：**自動發佈已關閉** → 要去「發佈概覽」**手動撳「開始全面發佈」** ✓（唔好漏）
+
+## 🔧 審核完之後嘅計劃（Billing）
+**前提更正（2026-10-14 查證）**：之前記錄話「第 2–9 章未寫」**係錯嘅** —— `premium-data.js` 已經有
+**16 型 × 9 章 = 144 章**（平均 198 字，零空位）。第 2–9 章只係 **UI 鎖住**（未收費），唔係冇內容。
+→ 所以 Play Billing **唔需要等內容**，可以直接做。
+
+| 步 | 做咩 | 邊個 |
+|---|---|---|
+| 1 | Play Console 開「應用程式內商品」`hkmbti_full_analysis_unlocked` HK$18（一次性解鎖）| Roy（Apps 主管帶）|
+| 2 | 網頁 code 加 **Digital Goods API**（`getDigitalGoodsService('https://play.google.com/billing')`）＋ 保留無 API 時嘅軟性文案 | 我 |
+| 3 | 用 **PWABuilder** 重建 Android 包（開啟 Play Billing）＋ **用返同一個 upload keystore**（見下）| 一齊 |
+| 4 | 出新版本（versionCode 14）→ 提交審核 → 通過 → 有收入 | 一齊 |
+
+**簽署密鑰位置（唔可以唔見）**：
+`/opt/data/backups/hk-mbti-uploadkey-20260926/`（`hk-mbti-upload-key.keystore` ＋ `hk-mbti-upload-key-info.txt`）
+＋ 舊包 `/opt/data/backups/hk-mbti-play-prep-20260731-220000/pwabuilder-package/`（`signing.keystore` ＋ `signing-key-info.txt`）
+→ 重建 AAB 一定要用同一個 keystore，否則 Play 會拒收更新。
+
+**技術路線已核實**：本 app 係 PWABuilder 造嘅 TWA；PWABuilder 支援 Play Billing（經 Digital Goods API），
+即係 TWA 收費嘅標準做法 —— 唔需要改成原生 app。
