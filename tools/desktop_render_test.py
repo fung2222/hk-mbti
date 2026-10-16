@@ -478,6 +478,28 @@ async def run():
                   "linear-gradient" in str(_mr.get("bgimg")) and _mr.get("dt") == "" and _mr.get("popD") == "none", str(_mr))
             await _mp2.close()
 
+        # ── 2026-10-15 · 風格一致性守門（Roy 指：新區塊要同其他卡一致）──
+        # 血例：「意見同支援」卡原本 padding:0（因為拆走內盒後冇補返）→ 文字貼邊、同其他卡唔一致。
+        # 規則：關於頁每張 .card 嘅 padding-left 一定要 >= 16px（唔准有 0 padding 嘅卡）。
+        _sp = await b.new_page()
+        await _sp.goto(url, wait_until="networkidle")
+        await _sp.wait_for_timeout(1200)
+        _sp_r = await _sp.evaluate("""() => {
+          if (window.openAbout) window.openAbout();
+          const cards=[...document.querySelectorAll('#about .card')];
+          return cards.map((c,i)=>{const cs=getComputedStyle(c);
+            const h=c.querySelector('.font-black, .font-bold');
+            return {i, padLeft:parseFloat(cs.paddingLeft), name:['第一張','立即測試卡','意見同支援'][i]||('卡'+i),
+                    headWeight:h?getComputedStyle(h).fontWeight:null, headSize:h?parseFloat(getComputedStyle(h).fontSize):null};});
+        }""")
+        for _c in _sp_r:
+            check("風格一致：%s 有足夠內邊距（padding-left >= 16px，唔准貼邊）" % _c["name"], _c["padLeft"] >= 16, str(_c))
+        _headed = [_c for _c in _sp_r if _c.get("headWeight")]
+        if len(_headed) >= 2:
+            check("風格一致：有標題嘅卡，標題字重／字大完全一樣（唔准自己砌一套）",
+                  len({(_c["headWeight"], _c["headSize"]) for _c in _headed}) == 1, str(_headed))
+        await _sp.close()
+
         await b.close()
     srv.shutdown()
     _scope = ("（ONLY=%s 局部）" % ONLY) if ONLY else ""
