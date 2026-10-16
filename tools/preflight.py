@@ -277,6 +277,15 @@ for _line in re.findall(r'leading-relaxed">([^<]+)</div>', _e_card):
     if _cjk > 18:
         _e_problems.append("意見卡文案太長（%d 個中文字）會斷錯行：" % _cjk + _line)
 
+
+# 私隱聯絡方式：2026-10-15 Roy 拍板 A —— 一定要 email（普通用戶唔識用 GitHub Issues）
+for _f in ("index.html", "privacy.html"):
+    _c = open(_f, encoding="utf-8").read()
+    if "mailto:fung22222@gmail.com" not in _c:
+        _e_problems.append(_f + " 私隱聯絡唔係 email（mailto:fung22222@gmail.com）")
+    if "GitHub Issues" in _c:
+        _e_problems.append(_f + " 仲有舊嘅 GitHub Issues 聯絡字眼（已改用 email）")
+
 print("\n===== 12. 意見／評分入口 =====")
 if _e_problems:
     for _p2 in _e_problems:
