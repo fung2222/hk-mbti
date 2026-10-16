@@ -308,6 +308,74 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
   chk('★ 撳「返全部 16 型」真係返到 16 型選擇', w._showing==='deep' && grid16()===16, 'card='+grid16());
   chk('頁面零 JS error', jerr.length===0, jerr.slice(0,2).join(' | '));
 
+  // ---------- Play Billing（Digital Goods API；網頁冇 API 就保持 soft pitch）----------
+  chk('★ 源碼有 Digital Goods API + SKU', /getDigitalGoodsService\(["']https:\/\/play\.google\.com\/billing["']\)/.test(src) && /hkmbti_full_analysis_unlocked/.test(src));
+  chk('★ 源碼有 listPurchases + acknowledge onetime，冇 consume', /listPurchases/.test(src) && /acknowledge\(/.test(src) && /["']onetime["']/.test(src) && !/\.consume\(/.test(src));
+  chk('★ 源碼冇寫死 HK$18（價錢只可以來自 Play）', !/HK\$18/.test(src));
+  const hasBilling = typeof w.restorePlayPurchases === 'function' && typeof w.buyFull === 'function';
+  chk('★ restorePlayPurchases / buyFull 存在', hasBilling);
+  if(hasBilling){
+    w.localStorage.setItem('hkmbti_tier','free');
+    delete w.getDigitalGoodsService;
+    w._billingService = null; w._billingPrice = '';
+    await w.restorePlayPurchases();
+    w.openUpgrade();
+    chk('★ 冇 API：restore 唔寫 tier', w.localStorage.getItem('hkmbti_tier')!=='full', String(w.localStorage.getItem('hkmbti_tier')));
+    chk('★ 冇 API：CTA 仍係看完整分析，升級頁冇價錢', $('#upgradeCta').textContent.trim()==='看完整分析' && !/HK\$|9\.99|解鎖第 2/.test($('#upgrade').textContent), $('#upgradeCta').textContent);
+
+    let acked = [];
+    w.localStorage.setItem('hkmbti_tier','free');
+    w._billingService = null; w._billingPrice = '';
+    w.getDigitalGoodsService = async function(url){
+      if(url !== 'https://play.google.com/billing') throw new Error('bad url');
+      return {
+        listPurchases: async ()=>[{itemId:'hkmbti_full_analysis_unlocked', purchaseToken:'tok-1', acknowledged:false}],
+        getDetails: async ()=>[{itemId:'hkmbti_full_analysis_unlocked', price:{currency:'USD', value:'9.99'}}],
+        acknowledge: async (token, type)=>{ acked.push([token, type]); }
+      };
+    };
+    await w.restorePlayPurchases();
+    chk('★ 已購買：restore 寫 tier=full', w.localStorage.getItem('hkmbti_tier')==='full', String(w.localStorage.getItem('hkmbti_tier')));
+    chk('★ 已購買但未 acknowledge：補 acknowledge onetime', acked.length===1 && acked[0][0]==='tok-1' && acked[0][1]==='onetime', JSON.stringify(acked));
+    chk('★ 已購買：等級掣變完整版', $('#tierLabel').textContent.trim()==='完整版', $('#tierLabel').textContent);
+
+    const svc = {
+      listPurchases: async ()=>[],
+      getDetails: async ()=>[{itemId:'hkmbti_full_analysis_unlocked', price:{currency:'USD', value:'9.99'}}],
+      acknowledge: async (token, type)=>{ buyAck.push([token, type]); }
+    };
+    let buyAck = [];
+    w.localStorage.setItem('hkmbti_tier','free'); w.renderTier();
+    w._billingService = null; w._billingPrice = '';
+    w.getDigitalGoodsService = async ()=>svc;
+    await w.restorePlayPurchases();
+    w.openUpgrade();
+    chk('★ 未購買：CTA 顯示 Play 回傳價錢（9.99），唔係寫死', /9\.99/.test($('#upgradeCta').textContent) && /解鎖第 2–9 章/.test($('#upgradeCta').textContent), $('#upgradeCta').textContent);
+    chk('★ 未購買：購買卡唔再話未開放／冇收費', !/未開放/.test($('#upgradeBuy').textContent) && !/冇收費/.test($('#upgradeBuy').textContent), $('#upgradeBuy').textContent.replace(/\s+/g,' ').slice(0,90));
+
+    w.PaymentRequest = function(methods){
+      w._lastPayMethods = methods;
+      this.show = async ()=>({ details:{ purchaseToken:'buy-tok' }, complete: async ()=>{} });
+    };
+    w.localStorage.setItem('hkmbti_tier','free');
+    await w.buyFull();
+    chk('★ 買成功：PaymentRequest 用 Play Billing + SKU', JSON.stringify(w._lastPayMethods||'').indexOf('https://play.google.com/billing')>=0 && JSON.stringify(w._lastPayMethods||'').indexOf('hkmbti_full_analysis_unlocked')>=0, JSON.stringify(w._lastPayMethods));
+    chk('★ 買成功：acknowledge purchaseToken + onetime', buyAck.length===1 && buyAck[0][0]==='buy-tok' && buyAck[0][1]==='onetime', JSON.stringify(buyAck));
+    chk('★ 買成功：寫 tier=full', w.localStorage.getItem('hkmbti_tier')==='full', String(w.localStorage.getItem('hkmbti_tier')));
+
+    w.localStorage.setItem('hkmbti_tier','free'); w.renderTier();
+    w.PaymentRequest = function(){ this.show = async ()=>{ const e=new Error('cancel'); e.name='AbortError'; throw e; }; };
+    await w.buyFull();
+    chk('★ 取消付款：唔寫 tier', w.localStorage.getItem('hkmbti_tier')!=='full', String(w.localStorage.getItem('hkmbti_tier')));
+
+    w.localStorage.setItem('hkmbti_tier','free'); w.renderTier();
+    w._billingService = null; w._billingPrice = '';
+    w.getDigitalGoodsService = async ()=>({ listPurchases: async ()=>[], getDetails: async ()=>[], acknowledge: async ()=>{} });
+    await w.restorePlayPurchases();
+    w.openUpgrade();
+    chk('★ 商品未建立：保持 soft pitch，唔顯示價錢', $('#upgradeCta').textContent.trim()==='看完整分析' && !/9\.99|解鎖第 2/.test($('#upgrade').textContent), $('#upgradeCta').textContent);
+  }
+
   console.log(`\n${ok===total?'===== 全部通過':'===== 有失敗'}（${ok}/${total}）=====`);
   process.exit(ok===total?0:1);
 },600);

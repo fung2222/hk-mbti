@@ -405,3 +405,37 @@ Gemini 份報告**準確度高**（佢真係讀過本 app：茶餐廳／港鐵�
 - 收費：HK$18 一次性解鎖「深入分析」第 2–9 章（內容已 144 章齊）
 - 內容：可考慮擴充（新章節／新版本題目）
 - 商店素材：有需要時更新截圖／宣傳
+
+---
+
+# 📌 下一步清單（2026-10-15 · 交接用）
+
+## 而家嘅狀態
+- **App 已上架**（v13 / 2.0.0 / 177 國）；首日 13 安裝、0 當機；可以被 Play 搜到
+- **收費（Play Billing）未有**：`index.html` 冇 Digital Goods API（0 處）
+- **內容已齊**：`premium-data.js` 有 16 型 × 9 章 = **144 章**（第 1 章免費、2–9 章 UI 鎖住）
+- **解鎖機制（單一入口）**：`window.getTier()` 讀 `localStorage["hkmbti_tier"]` === "full"；`window.isUnlocked()`
+- CTA：`openDeep()`（結果頁／升級頁「看完整分析」）；`openUpgrade()`（頂欄版本掣）
+
+## Roy 已完成（Play Console / Payments）
+- 付款設定檔（信用卡）✓、銀行帳戶（恒生 024-768-072324668）✓ 已驗證
+- 商品**未建立**（進行中：透過 Play 營利 → 開始使用 → 應用程式內產品）
+- 稅務資料**未填**（payments.google.com → 設定 → 美國稅務資訊）
+- 15% 服務費層級**未註冊**（Play Console 橫額「管理帳戶詳情」）
+
+## 我要做（Play Billing 實作）
+1. ✅ `index.html` 已加 **Digital Goods API**（2026-10-17）：`getDigitalGoodsService("https://play.google.com/billing")`
+   → `getDetails` 拎價錢（**只喺 Play 環境、而且商品真係存在**先顯示；網頁版唔顯示價錢）
+   → `PaymentRequest` → `acknowledge(token, "onetime")`（**唔准 consume**）
+2. ✅ 買到 → `localStorage["hkmbti_tier"] = "full"` → 重新渲染
+3. ✅ 開 app 時 `listPurchases()` 還原；未 acknowledge 會補 ack
+4. ✅ 冇 API／商品未建立 → 保持 soft pitch「看完整分析」，唔寫 tier
+5. ✅ 守門：`preflight` 第 6b 節 ＋ `premium_test.js`（195 項，含取消付款唔寫 tier）
+6. ⏳ 出 **versionCode 14**：等 Roy 建好商品之後，用 **PWABuilder** 重建（開啟 Play Billing）＋
+   **用返同一個 upload keystore**（`/opt/data/backups/hk-mbti-uploadkey-20260926/`）
+   → 上傳 → 提交審核 → 通過後手動發佈
+   **未叫唔好 bump 版本號。**
+
+## 出貨規矩（唔可以跳）
+只准 `sh tools/ship.sh "msg"`（11 套閘）；改 UI／文案前先讀 skill `hk-mbti-webapp`；
+改完要用真 Chrome 量生效值 ＋ 自己睇圖；新區塊要抄鄰近區塊 class。

@@ -103,6 +103,16 @@ LANDING_BANNED = ["HK$18", "示範版本", "付款會經 Google Play"]
 for kw in LANDING_BANNED:
     if kw in idx:
         fails.append("index.html 仍有上架前紅線字串：%s" % kw)
+# 6b. Play Billing 接線（2026-10-17）
+# 網頁版冇 Digital Goods API 必須保持 soft pitch，價錢唔准寫死（HK$18 已在上面禁止）。
+# 一次解鎖唔准 consume：消耗咗 Google 會當用完，換機還原唔到。
+# 唔 acknowledge，三日後 Google 自動退款。
+if "getDigitalGoodsService" not in idx or "hkmbti_full_analysis_unlocked" not in idx:
+    fails.append("index.html 未接 Play Billing（要有 getDigitalGoodsService + hkmbti_full_analysis_unlocked）")
+if "listPurchases" not in idx or "acknowledge" not in idx:
+    fails.append("index.html 未有還原購買／acknowledge（唔 ack 三日後退款）")
+if ".consume(" in idx:
+    fails.append("index.html 唔准 consume 一次解鎖（消耗品會失去資格）")
 for f in ("store-listing/full-desc-play.txt", "store-listing/full-desc.md"):
     if os.path.exists(os.path.join(ROOT, f)) and "準確度有保證" in read(f):
         fails.append("%s 仍有「準確度有保證」（同 app 內免責句矛盾）" % f)

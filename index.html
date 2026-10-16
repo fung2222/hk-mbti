@@ -1873,7 +1873,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <p class="text-sm leading-relaxed">免費版已經包括 60 題測試、16 型性格百科、個人相處同拍拖攻略。</p>
   <p class="text-sm leading-relaxed mt-3">完整版加一個新項目：<b>人格深入分析</b>。16 種人格，每一種有 <b>9 章</b> —— 由核心動機、盲點、壓力反應，講到職場、愛情、友情，以及「唔好同佢講嘅 3 句」。</p>
   <p class="text-sm leading-relaxed mt-3">每一種人格嘅<b>第 1 章免費</b>，你可以先睇咗先決定。</p>
-  <p class="text-sm leading-relaxed mt-3">第 2–9 章而家未開放，亦冇收費。</p>
+  <p class="text-sm leading-relaxed mt-3" id="upgradeClosed">第 2–9 章而家未開放，亦冇收費。</p>
  </div>
 
  <div class="card p-5 mb-4">
@@ -1889,7 +1889,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="card p-5 mb-4" id="upgradeBuy">
-  <p class="text-sm leading-relaxed">第 1 章可以免費睇。其餘章節（第 2–9 章）而家未開放，亦冇收費。</p>
+  <p class="text-sm leading-relaxed" id="upgradeLead">第 1 章可以免費睇。其餘章節（第 2–9 章）而家未開放，亦冇收費。</p>
   <button type="button" class="up-cta" id="upgradeCta" onclick="openDeep()">看完整分析</button>
   <p class="text-[11px] leading-relaxed text-gray-500 mt-3" id="upgradeNote">撳上面會去 16 型目錄。第 1 章免費；其餘章節未開放。</p>
  </div>
@@ -6116,17 +6116,30 @@ db.setAttribute("aria-label", b.getAttribute("aria-label"));
 };
 window.renderUpgradeState = function(){
 const cta = document.getElementById("upgradeCta"), note = document.getElementById("upgradeNote");
+const closed = document.getElementById("upgradeClosed"), lead = document.getElementById("upgradeLead");
 if(!cta) return;
 const full = window.getTier() === "full";
+const price = window._billingPrice || "";
 if(full){
 cta.textContent = "已解鎖 · 睇人格深入分析";
 cta.onclick = function(){ openDeep(); };
 if(note) note.textContent = "你已經解鎖完整版，多謝支持。日後新增嘅章節都會自動包括。";
- } else {
- cta.textContent = "看完整分析";
- cta.onclick = function(){ openDeep(); };
- if(note) note.textContent = "第 1 章免費。其餘章節（第 2–9 章）而家未開放，亦冇收費。";
- }
+if(closed) closed.textContent = "第 2–9 章已經解鎖。";
+if(lead) lead.textContent = "第 1–9 章都可以睇。";
+} else if(price){
+// 價錢只可以來自 Play（getDetails）。網頁冇 API 就唔會行到呢條。
+cta.textContent = "解鎖第 2–9 章 · " + price;
+cta.onclick = function(){ window.buyFull(); };
+if(note) note.textContent = "一次過解鎖，換機可以還原。";
+if(closed) closed.textContent = "第 2–9 章可以一次過解鎖。";
+if(lead) lead.textContent = "第 1 章可以免費睇。其餘章節（第 2–9 章）可以一次過解鎖。";
+} else {
+cta.textContent = "看完整分析";
+cta.onclick = function(){ openDeep(); };
+if(note) note.textContent = "第 1 章免費。其餘章節（第 2–9 章）而家未開放，亦冇收費。";
+if(closed) closed.textContent = "第 2–9 章而家未開放，亦冇收費。";
+if(lead) lead.textContent = "第 1 章可以免費睇。其餘章節（第 2–9 章）而家未開放，亦冇收費。";
+}
 };
 window.openUpgrade = function(){
 try{ closeHomeMenu(); }catch(e){}
@@ -6134,16 +6147,93 @@ if(window.getTier() === "full"){ window.openDeep(); return; }
 window.renderUpgradeState();
 show("upgrade");
 };
-window.unlockFull = async function(){
-// 2026-10-13 上架前：唔再示範解鎖，唔再假稱經 Google Play 付款。
-// 原因（Play 欺騙行為政策）：畫面寫住經 Play 收費、實際一撳就送＝審核會拒。
-// 已經解鎖嘅本機（舊 localStorage hkmbti_tier=full）照樣入目錄；未解鎖只講清楚現況，唔會寫 tier。
+window.BILLING_SKU = "hkmbti_full_analysis_unlocked";
+window._billingService = null;
+window._billingPrice = "";
+window._playBilling = async function(){
+if(!window.getDigitalGoodsService) return null;
+try{ return await window.getDigitalGoodsService("https://play.google.com/billing"); }
+catch(e){ return null; }
+};
+window._formatPlayPrice = function(price){
+if(!price || price.value == null || !price.currency) return "";
+var n = Number(price.value);
+if(!isFinite(n)) return "";
+try{
+return new Intl.NumberFormat(navigator.language || "zh-HK", { style: "currency", currency: price.currency }).format(n);
+}catch(e){ return ""; }
+};
+window._setTierFull = function(){
+try{ localStorage.setItem(window.TIER_KEY, "full"); }catch(e){}
+try{ window.renderTier(); }catch(e){}
+try{ window.renderUpgradeState(); }catch(e){}
+};
+window.restorePlayPurchases = async function(){
+const service = await window._playBilling();
+window._billingService = service;
+if(!service){ window._billingPrice = ""; try{ window.renderUpgradeState(); }catch(e){} return false; }
+let owned = false;
+try{
+const purchases = await service.listPurchases();
+for(const p of (purchases || [])){
+if(!p || p.itemId !== window.BILLING_SKU) continue;
+owned = true;
+if(p.acknowledged !== true && p.purchaseToken){
+try{ await service.acknowledge(p.purchaseToken, "onetime"); }catch(e){}
+}
+}
+}catch(e){}
+if(owned){ window._setTierFull(); return true; }
+var price = "";
+try{
+const details = await service.getDetails([window.BILLING_SKU]);
+const item = details && details[0];
+price = item ? window._formatPlayPrice(item.price) : "";
+}catch(e){ price = ""; }
+window._billingPrice = price;
+try{ window.renderUpgradeState(); }catch(e){}
+return false;
+};
+window.buyFull = async function(){
 if(window.getTier() === "full"){ window.openDeep(); return; }
+const service = window._billingService || await window._playBilling();
+window._billingService = service;
+if(!service || !window._billingPrice) return;
+let request;
+try{
+request = new PaymentRequest([{
+supportedMethods: "https://play.google.com/billing",
+data: { sku: window.BILLING_SKU }
+}], {
+total: { label: "Total", amount: { currency: "USD", value: "0" } }
+});
+}catch(e){ return; }
+let paymentResponse;
+try{
+paymentResponse = await request.show();
+}catch(e){
+if(e && e.name === "AbortError") return;
+try{ await appNotice("未完成", "今次未完成解鎖。你可以再試一次。"); }catch(e2){}
+return;
+}
+const det = (paymentResponse && paymentResponse.details) || {};
+const token = det.purchaseToken || det.token || "";
+let acked = false;
+if(token){
+try{ await service.acknowledge(token, "onetime"); acked = true; }catch(e){}
+}
+try{ if(paymentResponse.complete) await paymentResponse.complete(acked ? "success" : "fail"); }catch(e){}
+window._setTierFull();
+try{ window.openDeep(); }catch(e){}
+};
+window.unlockFull = async function(){
+if(window.getTier() === "full"){ window.openDeep(); return; }
+if(window._billingPrice){ return window.buyFull(); }
 await appDialog({
 title: "第 2–9 章未開放",
 body: "人格深入分析嘅第 1 章可以免費睇。\n\n第 2–9 章而家未開放，亦冇收費；開放之後會喺 app 內公布。",
 okText: "知道"
- });
+});
 };
 // ====================== 人格深入分析（完整版） ======================
 window.DEEP_ORDER = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
@@ -6302,7 +6392,7 @@ show("deep");
 window.scrollTo(0,0);
 };
 // 啟動時同步等級掣（所有函數定義好之後才跑）
-setTimeout(function(){ try{ window.renderTier(); }catch(e){} }, 0);
+setTimeout(function(){ try{ window.renderTier(); }catch(e){} try{ window.restorePlayPurchases(); }catch(e){} }, 0);
 window.openHub = function(){
 show("hub");
 };

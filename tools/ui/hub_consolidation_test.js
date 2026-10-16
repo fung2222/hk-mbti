@@ -219,7 +219,7 @@ setTimeout(() => {
     const all = src + files.map(f => fs.readFileSync(path.join(root, f), "utf8")).join("\n");
     const defined = new Set([...all.matchAll(/window\.([A-Za-z_$][\w$]*)\s*=\s*(?:function|\{|\(|async)/g)].map(m=>m[1]));
     const called = new Set([...src.matchAll(/window\.([A-Za-z_$][\w$]*)\s*\(/g)].map(m=>m[1]));
-    const BROWSER = ["scrollTo","addEventListener","matchMedia","open","print","getComputedStyle"];
+    const BROWSER = ["scrollTo","addEventListener","matchMedia","open","print","getComputedStyle","getDigitalGoodsService"];
     const bad = [...called].filter(x => !defined.has(x) && !BROWSER.includes(x));
     if(bad.length) console.log("      未定義：", bad.join(", "));
     return bad.length === 0;
