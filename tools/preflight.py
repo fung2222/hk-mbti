@@ -269,6 +269,14 @@ for _w in ["五星好評", "5星好評", "獎勵評分", "好評送禮", "評分
     if _w in _e_html:
         _e_problems.append("評分引導唔可以有獎勵字眼（違反 Play 政策）：" + _w)
 
+
+# 每段文案唔准太長（中文會喺任何位斷行 → 會劈開詞語／出孤行）
+_e_card = _e_html[_e_html.find("意見同支援"): _e_html.find("意見同支援") + 1600]
+for _line in re.findall(r'leading-relaxed">([^<]+)</div>', _e_card):
+    _cjk = len([c for c in _line if "\u4e00" <= c <= "\u9fff"])
+    if _cjk > 18:
+        _e_problems.append("意見卡文案太長（%d 個中文字）會斷錯行：" % _cjk + _line)
+
 print("\n===== 12. 意見／評分入口 =====")
 if _e_problems:
     for _p2 in _e_problems:
