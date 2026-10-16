@@ -256,5 +256,27 @@ else:
     print("  OK   og-image.png %dx%d（正方形）＋ meta 一致 ＋ twitter:card=summary" % (_ow, _oh))
     notes.append("分享圖 og-image.png 正方形 ＋ meta 一致")
 
+
+
+# ===== 12. 意見／評分入口（2026-10-15 Roy 批准）=====
+_e_problems = []
+_e_html = open("index.html", encoding="utf-8").read()
+if "mailto:fung2222" not in _e_html and "mailto:fung22222@gmail.com" not in _e_html:
+    _e_problems.append("關於頁冇問題回報 email 入口")
+if "play.google.com/store/apps/details?id=com.fung2222.hkmbti" not in _e_html:
+    _e_problems.append("關於頁冇去 Google Play 評分嘅入口")
+for _w in ["五星好評", "5星好評", "獎勵評分", "好評送禮", "評分送"]:
+    if _w in _e_html:
+        _e_problems.append("評分引導唔可以有獎勵字眼（違反 Play 政策）：" + _w)
+
+print("\n===== 12. 意見／評分入口 =====")
+if _e_problems:
+    for _p2 in _e_problems:
+        print("  FAIL " + _p2)
+    FAILED.append("意見／評分入口")
+else:
+    print("  OK   關於頁有意見回報 email ＋ Play 評分入口（冇獎勵字眼）")
+    notes.append("意見／評分入口齊全")
+
 print("===== %s =====" % ("全部通過（%d 項）" % len(notes) if not fails else "%d 項有問題" % len(fails)))
 sys.exit(1 if fails else 0)
