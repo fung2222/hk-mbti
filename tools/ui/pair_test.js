@@ -153,7 +153,40 @@ for (const [k, v] of Object.entries(P)) {
   (v.give || []).forEach(s => look("give", s));
 }
 chk("★ 配對文案零「你」（" + (DUENI_ROWS ? "已改：" + DUENI_ROWS.join("、") : "全檔") + "；台詞除外）",
-    dueni.length === 0, dueni.slice(0, 5).join(" , "));
+   dueni.length === 0, dueni.slice(0, 5).join(" , "));
+
+// 收費內容（2026-10-17）：冇 Play 價錢唔鎖；有價錢先鎖完整相處同三句對白。
+chk("★ lines-data.js 有引入", /<script src="lines-data\.js"><\/script>/.test(RAW));
+chk("★ sw.js precache 有 lines-data.js", fs.readFileSync(path.join(REPO,"sw.js"),"utf8").includes('"/hk-mbti/lines-data.js"'));
+const TYPES = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
+const L = w.LINES || {};
+const badLine = TYPES.filter(t => {
+  const x = L[t];
+  if(!x) return true;
+  return ["work","home","date"].some(s => !x[s] || (x[s].say||[]).length!==3 || (x[s].dont||[]).length!==3);
+});
+chk("★ 16 型都有返工／屋企／拍拖，每場 3 句可以講、3 句唔好講", badLine.length===0, badLine.join(","));
+chk("★ 對白冇 emoji", !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/u.test(fs.readFileSync(path.join(REPO,"lines-data.js"),"utf8")));
+w._billingPrice = "";
+w.renderLines("INTJ");
+w.renderPairPick("INTJ");
+chk("★ 未開收費：三個場面出齊，唔好講都睇到",
+   /返工/.test(d.getElementById("lineBox").innerHTML) && /唔好講/.test(d.getElementById("lineBox").innerHTML) && /拍拖/.test(d.getElementById("lineBox").innerHTML));
+chk("★ 有揀佢類型嘅掣（16 粒）", d.querySelectorAll("#pairPick .pair-pick").length===16, d.querySelectorAll("#pairPick .pair-pick").length);
+w._billingPrice = "HK$9.99";
+w.renderLines("INTJ");
+chk("★ 已開收費未買：場面只露一句，唔好講收起",
+   !/<div class="text-xs text-gray-500">唔好講<\/div>/.test(d.getElementById("lineBox").innerHTML) && /睇齊三句可以講/.test(d.getElementById("lineBox").innerHTML));
+w.openPair("INFP","ENFP");
+chk("★ 已開收費未買：配對只露開頭，完整相處要解鎖",
+   /要解鎖先睇到/.test(d.getElementById("pairBody").innerHTML) && !/最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));
+try{ w.localStorage.setItem("hkmbti_tier","full"); }catch(e){}
+w.renderLines("INTJ");
+w.openPair("INFP","ENFP");
+chk("★ 已解鎖：三句唔好講同完整相處都出返",
+   /唔好講/.test(d.getElementById("lineBox").innerHTML) && /最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));
+w._billingPrice = "";
+try{ w.localStorage.removeItem("hkmbti_tier"); }catch(e){}
 
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);

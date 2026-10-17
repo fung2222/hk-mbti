@@ -5,6 +5,7 @@ const ASSETS = [
   "/hk-mbti/data.js",
   "/hk-mbti/social.js",
   "/hk-mbti/pair-data.js",
+  "/hk-mbti/lines-data.js",
   "/hk-mbti/tailwind.css",
   "/hk-mbti/voice-data.js",
   "/hk-mbti/premium-data.js",

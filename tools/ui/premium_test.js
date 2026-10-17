@@ -350,7 +350,7 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
     w.getDigitalGoodsService = async ()=>svc;
     await w.restorePlayPurchases();
     w.openUpgrade();
-    chk('★ 未購買：CTA 顯示 Play 回傳價錢（9.99），唔係寫死', /9\.99/.test($('#upgradeCta').textContent) && /解鎖第 2–9 章/.test($('#upgradeCta').textContent), $('#upgradeCta').textContent);
+    chk('★ 未購買：CTA 顯示 Play 回傳價錢（9.99），唔係寫死', /9\.99/.test($('#upgradeCta').textContent) && /解鎖相處對白/.test($('#upgradeCta').textContent), $('#upgradeCta').textContent);
     chk('★ 未購買：購買卡唔再話未開放／冇收費', !/未開放/.test($('#upgradeBuy').textContent) && !/冇收費/.test($('#upgradeBuy').textContent), $('#upgradeBuy').textContent.replace(/\s+/g,' ').slice(0,90));
 
     w.PaymentRequest = function(methods){

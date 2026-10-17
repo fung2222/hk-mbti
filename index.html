@@ -173,6 +173,12 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 /* 配對深入（B 模組，2026-10-04）*/
 /* 2026-10-06 Roy：原本 84x26px、11px、淡米底 → 太細太淡（喺 350px 行內只佔 24%）→ 改全闊金色實心 */
 .pair-go{display:block;width:100%;margin-top:8px;font-size:13px;font-weight:700;color:#3A2E14;background:linear-gradient(180deg,#E8C87A,var(--gold));border:0;border-radius:10px;padding:10px 12px;text-align:center;letter-spacing:.01em;box-shadow:0 1px 2px rgba(26,26,26,.10)}
+#pairPick{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.pair-pick{border:0;background:var(--soft);color:var(--ink);font-size:11px;font-weight:700;padding:6px 8px;border-radius:8px;font-family:inherit}
+.line-scene{margin:0 0 12px}
+.line-ul{margin:0;padding-left:1.1em}
+.line-ul li{font-size:13px;line-height:1.45;margin:2px 0}
+#lineBox .pair-go{margin-top:4px}
 .pair-pairhead{font-size:22px;font-weight:900;color:var(--ink);letter-spacing:.02em}
 .pair-x{color:#A08A5C;font-weight:700}
 .pair-ol,.pair-ul{margin:0;padding-left:1.15rem}
@@ -2584,7 +2590,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="personalReport" class="mb-4"></div>
  <div class="result-divider"></div>
 
+ <div id="lineBox" class="mb-4"></div>
  <div class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 10-8 0"/><circle cx="12" cy="7" r="3"/><path d="M5 21v-1a5 5 0 015-5h4a5 5 0 015 5v1"/></svg>與你的朋友配對</div>
+ <div id="pairPick"></div>
         <div id="compatibility" class="space-y-2 text-sm"></div>
  </div>
  </div>
@@ -2624,6 +2632,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 <!-- ====================== 60 題港式情境題庫 ====================== -->
 <script src="data.js"></script>
 <script src="pair-data.js"></script>
+<script src="lines-data.js"></script>
    <script src="social.js"></script>
 <script src="voice-data.js"></script>
 <script src="premium-data.js"></script>
@@ -5028,6 +5037,7 @@ if(ct) compatHtml += `
  `;
  });
  $("compatibility").innerHTML = compatHtml;
+try{ window.renderLines(type); window.renderPairPick(type); }catch(e){}
 };
 
 window.downloadCard = async function(){
@@ -6124,15 +6134,15 @@ if(full){
 cta.textContent = "已解鎖 · 睇人格深入分析";
 cta.onclick = function(){ openDeep(); };
 if(note) note.textContent = "你已經解鎖完整版，多謝支持。日後新增嘅章節都會自動包括。";
-if(closed) closed.textContent = "第 2–9 章已經解鎖。";
-if(lead) lead.textContent = "第 1–9 章都可以睇。";
+if(closed) closed.textContent = "相處對白同三個場面已經解鎖。";
+if(lead) lead.textContent = "第 1–9 章同完整相處對白都可以睇。";
 } else if(price){
 // 價錢只可以來自 Play（getDetails）。網頁冇 API 就唔會行到呢條。
-cta.textContent = "解鎖第 2–9 章 · " + price;
+cta.textContent = "解鎖相處對白 · " + price;
 cta.onclick = function(){ window.buyFull(); };
 if(note) note.textContent = "一次過解鎖，換機可以還原。";
-if(closed) closed.textContent = "第 2–9 章可以一次過解鎖。";
-if(lead) lead.textContent = "第 1 章可以免費睇。其餘章節（第 2–9 章）可以一次過解鎖。";
+if(closed) closed.textContent = "相處對白同三個場面可以一次過解鎖。";
+if(lead) lead.textContent = "第 1 章同配對開頭可以免費睇。完整對白可以一次過解鎖。";
 } else {
 cta.textContent = "看完整分析";
 cta.onclick = function(){ openDeep(); };
@@ -6880,6 +6890,40 @@ closeList();
 return html;
 };
 
+// 收費未開（冇 Play 價錢）時唔鎖，避免未賣到就收起免費內容。
+window.offerLocked = function(){
+  return window.getTier() !== "full" && !!window._billingPrice;
+};
+window.renderLines = function(type){
+  const box = document.getElementById("lineBox");
+  if(!box) return;
+  const L = (window.LINES || {})[type];
+  if(!L){ box.innerHTML = ""; return; }
+  const locked = window.offerLocked();
+  const scenes = [["work","返工"],["home","屋企"],["date","拍拖"]];
+  const blocks = scenes.map(function(sc){
+    const d = L[sc[0]] || {say:[], dont:[]};
+    const say = locked ? (d.say || []).slice(0, 1) : (d.say || []);
+    const dont = locked ? [] : (d.dont || []);
+    return '<div class="line-scene"><div class="text-sm font-bold">' + sc[1] + '</div>'
+      + '<ul class="line-ul">' + say.map(function(x){ return "<li>" + x + "</li>"; }).join("") + "</ul>"
+      + (dont.length ? '<div class="text-xs text-gray-500">唔好講</div><ul class="line-ul">' + dont.map(function(x){ return "<li>" + x + "</li>"; }).join("") + "</ul>" : "")
+      + "</div>";
+  }).join("");
+  const lockNote = locked
+    ? '<button type="button" class="pair-go" onclick="openUpgrade()">睇齊三句可以講、三句唔好講</button>'
+    : "";
+  box.innerHTML = '<div class="text-xs tracking-widest brand-gold font-bold mb-3">三個場面點講</div>' + blocks + lockNote;
+};
+window.renderPairPick = function(myType){
+  const box = document.getElementById("pairPick");
+  if(!box) return;
+  const order = window.TYPE_ORDER || [];
+  box.innerHTML = order.map(function(t){
+    return '<button type="button" class="pair-pick" onclick="openPair(\'' + myType + '\',\'' + t + '\')">' + t + "</button>";
+  }).join("");
+};
+
 // ====================== 配對深入（B 模組，Roy 2026-10-04 批准）======================
 // 內容：window.PAIRS（pair-data.js）。寫法用型號唔用「你」→ 邊個型讀都唔會錯。
 window.pairKey = function(a, b){
@@ -6900,12 +6944,20 @@ window.openPair = function(a, b){
   document.getElementById("pairTitle").innerText = A + " × " + B;
   document.getElementById("pairCrumb").innerText = "配對深入 / " + A + (TA.cn ? "（" + TA.cn + "）" : "") + " × " + B + (B !== A && TB.cn ? "（" + TB.cn + "）" : "");
   if(!k){
-    var _pc = Object.keys(window.PAIRS || {}).length;
-    body.innerHTML = '<div class="card p-6"><p class="text-sm text-gray-700 leading-relaxed">呢一對嘅深入內容仲喺度寫。而家已經有 ' + _pc + ' 對組合寫好咗，會陸續補上。</p></div>';
-    show("pair"); window.scrollTo(0, 0); return;
-  }
-  const d = (window.PAIRS || {})[k] || {};
-  const sec = function(t){ return '<div class="text-xs tracking-widest brand-gold font-bold mb-3">' + t + '</div>'; };
+     var _pc = Object.keys(window.PAIRS || {}).length;
+     body.innerHTML = '<div class="card p-6"><p class="text-sm text-gray-700 leading-relaxed">呢一對嘅深入內容仲喺度寫。而家已經有 ' + _pc + ' 對組合寫好咗，會陸續補上。</p></div>';
+     show("pair"); window.scrollTo(0, 0); return;
+   }
+   const d = (window.PAIRS || {})[k] || {};
+   if(window.offerLocked && window.offerLocked()){
+     body.innerHTML =
+       '<div class="card p-6 mb-4"><div class="pair-pairhead">' + A + ' <span class="pair-x">×</span> ' + B + '</div>'
+       + '<p class="text-sm text-gray-700 leading-relaxed mt-3">' + (d.spark || "") + '</p></div>'
+       + '<div class="card p-6 mb-4"><p class="text-sm text-gray-700 leading-relaxed">完整相處（最容易撞嘅位、各自要讓一步）要解鎖先睇到。</p>'
+       + '<button type="button" class="pair-go" onclick="openUpgrade()">睇完整相處</button></div>';
+     show("pair"); window.scrollTo(0, 0); return;
+   }
+   const sec = function(t){ return '<div class="text-xs tracking-widest brand-gold font-bold mb-3">' + t + '</div>'; };
   body.innerHTML =
     '<div class="card p-6 mb-4"><div class="pair-pairhead">' + A + ' <span class="pair-x">×</span> ' + B + '</div>'
     + '<p class="text-sm text-gray-700 leading-relaxed mt-3">' + (d.spark || "") + '</p></div>'
