@@ -168,6 +168,14 @@ chk("★ icon 唔係一個公仔走天涯（16 型用到 >=6 個語意家族）"
   chk("★ 免費：第 1 章標「免費」", d.querySelectorAll("#typeDeepBox .deep-tag.is-free").length===1);
   chk("★ 免費：第 2-9 章標「完整版」（8 個）", d.querySelectorAll("#typeDeepBox .deep-tag:not(.is-free)").length===8, d.querySelectorAll("#typeDeepBox .deep-tag:not(.is-free)").length);
   chk("★ 免費：tab 內有解鎖掣", /openUpgrade\(\)/.test($("#typeDeepBox").innerHTML));
+chk("★ 解鎖掣喺 9 章上面，唔係夾喺列表同底部測試卡中間", (function(){
+  const box = $("#typeDeepBox");
+  const btn = box.querySelector("button[onclick*='openUpgrade']");
+  const first = box.querySelector(".deep-item");
+  if(!btn || !first) return false;
+  const before = !!(btn.compareDocumentPosition(first) & 4);
+  return before && !btn.classList.contains("softbox-btn") && btn.classList.contains("deep-unlock");
+})());
   chk("★ 章節標題同 #deep 目錄一致（9 個固定標題）", (function(){
     const t=[...d.querySelectorAll("#typeDeepBox .deep-item")].map(x=>x.textContent);
     return ["你真正想要嘅嘢","你睇唔到嘅 3 個盲點","壓力爆煲時，你會變成點","3 個可以即刻做嘅改變","職場上嘅你","愛情裡嘅你","友情裡嘅你","唔好同你講嘅 3 句","香港情境對照"].every((x,i)=>t[i].includes(x));

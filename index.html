@@ -367,6 +367,8 @@ html.dk .btn-gold{color:#12161C}
 .deep-nav-btn.is-mid{flex:.8;color:#8B6F3D;border-color:rgba(212,169,95,.45)}
 .deep-nav-btn[disabled]{opacity:.3;cursor:default}
 .deep-item{cursor:pointer}
+#typeDeepBox .deep-unlock{display:block;width:100%;margin:0 0 14px;padding:13px 16px;border:0;border-radius:1.2rem;font-family:inherit;font-size:15px;font-weight:700;letter-spacing:.01em;color:#3A2E14;background:linear-gradient(180deg,#E8C87A,var(--gold));text-align:center;cursor:pointer}
+#typeTabDeep{margin-bottom:20px}
 .deep-tag{display:inline-block;font-size:10px;font-weight:700;color:#8B6F3D;background:#f6e7c4;border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:1px}
 .deep-tag.is-free{color:#3F6B4A;background:rgba(110,165,120,.16)}
 .deep-row{display:flex;align-items:center;gap:13px}
@@ -1253,6 +1255,7 @@ html.dk.dt .dt-cta-ghost:hover{color:#C0A87A}
 
 /* 配對深入：黑夜色（2026-10-04 修 —— 之前誤放主 style 且冇 html.dk 前綴 → 光模式都變金黃字 ✗） */
 html.dk .pair-go{background:linear-gradient(180deg,#D9B26A,#B8934C);color:#1A1A1A}
+html.dk #typeDeepBox .deep-unlock{background:linear-gradient(180deg,#D9B26A,#B8934C);color:#1A1A1A}
 html.dk .pair-ol li,html.dk .pair-ul li{color:#A79E92}
 html.dk .pair-x{color:#C0A87A}
 </style>
@@ -6656,6 +6659,7 @@ window.renderTypeTabs = function(code){
   } else {
    const _full = (window.getTier() === "full");
    db.innerHTML = '<div class="text-xs text-gray-500 mb-3">' + dd.chapters.length + ' 章 · ' + (_full ? "深入分析" : "第 1 章免費，其餘要完整版") + '</div>'
+    + (_full ? "" : '<button type="button" class="deep-unlock" onclick="openUpgrade()">解鎖全部 9 章</button>')
     + dd.chapters.map(function(c, i){
      const tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
      return '<button type="button" class="card p-4 mb-3 w-full text-left deep-item" onclick="openDeepChapterFromType(' + i + ',\'' + code + '\')">'
@@ -6664,8 +6668,7 @@ window.renderTypeTabs = function(code){
       + '<div class="deep-t">' + c.t + tag + '</div>'
       + '<div class="text-xs text-gray-500 mt-1">' + c.s + '</div></div>'
        + '<span class="deep-star"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg></span>' + '</div></button>';
-    }).join("")
-    + (_full ? "" : '<button type="button" class="softbox-btn mt-2" onclick="openUpgrade()">解鎖全部 9 章</button>');
+    }).join("");
   }
  }
 };
