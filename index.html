@@ -6159,6 +6159,8 @@ try{ closeHomeMenu(); }catch(e){}
 if(window.getTier() === "full"){ window.openDeep(); return; }
 window.renderUpgradeState();
 show("upgrade");
+// 唔好喺開 app 時叫收銀機：14 一開就叫，會即刻閃退。去升級頁先問。
+try{ window.restorePlayPurchases(); }catch(e){}
 };
 window.BILLING_SKU = "hkmbti_full_analysis_unlocked";
 window._billingService = null;
@@ -6405,7 +6407,7 @@ show("deep");
 window.scrollTo(0,0);
 };
 // 啟動時同步等級掣（所有函數定義好之後才跑）
-setTimeout(function(){ try{ window.renderTier(); }catch(e){} try{ window.restorePlayPurchases(); }catch(e){} }, 0);
+setTimeout(function(){ try{ window.renderTier(); }catch(e){} }, 0);
 window.openHub = function(){
 show("hub");
 };

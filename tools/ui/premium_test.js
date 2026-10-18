@@ -314,6 +314,11 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
   chk('★ 源碼冇寫死 HK$18（價錢只可以來自 Play）', !/HK\$18/.test(src));
   const hasBilling = typeof w.restorePlayPurchases === 'function' && typeof w.buyFull === 'function';
   chk('★ restorePlayPurchases / buyFull 存在', hasBilling);
+  chk('★ 開 app 唔即刻叫收銀機（14 一開就叫會閃退）', (function(){
+    const boot = src.match(/setTimeout\(function\(\)\{ try\{ window\.renderTier\(\); \}catch\(e\)\{\} \}, 0\);/);
+    const up = src.slice(src.indexOf('window.openUpgrade = function'), src.indexOf('window.BILLING_SKU'));
+    return !!boot && /restorePlayPurchases\(\)/.test(up) && !/setTimeout\([\s\S]{0,120}restorePlayPurchases/.test(src);
+  })());
   if(hasBilling){
     w.localStorage.setItem('hkmbti_tier','free');
     delete w.getDigitalGoodsService;
