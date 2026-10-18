@@ -1883,6 +1883,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <p class="text-sm leading-relaxed mt-3">完整版加一個新項目：<b>人格深入分析</b>。16 種人格，每一種有 <b>9 章</b> —— 由核心動機、盲點、壓力反應，講到職場、愛情、友情，以及「唔好同佢講嘅 3 句」。</p>
   <p class="text-sm leading-relaxed mt-3">每一種人格嘅<b>第 1 章免費</b>，你可以先睇咗先決定。</p>
   <p class="text-sm leading-relaxed mt-3" id="upgradeClosed">第 2–9 章而家未開放，亦冇收費。</p>
+  <p class="text-xs mt-2 hidden" id="billingDebug" style="color:#8a94a6;word-break:break-all"></p>
  </div>
 
  <div class="card p-5 mb-4">
@@ -6159,6 +6160,21 @@ try{ closeHomeMenu(); }catch(e){}
 if(window.getTier() === "full"){ window.openDeep(); return; }
 window.renderUpgradeState();
 show("upgrade");
+// 診斷：連撳標題 5 次顯示收銀機回傳（唔影響外觀）
+try{
+  var _t = document.getElementById("upgradeTitle");
+  if(_t && !_t._bdBound){
+    _t._bdBound = true; _t._bdN = 0;
+    _t.addEventListener("click", function(){
+      _t._bdN = (_t._bdN || 0) + 1;
+      if(_t._bdN >= 5){
+        var el = document.getElementById("billingDebug");
+        if(el){ el.classList.toggle("hidden"); }
+        _t._bdN = 0;
+      }
+    });
+  }
+}catch(e){}
 // 唔好喺開 app 時叫收銀機：14 一開就叫，會即刻閃退。去升級頁先問。
 try{ window.restorePlayPurchases(); }catch(e){}
 };
@@ -6184,12 +6200,17 @@ try{ window.renderTier(); }catch(e){}
 try{ window.renderUpgradeState(); }catch(e){}
 };
 window.restorePlayPurchases = async function(){
+const dbg = [];
+var bd = function(s){ try{ dbg.push(s); var el = document.getElementById("billingDebug"); if(el) el.textContent = dbg.join(" | "); }catch(e){} };
+bd("api=" + (window.getDigitalGoodsService ? "yes" : "no"));
 const service = await window._playBilling();
 window._billingService = service;
+bd("svc=" + (service ? "ok" : "null"));
 if(!service){ window._billingPrice = ""; try{ window.renderUpgradeState(); }catch(e){} return false; }
 let owned = false;
 try{
 const purchases = await service.listPurchases();
+bd("own=" + ((purchases || []).length));
 for(const p of (purchases || [])){
 if(!p || p.itemId !== window.BILLING_SKU) continue;
 owned = true;
@@ -6197,15 +6218,17 @@ if(p.acknowledged !== true && p.purchaseToken){
 try{ await service.acknowledge(p.purchaseToken, "onetime"); }catch(e){}
 }
 }
-}catch(e){}
+}catch(e){ bd("ownerr=" + (e && e.name ? e.name : "x")); }
 if(owned){ window._setTierFull(); return true; }
 var price = "";
 try{
 const details = await service.getDetails([window.BILLING_SKU]);
 const item = details && details[0];
+bd("det=" + ((details || []).length) + (item ? " price=" + JSON.stringify(item.price || null) : " item=null"));
 price = item ? window._formatPlayPrice(item.price) : "";
-}catch(e){ price = ""; }
+}catch(e){ bd("deterr=" + (e && e.name ? e.name : "x")); price = ""; }
 window._billingPrice = price;
+bd("price=" + (price || "empty"));
 try{ window.renderUpgradeState(); }catch(e){}
 return false;
 };
