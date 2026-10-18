@@ -315,7 +315,7 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
   const hasBilling = typeof w.restorePlayPurchases === 'function' && typeof w.buyFull === 'function';
   chk('★ restorePlayPurchases / buyFull 存在', hasBilling);
   chk('★ 收銀機診斷行顯示在升級頁（暫時，修好即移除）', (function(){ const el=$('#billingDebug'); return !!el && !el.classList.contains('hidden'); })());
-  chk('★ 收銀機診斷會記錄 api／svc／det 狀態', /bd\("api=" \+/.test(src) && /bd\("svc=" \+/.test(src) && /bd\("det=" \+/.test(src));
+  chk('★ 收銀機診斷會記錄 api／svc／det 狀態', /bd\("api=" \+/.test(src) && /bd\("svc=" \+/.test(src) && /bd\("det" \+ attempt \+ "="/.test(src) && /bd\("deterr" \+ attempt \+ "="/.test(src));
   chk('★ 開 app 唔即刻叫收銀機（14 一開就叫會閃退）', (function(){
     const boot = src.match(/setTimeout\(function\(\)\{ try\{ window\.renderTier\(\); \}catch\(e\)\{\} \}, 0\);/);
     const up = src.slice(src.indexOf('window.openUpgrade = function'), src.indexOf('window.BILLING_SKU'));

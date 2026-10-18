@@ -6202,6 +6202,7 @@ try{ window.renderUpgradeState(); }catch(e){}
 window.restorePlayPurchases = async function(){
 const dbg = [];
 var bd = function(s){ try{ dbg.push(s); var el = document.getElementById("billingDebug"); if(el) el.textContent = dbg.join(" | "); }catch(e){} };
+var errStr = function(e){ return (e && e.name ? e.name : "x") + (e && e.message ? ":" + String(e.message).slice(0,90) : ""); };
 bd("api=" + (window.getDigitalGoodsService ? "yes" : "no"));
 const service = await window._playBilling();
 window._billingService = service;
@@ -6218,15 +6219,20 @@ if(p.acknowledged !== true && p.purchaseToken){
 try{ await service.acknowledge(p.purchaseToken, "onetime"); }catch(e){}
 }
 }
-}catch(e){ bd("ownerr=" + (e && e.name ? e.name : "x")); }
+}catch(e){ bd("ownerr=" + errStr(e)); }
 if(owned){ window._setTierFull(); return true; }
 var price = "";
-try{
-const details = await service.getDetails([window.BILLING_SKU]);
-const item = details && details[0];
-bd("det=" + ((details || []).length) + (item ? " price=" + JSON.stringify(item.price || null) : " item=null"));
-price = item ? window._formatPlayPrice(item.price) : "";
-}catch(e){ bd("deterr=" + (e && e.name ? e.name : "x")); price = ""; }
+var wait = function(ms){ return new Promise(function(r){ setTimeout(r, ms); }); };
+for(var attempt = 1; attempt <= 3; attempt++){
+  try{
+    const details = await service.getDetails([window.BILLING_SKU]);
+    const item = details && details[0];
+    bd("det" + attempt + "=" + ((details || []).length) + (item ? " price=" + JSON.stringify(item.price || null) : " item=null"));
+    if(item && item.price){ price = window._formatPlayPrice(item.price); }
+    if(price) break;
+  }catch(e){ bd("deterr" + attempt + "=" + errStr(e)); }
+  if(attempt < 3) await wait(1200);
+}
 window._billingPrice = price;
 bd("price=" + (price || "empty"));
 try{ window.renderUpgradeState(); }catch(e){}
