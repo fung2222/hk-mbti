@@ -6437,6 +6437,9 @@ window.scrollTo(0,0);
 };
 // 啟動時同步等級掣（所有函數定義好之後才跑）
 setTimeout(function(){ try{ window.renderTier(); }catch(e){} }, 0);
+// 2026-10-18：閃退已修（z0.t 捷徑元件）。開 app 後延遲問一次價錢，令重新整理後都補得返。
+// 唔會阻塞首屏；失敗只會令價錢留空，唔會殺 app。
+setTimeout(function(){ try{ window.restorePlayPurchases(); }catch(e){} }, 1200);
 window.openHub = function(){
 show("hub");
 };

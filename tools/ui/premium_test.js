@@ -316,10 +316,11 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
   chk('★ restorePlayPurchases / buyFull 存在', hasBilling);
   chk('★ 收銀機診斷行顯示在升級頁（暫時，修好即移除）', (function(){ const el=$('#billingDebug'); return !!el && !el.classList.contains('hidden'); })());
   chk('★ 收銀機診斷會記錄 api／svc／det 狀態', /bd\("api=" \+/.test(src) && /bd\("svc=" \+/.test(src) && /bd\("det" \+ attempt \+ "="/.test(src) && /bd\("deterr" \+ attempt \+ "="/.test(src));
-  chk('★ 開 app 唔即刻叫收銀機（14 一開就叫會閃退）', (function(){
-    const boot = src.match(/setTimeout\(function\(\)\{ try\{ window\.renderTier\(\); \}catch\(e\)\{\} \}, 0\);/);
+  chk('★ 開 app 後延遲 1200ms 補問價錢（唔阻塞首屏、有 try/catch）', (function(){
+    const boot = /setTimeout\(function\(\)\{ try\{ window\.renderTier\(\); \}catch\(e\)\{\} \}, 0\);/.test(src);
+    const delayed = /setTimeout\(function\(\)\{ try\{ window\.restorePlayPurchases\(\); \}catch\(e\)\{\} \}, 1200\);/.test(src);
     const up = src.slice(src.indexOf('window.openUpgrade = function'), src.indexOf('window.BILLING_SKU'));
-    return !!boot && /restorePlayPurchases\(\)/.test(up) && !/setTimeout\([\s\S]{0,120}restorePlayPurchases/.test(src);
+    return boot && delayed && /restorePlayPurchases\(\)/.test(up);
   })());
   if(hasBilling){
     w.localStorage.setItem('hkmbti_tier','free');
