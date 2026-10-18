@@ -360,6 +360,24 @@ html.dk .tier-btn.is-full .tier-dot{background:#D9B26A}
 .up3-d{font-size:13.5px;line-height:1.75;color:#5B6472;margin:0}
 .up3-closed{font-size:12px;line-height:1.7;color:#6B7280;margin:18px 0 0}
 .up3-note{font-size:11px;line-height:1.7;color:#6B7280;margin:10px 0 0;text-align:center}
+#upgrade .up3-hero{text-align:center;padding:6px 8px 2px}
+#upgrade .up3-ico-wrap{width:84px;height:84px;margin:0 auto 14px;border-radius:28px;background:rgba(212,169,95,.18);display:flex;align-items:center;justify-content:center}
+#upgrade .up3-ico{width:40px;height:40px;stroke:#7A5C2E;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+#upgrade .up3-h{margin:0;font-size:28px;font-weight:900;letter-spacing:-.02em;line-height:1.2;color:#7A5C2E}
+#upgrade .up3-sub{margin:8px auto 0;max-width:22em;font-size:13.5px;line-height:1.7;color:#5B6472}
+#upgrade .up3-card{margin-top:22px}
+#upgrade .up3-num{color:#C4922E}
+#upgrade .up3-t{color:#1E2A3B}
+#upgrade .up3-buy{margin-top:22px;text-align:center}
+#upgrade .up3-price{margin:0 0 10px;font-size:18px;font-weight:700;letter-spacing:.02em;color:#7A5C2E}
+#upgrade .up3-price[hidden]{display:none}
+#upgrade .up-cta{width:auto;min-width:168px;height:42px;padding:0 28px;display:inline-flex;align-items:center;justify-content:center}
+html.dk #upgrade .up3-ico{stroke:#D8C69E}
+html.dk #upgrade .up3-ico-wrap{background:rgba(217,178,106,.16)}
+html.dk #upgrade .up3-h,html.dk #upgrade .up3-price{color:#D8C69E}
+html.dk #upgrade .up3-t{color:#F2F5F9}
+html.dk #upgrade .up3-sub{color:#A8B2C0}
+html.dk #upgrade .up3-num{color:#D8C69E}
 .up3-buy{margin-top:24px}
 html.dk .up3-lead{color:#C9D1DC}
 html.dk .up3-item{border-top-color:rgba(255,255,255,.1)}
@@ -1894,9 +1912,13 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <p class="page-hero-sub">一次過解鎖 · 換機都認得</p>
  </div>
 
- <p class="up3-lead" id="upgradeLead">第 1 章可以免費睇。其餘章節（第 2–9 章）而家未開放，亦冇收費。</p>
+ <div class="up3-hero" id="upgradeHero">
+  <div class="up3-ico-wrap" aria-hidden="true"><svg class="up3-ico" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 017.2-2.4"/></svg></div>
+  <h2 class="up3-h" id="upgradeHeadline">完整版有咩</h2>
+  <p class="up3-sub" id="upgradeLead">第 1 章可以免費睇。其餘章節（第 2–9 章）而家未開放，亦冇收費。</p>
+ </div>
 
- <div class="card p-5">
+ <div class="card p-5 up3-card" id="upgradeCard">
   <div class="up3-item">
    <div class="up3-num">01 · 你同佢</div>
    <div class="up3-t">你同邊種人點相處</div>
@@ -1917,6 +1939,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="up3-buy" id="upgradeBuy">
+  <p class="up3-price" id="upgradePrice" hidden></p>
   <button type="button" class="up-cta" id="upgradeCta" onclick="openDeep()">看完整分析</button>
   <p class="up3-note" id="upgradeNote">撳上面會去 16 型目錄。第 1 章免費；其餘章節未開放。</p>
  </div>
@@ -6148,28 +6171,34 @@ db.setAttribute("aria-label", b.getAttribute("aria-label"));
 window.renderUpgradeState = function(){
 const cta = document.getElementById("upgradeCta"), note = document.getElementById("upgradeNote");
 const closed = document.getElementById("upgradeClosed"), lead = document.getElementById("upgradeLead");
+const head = document.getElementById("upgradeHeadline"), priceEl = document.getElementById("upgradePrice");
 if(!cta) return;
 const full = window.getTier() === "full";
 const price = window._billingPrice || "";
 if(full){
+if(head) head.textContent = "已解鎖";
 cta.textContent = "已解鎖 · 睇人格深入分析";
 cta.onclick = function(){ openDeep(); };
 if(note) note.textContent = "你已經解鎖完整版，多謝支持。日後新增嘅章節都會自動包括。";
 if(closed) closed.textContent = "相處對白同三個場面已經解鎖。";
 if(lead) lead.textContent = "第 1–9 章同完整相處對白都可以睇。";
+if(priceEl){ priceEl.textContent = ""; priceEl.hidden = true; }
 } else if(price){
-// 價錢只可以來自 Play（getDetails）。網頁冇 API 就唔會行到呢條。
-cta.textContent = "解鎖相處對白 · " + price;
+if(head) head.textContent = "立即解鎖";
+cta.textContent = "立即解鎖";
 cta.onclick = function(){ window.buyFull(); };
 if(note) note.textContent = "一次過解鎖，換機可以還原。";
 if(closed) closed.textContent = "相處對白同三個場面可以一次過解鎖。";
-if(lead) lead.textContent = "第 1 章同配對開頭可以免費睇。完整對白可以一次過解鎖。";
+if(lead) lead.textContent = "一次過解鎖相處對白、三個港式場面，同 16 型 × 9 章。";
+if(priceEl){ priceEl.textContent = price; priceEl.hidden = false; }
 } else {
+if(head) head.textContent = "完整版有咩";
 cta.textContent = "看完整分析";
 cta.onclick = function(){ openDeep(); };
 if(note) note.textContent = "第 1 章免費。其餘章節（第 2–9 章）而家未開放，亦冇收費。";
 if(closed) closed.textContent = "第 2–9 章而家未開放，亦冇收費。";
 if(lead) lead.textContent = "第 1 章可以免費睇。其餘章節（第 2–9 章）而家未開放，亦冇收費。";
+if(priceEl){ priceEl.textContent = ""; priceEl.hidden = true; }
 }
 };
 window.openUpgrade = function(){

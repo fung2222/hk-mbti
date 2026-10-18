@@ -84,6 +84,7 @@ setTimeout(async ()=>{
   chk('★ .deep-tag 有黑暗模式覆蓋', /html\.dk \.deep-tag\{/.test(src) && /html\.dk \.deep-tag\.is-free\{/.test(src));
   chk('★ 升級頁有提「第 1 章免費」', /第 1 章免費/.test($('#upgrade').textContent));
   chk('★ 三格賣點覆蓋：對白／場面／9 章', /你同邊種人點相處/.test($('#upgrade').textContent) && /三個場面|返工、屋企、拍拖/.test($('#upgrade').textContent) && /9 章深入分析/.test($('#upgrade').textContent));
+  chk('★ 黑夜版三格標題唔會被淺色規則蓋暗', /html\.dk #upgrade \.up3-t\{color:#F2F5F9\}/.test(src));
 
   // ---------- 上架前 soft pitch（2026-10-13）：唔再示範解鎖 ----------
   w.localStorage.setItem('hkmbti_tier','free'); w.renderTier();
@@ -358,7 +359,7 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
     w.getDigitalGoodsService = async ()=>svc;
     await w.restorePlayPurchases();
     w.openUpgrade();
-    chk('★ 未購買：CTA 顯示 Play 回傳價錢（9.99），唔係寫死', /9\.99/.test($('#upgradeCta').textContent) && /解鎖相處對白/.test($('#upgradeCta').textContent), $('#upgradeCta').textContent);
+    chk('★ 未購買：掣叫立即解鎖，價錢喺掣上面、嚟自 Play（9.99），唔寫死', $('#upgradeCta').textContent.trim()==='立即解鎖' && /9\.99/.test(($('#upgradePrice')||{}).textContent||'') && !/HK\$18/.test($('#upgradeCta').textContent), ($('#upgradeCta').textContent||'') + ' | ' + (($('#upgradePrice')||{}).textContent||''));
     chk('★ 未購買：購買卡唔再話未開放／冇收費', !/未開放/.test($('#upgradeBuy').textContent) && !/冇收費/.test($('#upgradeBuy').textContent), $('#upgradeBuy').textContent.replace(/\s+/g,' ').slice(0,90));
 
     w.PaymentRequest = function(methods){
