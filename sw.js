@@ -1,5 +1,6 @@
 // 2026-10-18：收銀機診斷版；sw.js 有改動 → activate 會清 cache 重抓（CACHE 名必須等於 VERSION）
 // 2026-10-18b：開 app 後補問價錢（重新整理唔會冇價錢）
+// 2026-10-18c：移除臨時診斷行
 const CACHE = "hk-mbti-v2.0.0";
 const ASSETS = [
   "/hk-mbti/",

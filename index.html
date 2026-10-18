@@ -1883,7 +1883,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <p class="text-sm leading-relaxed mt-3">完整版加一個新項目：<b>人格深入分析</b>。16 種人格，每一種有 <b>9 章</b> —— 由核心動機、盲點、壓力反應，講到職場、愛情、友情，以及「唔好同佢講嘅 3 句」。</p>
   <p class="text-sm leading-relaxed mt-3">每一種人格嘅<b>第 1 章免費</b>，你可以先睇咗先決定。</p>
   <p class="text-sm leading-relaxed mt-3" id="upgradeClosed">第 2–9 章而家未開放，亦冇收費。</p>
-  <p class="text-xs mt-2" id="billingDebug" style="color:#8a94a6;word-break:break-all"></p>
  </div>
 
  <div class="card p-5 mb-4">
@@ -6160,21 +6159,6 @@ try{ closeHomeMenu(); }catch(e){}
 if(window.getTier() === "full"){ window.openDeep(); return; }
 window.renderUpgradeState();
 show("upgrade");
-// 診斷：連撳標題 5 次顯示收銀機回傳（唔影響外觀）
-try{
-  var _t = document.getElementById("upgradeTitle");
-  if(_t && !_t._bdBound){
-    _t._bdBound = true; _t._bdN = 0;
-    _t.addEventListener("click", function(){
-      _t._bdN = (_t._bdN || 0) + 1;
-      if(_t._bdN >= 5){
-        var el = document.getElementById("billingDebug");
-        if(el){ el.classList.toggle("hidden"); }
-        _t._bdN = 0;
-      }
-    });
-  }
-}catch(e){}
 // 唔好喺開 app 時叫收銀機：14 一開就叫，會即刻閃退。去升級頁先問。
 try{ window.restorePlayPurchases(); }catch(e){}
 };
@@ -6201,7 +6185,7 @@ try{ window.renderUpgradeState(); }catch(e){}
 };
 window.restorePlayPurchases = async function(){
 const dbg = [];
-var bd = function(s){ try{ dbg.push(s); var el = document.getElementById("billingDebug"); if(el) el.textContent = dbg.join(" | "); }catch(e){} };
+var bd = function(s){ try{ dbg.push(s); }catch(e){} };
 var errStr = function(e){ return (e && e.name ? e.name : "x") + (e && e.message ? ":" + String(e.message).slice(0,90) : ""); };
 bd("api=" + (window.getDigitalGoodsService ? "yes" : "no"));
 const service = await window._playBilling();

@@ -314,7 +314,7 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
   chk('★ 源碼冇寫死 HK$18（價錢只可以來自 Play）', !/HK\$18/.test(src));
   const hasBilling = typeof w.restorePlayPurchases === 'function' && typeof w.buyFull === 'function';
   chk('★ restorePlayPurchases / buyFull 存在', hasBilling);
-  chk('★ 收銀機診斷行顯示在升級頁（暫時，修好即移除）', (function(){ const el=$('#billingDebug'); return !!el && !el.classList.contains('hidden'); })());
+  chk('★ 收銀機診斷唔會顯示喺畫面（只留內部記錄）', !/id="billingDebug"/.test(src) && /var bd = function\(s\)\{ try\{ dbg\.push\(s\); \}/.test(src));
   chk('★ 收銀機診斷會記錄 api／svc／det 狀態', /bd\("api=" \+/.test(src) && /bd\("svc=" \+/.test(src) && /bd\("det" \+ attempt \+ "="/.test(src) && /bd\("deterr" \+ attempt \+ "="/.test(src));
   chk('★ 開 app 後延遲 1200ms 補問價錢（唔阻塞首屏、有 try/catch）', (function(){
     const boot = /setTimeout\(function\(\)\{ try\{ window\.renderTier\(\); \}catch\(e\)\{\} \}, 0\);/.test(src);
