@@ -63,7 +63,7 @@ setTimeout(async ()=>{
   chk('免費用戶撳等級掣 → 去 #upgrade', vis('upgrade') && !vis('home'), 'upgrade='+vis('upgrade'));
   chk('升級頁係 soft pitch：冇價錢、冇假付款（2026-10-13 上架前）', !/HK\$18/.test($('#upgrade').textContent) && !/示範版本/.test($('#upgrade').textContent) && !/經 Google Play/.test($('#upgrade').textContent), $('#upgradeBuy').textContent.replace(/\s+/g,' ').slice(0,80));
   chk('升級頁 CTA 文字＝看完整分析', $('#upgradeCta').textContent.trim()==='看完整分析', $('#upgradeCta').textContent);
-  chk('升級頁有免費／完整對比表', !!$('#upgrade table.up-cmp'));
+  chk('升級頁有三格賣點（唔再用對比表）', !$('#upgrade table.up-cmp') && $('#upgrade').querySelectorAll('.up3-item').length===3, String($('#upgrade').querySelectorAll('.up3-item').length));
   // ---------- 目錄全開放 + 第 1 章免費（Roy 2026-10-02）----------
   const _s=(ms)=>new Promise(r=>setTimeout(r,ms));
   w.localStorage.setItem('hkmbti_tier','free'); w.renderTier();
@@ -83,7 +83,7 @@ setTimeout(async ()=>{
   chk('★ 把關喺 openDeepChapter（唔係入口把關）', /if\(i > 0 && window\.getTier\(\) !== "full"\)\{ window\.openUpgrade\(\); return; \}/.test(src));
   chk('★ .deep-tag 有黑暗模式覆蓋', /html\.dk \.deep-tag\{/.test(src) && /html\.dk \.deep-tag\.is-free\{/.test(src));
   chk('★ 升級頁有提「第 1 章免費」', /第 1 章免費/.test($('#upgrade').textContent));
-  chk('★ 對比表：免費欄寫住「第 1 章」', /<td class="yes">第 1 章<\/td>/.test(src));
+  chk('★ 三格賣點覆蓋：對白／場面／9 章', /你同邊種人點相處/.test($('#upgrade').textContent) && /三個場面|返工、屋企、拍拖/.test($('#upgrade').textContent) && /9 章深入分析/.test($('#upgrade').textContent));
 
   // ---------- 上架前 soft pitch（2026-10-13）：唔再示範解鎖 ----------
   w.localStorage.setItem('hkmbti_tier','free'); w.renderTier();
