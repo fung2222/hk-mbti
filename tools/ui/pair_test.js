@@ -82,7 +82,7 @@ chk("★ 還原之後同一對搵得返內容", w.pairKey(_ab[0],_ab[1])===_vict
 // 結果頁入口掣
 w.localStorage.clear();
 w.renderResult({mbti:"INFP-T", pct:{EI:[40,60], SN:[35,65], TF:[70,30], JP:[80,20], TA:[62,38]}, closeAxes:[], score:{}, version:"life", totalQ:60});
-chk("★ 結果頁有 16 格人格，撳一格開配對", d.querySelectorAll("#pairPick .hub-type-card").length===16 && /openPairFromGrid\(/.test((d.querySelector("#pairPick .hub-type-card")||{}).getAttribute&&d.querySelector("#pairPick .hub-type-card").getAttribute("onclick")||""));
+chk("★ 結果頁有 16 格色框，撳一格開配對", d.querySelectorAll("#pairPick .pair-pill").length===16 && /openPairFromGrid\(/.test((d.querySelector("#pairPick .pair-pill")||{}).getAttribute&&d.querySelector("#pairPick .pair-pill").getAttribute("onclick")||""));
 
 // 導覽：snap → restore
 w.openPair("INFP","INFJ");
@@ -174,7 +174,7 @@ chk("★ 未開收費：三個場面出齊，唔好講都睇到",
    /返工/.test(d.getElementById("lineBox").innerHTML) && /唔好講/.test(d.getElementById("lineBox").innerHTML) && /拍拖/.test(d.getElementById("lineBox").innerHTML));
 const ln = d.querySelector("#lineBox .ln-ul li");
 chk("★ 完整內容對白字級跟個人報告（16px）", !!ln && w.getComputedStyle(ln).fontSize === "16px", ln ? w.getComputedStyle(ln).fontSize : "冇 .ln-ul");
-chk("★ 朋友配對係 16 格，唔再係下拉", d.querySelectorAll("#pairPick .hub-type-card").length===16, d.querySelectorAll("#pairPick .hub-type-card").length);
+chk("★ 朋友配對係 16 格色框，唔再係百科卡", d.querySelectorAll("#pairPick .pair-pill").length===16 && d.querySelectorAll("#pairPick .hub-type-card").length===0, d.querySelectorAll("#pairPick .pair-pill").length);
 w._billingPrice = "HK$9.99";
 w.renderLines("INTJ");
 chk("★ 已開收費未買：場面只露一句，唔好講收起",

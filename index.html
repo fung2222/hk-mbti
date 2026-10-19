@@ -179,8 +179,11 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 #personalReport .pr-pct-sec{margin-top:18px}
 #personalReport .pr-pct-card{margin:0 0 10px;padding:14px 16px}
 #personalReport .pr-method{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;margin-top:16px;background-color:#D4A95F;color:#1E2A3B;border:0;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
-#pairPick .pair-me{background:var(--soft);border-radius:.5rem;padding:8px 10px;min-height:42px;display:flex;flex-direction:column;justify-content:center}
-#pairPick select{width:100%;min-height:42px}
+#pairPick .pair-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+#pairPick .pair-pill{background:#fff;border-radius:10px;padding:10px 6px;text-align:center;border:2px solid transparent;line-height:1.3;cursor:pointer;font-family:inherit;-webkit-appearance:none;appearance:none;color:var(--ink)}
+#pairPick .pair-pill svg{width:22px;height:22px;display:block;margin:0 auto 4px}
+#pairPick .pair-pill .code{font-weight:900;font-size:14px;display:block}
+#pairPick .pair-pill .cn{display:block;font-size:10px;opacity:.7;margin-top:2px}
 #pairGo{display:flex;align-items:center;justify-content:center;gap:6px}
 /* 配對深入（B 模組，2026-10-04）*/
 /* 2026-10-06 Roy：原本 84x26px、11px、淡米底 → 太細太淡（喺 350px 行內只佔 24%）→ 改全闊金色實心 */
@@ -997,6 +1000,7 @@ html.dk #personalReport .pr-method{color:#12161C;background-color:#D4A95F}
     grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);column-gap:48px;align-items:center}
   html.dt #hk-stats .hk-stats-sub{font-size:14px;margin-bottom:18px}
   html.dt #hk-stats .hk-stats-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  html.dt #pairPick .pair-grid{grid-template-columns:repeat(8,1fr)}
   html.dt #hk-stats .hk-stats-foot{margin-top:14px}
   html.dt .scenes-head{max-width:none;width:var(--dt-w);margin:0 auto 20px}
   html.dt #app .scenes-head > .text-sm{font-size:16px;font-weight:400;color:#6b6560;margin:0}
@@ -1238,6 +1242,7 @@ html.dk{color-scheme:dark}
 html.dk .result-more-btn{background:rgba(240,115,111,.15);border-color:rgba(240,115,111,.5)}
 html.dk .share-btn{background:var(--soft);border-color:rgba(236,231,222,.22);color:#D8C69E}
 html.dk .share-btn:hover{background:var(--dk-hover)}
+html.dk #pairPick .pair-pill{background:var(--dk-card)}
 html.dk{
   --paper:#12161C;--soft:#1B2129;--ink:#ECE7DE;--gold:#D9B26A;--accent:#F0736F;
   --dk-card:#181E26;--dk-hover:#232B35;--dk-on:#2A323C;
@@ -7090,9 +7095,15 @@ window.renderPairPick = function(myType){
   if(!box) return;
   window._pairMe = myType;
   const order = window.TYPE_ORDER || [];
-  box.innerHTML = '<div class="hub-type-grid">' + order.map(function(t){
-    const html = window.hubTypeCardHtml ? window.hubTypeCardHtml(t, "openPairFromGrid('"+t+"')") : "";
-    return html.replace('onclick="pickTypeTile(event)"', 'onclick="openPairFromGrid(\''+t+'\')"');
+  box.innerHTML = '<div class="pair-grid">' + order.map(function(t){
+    const T = (window.TYPES || {})[t] || {};
+    const P = window.getPalette ? window.getPalette(t) : {};
+    const color = (P && P.c1) || "#8B6F3D";
+    const ico = window.getTypeIcon ? window.getTypeIcon(t) : "";
+    return '<button type="button" class="pair-pill" style="border-color:' + color + '" onclick="openPairFromGrid(\'' + t + '\')">'
+      + '<span class="pair-ico" style="color:' + color + '">' + ico + '</span>'
+      + '<span class="code" style="color:' + color + '">' + t + '</span>'
+      + '<span class="cn">' + (T.cn || "") + '</span></button>';
   }).join("") + '</div>';
 };
 window.openPairFromGrid = function(other){

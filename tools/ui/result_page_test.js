@@ -44,9 +44,9 @@ chk("★ ④ icon 真係有圖形（唔係空 svg）", [...icos].every(s=>s.quer
 chk("★ ④ 冇殘留裸「＋／－」標記", pd.querySelectorAll(".pros-mark").length===0 && !/class="pros-item"><span class="pros-mark"/.test(pd.innerHTML));
 chk("★ ④ 強項欄用 is-str、弱項欄用 is-wk（icon 先有正確顏色）",
     pd.querySelectorAll(".pros-box.is-str").length===1 && pd.querySelectorAll(".pros-box.is-wk").length===1);
-const cards=[...d.querySelectorAll("#pairPick .hub-type-card")];
+const cards=[...d.querySelectorAll("#pairPick .pair-pill")];
 chk("★ ⑤ 朋友配對 16 格都有型別 icon", cards.length===16 && cards.every(c=>c.querySelector("svg")), "格數="+cards.length);
-chk("★ ⑤ 16 格有 4 字母", cards.every(c=>/[EI][NS][TF][JP]/.test(c.textContent)));
+chk("★ ⑤ 16 格有 4 字母同色框", cards.every(c=>/[EI][NS][TF][JP]/.test(c.textContent) && c.style.borderColor));
 chk("★ ⑤ 結果頁配對區冇假百分比", !/% 夾/.test((d.querySelector('#resultFolder [data-rf="pair"]')||{}).textContent||""));
 
 // ───────── 三、icon 分配（真讀 data.js）─────────

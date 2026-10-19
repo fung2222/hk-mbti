@@ -213,11 +213,14 @@ chk("★ 「睇你哋點相處」掣唔再係舊嘅細淡樣式（11px / #7C6B45
 w.localStorage.clear();
 w.renderResult(JSON.parse(JSON.stringify(R)));
 chk("★ 16 格撳入去：未買去完整版，買咗先開配對", /openPairFromGrid/.test(RAW) && /offerLocked\(\)/.test(RAW.slice(RAW.indexOf("window.openPairFromGrid"), RAW.indexOf("window.openPairFromGrid")+220)));
-chk("★ 朋友配對係 16 格，冇假百分比", (function(){
-  const cards=d.querySelectorAll("#pairPick .hub-type-card");
-  const panel=d.querySelector('#resultFolder [data-rf="pair"]');
-  return cards.length===16 && panel && !/% 夾/.test(panel.textContent) && /openPairFromGrid\(/.test(cards[0].getAttribute("onclick")||"");
-})(), String(d.querySelectorAll("#pairPick .hub-type-card").length));
+chk("★ 朋友配對格跟記錄頁色框，有 icon，唔係百科滿版卡", (function(){
+  const pills=d.querySelectorAll("#pairPick .pair-pill");
+  if(pills.length!==16) return false;
+  const cs=w.getComputedStyle(pills[0]);
+  const border=pills[0].style.borderColor || cs.borderTopColor;
+  return !!pills[0].querySelector("svg") && border && border!=="transparent" && cs.aspectRatio!=="9 / 16";
+})());
+chk("★ 朋友配對區冇假百分比", !/% 夾/.test((d.querySelector('#resultFolder [data-rf="pair"]')||{}).textContent||""));
 
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);
