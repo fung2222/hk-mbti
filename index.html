@@ -197,10 +197,10 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 .pair-me-t{font-size:16px;font-weight:900;color:#1E2A3B;line-height:1.3}
 .pair-sel{flex:1 1 58%;min-width:0;height:46px;border-radius:10px;border:1px solid rgba(30,42,59,.16);background:#fff;color:#1E2A3B;font-size:15px;font-family:inherit;padding:0 10px}
 #resultFolder .rf-more-wrap{display:flex;justify-content:center;align-items:center;margin:28px 0 8px}
-#resultFolder .rf-more-inline{margin:18px 0 4px}
-#resultFolder .rf-type{display:inline-flex;align-items:center;gap:7px;vertical-align:-4px;font-size:1.62em;line-height:1}
-#resultFolder .rf-type svg{width:1.02em;height:1.02em;display:block}
-#resultFolder .rf-more-sm{font-size:14px;font-weight:700;min-height:36px;padding:8px 14px}
+#resultFolder .rf-more-inline{margin:18px 0 4px;justify-content:flex-start}
+#resultFolder .rf-type{font-weight:900;letter-spacing:-.01em}
+#resultFolder .rf-more-text{background:none;border:0;padding:0;border-radius:0;font-size:15px;font-weight:700;color:var(--accent)}
+#resultFolder .rf-more-text:hover{background:none;text-decoration:underline}
 #resultFolder .rf-arrow{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;margin-left:5px;flex-shrink:0}
 #resultFolder .rf-more-lg{font-size:16px;min-height:48px;padding:12px 22px}
 .rf-star{width:16px;height:16px;fill:currentColor;margin-right:6px;flex-shrink:0}
@@ -5149,7 +5149,7 @@ let detailHtml = `
  <div class="flex gap-2 flex-wrap mt-3">
  ${t.tags.map(tag => `<span class="scenario-badge bg-soft text-ink">${tag}</span>`).join("")}
  </div>
- <div class="rf-more-wrap rf-more-inline"><button type="button" onclick="goTypeFromResult()" class="result-more-btn rf-more-sm">睇完整分析<svg class="rf-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"/></svg></button></div>
+ <div class="rf-more-wrap rf-more-inline"><button type="button" onclick="goTypeFromResult()" class="result-more-btn rf-more-text">睇完整分析<svg class="rf-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"/></svg></button></div>
  <div class="mt-4 pt-4 border-t border-gray-100">
  <div class="sub-label">性格刻度</div>
  ${scoreBars}
@@ -5163,8 +5163,7 @@ const type = r.mbti.substring(0,4);
 const _selfTitle = document.getElementById("resultSelfTitle");
 if(_selfTitle){
   const _P = (window.getPalette ? window.getPalette(type) : null) || {c1:"#8B6F3D"};
-  _selfTitle.innerHTML = '你嘅性格係 <span class="rf-type" style="color:' + _P.c1 + '">'
-    + (window.getTypeIcon ? window.getTypeIcon(type) : "") + '<b>' + type + '</b></span>';
+  _selfTitle.innerHTML = '你嘅性格係 <span class="rf-type" style="color:' + _P.c1 + '">' + type + '</span>';
 }
  // 場景配對：按字母重疊計分（唔再要求全中，否則 ENTJ 等會零著燈）
 const letterHit = (L) => type.indexOf(L) >= 0;

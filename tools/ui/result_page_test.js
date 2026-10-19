@@ -127,10 +127,10 @@ const _sl = new Function("window","document", (SRC.match(/window\.shareDateLabel
 // Roy 2026-10-02：要年月日，唔止年月
 chk("★ ② shareDateLabel 出 YYYY.MM.DD（連日子）", _sl(Date.UTC(2026,9,2)) === "2026.10.02", String(_sl(Date.UTC(2026,9,2))));
 chk("★ ② shareDateLabel 補零（個位數月／日）", _sl(Date.UTC(2026,0,5)) === "2026.01.05", String(_sl(Date.UTC(2026,0,5))));
-chk("★ ③ 「睇完整分析」係實體按鈕 .result-more-btn",
-    /class="result-more-btn rf-more-sm"[\s\S]{0,300}睇完整分析[\s\S]{0,200}rf-arrow/.test(SRC));
-chk("★ ③ 唔再係「純文字 link」（舊 background:none 嗰串已冇）",
-    !/background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">看完整分析/.test(SRC));
+chk("★ ③ 「睇完整分析」係純文字 link（取消外框）",
+    /class="result-more-btn rf-more-text"[\s\S]{0,200}睇完整分析/.test(SRC)
+    && /#resultFolder \.rf-more-text\{[^}]*background:none/.test(SRC));
+chk("★ ③ 舊紅色膠囊 class 已經冇用（rf-more-sm 已清）", !/rf-more-sm/.test(SRC));
 chk("★ ③ 按鈕保留 accent 紅色識別", /\.result-more-btn\{[^}]*color:var\(--accent\)/.test(SRC));
 chk("★ ③ dark 規則喺 #dark-layer",
     /html\.dk \.result-more-btn\{/.test(SRC.slice(SRC.indexOf('id="dark-layer"'), SRC.indexOf('id="dark-layer"')+22000)));

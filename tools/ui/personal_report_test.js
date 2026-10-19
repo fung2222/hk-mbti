@@ -45,19 +45,22 @@ chk("★ 01-05 面板內冇細過 13px 嘅字", (function(){
   return bad.every(v=>v>=13);
 })(), ["#personalityDetail .scenario-badge","#lineBox .ln-k","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
   .map(sel=>{const el=d.querySelector(sel); return el?w.getComputedStyle(el).fontSize:"冇";}).join("/"));
-chk("★ 01 型號同 icon 放大，掣係細箭嘴", (function(){
+chk("★ 01 標題冇 icon、型號同標題一樣大；掣去外框左對齊", (function(){
   const t=d.getElementById("resultSelfTitle");
   const sp=t && t.querySelector(".rf-type");
   const btn=d.querySelector('#personalityDetail .result-more-btn');
-  const outside=d.querySelector('#resultFolder [data-rf="self"] > .rf-more-wrap');
-  if(!sp || !btn || outside) return false;
-  const fs=parseFloat(w.getComputedStyle(sp).fontSize);
-  const arrow=btn.querySelector("svg");
-  return fs>=28 && !btn.querySelector(".rf-star") && !!arrow
-    && /睇完整分析/.test(btn.textContent) && !/看完整分析/.test(btn.textContent)
+  if(!sp || !btn) return false;
+  const titleFs=parseFloat(w.getComputedStyle(t).fontSize);
+  const spFs=parseFloat(w.getComputedStyle(sp).fontSize);
+  const cs=w.getComputedStyle(btn);
+  const wrap=btn.closest(".rf-more-wrap");
+  const arrow=btn.querySelector("svg.rf-arrow");
+  return !t.querySelector("svg") && spFs===titleFs
     && /你嘅性格係/.test(t.textContent) && /[EI][NS][TF][JP]/.test(t.textContent)
-    && /goTypeFromResult/.test(btn.getAttribute("onclick")||"")
-    && btn.compareDocumentPosition(d.getElementById("personalityDetail").querySelector(".border-t")) & 4;
+    && (cs.backgroundColor==="rgba(0, 0, 0, 0)" || cs.backgroundColor==="transparent")
+    && parseFloat(cs.borderTopWidth)===0 && !!arrow
+    && /睇完整分析/.test(btn.textContent)
+    && !!wrap && w.getComputedStyle(wrap).justifyContent==="flex-start";
 })());
 chk("★ 01 副標題喺頁頂，唔喺卡入面", (function(){
   const sub=d.getElementById("resultFolderSub");
