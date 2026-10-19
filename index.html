@@ -2731,12 +2731,9 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    <div id="personalReport" class="mb-4"></div>
   </div>
   <div class="rf-panel hidden" data-rf="pair">
-   <div class="card p-5 mb-4">
-    <div class="hub-sec-title mb-3">與你的朋友配對</div>
-    <p class="text-xs text-gray-600 mb-3">左邊係你，右邊揀另一種人格</p>
-    <div id="pairPick"></div>
-   </div>
-   <div id="compatibility" class="space-y-2 text-sm"></div>
+   <div class="hub-sec-title mb-3">與你的朋友配對</div>
+   <p class="text-xs text-gray-600 mb-3">揀一種人格，睇你同佢點相處</p>
+   <div id="pairPick"></div>
   </div>
   <div class="rf-panel hidden" data-rf="scene">
    <h3 class="font-bold mb-3">你喺邊種港人？</h3>
@@ -5153,25 +5150,7 @@ scenHtml += `
  });
  $("scenarioMatch").innerHTML = scenHtml;
 
-let compatHtml = "";
-t.compat.forEach((c, i) => {
-const ct = window.TYPES[c];
-if(ct) compatHtml += `
- <div class="py-2.5" style="${i ? "border-top:1px solid rgba(30,42,59,.06)" : ""}">
- <div class="flex items-center gap-3">
- <div class="flex-1">
- <div class="font-bold text-sm flex items-center gap-1.5"><span class="cmp-ico" style="color:${(window.PALETTE && window.PALETTE[c] ? window.PALETTE[c].c1 : "currentColor")}">${window.getTypeIcon ? window.getTypeIcon(c) : ""}</span><span>${c} · ${ct.cn}</span></div>
- <div class="text-xs text-gray-500">${ct.slogan}</div>
- </div>
- <div class="text-right">
- <div class="text-xs text-accent font-bold">${window.typeCompatPct(type, c)}% 夾</div>
- </div>
- </div>
- </div>
- `;
- });
- $("compatibility").innerHTML = compatHtml;
-try{ window.renderLines(type); window.renderPairPick(type); }catch(e){}
+ try{ window.renderLines(type); window.renderPairPick(type); }catch(e){}
 try{ window.renderResultFolders(); }catch(e){}
 };
 
@@ -7110,23 +7089,19 @@ window.renderPairPick = function(myType){
   const box = document.getElementById("pairPick");
   if(!box) return;
   window._pairMe = myType;
-  const T = (window.TYPES || {})[myType] || {};
   const order = window.TYPE_ORDER || [];
-  const prefer = (T.compat && T.compat[0]) || order.filter(function(t){ return t !== myType; })[0] || order[0] || "";
-  const opts = order.map(function(t){
-    const cn = ((window.TYPES || {})[t] || {}).cn || "";
-    return '<option value="' + t + '"' + (t === prefer ? ' selected' : '') + '>' + t + (cn ? " · " + cn : "") + '</option>';
-  }).join("");
-  const star = '<svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>';
-  box.innerHTML = '<div class="grid grid-cols-2 gap-2 mb-3"><div class="pair-me"><div class="pair-me-k">你是</div><div class="pair-me-t">' + myType + (T.cn ? " · " + T.cn : "") + '</div></div>'
-    + '<div class="pair-me"><div class="pair-me-k">他/她是</div><select id="pairSel" class="bg-soft p-2 rounded-lg text-sm font-bold" aria-label="揀另一種人格">' + opts + '</select></div></div>'
-    + '<button type="button" class="btn-gold w-full py-2.5 rounded-lg text-sm" id="pairGo" onclick="openPairFromPick()">' + star + '睇你哋點相處</button>';
+  box.innerHTML = '<div class="hub-type-grid">' + order.map(function(t){
+    const html = window.hubTypeCardHtml ? window.hubTypeCardHtml(t, "openPairFromGrid('"+t+"')") : "";
+    return html.replace('onclick="pickTypeTile(event)"', 'onclick="openPairFromGrid(\''+t+'\')"');
+  }).join("") + '</div>';
+};
+window.openPairFromGrid = function(other){
+  if(window.offerLocked && window.offerLocked()){ window.openUpgrade(); return; }
+  if(window._pairMe && other) window.openPair(window._pairMe, other);
 };
 window.openPairFromPick = function(){
-  if(window.offerLocked && window.offerLocked()){ window.openUpgrade(); return; }
   const sel = document.getElementById("pairSel");
-  const other = sel ? sel.value : "";
-  if(window._pairMe && other) window.openPair(window._pairMe, other);
+  if(sel) window.openPairFromGrid(sel.value);
 };
 
 // ====================== 配對深入（B 模組，Roy 2026-10-04 批准）======================

@@ -22,7 +22,7 @@ setTimeout(()=>{
   for(const t of w.TYPE_ORDER||[]) { const dd=(w.PREMIUM||{})[t]; if(!dd||!dd.chapters) continue; dd.chapters.forEach(c=>{ n++; if(String(w.formatChapterHtml(c.b)).includes("&lt;br&gt;")) leak++; }); }
   chk('P1-1 全 16 型 × 9 章（'+n+' 章）零字面 <br>', n>=144 && leak===0, 'n='+n+' leak='+leak);
   // P1-2 結果頁 % 穩定
-  chk('P1-2 % 夾 用 typeCompatPct（冇 Math.random）', /typeCompatPct\(type, c\)/.test(src) && !/% 夾<\/div>`/.test(src.replace(/\$\{[^}]*\}/g,'X')) ? /typeCompatPct\(type, c\)/.test(src) : false);
+  chk('P1-2 結果頁配對唔再出假 % 夾', !/typeCompatPct\(type, c\)/.test(src) && /openPairFromGrid/.test(src));
   chk('P1-2 同一個配對兩次計同一個數', w.typeCompatPct("INTJ","ENFP")===w.typeCompatPct("INTJ","ENFP"));
   const pct=w.typeCompatPct("INTJ","ENFP"); chk('P1-2 範圍 82–94（同人格頁一致）', pct>=82&&pct<=94, pct);
   // P1-3 雙擊唔可以跳題

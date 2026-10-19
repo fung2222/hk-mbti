@@ -13,7 +13,7 @@ function chk(n,c,x){ total++; if(c)ok++; console.log((c?"✓":"✗")+" "+n+(c?""
 // ───────── 一、靜態 ─────────
 chk("★ pair-data.js 有引入", /<script src="pair-data\.js"><\/script>/.test(RAW));
 chk("★ #pair 畫面存在＋有返回掣（goBack）", /<section id="pair"/.test(RAW) && /id="pairBody"/.test(RAW));
-chk("★ 配對入口改做下拉，未買先去完整版", /openPairFromPick/.test(RAW) && /offerLocked\(\)/.test(RAW.slice(RAW.indexOf("window.openPairFromPick"), RAW.indexOf("window.openPairFromPick")+280)));
+chk("★ 配對入口改做 16 格，未買先去完整版", /openPairFromGrid/.test(RAW) && /offerLocked\(\)/.test(RAW.slice(RAW.indexOf("window.openPairFromGrid"), RAW.indexOf("window.openPairFromGrid")+220)));
 chk("★ 導覽堆疊有記 pairA／pairB（返回會還原同一篇）", RAW.includes("pairA: window._pairA || null") && RAW.includes('if(id === "pair" && prev && prev.pairA && prev.pairB)'));
 chk("★ 內容冇 emoji", !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/u.test(PAIRS_JS));
 chk("★ 內容唔提「買斷／付費／訂閱」", !/買斷|付費|訂閱/.test(PAIRS_JS));
@@ -82,7 +82,7 @@ chk("★ 還原之後同一對搵得返內容", w.pairKey(_ab[0],_ab[1])===_vict
 // 結果頁入口掣
 w.localStorage.clear();
 w.renderResult({mbti:"INFP-T", pct:{EI:[40,60], SN:[35,65], TF:[70,30], JP:[80,20], TA:[62,38]}, closeAxes:[], score:{}, version:"life", totalQ:60});
-chk("★ 結果頁有「睇你哋點相處」掣同下拉", /睇你哋點相處/.test(d.body.innerHTML) && !!d.querySelector("#pairSel") && /openPairFromPick\(/.test(d.getElementById("pairGo").getAttribute("onclick")||""));
+chk("★ 結果頁有 16 格人格，撳一格開配對", d.querySelectorAll("#pairPick .hub-type-card").length===16 && /openPairFromGrid\(/.test((d.querySelector("#pairPick .hub-type-card")||{}).getAttribute&&d.querySelector("#pairPick .hub-type-card").getAttribute("onclick")||""));
 
 // 導覽：snap → restore
 w.openPair("INFP","INFJ");
@@ -174,7 +174,7 @@ chk("★ 未開收費：三個場面出齊，唔好講都睇到",
    /返工/.test(d.getElementById("lineBox").innerHTML) && /唔好講/.test(d.getElementById("lineBox").innerHTML) && /拍拖/.test(d.getElementById("lineBox").innerHTML));
 const ln = d.querySelector("#lineBox .ln-ul li");
 chk("★ 完整內容對白字級跟個人報告（16px）", !!ln && w.getComputedStyle(ln).fontSize === "16px", ln ? w.getComputedStyle(ln).fontSize : "冇 .ln-ul");
-chk("★ 有揀佢類型嘅下拉（16 個）", d.querySelectorAll("#pairSel option").length===16, d.querySelectorAll("#pairSel option").length);
+chk("★ 朋友配對係 16 格，唔再係下拉", d.querySelectorAll("#pairPick .hub-type-card").length===16, d.querySelectorAll("#pairPick .hub-type-card").length);
 w._billingPrice = "HK$9.99";
 w.renderLines("INTJ");
 chk("★ 已開收費未買：場面只露一句，唔好講收起",

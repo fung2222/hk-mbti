@@ -14,11 +14,11 @@ const rsec = RAW.slice(RAW.indexOf('<section id="result"'), RAW.indexOf('id="dtF
 chk("★ 結果頁有 #personalReport 容器", /id="personalReport"/.test(rsec));
 chk("★ D 卡唔准落喺「與你的朋友配對」區入面（Roy 2026-10-04 實報個 bug）",
 rsec.indexOf('id="personalReport"')>0 && rsec.indexOf('id="personalReport"') < rsec.indexOf('與你的朋友配對</div>')
-&& rsec.indexOf('與你的朋友配對</div>') < rsec.indexOf('id="compatibility"'),
-"pr="+rsec.indexOf('id="personalReport"')+" 配對標題="+rsec.indexOf('與你的朋友配對</div>')+" comp="+rsec.indexOf('id="compatibility"'));
-chk("★ D 卡位置喺 #compatibility **之前**（最先見到「你」嘅數據）",
-    rsec.indexOf('id="personalReport"')>0 && rsec.indexOf('id="personalReport"') < rsec.indexOf('id="compatibility"'),
-    "pr="+rsec.indexOf('id="personalReport"')+" comp="+rsec.indexOf('id="compatibility"'));
+&& rsec.indexOf('與你的朋友配對</div>') < rsec.indexOf('id="pairPick"'),
+"pr="+rsec.indexOf('id="personalReport"')+" 配對標題="+rsec.indexOf('與你的朋友配對</div>')+" pick="+rsec.indexOf('id="pairPick"'));
+chk("★ D 卡位置喺配對格 **之前**（最先見到「你」嘅數據）",
+    rsec.indexOf('id="personalReport"')>0 && rsec.indexOf('id="personalReport"') < rsec.indexOf('id="pairPick"'),
+    "pr="+rsec.indexOf('id="personalReport"')+" pick="+rsec.indexOf('id="pairPick"'));
 chk("★ CSS 有 D 模組樣式（.pr-note／.pr-sim／.pr-axis）", /\.pr-note\{/.test(RAW) && /\.pr-sim\{/.test(RAW) && /\.pr-axis\{/.test(RAW));
 chk("★ 黑夜層只加色（#dark-layer 內有 .pr- 顏色規則，含 #A79E92）",
     /#dark-layer[\s\S]{0,4000}\.pr-note\{color:#A79E92\}/.test(RAW) || /\.pr-sim-d,\.pr-note\{color:#A79E92\}/.test(RAW));
@@ -212,18 +212,12 @@ chk("★ 「睇你哋點相處」掣唔再係舊嘅細淡樣式（11px / #7C6B45
 // 用真 DOM 檢查（regex 會橫跨 closing tags，唔可靠）
 w.localStorage.clear();
 w.renderResult(JSON.parse(JSON.stringify(R)));
-const _go = d.querySelector("#pairGo");
-chk("★ 掣存在且未買會去完整版、買咗先開配對", !!_go && /openPairFromPick\(/.test(_go.getAttribute("onclick")||"") && /offerLocked\(\)/.test(RAW.slice(RAW.indexOf("window.openPairFromPick"), RAW.indexOf("window.openPairFromPick")+400)));
-chk("★ 掣唔再擠喺 .text-right 角落（改咗下拉下面）", !!_go && !_go.closest(".text-right") && !!d.querySelector("#pairSel"));
-chk("★ 左邊顯示自己嘅型，右邊係下拉", !!d.querySelector(".pair-me-t") && !!d.querySelector("#pairSel"));
-chk("★ 左邊寫你是，右邊寫他/她是", /你是/.test((d.querySelector(".pair-me-k")||{}).textContent||"") && /他\/她是/.test(d.getElementById("pairPick").textContent));
-chk("★ 配對工具包成卡，同性格比較同一款", (function(){
-  const pick=d.querySelector("#pairPick");
-  const card=pick && pick.closest(".card");
-  const go=d.getElementById("pairGo");
-  return !!card && !!pick.querySelector(".grid") && /btn-gold/.test((go||{}).className||"") && /hub-sec-title/.test(card.innerHTML);
-})());
-chk("★ 配對列表仍然有型號 / % 夾", /% 夾/.test(d.getElementById("compatibility").textContent));
+chk("★ 16 格撳入去：未買去完整版，買咗先開配對", /openPairFromGrid/.test(RAW) && /offerLocked\(\)/.test(RAW.slice(RAW.indexOf("window.openPairFromGrid"), RAW.indexOf("window.openPairFromGrid")+220)));
+chk("★ 朋友配對係 16 格，冇假百分比", (function(){
+  const cards=d.querySelectorAll("#pairPick .hub-type-card");
+  const panel=d.querySelector('#resultFolder [data-rf="pair"]');
+  return cards.length===16 && panel && !/% 夾/.test(panel.textContent) && /openPairFromGrid\(/.test(cards[0].getAttribute("onclick")||"");
+})(), String(d.querySelectorAll("#pairPick .hub-type-card").length));
 
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);

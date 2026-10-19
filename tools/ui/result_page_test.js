@@ -44,16 +44,10 @@ chk("★ ④ icon 真係有圖形（唔係空 svg）", [...icos].every(s=>s.quer
 chk("★ ④ 冇殘留裸「＋／－」標記", pd.querySelectorAll(".pros-mark").length===0 && !/class="pros-item"><span class="pros-mark"/.test(pd.innerHTML));
 chk("★ ④ 強項欄用 is-str、弱項欄用 is-wk（icon 先有正確顏色）",
     pd.querySelectorAll(".pros-box.is-str").length===1 && pd.querySelectorAll(".pros-box.is-wk").length===1);
-const cmp=d.getElementById("compatibility");
-const rows=[...cmp.querySelectorAll("div.flex-1")];            // 每行配對（唔可以撈百分比 div）
-const icoRows=[...cmp.querySelectorAll(".cmp-ico")];
-chk("★ ⑤ 配對列表每行都有型別 icon（"+rows.length+" 行）",
-    rows.length>0 && rows.length===icoRows.length && rows.every(r=>r.querySelector(".cmp-ico svg")),
-    "行數="+rows.length+" icon 數="+icoRows.length);
-chk("★ ⑤ 型別 code 喺 icon 後面（唔係冇咗 code）",
-    rows.every(r=>/^[EI][NS][TF][JP] · /.test(r.querySelector("div.font-bold span:last-child").textContent)));
-chk("★ ⑤ icon 用返該型色卡主色（inline color）",
-    icoRows.length>0 && icoRows.every(s=>/(^#[0-9A-Fa-f]{6}$)|(^rgb\()/.test(s.style.color||"")), icoRows.map(s=>s.style.color).slice(0,3).join(","));
+const cards=[...d.querySelectorAll("#pairPick .hub-type-card")];
+chk("★ ⑤ 朋友配對 16 格都有型別 icon", cards.length===16 && cards.every(c=>c.querySelector("svg")), "格數="+cards.length);
+chk("★ ⑤ 16 格有 4 字母", cards.every(c=>/[EI][NS][TF][JP]/.test(c.textContent)));
+chk("★ ⑤ 結果頁配對區冇假百分比", !/% 夾/.test((d.querySelector('#resultFolder [data-rf="pair"]')||{}).textContent||""));
 
 // ───────── 三、icon 分配（真讀 data.js）─────────
 const w2={}; (new Function("window", fs.readFileSync(path.join(REPO,"data.js"),"utf8")))(w2);
