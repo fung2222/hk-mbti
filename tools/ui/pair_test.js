@@ -172,6 +172,8 @@ w.renderLines("INTJ");
 w.renderPairPick("INTJ");
 chk("★ 未開收費：三個場面出齊，唔好講都睇到",
    /返工/.test(d.getElementById("lineBox").innerHTML) && /唔好講/.test(d.getElementById("lineBox").innerHTML) && /拍拖/.test(d.getElementById("lineBox").innerHTML));
+const ln = d.querySelector("#lineBox .ln-ul li");
+chk("★ 完整內容對白字級跟個人報告（16px）", !!ln && w.getComputedStyle(ln).fontSize === "16px", ln ? w.getComputedStyle(ln).fontSize : "冇 .ln-ul");
 chk("★ 有揀佢類型嘅下拉（16 個）", d.querySelectorAll("#pairSel option").length===16, d.querySelectorAll("#pairSel option").length);
 w._billingPrice = "HK$9.99";
 w.renderLines("INTJ");

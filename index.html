@@ -183,10 +183,17 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 #resultFolder .rf-more-lg{font-size:16px;min-height:48px;padding:12px 22px}
 .rf-star{width:16px;height:16px;fill:currentColor;margin-right:6px;flex-shrink:0}
 .pair-pick{border:0;background:var(--soft);color:var(--ink);font-size:11px;font-weight:700;padding:6px 8px;border-radius:8px;font-family:inherit}
-.line-scene{margin:0 0 12px}
-.line-ul{margin:0;padding-left:1.1em}
-.line-ul li{font-size:13px;line-height:1.45;margin:2px 0}
-#lineBox .pair-go{margin-top:4px}
+#resultFolder .ln-head{font-size:12px;letter-spacing:.16em;color:#8B6F3D;font-weight:700;margin:0 0 18px}
+#resultFolder .ln-scene{margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid rgba(30,42,59,.10)}
+#resultFolder .ln-scene:last-child{border-bottom:0;margin-bottom:4px;padding-bottom:0}
+#resultFolder .ln-name{font-size:18px;font-weight:900;color:#1E2A3B;margin:0 0 8px}
+#resultFolder .ln-k{font-size:12px;letter-spacing:.14em;color:#8B6F3D;margin:12px 0 4px}
+#resultFolder .ln-k.ln-no{color:#8A7568}
+#resultFolder .ln-ul{margin:0;padding:0;list-style:none}
+#resultFolder .ln-ul li{position:relative;padding-left:16px;font-size:16px;line-height:1.85;color:#3A342C;margin:0 0 2px}
+#resultFolder .ln-ul li:before{content:"";position:absolute;left:2px;top:11px;width:5px;height:5px;border-radius:999px;background:var(--gold)}
+#resultFolder .ln-bad li:before{background:#C4B5A0}
+#result .rf-t .rf-star{display:inline-block;width:14px;height:14px;margin:0 0 2px 6px;vertical-align:-2px;fill:#C4A35A}
 .pair-pairhead{font-size:22px;font-weight:900;color:var(--ink);letter-spacing:.02em}
 .pair-x{color:#A08A5C;font-weight:700}
 .pair-ol,.pair-ul{margin:0;padding-left:1.15rem}
@@ -1230,6 +1237,11 @@ html.dk #result .rf-k,html.dk #result .rf-go{color:#D8C69E}
 html.dk .pair-sel{background:#1B2129;color:#F2F5F9;border-color:rgba(255,255,255,.16)}
 html.dk .pair-me-t{color:#F2F5F9}
 html.dk .pair-me-k{color:#D8C69E}
+html.dk #resultFolder .ln-head,html.dk #resultFolder .ln-k{color:#D8C69E}
+html.dk #resultFolder .ln-name{color:#F2F5F9}
+html.dk #resultFolder .ln-ul li{color:#E7E1D8}
+html.dk #resultFolder .ln-scene{border-bottom-color:rgba(255,255,255,.10)}
+html.dk #result .rf-t .rf-star{fill:#E8C87A}
 html.dk .scenes-bleed,html.dk .result-bleed,html.dk .hub-bleed{background:linear-gradient(180deg,var(--dk-card),var(--paper))}
 html.dk .home-acc{background:var(--dk-card);box-shadow:0 4px 24px rgba(0,0,0,.42)}
 html.dk .hub-mode-switch{background:#20272F}
@@ -2669,7 +2681,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    <span class="rf-go">進入</span>
   </button>
   <button type="button" class="rf-item" id="rfLockRow" onclick="openResultFolder('full')">
-   <span><span class="rf-k">05</span><span class="rf-t">完整內容</span><span class="rf-d">對白、三個場面、9 章</span></span>
+   <span><span class="rf-k">05</span><span class="rf-t">完整內容<svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg></span><span class="rf-d">對白、三個場面、9 章</span></span>
    <span class="rf-go" id="rfLockGo">進入</span>
   </button>
  </div>
@@ -2713,8 +2725,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
   </div>
   <div class="rf-panel hidden" data-rf="full">
-   <div id="lineBox" class="mb-4"></div>
-   <button type="button" class="pair-go rf-more" onclick="goTypeFromResult()">睇 9 章深入分析</button>
+   <div id="lineBox"></div>
+   <div class="rf-more-wrap"><button type="button" class="result-more-btn rf-more-lg" onclick="goTypeFromResult()"><svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>睇 9 章深入分析</button></div>
   </div>
  </section>
 
@@ -7065,15 +7077,16 @@ window.renderLines = function(type){
     const d = L[sc[0]] || {say:[], dont:[]};
     const say = locked ? (d.say || []).slice(0, 1) : (d.say || []);
     const dont = locked ? [] : (d.dont || []);
-    return '<div class="line-scene"><div class="text-sm font-bold">' + sc[1] + '</div>'
-      + '<ul class="line-ul">' + say.map(function(x){ return "<li>" + x + "</li>"; }).join("") + "</ul>"
-      + (dont.length ? '<div class="text-xs text-gray-500">唔好講</div><ul class="line-ul">' + dont.map(function(x){ return "<li>" + x + "</li>"; }).join("") + "</ul>" : "")
-      + "</div>";
-  }).join("");
-  const lockNote = locked
-    ? '<button type="button" class="pair-go" onclick="openUpgrade()">睇齊三句可以講、三句唔好講</button>'
+    const lis = function(arr){ return arr.map(function(x){ return "<li>" + x + "</li>"; }).join(""); };
+    return '<section class="ln-scene"><h3 class="ln-name">' + sc[1] + '</h3>'
+      + '<p class="ln-k">可以講</p><ul class="ln-ul">' + lis(say) + '</ul>'
+      + (dont.length ? '<p class="ln-k ln-no">唔好講</p><ul class="ln-ul ln-bad">' + lis(dont) + '</ul>' : '')
+      + '</section>';
+    }).join("");
+    const lockNote = locked
+    ? '<div class="rf-more-wrap"><button type="button" class="result-more-btn rf-more-lg" onclick="openUpgrade()">睇齊三句可以講、三句唔好講</button></div>'
     : "";
-  box.innerHTML = '<div class="text-xs tracking-widest brand-gold font-bold mb-3">三個場面點講</div>' + blocks + lockNote;
+    box.innerHTML = '<div class="ln-head">三個場面點講</div>' + blocks + lockNote;
 };
 window.renderPairPick = function(myType){
   const box = document.getElementById("pairPick");
