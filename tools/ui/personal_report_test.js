@@ -43,7 +43,13 @@ chk("★ 免費版：已經冇「解鎖完整版」掣（2026-10-04 開放免費
 const nameEl = d.querySelector("#personalReport .pr-sim-n");
 const axisEl = d.querySelector("#personalReport .pr-pct-lab");
 const noteEl = d.querySelector("#personalReport .pr-pct-note");
-chk("★ 傾向程度 5 條軸各自一張卡", d.querySelectorAll("#personalReport .pr-pct-card").length===5, String(d.querySelectorAll("#personalReport .pr-pct-card").length));
+chk("★ 傾向程度五條軸同一張卡，中間有分隔線", (function(){
+  const rows=d.querySelectorAll("#personalReport .pr-pct-row");
+  const card=d.querySelector("#personalReport .pr-pct-one");
+  if(rows.length!==5 || !card || card.querySelectorAll(".card").length) return false;
+  const sep=w.getComputedStyle(rows[1]).borderTopWidth;
+  return sep==="1px" && rows[0].closest(".pr-pct-one")===card;
+})(), String(d.querySelectorAll("#personalReport .pr-pct-row").length));
 const methodBtn = d.querySelector("#personalReport .pr-method");
 chk("★ 計分方法係睇得出嘅掣（有底色，唔係純文字）", !!methodBtn && methodBtn.tagName==="BUTTON" && w.getComputedStyle(methodBtn).backgroundColor!=="rgba(0, 0, 0, 0)" && w.getComputedStyle(methodBtn).backgroundColor!=="transparent", methodBtn && w.getComputedStyle(methodBtn).backgroundColor);
 chk("★ 個人報告細字統一：型名 13、軸 13、說明 15",

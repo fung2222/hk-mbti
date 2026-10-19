@@ -177,7 +177,9 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 #personalReport .pr-pct-note,#personalReport .pr-foot{margin-top:8px}
 #personalReport .pr-close{margin-top:12px}
 #personalReport .pr-pct-sec{margin-top:18px}
-#personalReport .pr-pct-card{margin:0 0 10px;padding:14px 16px}
+#personalReport .pr-pct-one{padding:4px 16px 6px}
+#personalReport .pr-pct-row{padding:14px 0}
+#personalReport .pr-pct-row + .pr-pct-row{border-top:1px solid rgba(30,42,59,.10)}
 #personalReport .pr-method{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;margin-top:16px;background-color:#D4A95F;color:#1E2A3B;border:0;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
 #pairPick .pair-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 #pairPick .pair-pill{background:#fff;border-radius:10px;padding:10px 6px;text-align:center;border:2px solid transparent;line-height:1.3;cursor:pointer;font-family:inherit;-webkit-appearance:none;appearance:none;color:var(--ink)}
@@ -1243,6 +1245,7 @@ html.dk .result-more-btn{background:rgba(240,115,111,.15);border-color:rgba(240,
 html.dk .share-btn{background:var(--soft);border-color:rgba(236,231,222,.22);color:#D8C69E}
 html.dk .share-btn:hover{background:var(--dk-hover)}
 html.dk #pairPick .pair-pill{background:var(--dk-card)}
+html.dk #personalReport .pr-pct-row + .pr-pct-row{border-top-color:rgba(255,255,255,.10)}
 html.dk{
   --paper:#12161C;--soft:#1B2129;--ink:#ECE7DE;--gold:#D9B26A;--accent:#F0736F;
   --dk-card:#181E26;--dk-hover:#232B35;--dk-on:#2A323C;
@@ -4965,7 +4968,7 @@ window.pctBlockHtml = function(r){
     const _domTxt = (window.PR_DOM && k && window.PR_DOM[k + "_" + (lv >= rv ? _ka : _kb)]) || "";
     if(typeof lv !== "number" || typeof rv !== "number") return "";
     const lWin = lv > rv, rWin = rv > lv;
-    return `<div class="card pr-pct-card">
+    return `<div class="pr-pct-row">
       <div class="pr-pct-lab">
         <span class="${lWin ? "is-win" : "is-dim"}">${lab} ${lv}%</span>
         <span class="${rWin ? "is-win" : "is-dim"}">${rv}% ${rlab}</span>
@@ -4982,11 +4985,13 @@ window.pctBlockHtml = function(r){
     : "";
   return `<div class="pr-pct-sec">
     <div class="text-xs tracking-widest brand-gold font-bold mb-3">你嘅傾向程度</div>
+    <div class="card pr-pct-one">
     ${row("E 外向", pct.EI[0], "內向 I", pct.EI[1], ac.EI, "EI")}
     ${row("S 實感", pct.SN[0], "直覺 N", pct.SN[1], ac.SN, "SN")}
     ${row("T 思考", pct.TF[0], "情感 F", pct.TF[1], ac.TF, "TF")}
     ${row("J 判斷", pct.JP[0], "感知 P", pct.JP[1], ac.JP, "JP")}
     ${row("T 敏感", pct.TA[0], "自信 A", pct.TA[1], ac.TA, "TA")}
+    </div>
     ${closeNote}
     <div class="pr-foot">百分比係你喺該軸兩邊嘅得分比例，唔代表好壞。中間幼線係 50%；分差 1 分以內嘅軸，下面會另外提你。</div>${pctNote}
     <button type="button" class="pr-method" onclick="openMethod()">計分方法同限制</button>
