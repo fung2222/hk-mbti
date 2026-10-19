@@ -176,7 +176,9 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 #personalReport .pr-pct-note,#personalReport .pr-close,#personalReport .pr-foot{font-size:15px;font-weight:400;line-height:1.7;color:#6b6560}
 #personalReport .pr-pct-note,#personalReport .pr-foot{margin-top:8px}
 #personalReport .pr-close{margin-top:12px}
-#personalReport .pr-method{display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:#8B6F3D;background:none;border:0;padding:0;font-family:inherit;cursor:pointer}
+#personalReport .pr-pct-sec{margin-top:18px}
+#personalReport .pr-pct-card{margin:0 0 10px;padding:14px 16px}
+#personalReport .pr-method{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;margin-top:16px;background-color:#D4A95F;color:#1E2A3B;border:0;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
 #pairPick .pair-me{background:var(--soft);border-radius:.5rem;padding:8px 10px;min-height:42px;display:flex;flex-direction:column;justify-content:center}
 #pairPick select{width:100%;min-height:42px}
 #pairGo{display:flex;align-items:center;justify-content:center;gap:6px}
@@ -870,7 +872,7 @@ html.dk .hub-row-chev{color:#C0A87A}
 .pr-sim-d,.pr-note{color:#A79E92}
 html.dk #personalReport .pr-sim-n,html.dk #personalReport .pr-pct-lab .is-dim,html.dk #personalReport .pr-pct-note,html.dk #personalReport .pr-close,html.dk #personalReport .pr-foot{color:#A79E92}
 html.dk #personalReport .pr-pct-lab{color:#F2F5F9}
-html.dk #personalReport .pr-method{color:#D8C69E}
+html.dk #personalReport .pr-method{color:#12161C;background-color:#D4A95F}
 
 /* ===== 2026-10-07 日光模式：金色「文字／圖示」加深到可讀（對比 >= 4.5）=====
    原因：日光模式 --gold (#D4A95F) 喺白／米底只有 2.0-2.2，遠低於標準 4.5。
@@ -4961,7 +4963,7 @@ window.pctBlockHtml = function(r){
     const _domTxt = (window.PR_DOM && k && window.PR_DOM[k + "_" + (lv >= rv ? _ka : _kb)]) || "";
     if(typeof lv !== "number" || typeof rv !== "number") return "";
     const lWin = lv > rv, rWin = rv > lv;
-    return `<div class="mb-3">
+    return `<div class="card pr-pct-card">
       <div class="pr-pct-lab">
         <span class="${lWin ? "is-win" : "is-dim"}">${lab} ${lv}%</span>
         <span class="${rWin ? "is-win" : "is-dim"}">${rv}% ${rlab}</span>
@@ -4976,7 +4978,7 @@ window.pctBlockHtml = function(r){
   const closeNote = (r.closeAxes && r.closeAxes.length)
     ? `<p class="pr-close">${r.closeAxes.join("、")} 軸接近中間（分數差 1 分內），呢幾條軸可能兩邊都似。</p>`
     : "";
-  return `<div class="mt-4 pt-4 border-t border-gray-100">
+  return `<div class="pr-pct-sec">
     <div class="text-xs tracking-widest brand-gold font-bold mb-3">你嘅傾向程度</div>
     ${row("E 外向", pct.EI[0], "內向 I", pct.EI[1], ac.EI, "EI")}
     ${row("S 實感", pct.SN[0], "直覺 N", pct.SN[1], ac.SN, "SN")}
@@ -4985,7 +4987,7 @@ window.pctBlockHtml = function(r){
     ${row("T 敏感", pct.TA[0], "自信 A", pct.TA[1], ac.TA, "TA")}
     ${closeNote}
     <div class="pr-foot">百分比係你喺該軸兩邊嘅得分比例，唔代表好壞。中間幼線係 50%；分差 1 分以內嘅軸，下面會另外提你。</div>${pctNote}
-    <button type="button" class="pr-method" onclick="openMethod()">計分方法同限制 →</button>
+    <button type="button" class="pr-method" onclick="openMethod()">計分方法同限制</button>
   </div>`;
 };
 
@@ -5050,8 +5052,8 @@ window.renderPersonalReport = function(r){
     + '<div class="text-xs tracking-widest brand-gold font-bold mb-3">你嘅個人化報告</div>'
     + '<div class="sub-label">最似你嘅 3 個型</div>' + simRows
     + '<div class="sub-label mt-4">你嘅 3 個盲點</div>' + d.notes.map(function(n){ return '<p class="pr-note">' + n + '</p>'; }).join("")
-    + window.pctBlockHtml(r)
-    + '</div>';
+    + '</div>'
+    + window.pctBlockHtml(r);
 };
 window.renderResult = function(r){
  // T/A 軸（第 5 條軸）：同完成時間同一行，唔另開 badge（卡入面已有 chip）
@@ -7116,8 +7118,8 @@ window.renderPairPick = function(myType){
     return '<option value="' + t + '"' + (t === prefer ? ' selected' : '') + '>' + t + (cn ? " · " + cn : "") + '</option>';
   }).join("");
   const star = '<svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>';
-  box.innerHTML = '<div class="grid grid-cols-2 gap-2 mb-3"><div class="pair-me"><div class="pair-me-k">你</div><div class="pair-me-t">' + myType + (T.cn ? " · " + T.cn : "") + '</div></div>'
-    + '<select id="pairSel" class="bg-soft p-2 rounded-lg text-sm font-bold" aria-label="揀另一種人格">' + opts + '</select></div>'
+  box.innerHTML = '<div class="grid grid-cols-2 gap-2 mb-3"><div class="pair-me"><div class="pair-me-k">你是</div><div class="pair-me-t">' + myType + (T.cn ? " · " + T.cn : "") + '</div></div>'
+    + '<div class="pair-me"><div class="pair-me-k">他/她是</div><select id="pairSel" class="bg-soft p-2 rounded-lg text-sm font-bold" aria-label="揀另一種人格">' + opts + '</select></div></div>'
     + '<button type="button" class="btn-gold w-full py-2.5 rounded-lg text-sm" id="pairGo" onclick="openPairFromPick()">' + star + '睇你哋點相處</button>';
 };
 window.openPairFromPick = function(){

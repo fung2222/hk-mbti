@@ -43,6 +43,9 @@ chk("★ 免費版：已經冇「解鎖完整版」掣（2026-10-04 開放免費
 const nameEl = d.querySelector("#personalReport .pr-sim-n");
 const axisEl = d.querySelector("#personalReport .pr-pct-lab");
 const noteEl = d.querySelector("#personalReport .pr-pct-note");
+chk("★ 傾向程度 5 條軸各自一張卡", d.querySelectorAll("#personalReport .pr-pct-card").length===5, String(d.querySelectorAll("#personalReport .pr-pct-card").length));
+const methodBtn = d.querySelector("#personalReport .pr-method");
+chk("★ 計分方法係睇得出嘅掣（有底色，唔係純文字）", !!methodBtn && methodBtn.tagName==="BUTTON" && w.getComputedStyle(methodBtn).backgroundColor!=="rgba(0, 0, 0, 0)" && w.getComputedStyle(methodBtn).backgroundColor!=="transparent", methodBtn && w.getComputedStyle(methodBtn).backgroundColor);
 chk("★ 個人報告細字統一：型名 13、軸 13、說明 15",
   !!nameEl && w.getComputedStyle(nameEl).fontSize==="13px"
   && !!axisEl && w.getComputedStyle(axisEl).fontSize==="13px"
@@ -213,6 +216,7 @@ const _go = d.querySelector("#pairGo");
 chk("★ 掣存在且未買會去完整版、買咗先開配對", !!_go && /openPairFromPick\(/.test(_go.getAttribute("onclick")||"") && /offerLocked\(\)/.test(RAW.slice(RAW.indexOf("window.openPairFromPick"), RAW.indexOf("window.openPairFromPick")+400)));
 chk("★ 掣唔再擠喺 .text-right 角落（改咗下拉下面）", !!_go && !_go.closest(".text-right") && !!d.querySelector("#pairSel"));
 chk("★ 左邊顯示自己嘅型，右邊係下拉", !!d.querySelector(".pair-me-t") && !!d.querySelector("#pairSel"));
+chk("★ 左邊寫你是，右邊寫他/她是", /你是/.test((d.querySelector(".pair-me-k")||{}).textContent||"") && /他\/她是/.test(d.getElementById("pairPick").textContent));
 chk("★ 配對工具包成卡，同性格比較同一款", (function(){
   const pick=d.querySelector("#pairPick");
   const card=pick && pick.closest(".card");
