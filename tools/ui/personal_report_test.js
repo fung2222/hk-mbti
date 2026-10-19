@@ -45,35 +45,18 @@ chk("★ 01-05 面板內冇細過 13px 嘅字", (function(){
   return bad.every(v=>v>=13);
 })(), ["#personalityDetail .scenario-badge","#lineBox .ln-k","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
   .map(sel=>{const el=d.querySelector(sel); return el?w.getComputedStyle(el).fontSize:"冇";}).join("/"));
-chk("★ 01 標題冇 icon、型號同標題一樣大；掣去外框左對齊", (function(){
-  const t=d.getElementById("resultSelfTitle");
-  const sp=t && t.querySelector(".rf-type");
-  const btn=d.querySelector('#personalityDetail .result-more-btn');
-  if(!sp || !btn) return false;
-  const titleFs=parseFloat(w.getComputedStyle(t).fontSize);
-  const spFs=parseFloat(w.getComputedStyle(sp).fontSize);
-  const cs=w.getComputedStyle(btn);
-  const wrap=btn.closest(".rf-more-wrap");
-  const arrow=btn.querySelector("svg.rf-arrow");
-  return !t.querySelector("svg") && spFs===titleFs
-    && /你嘅性格係/.test(t.textContent) && /[EI][NS][TF][JP]/.test(t.textContent)
-    && (cs.backgroundColor==="rgba(0, 0, 0, 0)" || cs.backgroundColor==="transparent")
-    && parseFloat(cs.borderTopWidth)===0 && !!arrow
-    && /睇完整分析/.test(btn.textContent)
-    && !!wrap && w.getComputedStyle(wrap).justifyContent==="flex-start";
-})());
-chk("★ 01 副標題喺頁頂，唔喺卡入面", (function(){
-  const sub=d.getElementById("resultFolderSub");
-  const cardSub=d.querySelector('#resultFolder [data-rf="self"] .rf-sub');
-  return !!sub && /你是邊種人/.test(sub.textContent) && !!sub.closest(".page-hero") && !cardSub;
+chk("★ 01 直接跳人格頁，唔再自己排一次", (function(){
+  const btn=d.querySelector('#resultFolders .rf-item');
+  const selfPanel=d.querySelector('#resultFolder [data-rf="self"]');
+  return !!btn && /openResultSelf\(\)/.test(btn.getAttribute("onclick")||"")
+    && !selfPanel && /openType\(t,\s*"resultFolder"\)/.test(RAW.slice(RAW.indexOf("window.openResultSelf"), RAW.indexOf("window.openResultSelf")+420));
 })());
 chk("★ 01-05 第一張卡標題 19px，02-05 副標題 15px", (function(){
   const titles=d.querySelectorAll("#resultFolder .rf-title");
   const subs=d.querySelectorAll("#resultFolder .rf-sub");
-  if(titles.length<5 || subs.length<4) return false;
+  if(titles.length<4 || subs.length<4) return false;
   const t=w.getComputedStyle(titles[0]), s=w.getComputedStyle(subs[0]);
-  const self=d.querySelector('#resultFolder [data-rf="self"] .rf-title');
-  return t.fontSize==="19px" && t.fontWeight==="900" && s.fontSize==="15px" && !!self && !!self.closest(".card");
+  return t.fontSize==="19px" && t.fontWeight==="900" && s.fontSize==="15px";
 })(), String(d.querySelectorAll("#resultFolder .rf-title").length));
 chk("★ 免費版：標題係「你嘅個人化報告」（冇「完整版」字眼）", /你嘅個人化報告/.test(locked) && !/完整版/.test(locked));
 chk("★ 免費版：已經冇「解鎖完整版」掣（2026-10-04 開放免費）", !/解鎖完整版/.test(locked) && !/unlockFull\(\)/.test(locked));

@@ -331,24 +331,22 @@ async def run():
               bool(gp) and gp.get("gap", 0) >= 24, str(gp))
         check("390: 測試區下面個 ▼ 上下空間 = 20px / 32px",
               bool(gp) and gp.get("ndMt") == "20px" and gp.get("ndMb") == "32px", str(gp))
-        # 2026-10-06 Roy：強項／弱項 下面要有留白（原本同下面「個人化報告」黐實 0px）
-        # 量度意圖（留白 >= 16px），唔黐死某個實作（margin 出邊度做都得）
+        # 2026-10-19 Roy：01 已搬入人格頁（唔再自己排一次），留白改喺人格頁量
         RESULT_FIX = {"mbti":"INFP-A","pct":{"EI":[40,60],"SN":[35,65],"TF":[70,30],"JP":[80,20],"TA":[62,38]},
                       "closeAxes":[],"score":{},"version":"life","totalQ":60,"name":"Roy"}
         await _p4.evaluate("(r)=>{ window.renderResult(r); window.show('result'); }", RESULT_FIX)
+        await _p4.evaluate("()=>window.openType('INFP','result')")
         await _p4.wait_for_timeout(400)
         sp = await _p4.evaluate("""() => {
-          const boxes=[...document.querySelectorAll('#personalityDetail .pros-box')];
-          const last=boxes[boxes.length-1], pr=document.getElementById('personalReport');
-          if(!last||!pr) return null;
-          const gr=last.closest('.pros-grid');
-          const a=last.closest('.rf-panel'), b=pr.closest('.rf-panel');
-          const separated=!!(a&&b&&a!==b);
-          return {gap:separated?16:Math.round(pr.getBoundingClientRect().top-last.getBoundingClientRect().bottom),
-                  separated, marB:gr?getComputedStyle(gr).marginBottom:null, n:boxes.length};
+          const pc=document.getElementById('typeProsCons');
+          const card=pc?pc.querySelector('.card'):null;
+          const boxes=[...document.querySelectorAll('#typeProsCons .pros-box')];
+          if(!pc||!card||!boxes.length) return null;
+          const cs=getComputedStyle(card);
+          return {marB:cs.marginBottom, n:boxes.length};
         }""")
-        check("390: 強項／弱項 下面有 >=16px 留白（唔同下面張卡黐實）",
-              bool(sp) and sp["gap"] >= 16, str(sp))
+        check("390: 人格頁強項／弱項下面有 >=16px 留白（唔同下面黐實）",
+              bool(sp) and sp["n"] == 2 and float((sp["marB"] or "0px").replace("px","")) >= 16, str(sp))
         # 2026-10-06 Roy：黑夜模式「弱項」欄原本睇落冇底（inline 3% 深藍喺深底上 = 0）
         # 意圖：兩個框都要同頁面底有可見差別（唔綁死某個顏色值）
         for _mode, _need in (("dark", 0.003), ("light", 0.003)):
@@ -374,19 +372,18 @@ async def run():
         # 桌面層最容易自己 override 間距 -> 同一條意圖喺 1440 再驗一次
         _c5, _p5, _e5 = await page(1440, 900, 1920, 1080)
         await _p5.evaluate("(r)=>{ window.renderResult(r); window.show('result'); }", RESULT_FIX)
+        await _p5.evaluate("()=>window.openType('INFP','result')")
         await _p5.wait_for_timeout(400)
         sp5 = await _p5.evaluate("""() => {
-          const boxes=[...document.querySelectorAll('#personalityDetail .pros-box')];
-          const last=boxes[boxes.length-1], pr=document.getElementById('personalReport');
-          if(!last||!pr) return null;
-          const gr=last.closest('.pros-grid');
-          const a=last.closest('.rf-panel'), b=pr.closest('.rf-panel');
-          const separated=!!(a&&b&&a!==b);
-          return {gap:separated?16:Math.round(pr.getBoundingClientRect().top-last.getBoundingClientRect().bottom),
-                  separated, marB:gr?getComputedStyle(gr).marginBottom:null, n:boxes.length};
+          const pc=document.getElementById('typeProsCons');
+          const card=pc?pc.querySelector('.card'):null;
+          const boxes=[...document.querySelectorAll('#typeProsCons .pros-box')];
+          if(!pc||!card||!boxes.length) return null;
+          const cs=getComputedStyle(card);
+          return {marB:cs.marginBottom, n:boxes.length};
         }""")
-        check("1440: 強項／弱項 下面有 >=16px 留白（桌面層冇 override 走）",
-              bool(sp5) and sp5["gap"] >= 16, str(sp5))
+        check("1440: 人格頁強項／弱項下面有 >=16px 留白（桌面層冇 override 走）",
+              bool(sp5) and sp5["n"] == 2 and float((sp5["marB"] or "0px").replace("px","")) >= 16, str(sp5))
         await _c5.close()
 
         # 2026-10-06 Roy 報「色調太淺好難睇」：關於頁「本站廣東話版」卡唔係 .card，

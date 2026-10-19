@@ -97,7 +97,9 @@ setTimeout(() => {
     }
     if (c.label.includes("結果文件夾")) {
       const pd = ((c.d.getElementById("personalityDetail") || {}).textContent || "").trim();
-      const showing = !c.d.getElementById("resultFolder").classList.contains("hidden");
+      const folder = c.d.getElementById("resultFolder");
+      const typePage = c.d.getElementById("type");
+      const showing = (folder && !folder.classList.contains("hidden")) || (typePage && !typePage.classList.contains("hidden"));
       if (showing && pd.length > 20) p2++; else { f2++; console.log("  ✗ 結果文件夾下拉後內容冇晒！顯示=" + showing + " 字數=" + pd.length); }
     }
     if (c.label.includes("維度詳解")) {

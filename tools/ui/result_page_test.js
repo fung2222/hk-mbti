@@ -127,10 +127,11 @@ const _sl = new Function("window","document", (SRC.match(/window\.shareDateLabel
 // Roy 2026-10-02：要年月日，唔止年月
 chk("★ ② shareDateLabel 出 YYYY.MM.DD（連日子）", _sl(Date.UTC(2026,9,2)) === "2026.10.02", String(_sl(Date.UTC(2026,9,2))));
 chk("★ ② shareDateLabel 補零（個位數月／日）", _sl(Date.UTC(2026,0,5)) === "2026.01.05", String(_sl(Date.UTC(2026,0,5))));
-chk("★ ③ 「睇完整分析」係純文字 link（取消外框）",
-    /class="result-more-btn rf-more-text"[\s\S]{0,200}睇完整分析/.test(SRC)
-    && /#resultFolder \.rf-more-text\{[^}]*background:none/.test(SRC));
-chk("★ ③ 舊紅色膠囊 class 已經冇用（rf-more-sm 已清）", !/rf-more-sm/.test(SRC));
+chk("★ ③ 01 直接跳人格頁（唔再自己排性格分析）",
+    /onclick="openResultSelf\(\)"/.test(SRC)
+    && /window\.openResultSelf = function\(\)/.test(SRC)
+    && /openType\(t,\s*"resultFolder"\)/.test(SRC));
+chk("★ ③ 舊紅色膠囊 class 已經冇用（rf-more-sm／rf-more-text 已清）", !/rf-more-sm|rf-more-text/.test(SRC));
 chk("★ ③ 按鈕保留 accent 紅色識別", /\.result-more-btn\{[^}]*color:var\(--accent\)/.test(SRC));
 chk("★ ③ dark 規則喺 #dark-layer",
     /html\.dk \.result-more-btn\{/.test(SRC.slice(SRC.indexOf('id="dark-layer"'), SRC.indexOf('id="dark-layer"')+22000)));
