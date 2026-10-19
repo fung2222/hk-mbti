@@ -161,16 +161,11 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 .ver-btn.ver-lit .ver-chev{transform:rotate(180deg);background:var(--gold);color:var(--ink)}
 .ver-btn.ver-lit .ver-arrow{transform:translateX(4px)}
 /* 完整版 D 模組：個人化報告（入口：結果頁，2026-10-04） */
-.pr-sim{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:14px 0;font-size:17px}
-.pr-sim + .pr-sim{border-top:1px solid rgba(30,42,59,.07)}
-.pr-sim-c{font-weight:900;color:var(--ink);letter-spacing:.02em}
-.pr-sim-d{font-size:15px;font-weight:700;color:#6b6560;text-align:right;line-height:1.6}
 .pr-note{position:relative;margin:0 0 14px;padding-left:16px;font-size:16px;line-height:1.85;color:#6b6560}
 .pr-note:last-child{margin-bottom:0}
 .pr-note:before{content:"";position:absolute;left:2px;top:9px;width:5px;height:5px;border-radius:999px;background:var(--gold)}
 .pr-axis{margin-top:16px}
 .pr-axis-t{display:flex;justify-content:space-between;font-size:15px;font-weight:700;margin-bottom:6px}
-#personalReport .pr-sim-n{font-size:13px;font-weight:400;color:#6b6560}
 #personalReport .pr-pct-lab{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px;color:var(--ink)}
 #personalReport .pr-pct-lab .is-dim{font-weight:400;color:#6b6560}
 #personalReport .pr-pct-note,#personalReport .pr-close,#personalReport .pr-foot{font-size:15px;font-weight:400;line-height:1.7;color:#6b6560}
@@ -885,9 +880,7 @@ html.dk .hub-mode-btn.is-on{color:var(--ink)}
 html.dk .hub-type-hint,html.dk .hub-scene-n{color:#A79E92}
 html.dk .hub-more-link,html.dk .hub-scene-back,html.dk .deep-ch,html.dk .deep-go{color:#D8C69E}
 html.dk .hub-row-chev{color:#C0A87A}
-.pr-sim + .pr-sim{border-top-color:rgba(255,255,255,.08)}
-.pr-sim-d,.pr-note{color:#A79E92}
-html.dk #personalReport .pr-sim-n,html.dk #personalReport .pr-pct-lab .is-dim,html.dk #personalReport .pr-pct-note,html.dk #personalReport .pr-close,html.dk #personalReport .pr-foot{color:#A79E92}
+html.dk #personalReport .pr-pct-lab .is-dim,html.dk #personalReport .pr-pct-note,html.dk #personalReport .pr-close,html.dk #personalReport .pr-foot{color:#A79E92}
 html.dk #personalReport .pr-pct-lab{color:#F2F5F9}
 html.dk #personalReport .pr-method{color:#12161C;background-color:#D4A95F}
 
@@ -1260,6 +1253,7 @@ html.dk #pairPick .pair-pill{background:var(--dk-card)}
 html.dk #resultFolder .rf-title{color:#F2F5F9}
 html.dk #resultFolder .rf-sub{color:#A79E92}
 html.dk #personalReport .pr-pct-row + .pr-pct-row{border-top-color:rgba(255,255,255,.10)}
+html.dk .pr-note{color:#A79E92}
 html.dk{
   --paper:#12161C;--soft:#1B2129;--ink:#ECE7DE;--gold:#D9B26A;--accent:#F0736F;
   --dk-card:#181E26;--dk-hover:#232B35;--dk-on:#2A323C;
@@ -2704,7 +2698,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    <span class="rf-go">進入</span>
   </button>
   <button type="button" class="rf-item" onclick="openResultFolder('report')">
-   <span><span class="rf-k">02</span><span class="rf-t">個人報告<span class="rf-tag rf-free">免費</span></span><span class="rf-d">最似嘅型、盲點、傾向</span></span>
+   <span><span class="rf-k">02</span><span class="rf-t">個人報告<span class="rf-tag rf-free">免費</span></span><span class="rf-d">盲點、傾向</span></span>
    <span class="rf-go">進入</span>
   </button>
   <button type="button" class="rf-item" onclick="openResultFolder('scene')">
@@ -5068,15 +5062,10 @@ window.renderPersonalReport = function(r){
       return;
     }
   }
-  const simRows = d.similar.map(function(o){
-    const right = o.me ? "你嘅結果" : ("差 " + o.diff.length + " 個字母（" + o.diff.join("、") + "）");
-    return '<div class="pr-sim"><span><span class="pr-sim-c">' + o.code + '</span> <span class="pr-sim-n">' + o.name + '</span></span><span class="pr-sim-d">' + right + '</span></div>';
-  }).join("");
   box.innerHTML = '<div class="card p-5">'
     + '<div class="rf-title">你嘅個人化報告</div>'
-    + '<p class="rf-sub">最似嘅型、盲點、傾向</p>'
-    + '<div class="sub-label">最似你嘅 3 個型</div>' + simRows
-    + '<div class="sub-label mt-4">你嘅 3 個盲點</div>' + d.notes.map(function(n){ return '<p class="pr-note">' + n + '</p>'; }).join("")
+    + '<p class="rf-sub">盲點同傾向</p>'
+    + '<div class="sub-label">你嘅 3 個盲點</div>' + d.notes.map(function(n){ return '<p class="pr-note">' + n + '</p>'; }).join("")
     + '</div>'
     + window.pctBlockHtml(r);
 };
