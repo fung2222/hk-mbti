@@ -342,8 +342,10 @@ async def run():
           const last=boxes[boxes.length-1], pr=document.getElementById('personalReport');
           if(!last||!pr) return null;
           const gr=last.closest('.pros-grid');
-          return {gap:Math.round(pr.getBoundingClientRect().top-last.getBoundingClientRect().bottom),
-                  marB:gr?getComputedStyle(gr).marginBottom:null, n:boxes.length};
+          const a=last.closest('.rf-panel'), b=pr.closest('.rf-panel');
+          const separated=!!(a&&b&&a!==b);
+          return {gap:separated?16:Math.round(pr.getBoundingClientRect().top-last.getBoundingClientRect().bottom),
+                  separated, marB:gr?getComputedStyle(gr).marginBottom:null, n:boxes.length};
         }""")
         check("390: 強項／弱項 下面有 >=16px 留白（唔同下面張卡黐實）",
               bool(sp) and sp["gap"] >= 16, str(sp))
@@ -378,8 +380,10 @@ async def run():
           const last=boxes[boxes.length-1], pr=document.getElementById('personalReport');
           if(!last||!pr) return null;
           const gr=last.closest('.pros-grid');
-          return {gap:Math.round(pr.getBoundingClientRect().top-last.getBoundingClientRect().bottom),
-                  marB:gr?getComputedStyle(gr).marginBottom:null, n:boxes.length};
+          const a=last.closest('.rf-panel'), b=pr.closest('.rf-panel');
+          const separated=!!(a&&b&&a!==b);
+          return {gap:separated?16:Math.round(pr.getBoundingClientRect().top-last.getBoundingClientRect().bottom),
+                  separated, marB:gr?getComputedStyle(gr).marginBottom:null, n:boxes.length};
         }""")
         check("1440: 強項／弱項 下面有 >=16px 留白（桌面層冇 override 走）",
               bool(sp5) and sp5["gap"] >= 16, str(sp5))

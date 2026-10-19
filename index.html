@@ -190,6 +190,15 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 /* 2026-10-11 Roy：首頁「香港分佈」摘要（內容由 renderHomeStats 動態填，唔准寫死數字） */
 #hk-stats{margin:30px 0 40px}   /* 2026-10-11 Roy：同「探索更多」中間原本只有 4px，太逼 → 40px */
 #homeSecLine{height:1px;margin:22px 0;background:rgba(30,42,59,.18);border:0}
+#result .rf-list{margin:4px 0 18px}
+#result .rf-item{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;border-top:1px solid rgba(30,42,59,.12);padding:16px 2px;font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
+#result .rf-item:first-child{border-top:0}
+#result .rf-k{display:block;font-size:11px;letter-spacing:.16em;color:#8B6F3D;margin-bottom:3px}
+#result .rf-t{display:block;font-size:18px;font-weight:900;color:#1E2A3B;line-height:1.3}
+#result .rf-d{display:block;font-size:13px;color:#6b6560;margin-top:2px;line-height:1.45}
+#result .rf-go{margin-left:auto;color:#8B6F3D;font-size:13px;font-weight:700;flex-shrink:0}
+#resultFolder .rf-panel{padding-top:4px}
+#resultFolder .rf-more{margin:0 0 14px}
 .hk-stats-sub{font-size:12px;color:#6b6560;margin:0 0 14px;line-height:1.7}
 .hk-stats-list{display:grid;gap:8px}
 .hk-stats-item{background:rgba(212,169,95,.06);border-radius:10px;padding:10px 12px}
@@ -1105,6 +1114,8 @@ html.dk .hub-row-chev{color:#C0A87A}
   html.dt #result > #shareStatus{grid-area:status}
   html.dt #result > #shareHint{grid-area:hint}
   html.dt #result > .result-bleed{grid-area:analysis;margin:0}
+  html.dt #result > .rf-list{grid-area:analysis;margin:0}
+  html.dt #result:not(.hidden){grid-template-areas:"hero hero" "meta analysis" "card analysis" "btns analysis" "status analysis" "hint analysis" "cta cta" "note note"}
   html.dt #result > .card.p-5{grid-area:scene}
   html.dt #result > .softbox{grid-area:cta}
   html.dt #result > p{grid-area:note}
@@ -1204,6 +1215,10 @@ html.dk{
 }
 /* 白色卡／漸變 → 深卡 */
 html.dk #homeSecLine{background:rgba(236,231,222,.22)}
+html.dk #result .rf-item{border-top-color:rgba(255,255,255,.12)}
+html.dk #result .rf-t{color:#F2F5F9}
+html.dk #result .rf-d{color:#A8B2C0}
+html.dk #result .rf-k,html.dk #result .rf-go{color:#D8C69E}
 html.dk .scenes-bleed,html.dk .result-bleed,html.dk .hub-bleed{background:linear-gradient(180deg,var(--dk-card),var(--paper))}
 html.dk .home-acc{background:var(--dk-card);box-shadow:0 4px 24px rgba(0,0,0,.42)}
 html.dk .hub-mode-switch{background:#20272F}
@@ -2625,29 +2640,27 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div id="shareStatus" class="text-[10px] text-gray-500 mt-1 text-center px-2"></div>
  <div id="shareHint" class="text-[10px] text-gray-400 mt-2 text-center px-3 leading-relaxed mb-4"></div>
 
- <!-- 性格分析 + 朋友配對 · 滿版合併 -->
- <div class="result-bleed">
- <div class="result-bleed-inner">
- <div class="flex items-center justify-between mb-3">
- <h3 class="text-xs tracking-widest brand-gold font-bold"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h16"/><path d="M6 19V9l6-5 6 5v10"/><path d="M10 19v-6h4v6"/></svg>你的性格分析</h3>
- <button type="button" onclick="goTypeFromResult()" class="result-more-btn">看完整分析</button>
- </div>
- <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
-
- <!-- 個人化報告（屬「你」嘅內容：要喺「與你的朋友配對」之前） -->
- <div id="personalReport" class="mb-4"></div>
- <div class="result-divider"></div>
-
- <div id="lineBox" class="mb-4"></div>
- <div class="text-xs tracking-widest brand-gold font-bold mb-3"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 10-8 0"/><circle cx="12" cy="7" r="3"/><path d="M5 21v-1a5 5 0 015-5h4a5 5 0 015 5v1"/></svg>與你的朋友配對</div>
- <div id="pairPick"></div>
-        <div id="compatibility" class="space-y-2 text-sm"></div>
- </div>
- </div>
-
- <div class="card p-5 mb-4">
- <h3 class="font-bold mb-3">你喺邊種港人？</h3>
- <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
+ <div class="rf-list" id="resultFolders">
+  <button type="button" class="rf-item" onclick="openResultFolder('self')">
+   <span><span class="rf-k">01</span><span class="rf-t">性格分析</span><span class="rf-d">你是邊種人、刻度、強項弱項</span></span>
+   <span class="rf-go">進入</span>
+  </button>
+  <button type="button" class="rf-item" onclick="openResultFolder('report')">
+   <span><span class="rf-k">02</span><span class="rf-t">個人報告</span><span class="rf-d">最似嘅型、盲點、傾向</span></span>
+   <span class="rf-go">進入</span>
+  </button>
+  <button type="button" class="rf-item" onclick="openResultFolder('pair')">
+   <span><span class="rf-k">03</span><span class="rf-t">朋友配對</span><span class="rf-d">同邊種人最夾</span></span>
+   <span class="rf-go">進入</span>
+  </button>
+  <button type="button" class="rf-item" onclick="openResultFolder('scene')">
+   <span><span class="rf-k">04</span><span class="rf-t">港人情境</span><span class="rf-d">你喺邊種港人</span></span>
+   <span class="rf-go">進入</span>
+  </button>
+  <button type="button" class="rf-item" id="rfLockRow" onclick="openResultFolder('full')">
+   <span><span class="rf-k">05</span><span class="rf-t">完整內容</span><span class="rf-d">對白、三個場面、9 章</span></span>
+   <span class="rf-go" id="rfLockGo">進入</span>
+  </button>
  </div>
 
  <div class="card mb-4 softbox">
@@ -2660,6 +2673,38 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <p class="text-[11px] text-gray-400 text-center px-3 mt-4 leading-relaxed">
   本測試只係自我探索工具，唔係醫學診斷或專業心理評估。唔適合作僱傭、配對婚姻或貼標籤批評人嘅依據。
  </p>
+ </section>
+
+ <section id="resultFolder" class="hidden fade-up">
+  <div class="page-hero">
+   <div class="page-hero-row">
+    <button type="button" class="page-back" onclick="goBack()">返回</button>
+    <h1 id="resultFolderTitle">性格分析</h1>
+   </div>
+  </div>
+  <div class="rf-panel" data-rf="self">
+   <div class="flex items-center justify-between mb-3">
+    <h3 class="text-xs tracking-widest brand-gold font-bold">你的性格分析</h3>
+    <button type="button" onclick="goTypeFromResult()" class="result-more-btn">看完整分析</button>
+   </div>
+   <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
+  </div>
+  <div class="rf-panel hidden" data-rf="report">
+   <div id="personalReport" class="mb-4"></div>
+  </div>
+  <div class="rf-panel hidden" data-rf="pair">
+   <div class="text-xs tracking-widest brand-gold font-bold mb-3">與你的朋友配對</div>
+   <div id="pairPick"></div>
+   <div id="compatibility" class="space-y-2 text-sm"></div>
+  </div>
+  <div class="rf-panel hidden" data-rf="scene">
+   <h3 class="font-bold mb-3">你喺邊種港人？</h3>
+   <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
+  </div>
+  <div class="rf-panel hidden" data-rf="full">
+   <div id="lineBox" class="mb-4"></div>
+   <button type="button" class="pair-go rf-more" onclick="goTypeFromResult()">睇 9 章深入分析</button>
+  </div>
  </section>
 
 </div>
@@ -3424,6 +3469,7 @@ pairB: window._pairB || null,
 articleType: window._lastArticleType,
 deepType: window._deepType || null,
 deepCh: (typeof window._deepCh === "number" ? window._deepCh : 0),
+rf: window._resultFolder || null,
 hubScene: window._hubSceneKey || null,
 pendingVersion: (window.state && window.state.pendingVersion) || null,
 // 當時捲到邊：返上一頁要停返原本位置（Roy 2026-10-02）
@@ -3490,7 +3536,7 @@ window._showing = id;
 if(prevId === "home" && id !== "home"){
 try{ window._homeScrollY = window.scrollY || window.pageYOffset || 0; }catch(e){ window._homeScrollY = 0; }
  }
-["home","profile","test","result","about","hub","dims","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter","pair"].forEach(s => window.$(s).classList.add("hidden"));
+["home","profile","test","result","resultFolder","about","hub","dims","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter","pair"].forEach(s => window.$(s).classList.add("hidden"));
 window.$(id).classList.remove("hidden");
 if(window._applyPendingScroll()){
 // 返上一頁：停返嗰頁原本位置（Roy 2026-10-02）
@@ -5086,6 +5132,7 @@ if(ct) compatHtml += `
  });
  $("compatibility").innerHTML = compatHtml;
 try{ window.renderLines(type); window.renderPairPick(type); }catch(e){}
+try{ window.renderResultFolders(); }catch(e){}
 };
 
 window.downloadCard = async function(){
@@ -5765,6 +5812,8 @@ if(id === "letter"){
 if(prev && prev.letter){ openLetter(prev.letter); return; }
 if(typeof window.openHub === "function"){ openHub(); return; }
  }
+if(id === "result"){ show("result"); return; }
+if(id === "resultFolder"){ window.openResultFolder((prev && prev.rf) || "self"); return; }
 if(id === "upgrade"){ show("upgrade"); return; }
 if(id === "deep"){
 if(prev && prev.deepType && (window.PREMIUM || {})[prev.deepType]){ window.renderDeepTypeToc(prev.deepType); return; }
@@ -6201,6 +6250,7 @@ if(note) note.textContent = "第 1 章免費。其餘章節（第 2–9 章）�
 if(closed) closed.textContent = "第 2–9 章而家未開放，亦冇收費。";
 if(priceEl){ priceEl.textContent = ""; priceEl.hidden = true; }
 }
+try{ window.renderResultFolders(); }catch(e){}
 };
 window.openUpgrade = function(){
 try{ closeHomeMenu(); }catch(e){}
@@ -6962,6 +7012,29 @@ return html;
 // 收費未開（冇 Play 價錢）時唔鎖，避免未賣到就收起免費內容。
 window.offerLocked = function(){
   return window.getTier() !== "full" && !!window._billingPrice;
+};
+window.renderResultFolders = function(){
+  const go = document.getElementById("rfLockGo");
+  const row = document.getElementById("rfLockRow");
+  if(!go) return;
+  const locked = !!(window.offerLocked && window.offerLocked());
+  go.textContent = locked ? "要解鎖" : "進入";
+  if(row) row.classList.toggle("is-lock", locked);
+};
+window.openResultFolder = function(key){
+  if(key === "full" && window.offerLocked && window.offerLocked()){
+    window.openUpgrade();
+    return;
+  }
+  const titles = {self:"性格分析", report:"個人報告", pair:"朋友配對", scene:"港人情境", full:"完整內容"};
+  window._resultFolder = key || "self";
+  const h = document.getElementById("resultFolderTitle");
+  if(h) h.textContent = titles[window._resultFolder] || "結果";
+  const panels = document.querySelectorAll("#resultFolder .rf-panel");
+  for(let i = 0; i < panels.length; i++){
+    panels[i].classList.toggle("hidden", panels[i].getAttribute("data-rf") !== window._resultFolder);
+  }
+  show("resultFolder");
 };
 window.renderLines = function(type){
   const box = document.getElementById("lineBox");

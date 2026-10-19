@@ -17,7 +17,7 @@ function chk(n,c,x){ total++; if(c)ok++; console.log((c?"✓":"✗")+" "+n+(c?""
 // ───────── 一、靜態 ─────────
 const rsec = SRC.slice(SRC.indexOf('<section id="result"'), SRC.indexOf('<section id="result"')+6000);
 chk("★ ① 結果頁冇「性格百科」入口（冇 openHub()）", !/openHub\(\)/.test(rsec));
-chk("★ ① 「看完整分析」入口保留", /goTypeFromResult\(\)/.test(rsec));
+chk("★ ① 「看完整分析」入口保留", /goTypeFromResult\(\)/.test(SRC.slice(SRC.indexOf('id="resultFolder"'), SRC.indexOf('id="resultFolder"')+2500)));
 const iTa=rsec.indexOf('id="resultTaInline"'), iCard=rsec.indexOf('id="shareCardImg"'), iBtn=rsec.indexOf("downloadCard()");
 chk("★ ② 次序＝人格／完成時間文字 → 分享卡 → 三掣",
     iTa>0 && iCard>iTa && iBtn>iCard, "ta="+iTa+" card="+iCard+" btn="+iBtn);
@@ -134,7 +134,7 @@ const _sl = new Function("window","document", (SRC.match(/window\.shareDateLabel
 chk("★ ② shareDateLabel 出 YYYY.MM.DD（連日子）", _sl(Date.UTC(2026,9,2)) === "2026.10.02", String(_sl(Date.UTC(2026,9,2))));
 chk("★ ② shareDateLabel 補零（個位數月／日）", _sl(Date.UTC(2026,0,5)) === "2026.01.05", String(_sl(Date.UTC(2026,0,5))));
 chk("★ ③ 「看完整分析」紅色字已變實體按鈕 .result-more-btn",
-    /onclick="goTypeFromResult\(\)" class="result-more-btn">看完整分析<\/button>/.test(rsec));
+    /onclick="goTypeFromResult\(\)" class="result-more-btn">看完整分析<\/button>/.test(SRC.slice(SRC.indexOf('id="resultFolder"'), SRC.indexOf('id="resultFolder"')+2500)));
 chk("★ ③ 唔再係「純文字 link」（舊 background:none 嗰串已冇）",
     !/background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">看完整分析/.test(SRC));
 chk("★ ③ 按鈕保留 accent 紅色識別", /\.result-more-btn\{[^}]*color:var\(--accent\)/.test(SRC));

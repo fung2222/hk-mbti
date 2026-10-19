@@ -10,7 +10,7 @@ let ok=0,total=0;
 function chk(n,c,x){ total++; if(c)ok++; console.log((c?"✓":"✗")+" "+n+(c?"":"   <- "+(x===undefined?"":x))); }
 
 // ───────── 一、靜態結構 ─────────
-const rsec = RAW.slice(RAW.indexOf('<section id="result"'), RAW.indexOf('<section id="result"')+7000);
+const rsec = RAW.slice(RAW.indexOf('<section id="result"'), RAW.indexOf('id="dtFoot"'));
 chk("★ 結果頁有 #personalReport 容器", /id="personalReport"/.test(rsec));
 chk("★ D 卡唔准落喺「與你的朋友配對」區入面（Roy 2026-10-04 實報個 bug）",
 rsec.indexOf('id="personalReport"')>0 && rsec.indexOf('id="personalReport"') < rsec.indexOf('與你的朋友配對</div>')
