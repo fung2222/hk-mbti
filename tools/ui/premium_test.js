@@ -64,6 +64,7 @@ setTimeout(async ()=>{
   chk('升級頁係 soft pitch：冇價錢、冇假付款（2026-10-13 上架前）', !/HK\$18/.test($('#upgrade').textContent) && !/示範版本/.test($('#upgrade').textContent) && !/經 Google Play/.test($('#upgrade').textContent), $('#upgradeBuy').textContent.replace(/\s+/g,' ').slice(0,80));
   chk('升級頁 CTA 文字＝看完整分析', $('#upgradeCta').textContent.trim()==='看完整分析', $('#upgradeCta').textContent);
   chk('升級頁有三格賣點（唔再用對比表）', !$('#upgrade table.up-cmp') && $('#upgrade').querySelectorAll('.up3-item').length===3, String($('#upgrade').querySelectorAll('.up3-item').length));
+  chk('★ 頂欄改成深入內容一句，大字下面冇副標題', /更多深入內容、相處對話、場景對白及人格分析/.test($('#upgrade .page-hero-sub').textContent) && !$('#upgradeLead'), $('#upgrade .page-hero-sub') ? $('#upgrade .page-hero-sub').textContent : '無');
   // ---------- 目錄全開放 + 第 1 章免費（Roy 2026-10-02）----------
   const _s=(ms)=>new Promise(r=>setTimeout(r,ms));
   w.localStorage.setItem('hkmbti_tier','free'); w.renderTier();

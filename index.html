@@ -1909,13 +1909,12 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    <button type="button" class="page-back" onclick="goBack()">返回</button>
    <h1 id="upgradeTitle">完整版</h1>
   </div>
-  <p class="page-hero-sub">一次過解鎖 · 換機都認得</p>
+  <p class="page-hero-sub">更多深入內容、相處對話、場景對白及人格分析</p>
  </div>
 
  <div class="up3-hero" id="upgradeHero">
   <div class="up3-ico-wrap" aria-hidden="true"><svg class="up3-ico" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 017.2-2.4"/></svg></div>
   <h2 class="up3-h" id="upgradeHeadline">完整版有咩</h2>
-  <p class="up3-sub" id="upgradeLead">第 1 章可以免費睇。其餘章節（第 2–9 章）而家未開放，亦冇收費。</p>
  </div>
 
  <div class="card p-5 up3-card" id="upgradeCard">
@@ -6170,7 +6169,7 @@ db.setAttribute("aria-label", b.getAttribute("aria-label"));
 };
 window.renderUpgradeState = function(){
 const cta = document.getElementById("upgradeCta"), note = document.getElementById("upgradeNote");
-const closed = document.getElementById("upgradeClosed"), lead = document.getElementById("upgradeLead");
+const closed = document.getElementById("upgradeClosed");
 const head = document.getElementById("upgradeHeadline"), priceEl = document.getElementById("upgradePrice");
 if(!cta) return;
 const full = window.getTier() === "full";
@@ -6181,7 +6180,6 @@ cta.textContent = "已解鎖 · 睇人格深入分析";
 cta.onclick = function(){ openDeep(); };
 if(note) note.textContent = "你已經解鎖完整版，多謝支持。日後新增嘅章節都會自動包括。";
 if(closed) closed.textContent = "相處對白同三個場面已經解鎖。";
-if(lead) lead.textContent = "第 1–9 章同完整相處對白都可以睇。";
 if(priceEl){ priceEl.textContent = ""; priceEl.hidden = true; }
 } else if(price){
 if(head) head.textContent = "立即解鎖";
@@ -6189,7 +6187,6 @@ cta.textContent = "立即解鎖";
 cta.onclick = function(){ window.buyFull(); };
 if(note) note.textContent = "一次過解鎖，換機可以還原。";
 if(closed) closed.textContent = "相處對白同三個場面可以一次過解鎖。";
-if(lead) lead.textContent = "一次過解鎖相處對白、三個港式場面，同 16 型 × 9 章。";
 if(priceEl){ priceEl.textContent = price; priceEl.hidden = false; }
 } else {
 if(head) head.textContent = "完整版有咩";
@@ -6197,7 +6194,6 @@ cta.textContent = "看完整分析";
 cta.onclick = function(){ openDeep(); };
 if(note) note.textContent = "第 1 章免費。其餘章節（第 2–9 章）而家未開放，亦冇收費。";
 if(closed) closed.textContent = "第 2–9 章而家未開放，亦冇收費。";
-if(lead) lead.textContent = "第 1 章可以免費睇。其餘章節（第 2–9 章）而家未開放，亦冇收費。";
 if(priceEl){ priceEl.textContent = ""; priceEl.hidden = true; }
 }
 };
