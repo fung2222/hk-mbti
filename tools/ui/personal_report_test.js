@@ -45,14 +45,28 @@ chk("★ 01-05 面板內冇細過 13px 嘅字", (function(){
   return bad.every(v=>v>=13);
 })(), ["#personalityDetail .scenario-badge","#lineBox .ln-k","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
   .map(sel=>{const el=d.querySelector(sel); return el?w.getComputedStyle(el).fontSize:"冇";}).join("/"));
-chk("★ 03 一張大卡包晒全部港人卡，副標題有「下面」", (function(){
+chk("★ 02-05 標題都有彩色 icon，02/03 標題係獨立卡", (function(){
+  const panels=["report","scene","pair","full"].map(k=>d.querySelector('#resultFolder [data-rf="'+k+'"]')).filter(Boolean);
+  if(panels.length!==4) return false;
+  const icons=panels.every(p=>{ const t=p.querySelector(".rf-title"); const i=t&&t.querySelector("svg.rf-ico"); return !!i && (i.getAttribute("style")||"").indexOf("color")>=0; });
+  const sep=function(k,bodySel){
+    const p=d.querySelector('#resultFolder [data-rf="'+k+'"]');
+    const t=p.querySelector(".rf-title");
+    const head=t&&t.closest(".card");
+    const body=p.querySelector(bodySel);
+    return !!head && !!body && !head.contains(body);
+  };
+  return icons && sep("report","#personalReport") && sep("scene","#scenarioMatch");
+})());
+chk("★ 03 內容卡包晒全部港人卡，副標題有「下面」", (function(){
   const panel=d.querySelector('#resultFolder [data-rf="scene"]');
   if(!panel) return false;
-  const big=panel.querySelector(":scope > .card");
+  const cards=[...panel.querySelectorAll(":scope > .card")];
+  const body=cards[cards.length-1];
   const grid=d.getElementById("scenarioMatch");
   const sub=panel.querySelector(".rf-sub");
-  const cards=d.querySelectorAll("#scenarioMatch .scn-card");
-  return !!big && !!grid && big.contains(grid) && cards.length>0
+  const tiles=d.querySelectorAll("#scenarioMatch .scn-card");
+  return !!body && !!grid && body.contains(grid) && tiles.length>0
     && !d.querySelector("#scenarioMatch .card")
     && /下面邊種港人最似你/.test((sub&&sub.textContent)||"");
 })());
@@ -69,7 +83,7 @@ chk("★ 01-05 第一張卡標題 19px，02-05 副標題 15px", (function(){
   const t=w.getComputedStyle(titles[0]), s=w.getComputedStyle(subs[0]);
   return t.fontSize==="19px" && t.fontWeight==="900" && s.fontSize==="15px";
 })(), String(d.querySelectorAll("#resultFolder .rf-title").length));
-chk("★ 免費版：標題係「你嘅個人化報告」（冇「完整版」字眼）", /你嘅個人化報告/.test(locked) && !/完整版/.test(locked));
+chk("★ 免費版：標題係「你嘅個人化報告」（冇「完整版」字眼）", /你嘅個人化報告/.test(d.querySelector('#resultFolder [data-rf="report"]').textContent) && !/完整版/.test(d.querySelector('#resultFolder [data-rf="report"]').textContent));
 chk("★ 免費版：已經冇「解鎖完整版」掣（2026-10-04 開放免費）", !/解鎖完整版/.test(locked) && !/unlockFull\(\)/.test(locked));
 const axisEl = d.querySelector("#personalReport .pr-pct-lab");
 const noteEl = d.querySelector("#personalReport .pr-pct-note");
