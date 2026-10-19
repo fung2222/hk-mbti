@@ -38,6 +38,14 @@ w.renderResult(JSON.parse(JSON.stringify(R)));
 let box=d.getElementById("personalReport");
 const locked=box.innerHTML;
 chk("★ 未解鎖：出咗 D 卡片", locked.length>0);
+chk("★ 01-05 第一張卡標題 19px、副標題 15px，性格分析有卡", (function(){
+  const titles=d.querySelectorAll("#resultFolder .rf-title");
+  const subs=d.querySelectorAll("#resultFolder .rf-sub");
+  if(titles.length<5 || subs.length<5) return false;
+  const t=w.getComputedStyle(titles[0]), s=w.getComputedStyle(subs[0]);
+  const self=d.querySelector('#resultFolder [data-rf="self"] .rf-title');
+  return t.fontSize==="19px" && t.fontWeight==="900" && s.fontSize==="15px" && !!self && !!self.closest(".card");
+})(), String(d.querySelectorAll("#resultFolder .rf-title").length));
 chk("★ 免費版：標題係「你嘅個人化報告」（冇「完整版」字眼）", /你嘅個人化報告/.test(locked) && !/完整版/.test(locked));
 chk("★ 免費版：已經冇「解鎖完整版」掣（2026-10-04 開放免費）", !/解鎖完整版/.test(locked) && !/unlockFull\(\)/.test(locked));
 const nameEl = d.querySelector("#personalReport .pr-sim-n");

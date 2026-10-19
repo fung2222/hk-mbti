@@ -200,7 +200,8 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 #resultFolder .rf-more-lg{font-size:16px;min-height:48px;padding:12px 22px}
 .rf-star{width:16px;height:16px;fill:currentColor;margin-right:6px;flex-shrink:0}
 .pair-pick{border:0;background:var(--soft);color:var(--ink);font-size:11px;font-weight:700;padding:6px 8px;border-radius:8px;font-family:inherit}
-#resultFolder .ln-head{font-size:12px;letter-spacing:.16em;color:#8B6F3D;font-weight:700;margin:0 0 18px}
+#resultFolder .rf-title{font-size:19px;font-weight:900;color:#1E2A3B;line-height:1.35;margin:0 0 6px;letter-spacing:-.01em}
+#resultFolder .rf-sub{font-size:15px;font-weight:400;color:#6b6560;line-height:1.6;margin:0 0 16px}
 #resultFolder .ln-scene{margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid rgba(30,42,59,.10)}
 #resultFolder .ln-scene:last-child{border-bottom:0;margin-bottom:4px;padding-bottom:0}
 #resultFolder .ln-name{font-size:18px;font-weight:900;color:#1E2A3B;margin:0 0 8px}
@@ -1245,6 +1246,8 @@ html.dk .result-more-btn{background:rgba(240,115,111,.15);border-color:rgba(240,
 html.dk .share-btn{background:var(--soft);border-color:rgba(236,231,222,.22);color:#D8C69E}
 html.dk .share-btn:hover{background:var(--dk-hover)}
 html.dk #pairPick .pair-pill{background:var(--dk-card)}
+html.dk #resultFolder .rf-title{color:#F2F5F9}
+html.dk #resultFolder .rf-sub{color:#A79E92}
 html.dk #personalReport .pr-pct-row + .pr-pct-row{border-top-color:rgba(255,255,255,.10)}
 html.dk{
   --paper:#12161C;--soft:#1B2129;--ink:#ECE7DE;--gold:#D9B26A;--accent:#F0736F;
@@ -1260,7 +1263,7 @@ html.dk #result .rf-k,html.dk #result .rf-go{color:#D8C69E}
 html.dk .pair-sel{background:#1B2129;color:#F2F5F9;border-color:rgba(255,255,255,.16)}
 html.dk .pair-me-t{color:#F2F5F9}
 html.dk .pair-me-k{color:#D8C69E}
-html.dk #resultFolder .ln-head,html.dk #resultFolder .ln-k{color:#D8C69E}
+html.dk #resultFolder .ln-k{color:#D8C69E}
 html.dk #resultFolder .ln-name{color:#F2F5F9}
 html.dk #resultFolder .ln-ul li{color:#E7E1D8}
 html.dk #resultFolder .ln-scene{border-bottom-color:rgba(255,255,255,.10)}
@@ -2729,8 +2732,11 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    </div>
   </div>
   <div class="rf-panel" data-rf="self">
-   <h3 class="text-xs tracking-widest brand-gold font-bold mb-3">你的性格分析</h3>
-   <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
+   <div class="card p-5">
+    <div class="rf-title">你的性格分析</div>
+    <p class="rf-sub">你是邊種人、刻度、強項弱項</p>
+    <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
+   </div>
    <div class="rf-more-wrap">
     <button type="button" onclick="goTypeFromResult()" class="result-more-btn rf-more-lg"><svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>看完整分析</button>
    </div>
@@ -2739,15 +2745,24 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    <div id="personalReport" class="mb-4"></div>
   </div>
   <div class="rf-panel hidden" data-rf="pair">
-   <div class="hub-sec-title mb-3">與你的朋友配對</div>
-   <p class="text-xs text-gray-600 mb-3">揀一種人格，睇你同佢點相處</p>
+   <div class="card p-5 mb-4">
+    <div class="rf-title">與你的朋友配對</div>
+    <p class="rf-sub">揀一種人格，睇你同佢點相處</p>
+   </div>
    <div id="pairPick"></div>
   </div>
   <div class="rf-panel hidden" data-rf="scene">
-   <h3 class="font-bold mb-3">你喺邊種港人？</h3>
+   <div class="card p-5 mb-4">
+    <div class="rf-title">你喺邊種港人？</div>
+    <p class="rf-sub">邊種港人最似你</p>
+   </div>
    <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
   </div>
   <div class="rf-panel hidden" data-rf="full">
+   <div class="card p-5 mb-4">
+    <div class="rf-title">三個場面點講</div>
+    <p class="rf-sub">返工、屋企、拍拖</p>
+   </div>
    <div id="lineBox"></div>
    <div class="rf-more-wrap"><button type="button" class="result-more-btn rf-more-lg" onclick="goTypeFromResult()"><svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>睇 9 章深入分析</button></div>
   </div>
@@ -5055,8 +5070,9 @@ window.renderPersonalReport = function(r){
     const right = o.me ? "你嘅結果" : ("差 " + o.diff.length + " 個字母（" + o.diff.join("、") + "）");
     return '<div class="pr-sim"><span><span class="pr-sim-c">' + o.code + '</span> <span class="pr-sim-n">' + o.name + '</span></span><span class="pr-sim-d">' + right + '</span></div>';
   }).join("");
-  box.innerHTML = '<div class="card p-4">'
-    + '<div class="text-xs tracking-widest brand-gold font-bold mb-3">你嘅個人化報告</div>'
+  box.innerHTML = '<div class="card p-5">'
+    + '<div class="rf-title">你嘅個人化報告</div>'
+    + '<p class="rf-sub">最似嘅型、盲點、傾向</p>'
     + '<div class="sub-label">最似你嘅 3 個型</div>' + simRows
     + '<div class="sub-label mt-4">你嘅 3 個盲點</div>' + d.notes.map(function(n){ return '<p class="pr-note">' + n + '</p>'; }).join("")
     + '</div>'
@@ -7093,7 +7109,7 @@ window.renderLines = function(type){
     const lockNote = locked
     ? '<div class="rf-more-wrap"><button type="button" class="result-more-btn rf-more-lg" onclick="openUpgrade()">睇齊三句可以講、三句唔好講</button></div>'
     : "";
-    box.innerHTML = '<div class="ln-head">三個場面點講</div>' + blocks + lockNote;
+    box.innerHTML = blocks + lockNote;
 };
 window.renderPairPick = function(myType){
   const box = document.getElementById("pairPick");
