@@ -154,5 +154,20 @@ chk("★ ③ .share-btn 冇喺主 style 出現 dark 版",
 
 chk("★ 05 完整內容入口有星", /id="rfLockRow"[\s\S]{0,500}class="rf-star"/.test(SRC));
 chk("★ 05 入面 9 章掣同其他頁同一款、有星", /data-rf="full"[\s\S]{0,900}class="result-more-btn rf-more-lg"[\s\S]{0,240}class="rf-star"/.test(SRC));
+chk("★ 03 係港人情境加免費，04 係朋友配對有星同解鎖", (function(){
+  const list=SRC.slice(SRC.indexOf('id="resultFolders"'), SRC.indexOf('id="resultFolders"')+3200);
+  const btns=[...list.matchAll(/<button[\s\S]*?<\/button>/g)].map(m=>m[0]);
+  const b03=btns.find(b=>/>03</.test(b))||"";
+  const b04=btns.find(b=>/>04</.test(b))||"";
+  return /港人情境/.test(b03) && /免費/.test(b03) && /openResultFolder\('scene'\)/.test(b03)
+    && /朋友配對/.test(b04) && /rf-star/.test(b04) && /解鎖/.test(b04) && /openResultFolder\('pair'\)/.test(b04);
+})());
+chk("★ 01 02 有免費方塊，05 星後面有解鎖", (function(){
+  const list=SRC.slice(SRC.indexOf('id="resultFolders"'), SRC.indexOf('id="resultFolders"')+2600);
+  const i01=list.indexOf(">01<"), i02=list.indexOf(">02<"), i03=list.indexOf(">03<");
+  const i05=list.indexOf(">05<");
+  return /免費/.test(list.slice(i01, i02)) && /免費/.test(list.slice(i02, i03))
+    && /rf-star[\s\S]{0,180}解鎖/.test(list.slice(i05));
+})());
 console.log("\n===== 結果頁測試 "+ok+"/"+total+" =====");
 process.exit(ok===total?0:1);
