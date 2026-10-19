@@ -232,6 +232,13 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 #personalityDetail .scenario-badge{font-size:13px}
 #resultFolder .scn-desc{font-size:13px;font-weight:700;color:#6b6560;margin-top:4px;line-height:1.45}
 #resultFolder .scn-top{font-size:13px;font-weight:900;color:#8B6F3D;margin-bottom:2px}
+#resultFolder .scn-card{background:var(--soft);border:1px solid transparent;border-radius:12px;padding:12px 8px;text-align:center}
+#resultFolder [data-rf="scene"] > .card{border:1px solid rgba(30,42,59,.12)}
+html.dk #resultFolder [data-rf="scene"] > .card{border-color:rgba(255,255,255,.12)}
+#resultFolder .scn-card.is-top{border-color:var(--gold);background:rgba(212,169,95,.10)}
+#resultFolder .scn-card.is-close{opacity:.9}
+#resultFolder .scn-card.is-dim{opacity:.45}
+#scenarioMatch{margin-top:16px}
 #result .rf-free{color:#3A5A32;background:rgba(92,138,92,.16)}
 #result .rf-lock{color:#3A2E14;background:rgba(212,169,95,.28)}
 #result .rf-d{display:block;font-size:13px;color:#6b6560;margin-top:2px;line-height:1.45}
@@ -2747,11 +2754,11 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    <div id="pairPick"></div>
   </div>
   <div class="rf-panel hidden" data-rf="scene">
-   <div class="card p-5 mb-4">
+   <div class="card p-5">
     <div class="rf-title">你喺邊種港人？</div>
-    <p class="rf-sub">邊種港人最似你</p>
+    <p class="rf-sub">下面邊種港人最似你</p>
+    <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
    </div>
-   <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
   </div>
   <div class="rf-panel hidden" data-rf="full">
    <div class="card p-5 mb-4">
@@ -5157,10 +5164,10 @@ scored.forEach(({s, score}) => {
 const isTop = maxScore > 0 && score === maxScore;
 const isClose = maxScore > 0 && score === maxScore - 1 && score > 0;
 const wrapCls = isTop
- ? "card p-3 text-center border-2 border-gold bg-gradient-to-b from-yellow-50 to-white shadow-md"
+ ? "scn-card is-top"
  : isClose
- ? "card p-3 text-center border border-gold opacity-90"
- : "card p-3 text-center opacity-40";
+ ? "scn-card is-close"
+ : "scn-card is-dim";
 scenHtml += `
  <div class="${wrapCls}">
  ${isTop ? `<div class="scn-top">最似你</div>` : ``}
