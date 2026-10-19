@@ -787,9 +787,6 @@ margin-right:11px;
 .share-btn{background:var(--soft);border:1px solid #E0D6BE;color:#7C6B45}
 .share-btn:hover{background:#EDE6D6}
 .share-btn:active{transform:scale(.97)}
-/* 配對列表嘅型別 icon（跟該型色卡主色） */
-.cmp-ico{display:inline-flex;width:17px;height:17px;flex:0 0 auto}
-.cmp-ico svg{width:100%;height:100%;display:block}
 .glass{background:rgba(255,255,255,0.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .card{background:white;border-radius:1.2rem;box-shadow:0 4px 24px rgba(0,0,0,0.06)}
 .option{
@@ -2273,10 +2270,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <!-- 2 關係 -->
  <div id="typeTabRel" class="hidden">
  <div id="typeRelCards"></div>
- <div class="card p-5 mb-4">
- <div class="sub-label">同邊種人最夾</div>
- <div id="typeCompat"></div>
- </div>
  </div>
 
  <!-- 3 場景 -->
@@ -6745,11 +6738,8 @@ window.typeRelIcon = function(k){
  };
  return '<svg class="type-rel-ico" viewBox="0 0 24 24" aria-hidden="true">' + (IC[k] || "") + '</svg>';
 };
-// 相容度：唔用 Math.random()（每次 render 都變會似 bug）→ 由兩個代號砌出穩定值
-window.typeCompatPct = function(a, b){
- const x = (a.charCodeAt(0)*3 + a.charCodeAt(3)*5 + b.charCodeAt(0)*7 + b.charCodeAt(3)*11);
- return 82 + (x % 13);
-};
+// 相容度：2026-10-19 Roy 確認個 % 係砌出嚟（字母 charCode → 永遠 82–94），
+// MBTI 冇官方配對分數，無法變真 → 成個配對 % 區塊刪走，唔誤導用戶。
 window.renderTypeTabs = function(code){
  code = String(code || window._lastType || "INTJ").toUpperCase();
  const T = (window.TYPES && window.TYPES[code]) || {};
@@ -6793,15 +6783,6 @@ window.renderTypeTabs = function(code){
   + relCol("友情裡嘅你", "friend", (_fl.friend || _fl.love), "#4F8A5B")
   + relCol("衝突處理", "conflict", (_fl.conflict || _fl.love), "#D08A3E")
   + '</div>';
- const cp = _g("typeCompat");
- if(cp) cp.innerHTML = (T.compat || []).map(function(c, i){
-  const ct = window.TYPES[c];
-  if(!ct) return "";
-  return '<div class="flex items-center gap-3 py-2.5"' + (i ? ' style="border-top:1px solid rgba(30,42,59,.06)"' : '') + '>'
-   + '<div class="flex-1"><div class="font-bold text-sm flex items-center gap-1.5"><span class="cmp-ico" style="color:' + ((window.PALETTE && window.PALETTE[c]) ? window.PALETTE[c].c1 : "currentColor") + '">' + (window.getTypeIcon ? window.getTypeIcon(c) : "") + '</span><span>' + c + ' · ' + ct.cn + '</span></div>'
-   + '<div class="text-xs text-gray-500">' + ct.slogan + '</div></div>'
-   + '<div class="text-xs text-accent font-bold">' + window.typeCompatPct(code, c) + '% 夾</div></div>';
- }).join("");
 
  // ---- 3 場景（原本獨立 #typeScenes 分頁，Roy 2026-10-02 併入呢度）----
  const mk = function(list, fn){

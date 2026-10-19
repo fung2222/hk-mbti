@@ -23,8 +23,7 @@ setTimeout(()=>{
   chk('P1-1 全 16 型 × 9 章（'+n+' 章）零字面 <br>', n>=144 && leak===0, 'n='+n+' leak='+leak);
   // P1-2 結果頁 % 穩定
   chk('P1-2 結果頁配對唔再出假 % 夾', !/typeCompatPct\(type, c\)/.test(src) && /openPairFromGrid/.test(src));
-  chk('P1-2 同一個配對兩次計同一個數', w.typeCompatPct("INTJ","ENFP")===w.typeCompatPct("INTJ","ENFP"));
-  const pct=w.typeCompatPct("INTJ","ENFP"); chk('P1-2 範圍 82–94（同人格頁一致）', pct>=82&&pct<=94, pct);
+  chk('P1-2 人格頁關係分頁亦冇假 % 夾（typeCompatPct 已刪）', !/window\.typeCompatPct/.test(src) && !/id="typeCompat"/.test(src));
   // P1-3 雙擊唔可以跳題
   w.openProfile("life");
   setTimeout(()=>{

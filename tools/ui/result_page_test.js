@@ -106,14 +106,8 @@ const dom2=new JSDOM(HTML,{runScripts:"dangerously",pretendToBeVisual:true,url:"
 const w2d=dom2.window, d2=dom2.window.document;
 w2d.openType("INTJ","hub");
 try{ w2d.setTypeTab("rel", true); }catch(e){}
-const cmpHtml = d2.getElementById("typeCompat") ? d2.getElementById("typeCompat").innerHTML : "";
-const cmpIcos = d2.querySelectorAll("#typeCompat .cmp-ico svg");
-const cmpRows = d2.querySelectorAll("#typeCompat .flex-1");
-chk("★ ⑤ 關係 tab「同邊種人最夾？」每行英文前面有型別 icon（"+cmpRows.length+" 行）",
-    cmpRows.length > 0 && cmpIcos.length === cmpRows.length, "行=" + cmpRows.length + " icon=" + cmpIcos.length);
-chk("★ ⑤ 關係 tab icon 用返該型色卡主色",
-    [...cmpIcos].every(s => /(^#[0-9A-Fa-f]{6}$)|(^rgb\()/.test((s.closest(".cmp-ico")||{}).style ? s.closest(".cmp-ico").style.color : "")),
-    [...d2.querySelectorAll("#typeCompat .cmp-ico")].map(s=>s.style.color).slice(0,3).join(","));
+chk("★ ⑤ 關係 tab 已經冇假「同邊種人最夾」%", !d2.getElementById("typeCompat") && !/% 夾/.test(d2.getElementById("typeTabRel").textContent));
+chk("★ ⑤ 關係 tab 仍然有 4 張真內容卡", d2.querySelectorAll("#typeRelCards .type-rel-card").length===4, d2.querySelectorAll("#typeRelCards .type-rel-card").length);
 
 // ───────── 五、結果頁二次微調（Roy 2026-10-02 第二批）─────────
 chk("★ ① 分享卡已冇日期（冇 dateLabel）", !/dateLabel/.test(SRC));

@@ -146,11 +146,9 @@ chk("★ icon 唔係一個公仔走天涯（16 型用到 >=6 個語意家族）"
   chk("★ 關係 tab 有 4 張卡（職場／愛情／友情／衝突）", d.querySelectorAll("#typeRelCards .type-rel-card").length===4, d.querySelectorAll("#typeRelCards .type-rel-card").length);
   chk("★ 關係卡有 icon（線條 stroke 風格）", d.querySelectorAll("#typeRelCards .type-rel-ico").length===4);
   chk("★ 關係卡文字唔再係一行逗號（逐項列出）", d.querySelectorAll("#typeRelCards .type-rel-item").length>=15, d.querySelectorAll("#typeRelCards .type-rel-item").length);
-  chk("★ 關係 tab 有相容性（2 個型 + 穩定 %）", d.querySelectorAll("#typeCompat > div").length===2 && /% 夾/.test($("#typeCompat").textContent));
-  chk("★ 相容 % 係穩定值（唔用 Math.random）", !/Math\.random/.test(src.slice(src.indexOf("window.renderTypeTabs = function"), src.indexOf("window.openDeepChapterFromType = function"))));
-  const _p1=$("#typeCompat").textContent.match(/(\d+)% 夾/)[1];
-  w.openType("INTJ","hub"); btn("rel").click();
-  chk("★ 相容 % 重開之後一樣", $("#typeCompat").textContent.match(/(\d+)% 夾/)[1]===_p1, _p1+" vs "+$("#typeCompat").textContent.match(/(\d+)% 夾/)[1]);
+  chk("★ 關係 tab 已經冇「同邊種人最夾」假 %（2026-10-19 Roy：假數據要刪）",
+      !d.querySelector("#typeCompat") && !/% 夾/.test(d.getElementById("typeTabRel").textContent)
+      && !/typeCompatPct/.test(src));
 
   // 場景
   btn("scene").click();
@@ -287,9 +285,9 @@ chk("★ 解鎖掣喺 9 章上面，唔係夾喺列表同底部測試卡中間",
       w._typeTab+" / "+$("#typeSceneList").querySelectorAll(".scene-go-row").length);
   w.setTypeTab("rel"); await new Promise(r=>setTimeout(r,60));
   $("#typeNext").click(); await new Promise(r=>setTimeout(r,120));
-  chk("★ 喺「關係」分頁轉型 → 仍然留喺關係分頁、配對 icon 重 render",
-      w._typeTab==="rel" && $("#typeCompat").querySelectorAll(".cmp-ico").length>0,
-      w._typeTab+" / "+$("#typeCompat").querySelectorAll(".cmp-ico").length);
+  chk("★ 喺「關係」分頁轉型 → 仍然留喺關係分頁、4 張卡重 render",
+      w._typeTab==="rel" && $("#typeRelCards").querySelectorAll(".type-rel-card").length===4,
+      w._typeTab+" / "+$("#typeRelCards").querySelectorAll(".type-rel-card").length);
   // 來源要記住（由結果頁入 → 轉型後 _typeFrom 仍然係 result）
   w._typeFrom="result"; w.openType("INTJ","result"); await new Promise(r=>setTimeout(r,40));
   $("#typeNext").click(); await new Promise(r=>setTimeout(r,80));
