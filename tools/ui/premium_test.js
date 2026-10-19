@@ -361,6 +361,7 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
     await w.restorePlayPurchases();
     w.openUpgrade();
     chk('★ 未購買：掣叫立即解鎖，價錢喺掣上面、嚟自 Play（9.99），唔寫死', $('#upgradeCta').textContent.trim()==='立即解鎖' && /9\.99/.test(($('#upgradePrice')||{}).textContent||'') && !/HK\$18/.test($('#upgradeCta').textContent), ($('#upgradeCta').textContent||'') + ' | ' + (($('#upgradePrice')||{}).textContent||''));
+    chk('★ 未購買：掣下面寫「解鎖全部內容，換機都可以還原。」', $('#upgradeNote').textContent.trim()==='解鎖全部內容，換機都可以還原。', $('#upgradeNote').textContent);
     chk('★ 未購買：購買卡唔再話未開放／冇收費', !/未開放/.test($('#upgradeBuy').textContent) && !/冇收費/.test($('#upgradeBuy').textContent), $('#upgradeBuy').textContent.replace(/\s+/g,' ').slice(0,90));
 
     w.PaymentRequest = function(methods){
