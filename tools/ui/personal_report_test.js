@@ -45,6 +45,28 @@ chk("★ 01-05 面板內冇細過 13px 嘅字", (function(){
   return bad.every(v=>v>=13);
 })(), ["#personalityDetail .scenario-badge","#lineBox .ln-k","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
   .map(sel=>{const el=d.querySelector(sel); return el?w.getComputedStyle(el).fontSize:"冇";}).join("/"));
+chk("★ 02-05 標題卡上下留白相等、副標題縮排、icon 26px", (function(){
+  const ks=["report","scene","pair","full"];
+  const ok=ks.every(k=>{
+    const p=d.querySelector('#resultFolder [data-rf="'+k+'"]');
+    const head=p&&p.querySelector(".rf-title")&&p.querySelector(".rf-title").closest(".card");
+    if(!head) return false;
+    const cs=w.getComputedStyle(head);
+    const sub=head.querySelector(".rf-sub");
+    const ico=head.querySelector("svg.rf-ico");
+    const sc=sub?w.getComputedStyle(sub):null;
+    const ic=ico?w.getComputedStyle(ico):null;
+    return cs.paddingTop===cs.paddingBottom
+      && !!sc && parseFloat(sc.marginLeft)>=30
+      && !!ic && parseFloat(ic.width)>=26;
+  });
+  return ok;
+})(), (function(){
+  const p=d.querySelector('#resultFolder [data-rf="report"]');
+  const head=p.querySelector(".rf-title").closest(".card");
+  const cs=w.getComputedStyle(head), sub=head.querySelector(".rf-sub"), ico=head.querySelector("svg.rf-ico");
+  return [cs.paddingTop, cs.paddingBottom, w.getComputedStyle(sub).marginLeft, w.getComputedStyle(ico).width].join("/");
+})());
 chk("★ 02-05 標題都有彩色 icon，02/03 標題係獨立卡", (function(){
   const panels=["report","scene","pair","full"].map(k=>d.querySelector('#resultFolder [data-rf="'+k+'"]')).filter(Boolean);
   if(panels.length!==4) return false;

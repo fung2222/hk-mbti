@@ -199,7 +199,10 @@ html.dk #personalReport .pr-pct-one{border-color:rgba(255,255,255,.12)}
 .rf-star{width:16px;height:16px;fill:currentColor;margin-right:6px;flex-shrink:0}
 .pair-pick{border:0;background:var(--soft);color:var(--ink);font-size:11px;font-weight:700;padding:6px 8px;border-radius:8px;font-family:inherit}
 #resultFolder .rf-title{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:900;color:#1E2A3B;line-height:1.35;margin:0 0 6px;letter-spacing:-.01em}
-#resultFolder .rf-ico{width:22px;height:22px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#resultFolder .rf-ico{width:26px;height:26px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#resultFolder .rf-head{padding:18px 20px;display:flex;flex-direction:column;justify-content:center}
+#resultFolder .rf-head .rf-title{margin:0}
+#resultFolder .rf-head .rf-sub{margin:6px 0 0 34px}
 #resultFolder .rf-sub{font-size:15px;font-weight:400;color:#6b6560;line-height:1.6;margin:0 0 16px}
 #resultFolder .ln-scene{margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid rgba(30,42,59,.10)}
 #resultFolder .ln-scene:last-child{border-bottom:0;margin-bottom:4px;padding-bottom:0}
@@ -2743,21 +2746,21 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <!-- 2026-10-19 Roy：01 直接跳人格頁，唔再自己排一次；保留隱藏容器畀舊 render 用 -->
   <div id="personalityDetail" class="hidden" aria-hidden="true"></div>
   <div class="rf-panel hidden" data-rf="report">
-   <div class="card p-5 mb-4">
+   <div class="card rf-head mb-4">
     <div class="rf-title"><svg class="rf-ico" viewBox="0 0 24 24" style="color:#5A7D8C" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M9 9h7"/><path d="M9 13h7"/><path d="M9 17h4"/></svg>你嘅個人化報告</div>
     <p class="rf-sub">盲點同傾向</p>
    </div>
    <div id="personalReport"></div>
   </div>
   <div class="rf-panel hidden" data-rf="pair">
-   <div class="card p-5 mb-4">
+   <div class="card rf-head mb-4">
     <div class="rf-title"><svg class="rf-ico" viewBox="0 0 24 24" style="color:#8A3E9E" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9" r="2.6"/><path d="M3 20c0-3.3 2.7-5.8 6-5.8s6 2.5 6 5.8"/><path d="M16.8 14.4c2.3.3 4.2 2.4 4.2 5.2"/></svg>與你的朋友配對</div>
     <p class="rf-sub">揀一種人格，睇你同佢點相處</p>
    </div>
    <div id="pairPick"></div>
   </div>
   <div class="rf-panel hidden" data-rf="scene">
-   <div class="card p-5 mb-4">
+   <div class="card rf-head mb-4">
     <div class="rf-title"><svg class="rf-ico" viewBox="0 0 24 24" style="color:#4F8A5B" aria-hidden="true"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>你喺邊種港人？</div>
     <p class="rf-sub">下面邊種港人最似你</p>
    </div>
@@ -2766,7 +2769,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    </div>
   </div>
   <div class="rf-panel hidden" data-rf="full">
-   <div class="card p-5 mb-4">
+   <div class="card rf-head mb-4">
     <div class="rf-title"><svg class="rf-ico" viewBox="0 0 24 24" style="color:#C4A35A" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M20 18v3H6.5A2.5 2.5 0 0 1 4 18.5"/></svg>三個場面點講</div>
     <p class="rf-sub">返工、屋企、拍拖</p>
    </div>
