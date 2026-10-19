@@ -5823,7 +5823,15 @@ if(prev && prev.letter){ openLetter(prev.letter); return; }
 if(typeof window.openHub === "function"){ openHub(); return; }
  }
 if(id === "result"){ show("result"); return; }
-if(id === "resultFolder"){ window.openResultFolder((prev && prev.rf) || "self"); return; }
+if(id === "resultFolder"){
+  try{
+    let idx = 0;
+    try{ idx = parseInt(sessionStorage.getItem("hkmbti_last_record_idx"), 10) || 0; }catch(e){}
+    if(typeof window.viewHistoryResult === "function") window.viewHistoryResult(idx);
+  }catch(e){}
+  window.openResultFolder((prev && prev.rf) || "self");
+  return;
+}
 if(id === "upgrade"){ show("upgrade"); return; }
 if(id === "deep"){
 if(prev && prev.deepType && (window.PREMIUM || {})[prev.deepType]){ window.renderDeepTypeToc(prev.deepType); return; }

@@ -6,14 +6,14 @@ const { JSDOM } = require("jsdom");
 const root = path.resolve(__dirname, "../..");
 const src = fs.readFileSync(path.join(root, "index.html"), "utf8");
 // typeScenes 獨立分頁已拆（2026-10-02）→ 場景攻略而家係人格頁 #type 嘅一個 tab
-const SECTIONS = ["home","profile","test","result","about","hub","dims","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter","pair"];
+const SECTIONS = ["home","profile","test","result","resultFolder","about","hub","dims","letter","type","socialArticle","romanceArticle","method","privacy","upgrade","deep","deepChapter","pair"];
 
 let pass = 0, fail = 0;
 const chk = (n, ok, got) => { if (ok) pass++; else { fail++; console.log("✗ " + n + "   <- " + (got === undefined ? "" : got)); } };
 
 function bootSync(label, opts) { return boot(label, opts); }
 
-function boot(label, { lastSection, lastNav, navType = "reload", hubMode } = {}) {
+function boot(label, { lastSection, lastNav, navType = "reload", hubMode, history } = {}) {
   const dom = new JSDOM(src, {
     runScripts: "dangerously",
     pretendToBeVisual: true,
@@ -23,13 +23,15 @@ function boot(label, { lastSection, lastNav, navType = "reload", hubMode } = {})
       if (lastSection) { try { w.sessionStorage.setItem("hkmbti_last_section", lastSection); } catch (e) {} }
       if (lastNav) { try { w.sessionStorage.setItem("hkmbti_last_nav", JSON.stringify(lastNav)); } catch (e) {} }
       if (hubMode) { try { w.sessionStorage.setItem("hkmbti_hub_mode", hubMode); } catch (e) {} }
+      if (history) { try { w.localStorage.setItem("hkmbti_history", JSON.stringify(history)); } catch (e) {} }
       w.performance.getEntriesByType = function (t) { return t === "navigation" ? [{ type: navType }] : []; };
       w.scrollTo = function () {};
       // jsdom 唔會 load 外部 script → inject 場景資料（模擬真機已載入）
       const _A = { ENFP: { body: "b" } };
       w.SOCIAL = { WhatsAppGroup: { name: "WhatsApp 群組", desc: "d", articles: _A }, FamilyGathering: { name: "親戚飯局", desc: "d", articles: _A }, TeaFriend: { name: "飲茶吹水朋友", desc: "d", articles: _A }, GroupProject: { name: "Group Project 隊友", desc: "d", articles: _A }, Roommate: { name: "室友", desc: "d", articles: _A }, Workplace: { name: "返工同事", desc: "d", articles: _A }, 失戀陪: { name: "失戀時陪佢", desc: "d", articles: _A } };
       w.ROMANCE = { 拍拖: { name: "點同佢拍拖", desc: "d", articles: _A }, 吵架: { name: "同佢點收科", desc: "d", articles: _A }, 分手: { name: "點同佢分手", desc: "d", articles: _A } };
-      w.TYPES = { ENFP: { name: "調停者" }, INTJ: { name: "建築師" }, INFP: { name: "調解員", cn: "調解員" } };
+      w.TYPES = { ENFP: { name: "調停者", cn: "競選者", desc: "測試描述夠長用來確認下拉重整之後內容仲在", tags: ["靜"], score: [], compat: ["INFP"] }, INTJ: { name: "建築師", cn: "建築師", desc: "d", tags: [], score: [], compat: [] }, INFP: { name: "調解員", cn: "調解員", desc: "d", tags: [], score: [], compat: [] } };
+      w.SCENARIOS = [];
       // 配對深入資料（模擬真機已載入 pair-data.js）—— 唔注入就會走「陸續補上」分支 ✗
       w.PAIRS = { "INFP|ENFP": { spark: "兩个", clash: ["a","b","c"], give: ["d","e"], sum: "f" } };
     }
@@ -53,6 +55,7 @@ const cases = [
   boot("下拉重整（last_section 壞值）", { lastSection: "someGarbageId", lastNav: { id: "someGarbageId" } }),
   boot("下拉重整（last_nav 壞 JSON）", { lastSection: "hub", lastNav: null }),
   boot("下拉重整（原本停配對深入）", { lastSection: "pair", lastNav: { id: "pair", pairA: "INFP", pairB: "ENFP" } }),
+  boot("下拉重整（原本停結果文件夾）", { lastSection: "resultFolder", lastNav: { id: "resultFolder", rf: "self" }, history: [{ id: "r1", mbti: "ENFP-T", name: "Roy", version: "life", timestamp: Date.now(), pct: { EI: [40, 60], SN: [35, 65], TF: [70, 30], JP: [80, 20], TA: [62, 38] }, score: {}, closeAxes: [] }] }),
 ];
 
 let done = 0;
@@ -91,6 +94,11 @@ setTimeout(() => {
       if (n.indexOf("最容易撞嘅 3 個位") >= 0 && /<li>/.test(n)) p2++;
       else { f2++; console.log("  ✗ 配對頁下拉重整後內容冇晒！長度 = " + n.length); }
       if (visible.join() === "pair") p2++; else { f2++; console.log("  ✗ 配對頁重整後唔止一個畫面顯示：" + visible.join()); }
+    }
+    if (c.label.includes("結果文件夾")) {
+      const pd = ((c.d.getElementById("personalityDetail") || {}).textContent || "").trim();
+      const showing = !c.d.getElementById("resultFolder").classList.contains("hidden");
+      if (showing && pd.length > 20) p2++; else { f2++; console.log("  ✗ 結果文件夾下拉後內容冇晒！顯示=" + showing + " 字數=" + pd.length); }
     }
     if (c.label.includes("維度詳解")) {
       const n = c.d.querySelectorAll("#dims .hub-letter-list > div").length;
