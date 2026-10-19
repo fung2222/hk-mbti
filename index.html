@@ -189,6 +189,7 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 .stat-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8b96d);border-radius:999px;transition:width .5s ease}
 /* 2026-10-11 Roy：首頁「香港分佈」摘要（內容由 renderHomeStats 動態填，唔准寫死數字） */
 #hk-stats{margin:30px 0 40px}   /* 2026-10-11 Roy：同「探索更多」中間原本只有 4px，太逼 → 40px */
+#homeSecLine{height:1px;margin:22px 0;background:rgba(30,42,59,.18);border:0}
 .hk-stats-sub{font-size:12px;color:#6b6560;margin:0 0 14px;line-height:1.7}
 .hk-stats-list{display:grid;gap:8px}
 .hk-stats-item{background:rgba(212,169,95,.06);border-radius:10px;padding:10px 12px}
@@ -951,6 +952,7 @@ html.dk .hub-row-chev{color:#C0A87A}
   html.dt .home-acc-label .scenes-title-ico{width:22px;height:22px;margin-right:8px;color:var(--gold);vertical-align:-4px}
 
   html.dt .scenes-bleed{margin:0;padding:48px 0 52px;background:var(--soft)}
+  html.dt #homeSecLine{width:var(--dt-w);margin:28px auto}
   /* 2026-10-11 Roy：首頁「香港分佈」摘要（桌面／平板：左文案、右數據） */
   html.dt #hk-stats:not(.hidden){width:var(--dt-w);margin:0 auto;padding:52px 0 8px;display:grid;
     grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);column-gap:48px;align-items:center}
@@ -1201,6 +1203,7 @@ html.dk{
   --dk-line:rgba(236,231,222,.13);--dk-line2:rgba(236,231,222,.22);
 }
 /* 白色卡／漸變 → 深卡 */
+html.dk #homeSecLine{background:rgba(236,231,222,.22)}
 html.dk .scenes-bleed,html.dk .result-bleed,html.dk .hub-bleed{background:linear-gradient(180deg,var(--dk-card),var(--paper))}
 html.dk .home-acc{background:var(--dk-card);box-shadow:0 4px 24px rgba(0,0,0,.42)}
 html.dk .hub-mode-switch{background:#20272F}
@@ -2406,6 +2409,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  </div>
  </div>
+
+ <div id="homeSecLine" aria-hidden="true"></div>
 
  <!-- 香港分佈（摘要）· 2026-10-11 Roy：首頁加一段短摘要，連去完整統計頁 -->
  <div id="hk-stats">

@@ -157,6 +157,11 @@ setTimeout(() => {
   // ---------- 4. 香港分佈摘要（Roy 2026-10-11）----------
   const hk = d.getElementById("hk-stats");
   check("首頁有 #hk-stats（香港分佈摘要）而且喺 #home 入面", !!hk && !!hk.closest("#home"));
+  check("★ 港式日常情景同香港分佈中間有分隔線", (function(){
+    const line = d.getElementById("homeSecLine");
+    const scenes = d.querySelector("#home .scenes-bleed");
+    return !!line && !!scenes && !!hk && scenes.compareDocumentPosition(line) === 4 && line.compareDocumentPosition(hk) === 4;
+  })());
   check("#hk-stats 連去完整統計頁（./stats.html）", !!hk && !!hk.querySelector('a[href="./stats.html"]'));
   check("#hk-stats 由 renderHomeStats 填內容（唔准寫死數字）",
     /window\.renderHomeStats = function\(\)/.test(html) && /id="hkStatsList"/.test(html));
