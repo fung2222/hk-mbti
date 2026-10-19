@@ -40,6 +40,14 @@ const locked=box.innerHTML;
 chk("★ 未解鎖：出咗 D 卡片", locked.length>0);
 chk("★ 免費版：標題係「你嘅個人化報告」（冇「完整版」字眼）", /你嘅個人化報告/.test(locked) && !/完整版/.test(locked));
 chk("★ 免費版：已經冇「解鎖完整版」掣（2026-10-04 開放免費）", !/解鎖完整版/.test(locked) && !/unlockFull\(\)/.test(locked));
+const nameEl = d.querySelector("#personalReport .pr-sim-n");
+const axisEl = d.querySelector("#personalReport .pr-pct-lab");
+const noteEl = d.querySelector("#personalReport .pr-pct-note");
+chk("★ 個人報告細字統一：型名 13、軸 13、說明 15",
+  !!nameEl && w.getComputedStyle(nameEl).fontSize==="13px"
+  && !!axisEl && w.getComputedStyle(axisEl).fontSize==="13px"
+  && !!noteEl && w.getComputedStyle(noteEl).fontSize==="15px",
+  [nameEl&&w.getComputedStyle(nameEl).fontSize, axisEl&&w.getComputedStyle(axisEl).fontSize, noteEl&&w.getComputedStyle(noteEl).fontSize].join("/"));
 chk("★ 免費版：直接出齊內容（3 相似型 ＋ 3 盲點），唔再鎖", (locked.match(/pr-sim-c/g)||[]).length===3 && (locked.match(/pr-note/g)||[]).length===3);
 
 // 已解鎖
@@ -205,6 +213,12 @@ const _go = d.querySelector("#pairGo");
 chk("★ 掣存在且未買會去完整版、買咗先開配對", !!_go && /openPairFromPick\(/.test(_go.getAttribute("onclick")||"") && /offerLocked\(\)/.test(RAW.slice(RAW.indexOf("window.openPairFromPick"), RAW.indexOf("window.openPairFromPick")+400)));
 chk("★ 掣唔再擠喺 .text-right 角落（改咗下拉下面）", !!_go && !_go.closest(".text-right") && !!d.querySelector("#pairSel"));
 chk("★ 左邊顯示自己嘅型，右邊係下拉", !!d.querySelector(".pair-me-t") && !!d.querySelector("#pairSel"));
+chk("★ 配對工具包成卡，同性格比較同一款", (function(){
+  const pick=d.querySelector("#pairPick");
+  const card=pick && pick.closest(".card");
+  const go=d.getElementById("pairGo");
+  return !!card && !!pick.querySelector(".grid") && /btn-gold/.test((go||{}).className||"") && /hub-sec-title/.test(card.innerHTML);
+})());
 chk("★ 配對列表仍然有型號 / % 夾", /% 夾/.test(d.getElementById("compatibility").textContent));
 
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
