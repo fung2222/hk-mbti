@@ -178,7 +178,8 @@ chk("★ 朋友配對係 16 格色框，唔再係百科卡", d.querySelectorAll(
 w._billingPrice = "HK$9.99";
 w.renderLines("INTJ");
 chk("★ 已開收費未買：場面只露一句，唔好講收起",
-   !/<div class="text-xs text-gray-500">唔好講<\/div>/.test(d.getElementById("lineBox").innerHTML) && /睇齊三句可以講/.test(d.getElementById("lineBox").innerHTML));
+   !/唔好講/.test(d.getElementById("lineBox").innerHTML)
+   && (function(){ const b=[...d.querySelectorAll("#resultFolder [data-rf='full'] button")].pop(); return !!b && /深入分析/.test(b.textContent); })());
 w.openPair("INFP","ENFP");
 chk("★ 已開收費未買：配對只露開頭，完整相處要解鎖",
    /要解鎖先睇到/.test(d.getElementById("pairBody").innerHTML) && !/最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));

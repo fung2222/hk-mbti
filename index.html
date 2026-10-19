@@ -199,11 +199,23 @@ html.dk #personalReport .pr-pct-one{border-color:rgba(255,255,255,.12)}
 .rf-star{width:16px;height:16px;fill:currentColor;margin-right:6px;flex-shrink:0}
 .pair-pick{border:0;background:var(--soft);color:var(--ink);font-size:11px;font-weight:700;padding:6px 8px;border-radius:8px;font-family:inherit}
 #resultFolder .rf-title{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:900;color:#1E2A3B;line-height:1.35;margin:0 0 6px;letter-spacing:-.01em}
-#resultFolder .rf-ico{width:26px;height:26px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-#resultFolder .rf-head{padding:18px 20px;display:flex;flex-direction:column;justify-content:center}
+#resultFolder .rf-ico{width:34px;height:34px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#resultFolder .rf-head{padding:18px 20px;display:flex;align-items:center;gap:14px}
+#resultFolder .rf-head-txt{min-width:0;flex:1}
 #resultFolder .rf-head .rf-title{margin:0}
-#resultFolder .rf-head .rf-sub{margin:6px 0 0 34px}
+#resultFolder .rf-head .rf-sub{margin:6px 0 0}
+#personalReport .pr-pct-one{padding:20px 20px 6px}
 #resultFolder .rf-sub{font-size:15px;font-weight:400;color:#6b6560;line-height:1.6;margin:0 0 16px}
+#resultFolder .rf-cta-gold{background:#D4A95F;border-color:#D4A95F;color:#1E2A3B;min-height:48px;font-size:16px;font-weight:700}
+#resultFolder .rf-cta-gold .rf-star{fill:#1E2A3B}
+html.dk #resultFolder .rf-cta-gold{background:#D4A95F;border-color:#D4A95F;color:#1E2A3B}
+html.dk #resultFolder .rf-cta-gold .rf-star{fill:#1E2A3B}
+#resultFolder .ln-tabs{display:flex;gap:8px;margin:0 0 16px}
+#resultFolder .ln-tab{flex:1;font-family:inherit;font-size:15px;font-weight:700;padding:11px 8px;border-radius:10px;border:1px solid rgba(30,42,59,.14);background:transparent;color:#6b6560;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+#resultFolder .ln-tab.is-on{background:#D4A95F;border-color:#D4A95F;color:#1E2A3B}
+#resultFolder .ln-pane{padding:2px 2px 4px}
+html.dk #resultFolder .ln-tab{border-color:rgba(255,255,255,.16);color:#A79E92}
+html.dk #resultFolder .ln-tab.is-on{background:#D4A95F;border-color:#D4A95F;color:#1E2A3B}
 #resultFolder .ln-scene{margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid rgba(30,42,59,.10)}
 #resultFolder .ln-scene:last-child{border-bottom:0;margin-bottom:4px;padding-bottom:0}
 #resultFolder .ln-name{font-size:18px;font-weight:900;color:#1E2A3B;margin:0 0 8px}
@@ -2747,34 +2759,44 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <div id="personalityDetail" class="hidden" aria-hidden="true"></div>
   <div class="rf-panel hidden" data-rf="report">
    <div class="card rf-head mb-4">
-    <div class="rf-title"><svg class="rf-ico" viewBox="0 0 24 24" style="color:#5A7D8C" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M9 9h7"/><path d="M9 13h7"/><path d="M9 17h4"/></svg>你嘅個人化報告</div>
-    <p class="rf-sub">盲點同傾向</p>
+    <svg class="rf-ico" viewBox="0 0 24 24" style="color:#5A7D8C" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M9 9h7"/><path d="M9 13h7"/><path d="M9 17h4"/></svg>
+    <div class="rf-head-txt">
+     <div class="rf-title">你嘅個人化報告</div>
+     <p class="rf-sub">盲點同傾向</p>
+    </div>
    </div>
    <div id="personalReport"></div>
   </div>
   <div class="rf-panel hidden" data-rf="pair">
    <div class="card rf-head mb-4">
-    <div class="rf-title"><svg class="rf-ico" viewBox="0 0 24 24" style="color:#8A3E9E" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9" r="2.6"/><path d="M3 20c0-3.3 2.7-5.8 6-5.8s6 2.5 6 5.8"/><path d="M16.8 14.4c2.3.3 4.2 2.4 4.2 5.2"/></svg>與你的朋友配對</div>
-    <p class="rf-sub">揀一種人格，睇你同佢點相處</p>
+    <svg class="rf-ico" viewBox="0 0 24 24" style="color:#8A3E9E" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><circle cx="16.5" cy="9" r="2.6"/><path d="M3 20c0-3.3 2.7-5.8 6-5.8s6 2.5 6 5.8"/><path d="M16.8 14.4c2.3.3 4.2 2.4 4.2 5.2"/></svg>
+    <div class="rf-head-txt">
+     <div class="rf-title">與你的朋友配對</div>
+     <p class="rf-sub">揀一種人格，睇你同佢點相處</p>
+    </div>
    </div>
    <div id="pairPick"></div>
   </div>
   <div class="rf-panel hidden" data-rf="scene">
    <div class="card rf-head mb-4">
-    <div class="rf-title"><svg class="rf-ico" viewBox="0 0 24 24" style="color:#4F8A5B" aria-hidden="true"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>你喺邊種港人？</div>
-    <p class="rf-sub">下面邊種港人最似你</p>
+    <svg class="rf-ico" viewBox="0 0 24 24" style="color:#4F8A5B" aria-hidden="true"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+    <div class="rf-head-txt">
+     <div class="rf-title">你喺邊種港人？</div>
+     <p class="rf-sub">下面邊種港人最似你</p>
+    </div>
    </div>
-   <div class="card p-5">
-    <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
-   </div>
+   <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
   </div>
   <div class="rf-panel hidden" data-rf="full">
    <div class="card rf-head mb-4">
-    <div class="rf-title"><svg class="rf-ico" viewBox="0 0 24 24" style="color:#C4A35A" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M20 18v3H6.5A2.5 2.5 0 0 1 4 18.5"/></svg>三個場面點講</div>
-    <p class="rf-sub">返工、屋企、拍拖</p>
+    <svg class="rf-ico" viewBox="0 0 24 24" style="color:#C4A35A" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M20 18v3H6.5A2.5 2.5 0 0 1 4 18.5"/></svg>
+    <div class="rf-head-txt">
+     <div class="rf-title">三個場面點講</div>
+     <p class="rf-sub">返工、屋企、拍拖</p>
+    </div>
    </div>
    <div id="lineBox"></div>
-   <div class="rf-more-wrap"><button type="button" class="result-more-btn rf-more-lg" onclick="goTypeFromResult()"><svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>睇 9 章深入分析</button></div>
+   <div class="rf-more-wrap"><button type="button" class="result-more-btn rf-more-lg rf-cta-gold" onclick="goTypeFromResult()"><svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>深入分析</button></div>
   </div>
  </section>
 
@@ -7099,20 +7121,26 @@ window.renderLines = function(type){
   if(!L){ box.innerHTML = ""; return; }
   const locked = window.offerLocked();
   const scenes = [["work","返工"],["home","屋企"],["date","拍拖"]];
-  const blocks = scenes.map(function(sc){
+  const tabs = '<div class="ln-tabs">' + scenes.map(function(sc, i){
+    return '<button type="button" class="ln-tab' + (i === 0 ? " is-on" : "") + '" data-ln="' + sc[0] + '" onclick="lnTab(\'' + sc[0] + '\')">' + sc[1] + '</button>';
+  }).join("") + '</div>';
+  const panes = scenes.map(function(sc, i){
     const d = L[sc[0]] || {say:[], dont:[]};
     const say = locked ? (d.say || []).slice(0, 1) : (d.say || []);
     const dont = locked ? [] : (d.dont || []);
     const lis = function(arr){ return arr.map(function(x){ return "<li>" + x + "</li>"; }).join(""); };
-    return '<section class="ln-scene"><h3 class="ln-name">' + sc[1] + '</h3>'
+    return '<div class="ln-pane' + (i === 0 ? "" : " hidden") + '" data-ln="' + sc[0] + '">'
       + '<p class="ln-k">可以講</p><ul class="ln-ul">' + lis(say) + '</ul>'
       + (dont.length ? '<p class="ln-k ln-no">唔好講</p><ul class="ln-ul ln-bad">' + lis(dont) + '</ul>' : '')
-      + '</section>';
-    }).join("");
-    const lockNote = locked
-    ? '<div class="rf-more-wrap"><button type="button" class="result-more-btn rf-more-lg" onclick="openUpgrade()">睇齊三句可以講、三句唔好講</button></div>'
-    : "";
-    box.innerHTML = blocks + lockNote;
+      + '</div>';
+  }).join("");
+  box.innerHTML = tabs + panes;
+};
+window.lnTab = function(k){
+  const box = document.getElementById("lineBox");
+  if(!box) return;
+  [...box.querySelectorAll(".ln-tab")].forEach(function(b){ b.classList.toggle("is-on", b.getAttribute("data-ln") === k); });
+  [...box.querySelectorAll(".ln-pane")].forEach(function(p){ p.classList.toggle("hidden", p.getAttribute("data-ln") !== k); });
 };
 window.renderPairPick = function(myType){
   const box = document.getElementById("pairPick");

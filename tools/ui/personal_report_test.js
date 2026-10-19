@@ -45,32 +45,67 @@ chk("★ 01-05 面板內冇細過 13px 嘅字", (function(){
   return bad.every(v=>v>=13);
 })(), ["#personalityDetail .scenario-badge","#lineBox .ln-k","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
   .map(sel=>{const el=d.querySelector(sel); return el?w.getComputedStyle(el).fontSize:"冇";}).join("/"));
-chk("★ 02-05 標題卡上下留白相等、副標題縮排、icon 26px", (function(){
+chk("★ 02-05 icon 獨立喺卡內垂直置中、34px", (function(){
+  const ks=["report","scene","pair","full"];
+  const css=/\.rf-head\{[^}]*align-items:center/.test(RAW) && /\.rf-ico\{[^}]*width:34px/.test(RAW);
+  const struct=ks.every(k=>{
+    const p=d.querySelector('#resultFolder [data-rf="'+k+'"]');
+    const head=p.querySelector(".rf-title").closest(".card");
+    const ico=head&&head.querySelector("svg.rf-ico");
+    return !!ico && ico.parentElement===head;
+  });
+  return css && struct;
+})(), (function(){
+  const p=d.querySelector('#resultFolder [data-rf="report"]');
+  const head=p.querySelector(".rf-title").closest(".card");
+  return String(head.querySelector("svg.rf-ico")&&head.querySelector("svg.rf-ico").parentElement===head);
+})());
+chk("★ 02 盲點同傾向標題左邊、顏色、字重一致", (function(){
+  const g=d.querySelector("#personalReport .pr-gold"), t=d.querySelector("#personalReport .pr-pct-title");
+  if(!g||!t) return false;
+  const gs=w.getComputedStyle(g), ts=w.getComputedStyle(t);
+  return Math.abs(g.getBoundingClientRect().left-t.getBoundingClientRect().left)<=1
+    && gs.color===ts.color && gs.fontSize===ts.fontSize && gs.fontWeight===ts.fontWeight;
+})(), (function(){
+  const g=d.querySelector("#personalReport .pr-gold"), t=d.querySelector("#personalReport .pr-pct-title");
+  const gs=w.getComputedStyle(g), ts=w.getComputedStyle(t);
+  return [Math.round(g.getBoundingClientRect().left), Math.round(t.getBoundingClientRect().left), gs.color, ts.color].join("/");
+})());
+chk("★ 03 十張港人卡冇外層卡", (function(){
+  const grid=d.getElementById("scenarioMatch");
+  if(!grid) return false;
+  return !grid.closest(".card") && d.querySelectorAll("#scenarioMatch .scn-card").length>=10;
+})());
+chk("★ 05 三個場面係書籤頁，最底掣寫「深入分析」", (function(){
+  const box=d.querySelector("#resultFolder [data-rf='full']");
+  const tabs=box.querySelectorAll(".ln-tab");
+  const panes=box.querySelectorAll(".ln-pane");
+  const btn=[...box.querySelectorAll("button")].pop();
+  return tabs.length===3 && panes.length===3
+    && [...panes].filter(e=>!e.classList.contains("hidden")).length===1
+    && !!btn && /深入分析/.test(btn.textContent);
+})());
+chk("★ 02-05 標題卡上下留白相等、icon 34px", (function(){
   const ks=["report","scene","pair","full"];
   const ok=ks.every(k=>{
     const p=d.querySelector('#resultFolder [data-rf="'+k+'"]');
     const head=p&&p.querySelector(".rf-title")&&p.querySelector(".rf-title").closest(".card");
     if(!head) return false;
     const cs=w.getComputedStyle(head);
-    const sub=head.querySelector(".rf-sub");
     const ico=head.querySelector("svg.rf-ico");
-    const sc=sub?w.getComputedStyle(sub):null;
-    const ic=ico?w.getComputedStyle(ico):null;
-    return cs.paddingTop===cs.paddingBottom
-      && !!sc && parseFloat(sc.marginLeft)>=30
-      && !!ic && parseFloat(ic.width)>=26;
+    return cs.paddingTop===cs.paddingBottom && !!ico && parseFloat(w.getComputedStyle(ico).width)>=32;
   });
   return ok;
 })(), (function(){
   const p=d.querySelector('#resultFolder [data-rf="report"]');
   const head=p.querySelector(".rf-title").closest(".card");
-  const cs=w.getComputedStyle(head), sub=head.querySelector(".rf-sub"), ico=head.querySelector("svg.rf-ico");
-  return [cs.paddingTop, cs.paddingBottom, w.getComputedStyle(sub).marginLeft, w.getComputedStyle(ico).width].join("/");
+  const cs=w.getComputedStyle(head), ico=head.querySelector("svg.rf-ico");
+  return [cs.paddingTop, cs.paddingBottom, w.getComputedStyle(ico).width].join("/");
 })());
 chk("★ 02-05 標題都有彩色 icon，02/03 標題係獨立卡", (function(){
   const panels=["report","scene","pair","full"].map(k=>d.querySelector('#resultFolder [data-rf="'+k+'"]')).filter(Boolean);
   if(panels.length!==4) return false;
-  const icons=panels.every(p=>{ const t=p.querySelector(".rf-title"); const i=t&&t.querySelector("svg.rf-ico"); return !!i && (i.getAttribute("style")||"").indexOf("color")>=0; });
+  const icons=panels.every(p=>{ const t=p.querySelector(".rf-title"); const h=t&&t.closest(".card"); const i=h&&h.querySelector("svg.rf-ico"); return !!i && (i.getAttribute("style")||"").indexOf("color")>=0; });
   const sep=function(k,bodySel){
     const p=d.querySelector('#resultFolder [data-rf="'+k+'"]');
     const t=p.querySelector(".rf-title");
@@ -83,13 +118,11 @@ chk("★ 02-05 標題都有彩色 icon，02/03 標題係獨立卡", (function(){
 chk("★ 03 內容卡包晒全部港人卡，副標題有「下面」", (function(){
   const panel=d.querySelector('#resultFolder [data-rf="scene"]');
   if(!panel) return false;
-  const cards=[...panel.querySelectorAll(":scope > .card")];
-  const body=cards[cards.length-1];
   const grid=d.getElementById("scenarioMatch");
   const sub=panel.querySelector(".rf-sub");
   const tiles=d.querySelectorAll("#scenarioMatch .scn-card");
-  return !!body && !!grid && body.contains(grid) && tiles.length>0
-    && !d.querySelector("#scenarioMatch .card")
+  return !!grid && panel.contains(grid) && tiles.length>=10
+    && !grid.closest(".card")
     && /下面邊種港人最似你/.test((sub&&sub.textContent)||"");
 })());
 chk("★ 01 直接跳人格頁，唔再自己排一次", (function(){

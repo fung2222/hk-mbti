@@ -148,7 +148,7 @@ chk("★ ③ .share-btn 冇喺主 style 出現 dark 版",
     !/html\.dk \.share-btn\{/.test(SRC.slice(0, SRC.indexOf('id="dark-layer"'))));
 
 chk("★ 05 完整內容入口有星", /id="rfLockRow"[\s\S]{0,500}class="rf-star"/.test(SRC));
-chk("★ 05 入面 9 章掣同其他頁同一款、有星", /data-rf="full"[\s\S]{0,900}class="result-more-btn rf-more-lg"[\s\S]{0,240}class="rf-star"/.test(SRC));
+chk("★ 05 入面 9 章掣同其他頁同一款、有星", /data-rf="full"[\s\S]{0,900}class="result-more-btn rf-more-lg[^"]*"[\s\S]{0,240}class="rf-star"/.test(SRC));
 chk("★ 03 係港人情境加免費，04 係朋友配對有星同解鎖", (function(){
   const list=SRC.slice(SRC.indexOf('id="resultFolders"'), SRC.indexOf('id="resultFolders"')+3200);
   const btns=[...list.matchAll(/<button[\s\S]*?<\/button>/g)].map(m=>m[0]);
