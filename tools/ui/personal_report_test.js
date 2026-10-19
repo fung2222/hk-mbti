@@ -73,6 +73,12 @@ chk("★ 免費版：標題係「你嘅個人化報告」（冇「完整版」�
 chk("★ 免費版：已經冇「解鎖完整版」掣（2026-10-04 開放免費）", !/解鎖完整版/.test(locked) && !/unlockFull\(\)/.test(locked));
 const axisEl = d.querySelector("#personalReport .pr-pct-lab");
 const noteEl = d.querySelector("#personalReport .pr-pct-note");
+chk("★ 02 傾向標題同盲點標題一樣大", (function(){
+  const t=d.querySelector("#personalReport .pr-pct-title");
+  const g=d.querySelector("#personalReport .pr-gold");
+  if(!t||!g) return false;
+  return w.getComputedStyle(t).fontSize===w.getComputedStyle(g).fontSize;
+})(), (function(){ const t=d.querySelector("#personalReport .pr-pct-title"), g=d.querySelector("#personalReport .pr-gold"); return [t&&w.getComputedStyle(t).fontSize, g&&w.getComputedStyle(g).fontSize].join("/"); })());
 chk("★ 02 傾向標題喺卡內，盲點標題轉金色", (function(){
   const one=d.querySelector("#personalReport .pr-pct-one");
   const gold=d.querySelector("#personalReport .pr-gold");
