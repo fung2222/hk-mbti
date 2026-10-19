@@ -198,8 +198,10 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 .pair-sel{flex:1 1 58%;min-width:0;height:46px;border-radius:10px;border:1px solid rgba(30,42,59,.16);background:#fff;color:#1E2A3B;font-size:15px;font-family:inherit;padding:0 10px}
 #resultFolder .rf-more-wrap{display:flex;justify-content:center;align-items:center;margin:28px 0 8px}
 #resultFolder .rf-more-inline{margin:18px 0 4px}
-#resultFolder .rf-type{display:inline-flex;align-items:center;gap:6px;vertical-align:-3px}
-#resultFolder .rf-type svg{width:1.15em;height:1.15em;display:block}
+#resultFolder .rf-type{display:inline-flex;align-items:center;gap:7px;vertical-align:-4px;font-size:1.62em;line-height:1}
+#resultFolder .rf-type svg{width:1.02em;height:1.02em;display:block}
+#resultFolder .rf-more-sm{font-size:14px;font-weight:700;min-height:36px;padding:8px 14px}
+#resultFolder .rf-arrow{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;margin-left:5px;flex-shrink:0}
 #resultFolder .rf-more-lg{font-size:16px;min-height:48px;padding:12px 22px}
 .rf-star{width:16px;height:16px;fill:currentColor;margin-right:6px;flex-shrink:0}
 .pair-pick{border:0;background:var(--soft);color:var(--ink);font-size:11px;font-weight:700;padding:6px 8px;border-radius:8px;font-family:inherit}
@@ -5147,7 +5149,7 @@ let detailHtml = `
  <div class="flex gap-2 flex-wrap mt-3">
  ${t.tags.map(tag => `<span class="scenario-badge bg-soft text-ink">${tag}</span>`).join("")}
  </div>
- <div class="rf-more-wrap rf-more-inline"><button type="button" onclick="goTypeFromResult()" class="result-more-btn rf-more-lg"><svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>看完整分析</button></div>
+ <div class="rf-more-wrap rf-more-inline"><button type="button" onclick="goTypeFromResult()" class="result-more-btn rf-more-sm">睇完整分析<svg class="rf-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"/></svg></button></div>
  <div class="mt-4 pt-4 border-t border-gray-100">
  <div class="sub-label">性格刻度</div>
  ${scoreBars}
