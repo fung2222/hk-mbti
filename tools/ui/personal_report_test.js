@@ -45,10 +45,15 @@ chk("★ 01-05 面板內冇細過 13px 嘅字", (function(){
   return bad.every(v=>v>=13);
 })(), ["#personalityDetail .scenario-badge","#lineBox .ln-k","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
   .map(sel=>{const el=d.querySelector(sel); return el?w.getComputedStyle(el).fontSize:"冇";}).join("/"));
-chk("★ 01-05 第一張卡標題 19px、副標題 15px，性格分析有卡", (function(){
+chk("★ 01 副標題喺頁頂，唔喺卡入面", (function(){
+  const sub=d.getElementById("resultFolderSub");
+  const cardSub=d.querySelector('#resultFolder [data-rf="self"] .rf-sub');
+  return !!sub && /你是邊種人/.test(sub.textContent) && !!sub.closest(".page-hero") && !cardSub;
+})());
+chk("★ 01-05 第一張卡標題 19px，02-05 副標題 15px", (function(){
   const titles=d.querySelectorAll("#resultFolder .rf-title");
   const subs=d.querySelectorAll("#resultFolder .rf-sub");
-  if(titles.length<5 || subs.length<5) return false;
+  if(titles.length<5 || subs.length<4) return false;
   const t=w.getComputedStyle(titles[0]), s=w.getComputedStyle(subs[0]);
   const self=d.querySelector('#resultFolder [data-rf="self"] .rf-title');
   return t.fontSize==="19px" && t.fontWeight==="900" && s.fontSize==="15px" && !!self && !!self.closest(".card");

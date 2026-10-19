@@ -257,6 +257,7 @@ html.dk #hk-stats .hk-stats-item{background:#2A323C}
 .page-back{position:relative;z-index:2;font-size:14px;line-height:1.25;color:rgba(255,255,255,.75);text-decoration:none;font-weight:400;background:none;border:0;padding:0;cursor:pointer;font-family:inherit;-webkit-appearance:none;appearance:none}
 .page-back:hover{color:#fff}
 .page-hero-sub{margin:6px 0 0;font-size:12px;opacity:.75;text-align:center}
+#resultFolder .page-hero-sub{font-size:13px;opacity:.85}
 #nickGrid button{transition:all .15s}
 #nickGrid button:active{transform:scale(.96)}
 #profileName:focus{box-shadow:0 0 0 3px rgba(212,169,95,.25)}
@@ -2738,11 +2739,11 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
     <button type="button" class="page-back" onclick="goBack()">返回</button>
     <h1 id="resultFolderTitle">性格分析</h1>
    </div>
+   <p class="page-hero-sub" id="resultFolderSub">你是邊種人、刻度、強項弱項</p>
   </div>
   <div class="rf-panel" data-rf="self">
    <div class="card p-5">
     <div class="rf-title">你的性格分析</div>
-    <p class="rf-sub">你是邊種人、刻度、強項弱項</p>
     <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
    </div>
    <div class="rf-more-wrap">
@@ -7088,9 +7089,16 @@ window.openResultFolder = function(key){
     return;
   }
   const titles = {self:"性格分析", report:"個人報告", pair:"朋友配對", scene:"港人情境", full:"完整內容"};
+  const subs = {self:"你是邊種人、刻度、強項弱項"};
   window._resultFolder = key || "self";
   const h = document.getElementById("resultFolderTitle");
   if(h) h.textContent = titles[window._resultFolder] || "結果";
+  const sb = document.getElementById("resultFolderSub");
+  if(sb){
+    const st = subs[window._resultFolder] || "";
+    sb.textContent = st;
+    sb.classList.toggle("hidden", !st);
+  }
   const panels = document.querySelectorAll("#resultFolder .rf-panel");
   for(let i = 0; i < panels.length; i++){
     panels[i].classList.toggle("hidden", panels[i].getAttribute("data-rf") !== window._resultFolder);
