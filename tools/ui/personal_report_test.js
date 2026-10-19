@@ -45,6 +45,17 @@ chk("★ 01-05 面板內冇細過 13px 嘅字", (function(){
   return bad.every(v=>v>=13);
 })(), ["#personalityDetail .scenario-badge","#lineBox .ln-k","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
   .map(sel=>{const el=d.querySelector(sel); return el?w.getComputedStyle(el).fontSize:"冇";}).join("/"));
+chk("★ 01 標題係你嘅性格係＋icon＋型號，掣喺刻度上面", (function(){
+  const t=d.getElementById("resultSelfTitle");
+  const btn=d.querySelector('#personalityDetail .result-more-btn');
+  const outside=d.querySelector('#resultFolder [data-rf="self"] > .rf-more-wrap');
+  if(!t || !btn || outside) return false;
+  const svg=t.querySelector("svg");
+  const cs=svg?w.getComputedStyle(svg):null;
+  return /你嘅性格係/.test(t.textContent) && !!svg && /[EI][NS][TF][JP]/.test(t.textContent)
+    && /goTypeFromResult/.test(btn.getAttribute("onclick")||"")
+    && btn.compareDocumentPosition(d.getElementById("personalityDetail").querySelector(".border-t")) & 4;
+})());
 chk("★ 01 副標題喺頁頂，唔喺卡入面", (function(){
   const sub=d.getElementById("resultFolderSub");
   const cardSub=d.querySelector('#resultFolder [data-rf="self"] .rf-sub');

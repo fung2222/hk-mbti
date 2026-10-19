@@ -197,6 +197,9 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 .pair-me-t{font-size:16px;font-weight:900;color:#1E2A3B;line-height:1.3}
 .pair-sel{flex:1 1 58%;min-width:0;height:46px;border-radius:10px;border:1px solid rgba(30,42,59,.16);background:#fff;color:#1E2A3B;font-size:15px;font-family:inherit;padding:0 10px}
 #resultFolder .rf-more-wrap{display:flex;justify-content:center;align-items:center;margin:28px 0 8px}
+#resultFolder .rf-more-inline{margin:18px 0 4px}
+#resultFolder .rf-type{display:inline-flex;align-items:center;gap:6px;vertical-align:-3px}
+#resultFolder .rf-type svg{width:1.15em;height:1.15em;display:block}
 #resultFolder .rf-more-lg{font-size:16px;min-height:48px;padding:12px 22px}
 .rf-star{width:16px;height:16px;fill:currentColor;margin-right:6px;flex-shrink:0}
 .pair-pick{border:0;background:var(--soft);color:var(--ink);font-size:11px;font-weight:700;padding:6px 8px;border-radius:8px;font-family:inherit}
@@ -2743,11 +2746,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   </div>
   <div class="rf-panel" data-rf="self">
    <div class="card p-5">
-    <div class="rf-title">你的性格分析</div>
+    <div class="rf-title" id="resultSelfTitle">你嘅性格係</div>
     <div id="personalityDetail" class="text-sm text-gray-700 leading-relaxed space-y-3"></div>
-   </div>
-   <div class="rf-more-wrap">
-    <button type="button" onclick="goTypeFromResult()" class="result-more-btn rf-more-lg"><svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>看完整分析</button>
    </div>
   </div>
   <div class="rf-panel hidden" data-rf="report">
@@ -5147,6 +5147,7 @@ let detailHtml = `
  <div class="flex gap-2 flex-wrap mt-3">
  ${t.tags.map(tag => `<span class="scenario-badge bg-soft text-ink">${tag}</span>`).join("")}
  </div>
+ <div class="rf-more-wrap rf-more-inline"><button type="button" onclick="goTypeFromResult()" class="result-more-btn rf-more-lg"><svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>看完整分析</button></div>
  <div class="mt-4 pt-4 border-t border-gray-100">
  <div class="sub-label">性格刻度</div>
  ${scoreBars}
@@ -5157,6 +5158,12 @@ let detailHtml = `
 try{ if(r && r.pct) window._lastScoreObj = r; window.renderPersonalReport(r); }catch(e){}
 
 const type = r.mbti.substring(0,4);
+const _selfTitle = document.getElementById("resultSelfTitle");
+if(_selfTitle){
+  const _P = (window.getPalette ? window.getPalette(type) : null) || {c1:"#8B6F3D"};
+  _selfTitle.innerHTML = '你嘅性格係 <span class="rf-type" style="color:' + _P.c1 + '">'
+    + (window.getTypeIcon ? window.getTypeIcon(type) : "") + '<b>' + type + '</b></span>';
+}
  // 場景配對：按字母重疊計分（唔再要求全中，否則 ENTJ 等會零著燈）
 const letterHit = (L) => type.indexOf(L) >= 0;
 const scored = window.SCENARIOS.map(s => {

@@ -128,7 +128,7 @@ const _sl = new Function("window","document", (SRC.match(/window\.shareDateLabel
 chk("★ ② shareDateLabel 出 YYYY.MM.DD（連日子）", _sl(Date.UTC(2026,9,2)) === "2026.10.02", String(_sl(Date.UTC(2026,9,2))));
 chk("★ ② shareDateLabel 補零（個位數月／日）", _sl(Date.UTC(2026,0,5)) === "2026.01.05", String(_sl(Date.UTC(2026,0,5))));
 chk("★ ③ 「看完整分析」紅色字已變實體按鈕 .result-more-btn",
-    /class="result-more-btn rf-more-lg"[\s\S]{0,400}看完整分析<\/button>/.test(SRC.slice(SRC.indexOf('id="resultFolder"'), SRC.indexOf('id="resultFolder"')+1800)));
+    /class="result-more-btn rf-more-lg"[\s\S]{0,400}看完整分析<\/button>/.test(SRC));
 chk("★ ③ 唔再係「純文字 link」（舊 background:none 嗰串已冇）",
     !/background:none;border:0;font-family:inherit;cursor:pointer;padding:0;">看完整分析/.test(SRC));
 chk("★ ③ 按鈕保留 accent 紅色識別", /\.result-more-btn\{[^}]*color:var\(--accent\)/.test(SRC));
