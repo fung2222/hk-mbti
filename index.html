@@ -185,7 +185,7 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 #pairPick .pair-pill{background:#fff;border-radius:10px;padding:10px 6px;text-align:center;border:2px solid transparent;line-height:1.3;cursor:pointer;font-family:inherit;-webkit-appearance:none;appearance:none;color:var(--ink)}
 #pairPick .pair-pill svg{width:22px;height:22px;display:block;margin:0 auto 4px}
 #pairPick .pair-pill .code{font-weight:900;font-size:14px;display:block}
-#pairPick .pair-pill .cn{display:block;font-size:10px;opacity:.7;margin-top:2px}
+#pairPick .pair-pill .cn{display:block;font-size:13px;opacity:.75;margin-top:2px;line-height:1.3}
 #pairGo{display:flex;align-items:center;justify-content:center;gap:6px}
 /* 配對深入（B 模組，2026-10-04）*/
 /* 2026-10-06 Roy：原本 84x26px、11px、淡米底 → 太細太淡（喺 350px 行內只佔 24%）→ 改全闊金色實心 */
@@ -205,7 +205,7 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 #resultFolder .ln-scene{margin:0 0 22px;padding:0 0 18px;border-bottom:1px solid rgba(30,42,59,.10)}
 #resultFolder .ln-scene:last-child{border-bottom:0;margin-bottom:4px;padding-bottom:0}
 #resultFolder .ln-name{font-size:18px;font-weight:900;color:#1E2A3B;margin:0 0 8px}
-#resultFolder .ln-k{font-size:12px;letter-spacing:.14em;color:#8B6F3D;margin:12px 0 4px}
+#resultFolder .ln-k{font-size:13px;letter-spacing:.14em;color:#8B6F3D;margin:12px 0 4px}
 #resultFolder .ln-k.ln-no{color:#8A7568}
 #resultFolder .ln-ul{margin:0;padding:0;list-style:none}
 #resultFolder .ln-ul li{position:relative;padding-left:16px;font-size:16px;line-height:1.85;color:#3A342C;margin:0 0 2px}
@@ -229,6 +229,9 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 #result .rf-k{display:block;font-size:11px;letter-spacing:.16em;color:#8B6F3D;margin-bottom:3px}
 #result .rf-t{display:flex;align-items:center;flex-wrap:wrap;gap:6px;font-size:18px;font-weight:900;color:#1E2A3B;line-height:1.3}
 #result .rf-tag{display:inline-flex;align-items:center;font-size:11px;font-weight:700;line-height:1;padding:3px 6px;border-radius:4px;letter-spacing:.04em}
+#personalityDetail .scenario-badge{font-size:13px}
+#resultFolder .scn-desc{font-size:13px;font-weight:700;color:#6b6560;margin-top:4px;line-height:1.45}
+#resultFolder .scn-top{font-size:13px;font-weight:900;color:#8B6F3D;margin-bottom:2px}
 #result .rf-free{color:#3A5A32;background:rgba(92,138,92,.16)}
 #result .rf-lock{color:#3A2E14;background:rgba(212,169,95,.28)}
 #result .rf-d{display:block;font-size:13px;color:#6b6560;margin-top:2px;line-height:1.45}
@@ -5172,10 +5175,10 @@ const wrapCls = isTop
  : "card p-3 text-center opacity-40";
 scenHtml += `
  <div class="${wrapCls}">
- ${isTop ? `<div class="text-[10px] font-black brand-gold mb-0.5">最似你</div>` : ``}
+ ${isTop ? `<div class="scn-top">最似你</div>` : ``}
  ${(window.SCENARIO_ICONS[s.name] || null) ? `<div class="scn-ico-wrap"><svg class="scn-ico" viewBox="0 0 24 24" style="color:${window.SCENARIO_ICONS[s.name].color}" aria-hidden="true">${window.SCENARIO_ICONS[s.name].path}</svg></div>` : ``}
  <div class="text-xs font-bold">${s.name}</div>
- <div class="text-[11px] text-gray-600 font-semibold mt-1">${s.desc}</div>
+ <div class="scn-desc">${s.desc}</div>
  </div>
  `;
  });

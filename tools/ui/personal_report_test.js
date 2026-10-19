@@ -38,6 +38,13 @@ w.renderResult(JSON.parse(JSON.stringify(R)));
 let box=d.getElementById("personalReport");
 const locked=box.innerHTML;
 chk("★ 未解鎖：出咗 D 卡片", locked.length>0);
+chk("★ 01-05 面板內冇細過 13px 嘅字", (function(){
+  const panel=d.querySelector('#resultFolder [data-rf="self"]');
+  const bad=["#personalityDetail .scenario-badge","#lineBox .ln-k","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
+    .map(sel=>{const el=d.querySelector(sel); return el?parseFloat(w.getComputedStyle(el).fontSize):0;});
+  return bad.every(v=>v>=13);
+})(), ["#personalityDetail .scenario-badge","#lineBox .ln-k","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
+  .map(sel=>{const el=d.querySelector(sel); return el?w.getComputedStyle(el).fontSize:"冇";}).join("/"));
 chk("★ 01-05 第一張卡標題 19px、副標題 15px，性格分析有卡", (function(){
   const titles=d.querySelectorAll("#resultFolder .rf-title");
   const subs=d.querySelectorAll("#resultFolder .rf-sub");
