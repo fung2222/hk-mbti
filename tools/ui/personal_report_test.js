@@ -201,13 +201,11 @@ chk("★ 「睇你哋點相處」掣唔再係舊嘅細淡樣式（11px / #7C6B45
 // 用真 DOM 檢查（regex 會橫跨 closing tags，唔可靠）
 w.localStorage.clear();
 w.renderResult(JSON.parse(JSON.stringify(R)));
-const _go = d.querySelector(".pair-go");
-chk("★ 掣存在且有 openPair handler", !!_go && /openPair\('/.test(_go.getAttribute("onclick")||""));
-chk("★ 掣唔再擠喺 .text-right 角落（改咗整行下面）", !!_go && !_go.closest(".text-right"));
-chk("★ 掣係配對行嘅獨立一行（parent 就係配對行）",
-    !!_go && !!_go.parentElement && /py-2\.5/.test(_go.parentElement.className) && _go.parentElement.querySelectorAll(".pair-go").length===1);
-chk("★ 配對行仍然有型號 / % 夾 / slogan",
-    !!_go && !!_go.parentElement && /% 夾/.test(_go.parentElement.textContent) && /pr|slogan|·/.test(_go.parentElement.textContent));
+const _go = d.querySelector("#pairGo");
+chk("★ 掣存在且未買會去完整版、買咗先開配對", !!_go && /openPairFromPick\(/.test(_go.getAttribute("onclick")||"") && /offerLocked\(\)/.test(RAW.slice(RAW.indexOf("window.openPairFromPick"), RAW.indexOf("window.openPairFromPick")+400)));
+chk("★ 掣唔再擠喺 .text-right 角落（改咗下拉下面）", !!_go && !_go.closest(".text-right") && !!d.querySelector("#pairSel"));
+chk("★ 左邊顯示自己嘅型，右邊係下拉", !!d.querySelector(".pair-me-t") && !!d.querySelector("#pairSel"));
+chk("★ 配對列表仍然有型號 / % 夾", /% 夾/.test(d.getElementById("compatibility").textContent));
 
 console.log("\n===== " + (ok===total ? "全部通過" : "有失敗") + " " + ok + "/" + total + " =====");
 process.exit(ok===total?0:1);
