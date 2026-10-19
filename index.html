@@ -172,7 +172,10 @@ transition:transform .45s ease,background .35s ease,color .35s ease
 #personalReport .pr-pct-note,#personalReport .pr-foot{margin-top:8px}
 #personalReport .pr-close{margin-top:12px}
 #personalReport .pr-pct-sec{margin-top:18px}
-#personalReport .pr-pct-one{padding:4px 16px 6px}
+#personalReport .pr-pct-one{padding:16px 16px 6px;border:1px solid rgba(30,42,59,.12)}
+html.dk #personalReport .pr-pct-one{border-color:rgba(255,255,255,.12)}
+#personalReport .pr-pct-title{font-size:12px;letter-spacing:.16em;color:#8B6F3D;font-weight:700;margin:0 0 10px}
+#personalReport .pr-gold{color:#8B6F3D}
 #personalReport .pr-pct-row{padding:14px 0}
 #personalReport .pr-pct-row + .pr-pct-row{border-top:1px solid rgba(30,42,59,.10)}
 #personalReport .pr-method{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;margin-top:16px;background-color:#D4A95F;color:#1E2A3B;border:0;border-radius:10px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
@@ -1254,6 +1257,7 @@ html.dk #resultFolder .rf-title{color:#F2F5F9}
 html.dk #resultFolder .rf-sub{color:#A79E92}
 html.dk #personalReport .pr-pct-row + .pr-pct-row{border-top-color:rgba(255,255,255,.10)}
 html.dk .pr-note{color:#A79E92}
+html.dk #personalReport .pr-pct-title,html.dk #personalReport .pr-gold{color:#D8C69E}
 html.dk{
   --paper:#12161C;--soft:#1B2129;--ink:#ECE7DE;--gold:#D9B26A;--accent:#F0736F;
   --dk-card:#181E26;--dk-hover:#232B35;--dk-on:#2A323C;
@@ -4995,8 +4999,8 @@ window.pctBlockHtml = function(r){
     ? `<p class="pr-close">${r.closeAxes.join("、")} 軸接近中間（分數差 1 分內），呢幾條軸可能兩邊都似。</p>`
     : "";
   return `<div class="pr-pct-sec">
-    <div class="text-xs tracking-widest brand-gold font-bold mb-3">你嘅傾向程度</div>
     <div class="card pr-pct-one">
+    <div class="pr-pct-title">你嘅傾向程度</div>
     ${row("E 外向", pct.EI[0], "內向 I", pct.EI[1], ac.EI, "EI")}
     ${row("S 實感", pct.SN[0], "直覺 N", pct.SN[1], ac.SN, "SN")}
     ${row("T 思考", pct.TF[0], "情感 F", pct.TF[1], ac.TF, "TF")}
@@ -5065,7 +5069,7 @@ window.renderPersonalReport = function(r){
   box.innerHTML = '<div class="card p-5">'
     + '<div class="rf-title">你嘅個人化報告</div>'
     + '<p class="rf-sub">盲點同傾向</p>'
-    + '<div class="sub-label">你嘅 3 個盲點</div>' + d.notes.map(function(n){ return '<p class="pr-note">' + n + '</p>'; }).join("")
+    + '<div class="sub-label pr-gold">你嘅 3 個盲點</div>' + d.notes.map(function(n){ return '<p class="pr-note">' + n + '</p>'; }).join("")
     + '</div>'
     + window.pctBlockHtml(r);
 };

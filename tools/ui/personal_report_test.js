@@ -73,6 +73,16 @@ chk("★ 免費版：標題係「你嘅個人化報告」（冇「完整版」�
 chk("★ 免費版：已經冇「解鎖完整版」掣（2026-10-04 開放免費）", !/解鎖完整版/.test(locked) && !/unlockFull\(\)/.test(locked));
 const axisEl = d.querySelector("#personalReport .pr-pct-lab");
 const noteEl = d.querySelector("#personalReport .pr-pct-note");
+chk("★ 02 傾向標題喺卡內，盲點標題轉金色", (function(){
+  const one=d.querySelector("#personalReport .pr-pct-one");
+  const gold=d.querySelector("#personalReport .pr-gold");
+  if(!one || !gold) return false;
+  const cs=w.getComputedStyle(gold);
+  const first=one.parentElement && one.parentElement.firstElementChild;
+  return !!one.querySelector(".pr-pct-title") && /你嘅傾向程度/.test(one.textContent)
+    && first===one
+    && /你嘅 3 個盲點/.test(gold.textContent) && cs.color==="rgb(139, 111, 61)";
+})(), (function(){ const g=d.querySelector("#personalReport .pr-gold"); return g?w.getComputedStyle(g).color:"冇"; })());
 chk("★ 傾向程度五條軸同一張卡，中間有分隔線", (function(){
   const rows=d.querySelectorAll("#personalReport .pr-pct-row");
   const card=d.querySelector("#personalReport .pr-pct-one");
@@ -227,8 +237,8 @@ chk("★ 個人化報告卡內有齊：3 盲點 + 傾向程度",
     /pr-note/.test(prPos) && /你嘅傾向程度/.test(prPos));
 chk("★ pctBlockHtml 係共用函數（唔再喺 renderResult 內硬寫）",
     RAW.includes("window.pctBlockHtml = function") && !/const pctBlock = \(_pct\.EI/.test(RAW));
-chk("★ 傾向程度卡冇 card class（唔再獨立卡框）",
-    !/class="card[^"]*"[^>]*>[\s\S]{0,80}你嘅傾向程度/.test(prPos));
+chk("★ 傾向程度標題喺五條軸同一張卡內（唔再另開卡框）",
+    (function(){ const t=d.querySelector("#personalReport .pr-pct-title"); return !!t && !!t.closest(".pr-pct-one") && d.querySelectorAll("#personalReport .pr-pct-one").length===1; })());
 // 「睇你哋點相處」入口：由 84x26px 細淡掣 → 全闊金色實心掣
 chk("★ 「睇你哋點相處」掣 CSS 係全闊（width:100%）", /\.pair-go\{[^}]*width:100%/.test(RAW));
 chk("★ 「睇你哋點相處」掣 CSS 有金色底（gradient + var(--gold)）",
