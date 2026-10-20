@@ -32,6 +32,7 @@
 // 2026-10-19x：02-05 標題加彩色 icon；02/03 標題拆獨立卡
 // 2026-10-19y：02-05 標題卡上下留白相等、副標題縮排、icon 26px
 // 2026-10-19z：icon 卡內垂直置中 34px；03 拆外卡；05 三書籤＋深入分析金掣
+// 2026-10-20a：05 改名深入分析、直接跳人格頁 deep；刪走三個場面對白（推測內容）
 const CACHE = "hk-mbti-v2.0.0";
 const ASSETS = [
   "/hk-mbti/",
@@ -39,7 +40,6 @@ const ASSETS = [
   "/hk-mbti/data.js",
   "/hk-mbti/social.js",
   "/hk-mbti/pair-data.js",
-  "/hk-mbti/lines-data.js",
   "/hk-mbti/tailwind.css",
   "/hk-mbti/voice-data.js",
   "/hk-mbti/premium-data.js",

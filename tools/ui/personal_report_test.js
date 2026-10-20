@@ -40,13 +40,13 @@ const locked=box.innerHTML;
 chk("★ 未解鎖：出咗 D 卡片", locked.length>0);
 chk("★ 01-05 面板內冇細過 13px 嘅字", (function(){
   const panel=d.querySelector('#resultFolder [data-rf="self"]');
-  const bad=["#personalityDetail .scenario-badge","#lineBox .ln-k","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
+  const bad=["#personalityDetail .scenario-badge","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
     .map(sel=>{const el=d.querySelector(sel); return el?parseFloat(w.getComputedStyle(el).fontSize):0;});
   return bad.every(v=>v>=13);
-})(), ["#personalityDetail .scenario-badge","#lineBox .ln-k","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
+})(), ["#personalityDetail .scenario-badge","#scenarioMatch .scn-desc","#pairPick .pair-pill .cn"]
   .map(sel=>{const el=d.querySelector(sel); return el?w.getComputedStyle(el).fontSize:"冇";}).join("/"));
-chk("★ 02-05 icon 獨立喺卡內垂直置中、34px", (function(){
-  const ks=["report","scene","pair","full"];
+chk("★ 02-04 icon 獨立喺卡內垂直置中、34px", (function(){
+  const ks=["report","scene","pair"];
   const css=/\.rf-head\{[^}]*align-items:center/.test(RAW) && /\.rf-ico\{[^}]*width:34px/.test(RAW);
   const struct=ks.every(k=>{
     const p=d.querySelector('#resultFolder [data-rf="'+k+'"]');
@@ -76,17 +76,12 @@ chk("★ 03 十張港人卡冇外層卡", (function(){
   if(!grid) return false;
   return !grid.closest(".card") && d.querySelectorAll("#scenarioMatch .scn-card").length>=10;
 })());
-chk("★ 05 三個場面係書籤頁，最底掣寫「深入分析」", (function(){
+chk("★ 05 直接跳去深入分析，唔再自己排版", (function(){
   const box=d.querySelector("#resultFolder [data-rf='full']");
-  const tabs=box.querySelectorAll(".ln-tab");
-  const panes=box.querySelectorAll(".ln-pane");
-  const btn=[...box.querySelectorAll("button")].pop();
-  return tabs.length===3 && panes.length===3
-    && [...panes].filter(e=>!e.classList.contains("hidden")).length===1
-    && !!btn && /深入分析/.test(btn.textContent);
+  return !box && /if\(key === "full"\)[\s\S]{0,1200}setTypeTab\("deep"\)/.test(RAW);
 })());
-chk("★ 02-05 標題卡上下留白相等、icon 34px", (function(){
-  const ks=["report","scene","pair","full"];
+chk("★ 02-04 標題卡上下留白相等、icon 34px", (function(){
+  const ks=["report","scene","pair"];
   const ok=ks.every(k=>{
     const p=d.querySelector('#resultFolder [data-rf="'+k+'"]');
     const head=p&&p.querySelector(".rf-title")&&p.querySelector(".rf-title").closest(".card");
@@ -102,9 +97,9 @@ chk("★ 02-05 標題卡上下留白相等、icon 34px", (function(){
   const cs=w.getComputedStyle(head), ico=head.querySelector("svg.rf-ico");
   return [cs.paddingTop, cs.paddingBottom, w.getComputedStyle(ico).width].join("/");
 })());
-chk("★ 02-05 標題都有彩色 icon，02/03 標題係獨立卡", (function(){
-  const panels=["report","scene","pair","full"].map(k=>d.querySelector('#resultFolder [data-rf="'+k+'"]')).filter(Boolean);
-  if(panels.length!==4) return false;
+chk("★ 02-04 標題都有彩色 icon，02/03 標題係獨立卡", (function(){
+  const panels=["report","scene","pair"].map(k=>d.querySelector('#resultFolder [data-rf="'+k+'"]')).filter(Boolean);
+  if(panels.length!==3) return false;
   const icons=panels.every(p=>{ const t=p.querySelector(".rf-title"); const h=t&&t.closest(".card"); const i=h&&h.querySelector("svg.rf-ico"); return !!i && (i.getAttribute("style")||"").indexOf("color")>=0; });
   const sep=function(k,bodySel){
     const p=d.querySelector('#resultFolder [data-rf="'+k+'"]');
@@ -131,10 +126,10 @@ chk("★ 01 直接跳人格頁，唔再自己排一次", (function(){
   return !!btn && /openResultSelf\(\)/.test(btn.getAttribute("onclick")||"")
     && !selfPanel && /openType\(t,\s*"resultFolder"\)/.test(RAW.slice(RAW.indexOf("window.openResultSelf"), RAW.indexOf("window.openResultSelf")+420));
 })());
-chk("★ 01-05 第一張卡標題 19px，02-05 副標題 15px", (function(){
+chk("★ 01-05 第一張卡標題 19px，02-04 副標題 15px", (function(){
   const titles=d.querySelectorAll("#resultFolder .rf-title");
   const subs=d.querySelectorAll("#resultFolder .rf-sub");
-  if(titles.length<4 || subs.length<4) return false;
+  if(titles.length<3 || subs.length<3) return false;
   const t=w.getComputedStyle(titles[0]), s=w.getComputedStyle(subs[0]);
   return t.fontSize==="19px" && t.fontWeight==="900" && s.fontSize==="15px";
 })(), String(d.querySelectorAll("#resultFolder .rf-title").length));
@@ -201,8 +196,8 @@ chk("★ 換一份答案 → 結果跟住變（真個人化）", p3!==p1);
 w.renderResult(JSON.parse(JSON.stringify(R)));
 chk("★ 冇撞爛結果頁原有元素（分享卡／三掣／傾向程度）",
     !!d.getElementById("shareCardImg") && /downloadCard\(\)/.test(d.body.innerHTML) && /你嘅傾向程度/.test(d.body.innerHTML));
-chk("★ 結果頁「看完整分析」＋「立即開始」仲在",
-    /goTypeFromResult\(\)/.test(d.body.innerHTML) && /goPickVersion\(\)">立即開始</.test(d.body.innerHTML));
+chk("★ 結果頁「深入分析」＋「立即開始」仲在",
+    /openResultFolder\('full'\)/.test(d.body.innerHTML) && /goPickVersion\(\)">立即開始</.test(d.body.innerHTML));
 
 // ───────── 三、迴歸：做完測試 → 入紀錄睇 → 出返嚟，D 卡唔可以消失（Roy 2026-10-04 報）─────────
 chk("★ saveResult 真係有存 pct／closeAxes／score",

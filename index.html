@@ -2730,7 +2730,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    <span class="rf-go">進入</span>
   </button>
   <button type="button" class="rf-item" id="rfLockRow" onclick="openResultFolder('full')">
-   <span><span class="rf-k">05</span><span class="rf-t">完整內容<svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg><span class="rf-tag rf-lock">解鎖</span></span><span class="rf-d">對白、三個場面、9 章</span></span>
+   <span><span class="rf-k">05</span><span class="rf-t">深入分析<svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg><span class="rf-tag rf-lock">解鎖</span></span><span class="rf-d">你嘅 9 章深入分析</span></span>
    <span class="rf-go" id="rfLockGo">進入</span>
   </button>
  </div>
@@ -2787,17 +2787,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    </div>
    <div id="scenarioMatch" class="grid grid-cols-2 gap-3"></div>
   </div>
-  <div class="rf-panel hidden" data-rf="full">
-   <div class="card rf-head mb-4">
-    <svg class="rf-ico" viewBox="0 0 24 24" style="color:#C4A35A" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M20 18v3H6.5A2.5 2.5 0 0 1 4 18.5"/></svg>
-    <div class="rf-head-txt">
-     <div class="rf-title">三個場面點講</div>
-     <p class="rf-sub">返工、屋企、拍拖</p>
-    </div>
-   </div>
-   <div id="lineBox"></div>
-   <div class="rf-more-wrap"><button type="button" class="result-more-btn rf-more-lg rf-cta-gold" onclick="goTypeFromResult()"><svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg>深入分析</button></div>
-  </div>
  </section>
 
 </div>
@@ -2818,7 +2807,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 <!-- ====================== 60 題港式情境題庫 ====================== -->
 <script src="data.js"></script>
 <script src="pair-data.js"></script>
-<script src="lines-data.js"></script>
    <script src="social.js"></script>
 <script src="voice-data.js"></script>
 <script src="premium-data.js"></script>
@@ -5202,7 +5190,7 @@ scenHtml += `
  });
  $("scenarioMatch").innerHTML = scenHtml;
 
- try{ window.renderLines(type); window.renderPairPick(type); }catch(e){}
+ try{ window.renderPairPick(type); }catch(e){}
 try{ window.renderResultFolders(); }catch(e){}
 };
 
@@ -7099,11 +7087,18 @@ window.openResultSelf = function(){
   window.openType(t, "resultFolder");
 };
 window.openResultFolder = function(key){
-  if(key === "full" && window.offerLocked && window.offerLocked()){
-    window.openUpgrade();
-    return;
+  if(key === "full"){
+    if(window.offerLocked && window.offerLocked()){ window.openUpgrade(); return; }
+    let t = window._resultType || "";
+    if(!t){
+      const ls = (typeof window.lastScoreObj === "function") ? window.lastScoreObj() : window._lastScoreObj;
+      t = String((ls && ls.mbti) || "").substring(0,4);
+    }
+    t = String(t || "").toUpperCase();
+    if(!t || !(window.TYPES || {})[t]){ key = "report"; }
+    else { window.openType(t, "resultFolder"); window.setTypeTab("deep"); return; }
   }
-  const titles = {self:"性格分析", report:"個人報告", pair:"朋友配對", scene:"港人情境", full:"完整內容"};
+  const titles = {self:"性格分析", report:"個人報告", pair:"朋友配對", scene:"港人情境", full:"深入分析"};
   window._resultFolder = key || "self";
   if(window._resultFolder === "self"){ window.openResultSelf(); return; }
   const h = document.getElementById("resultFolderTitle");
@@ -7113,34 +7108,6 @@ window.openResultFolder = function(key){
     panels[i].classList.toggle("hidden", panels[i].getAttribute("data-rf") !== window._resultFolder);
   }
   show("resultFolder");
-};
-window.renderLines = function(type){
-  const box = document.getElementById("lineBox");
-  if(!box) return;
-  const L = (window.LINES || {})[type];
-  if(!L){ box.innerHTML = ""; return; }
-  const locked = window.offerLocked();
-  const scenes = [["work","返工"],["home","屋企"],["date","拍拖"]];
-  const tabs = '<div class="ln-tabs">' + scenes.map(function(sc, i){
-    return '<button type="button" class="ln-tab' + (i === 0 ? " is-on" : "") + '" data-ln="' + sc[0] + '" onclick="lnTab(\'' + sc[0] + '\')">' + sc[1] + '</button>';
-  }).join("") + '</div>';
-  const panes = scenes.map(function(sc, i){
-    const d = L[sc[0]] || {say:[], dont:[]};
-    const say = locked ? (d.say || []).slice(0, 1) : (d.say || []);
-    const dont = locked ? [] : (d.dont || []);
-    const lis = function(arr){ return arr.map(function(x){ return "<li>" + x + "</li>"; }).join(""); };
-    return '<div class="ln-pane' + (i === 0 ? "" : " hidden") + '" data-ln="' + sc[0] + '">'
-      + '<p class="ln-k">可以講</p><ul class="ln-ul">' + lis(say) + '</ul>'
-      + (dont.length ? '<p class="ln-k ln-no">唔好講</p><ul class="ln-ul ln-bad">' + lis(dont) + '</ul>' : '')
-      + '</div>';
-  }).join("");
-  box.innerHTML = tabs + panes;
-};
-window.lnTab = function(k){
-  const box = document.getElementById("lineBox");
-  if(!box) return;
-  [...box.querySelectorAll(".ln-tab")].forEach(function(b){ b.classList.toggle("is-on", b.getAttribute("data-ln") === k); });
-  [...box.querySelectorAll(".ln-pane")].forEach(function(p){ p.classList.toggle("hidden", p.getAttribute("data-ln") !== k); });
 };
 window.renderPairPick = function(myType){
   const box = document.getElementById("pairPick");
@@ -7297,10 +7264,6 @@ window.articleStep = function(dir){
   else window.openSocialArticle(nx.key, code);
  } finally { window._navSilent = false; }
  try{ window._histWrite("replace"); }catch(e){}
-};
-window.goTypeFromResult = function(){
-const r = window.lastResult || "INTJ";
-openType(r.substring(0,4), "result");
 };
 
 // 維度 hero 底色：淺色用淺色版；黑夜用維度色低透明（否則淺底淺字睇唔到）。

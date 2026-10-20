@@ -17,7 +17,7 @@ function chk(n,c,x){ total++; if(c)ok++; console.log((c?"✓":"✗")+" "+n+(c?""
 // ───────── 一、靜態 ─────────
 const rsec = SRC.slice(SRC.indexOf('<section id="result"'), SRC.indexOf('<section id="result"')+6000);
 chk("★ ① 結果頁冇「性格百科」入口（冇 openHub()）", !/openHub\(\)/.test(rsec));
-chk("★ ① 「看完整分析」入口保留", /goTypeFromResult\(\)/.test(SRC.slice(SRC.indexOf('id="resultFolder"'), SRC.indexOf('id="resultFolder"')+2500)));
+chk("★ ① 「深入分析」入口保留", (function(){ const i=SRC.indexOf('id="resultFolders"'); return /openResultFolder\('full'\)/.test(SRC.slice(i, i+2600)); })());
 const iTa=rsec.indexOf('id="resultTaInline"'), iCard=rsec.indexOf('id="shareCardImg"'), iBtn=rsec.indexOf("downloadCard()");
 chk("★ ② 次序＝人格／完成時間文字 → 分享卡 → 三掣",
     iTa>0 && iCard>iTa && iBtn>iCard, "ta="+iTa+" card="+iCard+" btn="+iBtn);
@@ -147,8 +147,8 @@ chk("★ ③ dark：share-btn 規則喺 #dark-layer 內（唔准落主 style）"
 chk("★ ③ .share-btn 冇喺主 style 出現 dark 版",
     !/html\.dk \.share-btn\{/.test(SRC.slice(0, SRC.indexOf('id="dark-layer"'))));
 
-chk("★ 05 完整內容入口有星", /id="rfLockRow"[\s\S]{0,500}class="rf-star"/.test(SRC));
-chk("★ 05 入面 9 章掣同其他頁同一款、有星", /data-rf="full"[\s\S]{0,900}class="result-more-btn rf-more-lg[^"]*"[\s\S]{0,240}class="rf-star"/.test(SRC));
+chk("★ 05 深入分析入口有星", /id="rfLockRow"[\s\S]{0,500}class="rf-star"/.test(SRC));
+chk("★ 05 已經冇自己 panel，改為跳去深入分析", !/data-rf="full"/.test(SRC) && /if\(key === "full"\)[\s\S]{0,1200}setTypeTab\("deep"\)/.test(SRC));
 chk("★ 03 係港人情境加免費，04 係朋友配對有星同解鎖", (function(){
   const list=SRC.slice(SRC.indexOf('id="resultFolders"'), SRC.indexOf('id="resultFolders"')+3200);
   const btns=[...list.matchAll(/<button[\s\S]*?<\/button>/g)].map(m=>m[0]);

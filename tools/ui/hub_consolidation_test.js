@@ -67,7 +67,7 @@ chk("★ 文章頁底完全冇入口卡（softbox-btn／其他攻略）", (funct
 chk("★ 結果頁已經冇「性格百科」入口（Roy 2026-10-02：有睇完整分析就唔需要）", (function(){
   const i = src.indexOf('id="personalityDetail"');
   const seg = src.slice(Math.max(0, i - 400), i + 900);
-  return !/點同人相處|點同人拍拖/.test(seg) && !/openHub\(\)/.test(seg) && /goTypeFromResult\(\)/.test(src);
+  return !/點同人相處|點同人拍拖/.test(seg) && !/openHub\(\)/.test(seg) && /setTypeTab\("deep"\)/.test(src);
 })());
 chk("★ 百科「16 型卡」band 下間距 16px，同其他 band 一致（原本 26px＝場景文章頁例外值，唔啱比例）", (function(){
   const mb = (n)=>{ const m=new RegExp("\\."+n+"\\{([^}]*)\\}").exec(src); if(!m) return -1;

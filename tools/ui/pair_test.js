@@ -155,39 +155,36 @@ for (const [k, v] of Object.entries(P)) {
 chk("★ 配對文案零「你」（" + (DUENI_ROWS ? "已改：" + DUENI_ROWS.join("、") : "全檔") + "；台詞除外）",
    dueni.length === 0, dueni.slice(0, 5).join(" , "));
 
-// 收費內容（2026-10-17）：冇 Play 價錢唔鎖；有價錢先鎖完整相處同三句對白。
-chk("★ lines-data.js 有引入", /<script src="lines-data\.js"><\/script>/.test(RAW));
-chk("★ sw.js precache 有 lines-data.js", fs.readFileSync(path.join(REPO,"sw.js"),"utf8").includes('"/hk-mbti/lines-data.js"'));
-const TYPES = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
-const L = w.LINES || {};
-const badLine = TYPES.filter(t => {
-  const x = L[t];
-  if(!x) return true;
-  return ["work","home","date"].some(s => !x[s] || (x[s].say||[]).length!==3 || (x[s].dont||[]).length!==3);
-});
-chk("★ 16 型都有返工／屋企／拍拖，每場 3 句可以講、3 句唔好講", badLine.length===0, badLine.join(","));
-chk("★ 對白冇 emoji", !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/u.test(fs.readFileSync(path.join(REPO,"lines-data.js"),"utf8")));
-w._billingPrice = "";
-w.renderLines("INTJ");
+// 05（2026-10-19 Roy）：取消三個場面對白（內容係推測），改成直接跳當下人格嘅深入分析。
+chk("★ lines-data.js 已移除（index 冇 script、sw 冇 precache、檔案唔在）",
+   !/lines-data\.js/.test(RAW)
+   && !fs.readFileSync(path.join(REPO,"sw.js"),"utf8").includes("lines-data.js")
+   && !fs.existsSync(path.join(REPO,"lines-data.js")));
+chk("★ 05 清單叫「深入分析」、有星同解鎖", (function(){
+  const i=RAW.indexOf('id="resultFolders"');
+  const list=RAW.slice(i, i+2600);
+  const b=[...list.matchAll(/<button[\s\S]*?<\/button>/g)].map(m=>m[0]).find(x=>/>05</.test(x))||"";
+  return /深入分析/.test(b) && /rf-star/.test(b) && /rf-lock/.test(b) && /openResultFolder\('full'\)/.test(b);
+})());
+chk("★ 05 面板已刪（唔再有「三個場面點講」）",
+   !/data-rf="full"/.test(RAW) && !/三個場面點講/.test(RAW) && !/lineBox/.test(RAW));
 w.renderPairPick("INTJ");
-chk("★ 未開收費：三個場面出齊，唔好講都睇到",
-   /返工/.test(d.getElementById("lineBox").innerHTML) && /唔好講/.test(d.getElementById("lineBox").innerHTML) && /拍拖/.test(d.getElementById("lineBox").innerHTML));
-const ln = d.querySelector("#lineBox .ln-ul li");
-chk("★ 完整內容對白字級跟個人報告（16px）", !!ln && w.getComputedStyle(ln).fontSize === "16px", ln ? w.getComputedStyle(ln).fontSize : "冇 .ln-ul");
 chk("★ 朋友配對係 16 格色框，唔再係百科卡", d.querySelectorAll("#pairPick .pair-pill").length===16 && d.querySelectorAll("#pairPick .hub-type-card").length===0, d.querySelectorAll("#pairPick .pair-pill").length);
 w._billingPrice = "HK$9.99";
-w.renderLines("INTJ");
-chk("★ 已開收費未買：場面只露一句，唔好講收起",
-   !/唔好講/.test(d.getElementById("lineBox").innerHTML)
-   && (function(){ const b=[...d.querySelectorAll("#resultFolder [data-rf='full'] button")].pop(); return !!b && /深入分析/.test(b.textContent); })());
+try{ w.localStorage.removeItem("hkmbti_tier"); }catch(e){}
+w._resultType = "INTJ";
+w.openResultFolder("full");
+chk("★ 未解鎖：05 彈解鎖頁，唔會跳去深入分析",
+   !d.getElementById("upgrade").classList.contains("hidden"));
 w.openPair("INFP","ENFP");
 chk("★ 已開收費未買：配對只露開頭，完整相處要解鎖",
    /要解鎖先睇到/.test(d.getElementById("pairBody").innerHTML) && !/最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));
 try{ w.localStorage.setItem("hkmbti_tier","full"); }catch(e){}
-w.renderLines("INTJ");
+w.openResultFolder("full");
+chk("★ 已解鎖：05 直接跳去當下人格嘅深入分析",
+   w._lastType==="INTJ" && w._typeTab==="deep" && !d.getElementById("type").classList.contains("hidden"));
 w.openPair("INFP","ENFP");
-chk("★ 已解鎖：三句唔好講同完整相處都出返",
-   /唔好講/.test(d.getElementById("lineBox").innerHTML) && /最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));
+chk("★ 已解鎖：完整相處出返", /最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));
 w._billingPrice = "";
 try{ w.localStorage.removeItem("hkmbti_tier"); }catch(e){}
 
