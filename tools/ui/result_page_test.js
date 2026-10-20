@@ -148,7 +148,7 @@ chk("★ ③ .share-btn 冇喺主 style 出現 dark 版",
     !/html\.dk \.share-btn\{/.test(SRC.slice(0, SRC.indexOf('id="dark-layer"'))));
 
 chk("★ 05 深入分析入口有星", /id="rfLockRow"[\s\S]{0,500}class="rf-star"/.test(SRC));
-chk("★ 05 已經冇自己 panel，改為跳去深入分析", !/data-rf="full"/.test(SRC) && /if\(key === "full"\)[\s\S]{0,1200}setTypeTab\("deep"\)/.test(SRC));
+chk("★ 05 已經冇自己 panel，改為跳去深入分析 16 型頁", !/data-rf="full"/.test(SRC) && /if\(key === "full"\)[\s\S]{0,300}openDeep\(\)/.test(SRC));
 chk("★ 03 係港人情境加免費，04 係朋友配對有星同解鎖", (function(){
   const list=SRC.slice(SRC.indexOf('id="resultFolders"'), SRC.indexOf('id="resultFolders"')+3200);
   const btns=[...list.matchAll(/<button[\s\S]*?<\/button>/g)].map(m=>m[0]);

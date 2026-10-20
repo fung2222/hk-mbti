@@ -76,9 +76,9 @@ chk("★ 03 十張港人卡冇外層卡", (function(){
   if(!grid) return false;
   return !grid.closest(".card") && d.querySelectorAll("#scenarioMatch .scn-card").length>=10;
 })());
-chk("★ 05 直接跳去深入分析，唔再自己排版", (function(){
+chk("★ 05 直接跳去深入分析 16 型頁，唔再自己排版", (function(){
   const box=d.querySelector("#resultFolder [data-rf='full']");
-  return !box && /if\(key === "full"\)[\s\S]{0,1200}setTypeTab\("deep"\)/.test(RAW);
+  return !box && /if\(key === "full"\)[\s\S]{0,300}openDeep\(\)/.test(RAW);
 })());
 chk("★ 02-04 標題卡上下留白相等、icon 34px", (function(){
   const ks=["report","scene","pair"];

@@ -181,8 +181,9 @@ chk("★ 已開收費未買：配對只露開頭，完整相處要解鎖",
    /要解鎖先睇到/.test(d.getElementById("pairBody").innerHTML) && !/最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));
 try{ w.localStorage.setItem("hkmbti_tier","full"); }catch(e){}
 w.openResultFolder("full");
-chk("★ 已解鎖：05 直接跳去當下人格嘅深入分析",
-   w._lastType==="INTJ" && w._typeTab==="deep" && !d.getElementById("type").classList.contains("hidden"));
+chk("★ 已解鎖：05 去深入分析 16 型選擇頁（同主頁頂完整版同一入口）",
+   w._showing==="deep" && !d.getElementById("deep").classList.contains("hidden"));
+chk("★ 05 副題講明係揀人格", /16 型/.test(RAW.slice(RAW.indexOf('id="resultFolders"'), RAW.indexOf('id="resultFolders"')+2600)));
 w.openPair("INFP","ENFP");
 chk("★ 已解鎖：完整相處出返", /最容易撞嘅 3 個位/.test(d.getElementById("pairBody").innerHTML));
 w._billingPrice = "";

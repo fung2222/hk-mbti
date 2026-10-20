@@ -2730,7 +2730,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
    <span class="rf-go">進入</span>
   </button>
   <button type="button" class="rf-item" id="rfLockRow" onclick="openResultFolder('full')">
-   <span><span class="rf-k">05</span><span class="rf-t">深入分析<svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg><span class="rf-tag rf-lock">解鎖</span></span><span class="rf-d">你嘅 9 章深入分析</span></span>
+   <span><span class="rf-k">05</span><span class="rf-t">深入分析<svg class="rf-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1l2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.6l6.1-.9z"/></svg><span class="rf-tag rf-lock">解鎖</span></span><span class="rf-d">16 型 × 9 章深入分析</span></span>
    <span class="rf-go" id="rfLockGo">進入</span>
   </button>
  </div>
@@ -7089,14 +7089,7 @@ window.openResultSelf = function(){
 window.openResultFolder = function(key){
   if(key === "full"){
     if(window.offerLocked && window.offerLocked()){ window.openUpgrade(); return; }
-    let t = window._resultType || "";
-    if(!t){
-      const ls = (typeof window.lastScoreObj === "function") ? window.lastScoreObj() : window._lastScoreObj;
-      t = String((ls && ls.mbti) || "").substring(0,4);
-    }
-    t = String(t || "").toUpperCase();
-    if(!t || !(window.TYPES || {})[t]){ key = "report"; }
-    else { window.openType(t, "resultFolder"); window.setTypeTab("deep"); return; }
+    window.openDeep(); return;
   }
   const titles = {self:"性格分析", report:"個人報告", pair:"朋友配對", scene:"港人情境", full:"深入分析"};
   window._resultFolder = key || "self";
