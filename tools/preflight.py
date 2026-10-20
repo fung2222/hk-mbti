@@ -340,6 +340,15 @@ if '<script src="type-icons.js"></script>' not in _rec:
     _icon_problems.append("record.html 冇載入 type-icons.js")
 if "stat-ico" not in _rec:
     _icon_problems.append("record.html 16 格冇 icon")
+_st = open("stats.html", encoding="utf-8").read()
+if '<script src="type-icons.js"></script>' not in _st:
+    _icon_problems.append("stats.html 冇載入 type-icons.js")
+if "window.TYPE_COLOR" not in _st or "ts-ico" not in _st:
+    _icon_problems.append("stats.html 16 型冇型色 icon")
+if "deep-ico-type" not in _idx:
+    _icon_problems.append("深入分析 9 章目錄頂卡冇 icon")
+if "deepChapterIco" not in _idx:
+    _icon_problems.append("章節頁牌匾冇 icon")
 _about_i = _idx.find('id="about"')
 _about_seg = _idx[_about_i:_idx.find("</section>", _about_i)] if _about_i >= 0 else ""
 if "goPickVersion()" not in _about_seg:
@@ -351,7 +360,7 @@ if _icon_problems:
         print("  FAIL " + _p4)
     fails.append("16 型 icon／字級")
 else:
-    print("  OK   首頁頭三名同紀錄頁 16 格都有型色 icon；關於頁測試入口喺最底")
+    print("  OK   首頁頭三名、紀錄頁 16 格、stats.html 16 型、深入分析目錄／章節牌匾都有型色 icon；關於頁測試入口喺最底")
     notes.append("16 型 icon／字級")
 
 print("===== %s =====" % ("全部通過（%d 項）" % len(notes) if not fails else "%d 項有問題" % len(fails)))

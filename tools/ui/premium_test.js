@@ -170,11 +170,11 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
   // Roy 2026-10-10：測試前倒數 3-2-1 要同分享卡 4 個大字同一個字形（Archivo Black）
   chk('★ 倒數 .cd-number 用 Archivo Black（同分享卡 4 大字同一字形）', /\.cd-number\{[^}]*font-family:'Archivo Black'/.test(src));
   chk('★ Archivo Black webfont subset 有 1 2 3（唔加就靜默 fallback 返 Georgia，改咗等於冇改）', /family=Archivo\+Black&text=[A-Z-]+123/.test(src));
-  chk('★ 文章牌匾 4 字母改用同 #typeBig 一組（text-5xl font-black）', ['socialArticleType','romanceArticleType','deepChapterType'].every(id=>new RegExp('class="text-5xl font-black mb-1" id="'+id+'"').test(src)));
+  chk('★ 文章牌匾 4 字母改用同 #typeBig 一組（text-5xl font-black）', ['socialArticleType','romanceArticleType'].every(id=>new RegExp('class="text-5xl font-black mb-1" id="'+id+'"').test(src)) && /class="text-5xl font-black" id="deepChapterType"/.test(src));
   chk('★ 場景／章節牌匾已經唔用 .hub-type-code（只剩 16 型 hub 卡用）', !/class="hub-type-code" id="/.test(src));
   // Roy 2026-10-03：章節色卡要同人格頁色卡一模一樣 → 4 字母改用同 #typeBig 一組 class
   chk('★ 章節色卡 4 字母跟人格頁 #typeBig（text-5xl font-black）',
-      /class="text-5xl font-black mb-1" id="deepChapterType"/.test(src) && /class="text-5xl font-black mb-1" id="typeBig"/.test(src));
+      /class="text-5xl font-black" id="deepChapterType"/.test(src) && /class="text-5xl font-black mb-1" id="typeBig"/.test(src));
   chk('★ 三塊文章色卡（相處／拍拖／章節）都唔再係滿版（.card p-6 mb-[26px] ＋ type-hero-row/mid）', (src.match(/class="card p-6 mb-\[26px\]"/g)||[]).length===3 && !/article-type-stage/.test(src) && (src.match(/class="type-hero-row"/g)||[]).length>=3);
   // Roy 2026-10-03：九章目錄號碼 icon → 星星 + 標題上加「第X章」
   chk('★ 九章目錄：號碼方塊 .deep-num 已清走（死 CSS 都清）', !/deep-num/.test(src));

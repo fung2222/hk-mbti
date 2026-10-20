@@ -490,6 +490,10 @@ html.dk .deep-ico{color:#C0A87A}
 .deep-star svg{width:18px;height:18px;display:block;fill:#C8A24C}
 .deep-t{display:block;font-size:14px;font-weight:700;color:var(--ink);margin:0 0 3px}
 .deep-ch{font-size:11px;font-weight:700;color:#8B6F3D;letter-spacing:.02em;margin-bottom:2px}
+.deep-ch-type-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px}
+.deep-ch-ico{width:38px;height:38px;flex:0 0 auto;line-height:0;color:#fff}
+.deep-ch-ico svg{width:38px;height:38px;display:block}
+.deep-ch-ico:empty{display:none}
 .deep-go{color:#8B6F3D;font-size:12px;font-weight:700;flex-shrink:0}
 html.dk .deep-nav-btn{border-color:rgba(255,255,255,.16);color:#C2BAAD}
 html.dk .deep-nav-btn.is-mid{color:#D8C69E;border-color:rgba(217,178,106,.45)}
@@ -1984,7 +1988,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
   <div class="type-hero-row">
    <button type="button" class="type-nav" id="deepPrevTop" aria-label="上一章" onclick="deepStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
    <div class="type-hero-mid">
-    <div class="text-5xl font-black mb-1" id="deepChapterType">INTJ</div>
+    <div class="deep-ch-type-row"><span class="deep-ch-ico" id="deepChapterIco" aria-hidden="true"></span><div class="text-5xl font-black" id="deepChapterType">INTJ</div></div>
     <h2 class="text-[19px] font-black mb-1" id="deepChapterCn"></h2>
    </div>
    <button type="button" class="type-nav" id="deepNextTop" aria-label="下一章" onclick="deepStep(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.6 3.6L17.8 12l-9.2 8.4z"/></svg></button>
@@ -6506,7 +6510,7 @@ try{ const _c = document.getElementById("deepCta"); if(_c) _c.style.display = "n
 const T = (window.TYPES && window.TYPES[t]) || {};
 const PL = window.getPalette(t);
 const _full = (window.getTier() === "full");
-box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]"><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span> · ' + (T.cn || "") + '</div>' +
+box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]" style="display:flex;align-items:center;gap:9px"><span class="deep-ico-type" style="color:' + PL.c1 + ';width:26px;height:26px;flex:0 0 auto;line-height:0">' + (window.getTypeIcon ? window.getTypeIcon(t) : "") + '</span><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span><span style="color:#6b6560;font-weight:700">· ' + (T.cn || "") + '</span></div>' +
 '<div class="text-xs text-gray-500 mt-1">' + d.chapters.length + ' 章 · ' + (_full ? "深入分析" : "第 1 章免費，其餘要完整版") + '</div></div>' +
 d.chapters.map(function(c, i){
 const _tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
@@ -6568,6 +6572,7 @@ document.getElementById("deepChapterTitle").textContent = ch.t;
 document.getElementById("deepChapterCrumb").textContent = t + " · " + (i + 1) + " / " + d.chapters.length;
 document.getElementById("deepChapterType").innerText = t;
 document.getElementById("deepChapterType").dataset.code = t;
+try{ const _ci = document.getElementById("deepChapterIco"); if(_ci) _ci.innerHTML = (window.getTypeIcon ? window.getTypeIcon(t) : ""); }catch(e){}
 document.getElementById("deepChapterCn").textContent = T.cn || "";
 document.getElementById("deepChapterHead").textContent = ((i === 0 && window.getTier() !== "full") ? "第 1 章 · 免費試睇" : "完整版 · 第 " + (i + 1) + " 章");
 document.getElementById("deepChapterBody").innerHTML = window.formatChapterHtml(ch.b);

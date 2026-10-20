@@ -160,6 +160,8 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 @media (min-width:1280px){
   html.dt{--dt-w:min(1200px,calc(100% - 80px));--dt-read:820px}
 }
+.ts-ico{width:24px;height:24px;flex:0 0 auto;line-height:0;display:flex;align-items:center;justify-content:center}
+.ts-ico svg{width:24px;height:24px;display:block}
 @media (min-width:1440px){
   html.dt{--dt-w:min(1280px,calc(100% - 96px));--dt-read:840px}
 }
@@ -251,6 +253,7 @@ html.dk.dt .hero-popover a{color:#CFC9BE}
  <a href="./" class="softbox-btn">立即測試</a>
  </div>
 </div>
+<script src="type-icons.js"></script>
 <script>
 function siteBack(){
 try{
@@ -301,6 +304,12 @@ INFJ:"提倡者", INFP:"調解員", ENFJ:"主人公", ENFP:"競選者",
 ISTJ:"物流師", ISFJ:"守衛者", ESTJ:"總經理", ESFJ:"執事",
 ISTP:"鑒賞家", ISFP:"探險家", ESTP:"企業家", ESFP:"表演者"
 };
+window.TYPE_COLOR = {
+INTJ:"#6B4E9E", INTP:"#3E5F9E", ENTJ:"#1E8A8A", ENTP:"#E07B35",
+INFJ:"#8A3E9E", INFP:"#B085C4", ENFJ:"#E05A4A", ENFP:"#D9A028",
+ISTJ:"#4A6E9E", ISFJ:"#5C8A5C", ESTJ:"#A85240", ESFJ:"#E08058",
+ISTP:"#3E8A7A", ISFP:"#C0709E", ESTP:"#6B8A3E", ESFP:"#C04070"
+};
 (function(){
 let local = {};
 try{ local = JSON.parse(localStorage.getItem("hkmbti_type_counts")||"{}") || {}; }catch(e){ local = {}; }
@@ -318,9 +327,10 @@ const n = counts[code];
 const pct = total ? (n/total*100) : 0;
 const hkEst = Math.round(window.HK_POP * (n/total));
 const bar = Math.max(4, Math.round(n/maxC*100));
-const medal = i < 3 ? '<span class="brand-gold" style="margin-right:4px">●</span>' : "";
-const label = TYPE_CN[code] ? (code + " " + TYPE_CN[code]) : code;
-return '<div class="bg-soft rounded-lg p-2.5"><div class="flex justify-between items-baseline gap-2 mb-1"><span class="text-xs font-bold">'+medal+label+'</span><span class="text-xs brand-gold font-black">'+pct.toFixed(1)+'%</span></div><div class="stat-bar mb-1"><div class="stat-fill" style="width:'+bar+'%"></div></div><div class="flex justify-between text-xs text-gray-600"><span>'+n.toLocaleString("en-HK")+' 人</span><span>約香港 '+hkEst.toLocaleString("en-HK")+' 人</span></div></div>';
+const medal = i < 3 ? '<span class="brand-gold" style="margin-right:2px;font-size:12px">●</span>' : "";
+const color = (window.TYPE_COLOR && window.TYPE_COLOR[code]) || "#8B6F3D";
+const ico = (window.getTypeIcon ? window.getTypeIcon(code) : "");
+return '<div class="bg-soft rounded-lg p-3"><div class="flex justify-between items-center gap-2 mb-1"><span style="display:flex;align-items:center;gap:8px;min-width:0">'+medal+'<span class="ts-ico" style="color:'+color+'">'+ico+'</span><span style="font-size:17px;font-weight:900;color:'+color+'">'+code+'</span><span style="font-size:15px;font-weight:700;color:var(--ink)">'+(TYPE_CN[code]||"")+'</span></span><span class="brand-gold font-black" style="font-size:14px">'+pct.toFixed(1)+'%</span></div><div class="stat-bar mb-1"><div class="stat-fill" style="width:'+bar+'%;background:'+color+'"></div></div><div class="flex justify-between text-xs text-gray-600"><span>'+n.toLocaleString("en-HK")+' 人</span><span>約香港 '+hkEst.toLocaleString("en-HK")+' 人</span></div></div>';
  }).join("");
 })();
 </script>
