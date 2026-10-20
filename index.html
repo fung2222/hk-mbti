@@ -263,7 +263,12 @@ html.dk #resultFolder [data-rf="scene"] > .card{border-color:rgba(255,255,255,.1
 .hk-stats-list{display:grid;gap:8px}
 .hk-stats-item{background:rgba(212,169,95,.06);border-radius:10px;padding:10px 12px}
 .hk-stats-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
-.hk-stats-name{font-size:13px;font-weight:700}
+.hk-stats-name{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;line-height:1.35;min-width:0}
+.hk-stats-rank{font-size:12px;font-weight:900;color:#8B6F3D;flex:0 0 auto}
+.hk-stats-ico{width:22px;height:22px;flex:0 0 auto;color:var(--tc,#8B6F3D);line-height:0;display:flex;align-items:center;justify-content:center}
+.hk-stats-ico svg{width:22px;height:22px;display:block}
+.hk-stats-code{color:var(--tc,#8B6F3D);font-weight:900;font-size:17px}
+.hk-stats-cn{font-size:15px;font-weight:700;color:#3a3632;white-space:nowrap}
 .hk-stats-pct{font-size:18px;font-weight:900;color:var(--ink);letter-spacing:-.01em}
 .hk-stats-est{font-size:11px;color:#6b6560;margin-top:4px}
 .hk-stats-foot{display:flex;justify-content:flex-end;margin-top:12px}
@@ -1273,6 +1278,8 @@ html.dk #resultFolder .rf-title{color:#F2F5F9}
 html.dk #resultFolder .rf-sub{color:#A79E92}
 html.dk #personalReport .pr-pct-row + .pr-pct-row{border-top-color:rgba(255,255,255,.10)}
 html.dk .pr-note{color:#A79E92}
+html.dk .hk-stats-code,html.dk .hk-stats-ico{color:var(--tc-dk,var(--tc))}
+html.dk .hk-stats-cn{color:#C9C2B6}
 html.dk #personalReport .pr-pct-title,html.dk #personalReport .pr-gold{color:#D8C69E}
 html.dk{
   --paper:#12161C;--soft:#1B2129;--ink:#ECE7DE;--gold:#D9B26A;--accent:#F0736F;
@@ -1762,12 +1769,6 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
  </div>
 
- <div class="card mb-4 softbox">
- <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
- <p class="softbox-sub">想知道自己 MBTI 人格？</p>
- <button type="button" class="softbox-btn" onclick="goPickVersion()">立即測試</button>
- </div>
- 
  <!-- 2026-10-15 · Roy 批准（8、9）：意見回報 ＋ Play 評分入口（單卡、兩行、細分隔線）-->
  <div class="card p-5 mb-4">
  <div class="text-xs tracking-widest brand-gold font-bold mb-2">意見同支援</div>
@@ -1782,6 +1783,12 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="text-xs text-gray-600 leading-relaxed">去 Play 留個評分，幫更多人搵到。</div>
  <a href="https://play.google.com/store/apps/details?id=com.fung2222.hkmbti" rel="noopener" class="text-accent underline text-xs">去 Google Play 評分</a>
  </div>
+ </div>
+
+ <div class="card mb-4 softbox">
+ <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
+ <p class="softbox-sub">想知道自己 MBTI 人格？</p>
+ <button type="button" class="softbox-btn" onclick="goPickVersion()">立即測試</button>
  </div>
  </section>
 
@@ -5596,10 +5603,13 @@ const n = st.counts[code];
 const pct = n / total * 100;
 const hk = Math.round((window.HK_POP || 7500000) * (n / total));
 const bar = Math.max(8, Math.round(n / maxC * 100));
-const label = names[code] ? code + " " + names[code] : code;
-return '<div class="hk-stats-item">' +
-'<div class="hk-stats-top"><span class="hk-stats-name">' + (i+1) + '. ' + label + '</span><span class="hk-stats-pct">' + pct.toFixed(1) + '%</span></div>' +
-'<div class="stat-bar"><div class="stat-fill" style="width:' + bar + '%"></div></div>' +
+const P = (window.getPalette ? window.getPalette(code) : null) || {};
+const color = P.c1 || "#8B6F3D";
+const accent = P.accent || color;
+const ico = (window.getTypeIcon ? window.getTypeIcon(code) : "");
+return '<div class="hk-stats-item" style="--tc:' + color + ';--tc-dk:' + accent + '">' +
+'<div class="hk-stats-top"><span class="hk-stats-name"><span class="hk-stats-rank">' + (i+1) + '</span><span class="hk-stats-ico">' + ico + '</span><span class="hk-stats-code">' + code + '</span><span class="hk-stats-cn">' + (names[code] || "") + '</span></span><span class="hk-stats-pct">' + pct.toFixed(1) + '%</span></div>' +
+'<div class="stat-bar"><div class="stat-fill" style="width:' + bar + '%;background:' + color + '"></div></div>' +
 '<div class="hk-stats-est">約香港 ' + hk.toLocaleString("en-HK") + ' 人</div></div>';
 }).join("");
 };

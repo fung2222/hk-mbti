@@ -324,5 +324,35 @@ else:
     print("  OK   計分方法頁寫明內容來源（自行整理、唔係官方原文）")
     notes.append("內容來源聲明")
 
+print("\n===== 14. 16 型 icon／字級（首頁分佈＋紀錄頁）=====")
+_idx = open("index.html", encoding="utf-8").read()
+_rec = open("record.html", encoding="utf-8").read()
+_icon_problems = []
+_rhs_i = _idx.find("window.renderHomeStats")
+_rhs = _idx[_rhs_i:_idx.find("window.setShareStatus", _rhs_i)] if _rhs_i >= 0 else ""
+if "getTypeIcon(code)" not in _rhs:
+    _icon_problems.append("首頁分佈 renderHomeStats 冇用 getTypeIcon(code)")
+if "hk-stats-ico" not in _idx:
+    _icon_problems.append("首頁分佈冇 .hk-stats-ico")
+if ".hk-stats-code{color:var(--tc" not in _idx.replace(" ", ""):
+    _icon_problems.append("首頁型號冇用型色 var(--tc)")
+if '<script src="type-icons.js"></script>' not in _rec:
+    _icon_problems.append("record.html 冇載入 type-icons.js")
+if "stat-ico" not in _rec:
+    _icon_problems.append("record.html 16 格冇 icon")
+_about_i = _idx.find('id="about"')
+_about_seg = _idx[_about_i:_idx.find("</section>", _about_i)] if _about_i >= 0 else ""
+if "goPickVersion()" not in _about_seg:
+    _icon_problems.append("關於頁冇測試入口")
+elif _about_seg.rfind("goPickVersion()") < _about_seg.rfind("fung22222@gmail.com"):
+    _icon_problems.append("關於頁「立即測試」唔係最底（要喺意見卡之後）")
+if _icon_problems:
+    for _p4 in _icon_problems:
+        print("  FAIL " + _p4)
+    fails.append("16 型 icon／字級")
+else:
+    print("  OK   首頁頭三名同紀錄頁 16 格都有型色 icon；關於頁測試入口喺最底")
+    notes.append("16 型 icon／字級")
+
 print("===== %s =====" % ("全部通過（%d 項）" % len(notes) if not fails else "%d 項有問題" % len(fails)))
 sys.exit(1 if fails else 0)
