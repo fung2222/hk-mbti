@@ -347,10 +347,16 @@ if "window.TYPE_COLOR" not in _st or "ts-ico" not in _st:
     _icon_problems.append("stats.html 16 型冇型色 icon")
 if "\u25cf" in _st:
     _icon_problems.append("stats.html top 3 仲有波點（\u25cf）")
+if 'class="ts-pct"' not in _st or 'color:var(--ink)">' not in _st:
+    _icon_problems.append("stats.html 百分比唔係用 var(--ink)")
 if "deep-ico-type" not in _idx:
     _icon_problems.append("深入分析 9 章目錄頂卡冇 icon")
 if "deepChapterIco" not in _idx:
     _icon_problems.append("章節頁牌匾冇 icon")
+_m_start = _idx.find('id="method"')
+_m_seg = _idx[_m_start:_m_start + 4000] if _m_start >= 0 else ""
+if not re.search(r'id="method"[\s\S]{0,600}?class="card[^"]*"[\s\S]{0,300}?mth-lead', _m_seg):
+    _icon_problems.append("計分方法頁第一大句冇卡片框")
 _about_i = _idx.find('id="about"')
 _about_seg = _idx[_about_i:_idx.find("</section>", _about_i)] if _about_i >= 0 else ""
 if "goPickVersion()" not in _about_seg:
