@@ -345,6 +345,8 @@ if '<script src="type-icons.js"></script>' not in _st:
     _icon_problems.append("stats.html 冇載入 type-icons.js")
 if "window.TYPE_COLOR" not in _st or "ts-ico" not in _st:
     _icon_problems.append("stats.html 16 型冇型色 icon")
+if "\u25cf" in _st:
+    _icon_problems.append("stats.html top 3 仲有波點（\u25cf）")
 if "deep-ico-type" not in _idx:
     _icon_problems.append("深入分析 9 章目錄頂卡冇 icon")
 if "deepChapterIco" not in _idx:

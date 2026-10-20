@@ -37,6 +37,7 @@
 // 2026-10-20c：計分方法頁加「內容來源」；preflight 加第 13 節守門
 // 2026-10-20d：關於頁測試入口移最底；首頁頭三名＋紀錄頁 16 格加型色 icon 同放大字
 // 2026-10-20e：stats.html 16 型、深入分析目錄頂卡、章節牌匾加型色 icon
+// 2026-10-20f：stats.html top 3 刪波點
 const CACHE = "hk-mbti-v2.0.0";
 const ASSETS = [
   "/hk-mbti/",
