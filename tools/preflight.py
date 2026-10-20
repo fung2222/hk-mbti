@@ -261,7 +261,7 @@ print("\n===== 11. 分享圖（og:image）一致性 =====")
 if _og_problems:
     for _p in _og_problems:
         print("  FAIL " + _p)
-    FAILED.append("分享圖一致性")
+    fails.append("分享圖一致性")
 else:
     print("  OK   og-image.png %dx%d（正方形）＋ meta 一致 ＋ twitter:card=summary" % (_ow, _oh))
     notes.append("分享圖 og-image.png 正方形 ＋ meta 一致")
@@ -300,10 +300,29 @@ print("\n===== 12. 意見／評分入口 =====")
 if _e_problems:
     for _p2 in _e_problems:
         print("  FAIL " + _p2)
-    FAILED.append("意見／評分入口")
+    fails.append("意見／評分入口")
 else:
     print("  OK   關於頁有意見回報 email ＋ Play 評分入口（冇獎勵字眼）")
     notes.append("意見／評分入口齊全")
+
+print("\n===== 13. 內容來源聲明 =====")
+_meth = open("index.html", encoding="utf-8").read()
+_mi = _meth.find('id="method"')
+_mseg = _meth[_mi:_mi + 9000] if _mi >= 0 else ""
+_src_problems = []
+if "內容來源" not in _mseg:
+    _src_problems.append("計分方法頁冇「內容來源」標題")
+if "唔係任何官方題庫嘅翻譯" not in _mseg:
+    _src_problems.append("冇寫明唔係官方題庫翻譯")
+if "唔係官方原文" not in _mseg:
+    _src_problems.append("冇寫明內容唔係官方原文")
+if _src_problems:
+    for _p3 in _src_problems:
+        print("  FAIL " + _p3)
+    fails.append("內容來源")
+else:
+    print("  OK   計分方法頁寫明內容來源（自行整理、唔係官方原文）")
+    notes.append("內容來源聲明")
 
 print("===== %s =====" % ("全部通過（%d 項）" % len(notes) if not fails else "%d 項有問題" % len(fails)))
 sys.exit(1 if fails else 0)
