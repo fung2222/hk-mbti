@@ -40,6 +40,7 @@
 // 2026-10-20f：stats.html top 3 刪波點
 // 2026-10-20g：計分方法第一大句加卡；stats.html 百分比改 --ink
 // 2026-10-20h：stats.html bar 10px 改 7px（減 30%）
+// 2026-10-20i：首頁 top 3 bar 一樣改 7px
 const CACHE = "hk-mbti-v2.0.0";
 const ASSETS = [
   "/hk-mbti/",

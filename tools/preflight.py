@@ -351,6 +351,8 @@ if 'class="ts-pct"' not in _st or 'color:var(--ink)">' not in _st:
     _icon_problems.append("stats.html 百分比唔係用 var(--ink)")
 if ".stat-bar{height:7px" not in _st.replace(" ", ""):
     _icon_problems.append("stats.html bar 粗度唔係 7px（10px 減 30%）")
+if "#hk-stats .stat-bar{height:7px" not in _idx:
+    _icon_problems.append("首頁 top 3 bar 粗度唔係 7px")
 if "deep-ico-type" not in _idx:
     _icon_problems.append("深入分析 9 章目錄頂卡冇 icon")
 if "deepChapterIco" not in _idx:
