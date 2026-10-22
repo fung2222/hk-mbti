@@ -361,6 +361,8 @@ _m_start = _idx.find('id="method"')
 _m_seg = _idx[_m_start:_m_start + 4000] if _m_start >= 0 else ""
 if not re.search(r'id="method"[\s\S]{0,600}?class="card[^"]*"[\s\S]{0,300}?mth-lead', _m_seg):
     _icon_problems.append("計分方法頁第一大句冇卡片框")
+if "測試定位" not in _m_seg:
+    _icon_problems.append("計分方法頁第一張卡冇小標題（測試定位）")
 _about_i = _idx.find('id="about"')
 _about_seg = _idx[_about_i:_idx.find("</section>", _about_i)] if _about_i >= 0 else ""
 if "goPickVersion()" not in _about_seg:
