@@ -160,8 +160,8 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 @media (min-width:1280px){
   html.dt{--dt-w:min(1200px,calc(100% - 80px));--dt-read:820px}
 }
-.ts-ico{width:24px;height:24px;flex:0 0 auto;line-height:0;display:flex;align-items:center;justify-content:center}
-.ts-ico svg{width:24px;height:24px;display:block}
+.ts-ico{width:30px;height:30px;flex:0 0 auto;line-height:0;display:flex;align-items:center;justify-content:center}
+.ts-ico svg{width:30px;height:30px;display:block}
 @media (min-width:1440px){
   html.dt{--dt-w:min(1280px,calc(100% - 96px));--dt-read:840px}
 }
@@ -254,6 +254,7 @@ html.dk.dt .hero-popover a{color:#CFC9BE}
  </div>
 </div>
 <script src="type-icons.js"></script>
+<script src="type-arts.js"></script>
 <script>
 function siteBack(){
 try{
@@ -328,7 +329,7 @@ const pct = total ? (n/total*100) : 0;
 const hkEst = Math.round(window.HK_POP * (n/total));
 const bar = Math.max(4, Math.round(n/maxC*100));
 const color = (window.TYPE_COLOR && window.TYPE_COLOR[code]) || "#8B6F3D";
-const ico = (window.getTypeIcon ? window.getTypeIcon(code) : "");
+const ico = ((window.getTypeArt ? window.getTypeArt(code) : "") || (window.getTypeIcon ? window.getTypeIcon(code) : ""));
 return '<div class="bg-soft rounded-lg p-3"><div class="flex justify-between items-center gap-2 mb-1"><span style="display:flex;align-items:center;gap:8px;min-width:0"><span class="ts-ico" style="color:'+color+'">'+ico+'</span><span style="font-size:17px;font-weight:900;color:'+color+'">'+code+'</span><span style="font-size:15px;font-weight:700;color:var(--ink)">'+(TYPE_CN[code]||"")+'</span></span><span class="ts-pct" style="font-size:14px;font-weight:900;color:var(--ink)">'+pct.toFixed(1)+'%</span></div><div class="stat-bar mb-1"><div class="stat-fill" style="width:'+bar+'%;background:'+color+'"></div></div><div class="flex justify-between text-xs text-gray-600"><span>'+n.toLocaleString("en-HK")+' 人</span><span>約香港 '+hkEst.toLocaleString("en-HK")+' 人</span></div></div>';
  }).join("");
 })();

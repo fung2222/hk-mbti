@@ -29,8 +29,9 @@ window.getTypeIcon = function(code){
 const m = window.TYPE_ICONS || {};
 return m[code] || "";
 };
-// 型別大字 + icon（icon 喺字上面）
+// 型別大字 + icon（icon 喺字上面）· 2026-10-20：32px 以上用物品插畫（type-arts.js），冇就用線條版
 window.typeIcoHtml = function(code){
-const ic = window.getTypeIcon(code);
+const art = (window.getTypeArt ? window.getTypeArt(code) : "");
+const ic = art || window.getTypeIcon(code);
 return (ic ? '<span class="type-ico">' + ic + '</span>' : "") + '<span class="type-code-txt">' + code + '</span>';
 };

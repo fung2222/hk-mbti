@@ -367,6 +367,16 @@ _dj = open("data.js", encoding="utf-8").read()
 for _kw in ("名人參考", "配最夾", "最佳配對"):
     if _kw in _dj:
         _icon_problems.append("data.js 仍有未證實聲稱：" + _kw)
+_ta = open("type-arts.js", encoding="utf-8").read()
+if _ta.count("viewBox=\"0 0 64 64\"") < 16:
+    _icon_problems.append("type-arts.js 少過 16 個插畫")
+for _f in ("index.html", "record.html", "stats.html"):
+    if '<script src="type-arts.js"></script>' not in open(_f, encoding="utf-8").read():
+        _icon_problems.append(_f + " 冇載入 type-arts.js")
+if '"/hk-mbti/type-arts.js"' not in open("sw.js", encoding="utf-8").read():
+    _icon_problems.append("sw.js ASSETS 冇 type-arts.js")
+if "getTypeArt" not in open("type-icons.js", encoding="utf-8").read():
+    _icon_problems.append("typeIcoHtml 冇用 getTypeArt")
 _about_i = _idx.find('id="about"')
 _about_seg = _idx[_about_i:_idx.find("</section>", _about_i)] if _about_i >= 0 else ""
 if "goPickVersion()" not in _about_seg:

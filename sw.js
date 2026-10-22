@@ -45,6 +45,7 @@
 // 2026-10-20k：性格分頁長文剝走重複強項／弱項段（卡已保留）
 // 2026-10-20l：長文剝走「最佳配對」型號；尾加依附風格實證提示
 // 2026-10-20m：data.js 刪名人參考＋配最夾＋最佳配對；加人口比例來源註
+// 2026-10-20n：16 型插畫（type-arts.js）上身；百科 16 型分四類
 const CACHE = "hk-mbti-v2.0.0";
 const ASSETS = [
   "/hk-mbti/",
@@ -56,6 +57,7 @@ const ASSETS = [
   "/hk-mbti/voice-data.js",
   "/hk-mbti/premium-data.js",
   "/hk-mbti/type-icons.js",
+  "/hk-mbti/type-arts.js",
   "/hk-mbti/manifest.json",
   "/hk-mbti/favicon.png",
   "/hk-mbti/apple-touch-icon.png",

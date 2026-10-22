@@ -215,7 +215,7 @@ setTimeout(() => {
   chk("★ 共用排版 helper 仍在（formatGuideHtml）", typeof w.formatGuideHtml === "function");
   chk("★ 共用排版 helper 仍在（formatTypeFullHtml）", typeof w.formatTypeFullHtml === "function");
   chk("★ 每個 window.X(...) 呼叫點都有定義（跨 index.html + 所有 .js）", (function(){
-    const files = ["data.js","social.js","premium-data.js","type-icons.js","voice-data.js"].filter(f => fs.existsSync(path.join(root, f)));
+    const files = ["data.js","social.js","premium-data.js","type-icons.js","type-arts.js","voice-data.js"].filter(f => fs.existsSync(path.join(root, f)));
     const all = src + files.map(f => fs.readFileSync(path.join(root, f), "utf8")).join("\n");
     const defined = new Set([...all.matchAll(/window\.([A-Za-z_$][\w$]*)\s*=\s*(?:function|\{|\(|async)/g)].map(m=>m[1]));
     const called = new Set([...src.matchAll(/window\.([A-Za-z_$][\w$]*)\s*\(/g)].map(m=>m[1]));

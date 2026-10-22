@@ -82,8 +82,8 @@ display:flex;align-items:center;justify-content:center;
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px;}
 .stat-pill{background:#fff;border-radius:10px;padding:10px 6px;text-align:center;font-size:11px;border:2px solid transparent;line-height:1.3;cursor:pointer;font-family:inherit;-webkit-appearance:none;appearance:none;}
 .stat-pill.visited{border-color:var(--gold);background:rgba(212,169,95,0.08);}
-.stat-pill .stat-ico{display:flex;align-items:center;justify-content:center;height:24px;margin-bottom:4px;}
-.stat-pill .stat-ico svg{width:24px;height:24px;display:block;}
+.stat-pill .stat-ico{display:flex;align-items:center;justify-content:center;height:30px;margin-bottom:4px;}
+.stat-pill .stat-ico svg{width:30px;height:30px;display:block;}
 .stat-pill .code{font-weight:900;font-size:17px;display:block;margin-bottom:2px;letter-spacing:.01em;}
 .stat-pill.visited .code{color:var(--gold);}
 .stat-pill .stat-cn{display:block;font-size:13px;font-weight:700;line-height:1.35;opacity:.92;}
@@ -370,6 +370,7 @@ html.dk.dt .hero-popover a{color:#CFC9BE}
 <div class="toast" id="toast"></div>
 
 <script src="type-icons.js"></script>
+<script src="type-arts.js"></script>
 <script>
 function siteBack(){
 try{
@@ -527,7 +528,7 @@ const c = parseInt(counts[code]||0, 10) || 0;
 const meta = TYPE_META[code];
 const visited = c > 0;
 const color = meta.color || "#999";
-const ico = (window.getTypeIcon ? window.getTypeIcon(code) : "");
+const ico = ((window.getTypeArt ? window.getTypeArt(code) : "") || (window.getTypeIcon ? window.getTypeIcon(code) : ""));
 return `
  <button type="button" class="stat-pill ${visited ? "visited" : ""}" style="border-color:${color}" onclick="goType('${code}')">
  <span class="stat-ico" style="color:${color}">${ico}</span>

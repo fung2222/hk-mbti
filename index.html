@@ -266,8 +266,8 @@ html.dk #resultFolder [data-rf="scene"] > .card{border-color:rgba(255,255,255,.1
 .hk-stats-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
 .hk-stats-name{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;line-height:1.35;min-width:0}
 .hk-stats-rank{font-size:12px;font-weight:900;color:#8B6F3D;flex:0 0 auto}
-.hk-stats-ico{width:22px;height:22px;flex:0 0 auto;color:var(--tc,#8B6F3D);line-height:0;display:flex;align-items:center;justify-content:center}
-.hk-stats-ico svg{width:22px;height:22px;display:block}
+.hk-stats-ico{width:30px;height:30px;flex:0 0 auto;color:var(--tc,#8B6F3D);line-height:0;display:flex;align-items:center;justify-content:center}
+.hk-stats-ico svg{width:30px;height:30px;display:block}
 .hk-stats-code{color:var(--tc,#8B6F3D);font-weight:900;font-size:17px}
 .hk-stats-cn{font-size:15px;font-weight:700;color:#3a3632;white-space:nowrap}
 .hk-stats-pct{font-size:18px;font-weight:900;color:var(--ink);letter-spacing:-.01em}
@@ -562,6 +562,11 @@ html.dk .up-cmp .no{color:#6E675C}
 .hub-bleed{margin:0 -16px 12px;padding:22px 14px 16px;background:linear-gradient(180deg,#fff,var(--paper));}
 .hub-bleed-inner{max-width:26rem;margin:0 auto;}
 .hub-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
+#hubTypeGrid{display:block}
+.hub-type-group{margin:0 0 16px}
+.hub-type-group:last-child{margin-bottom:0}
+.hub-type-group-h{font-size:12px;font-weight:700;color:#8B6F3D;letter-spacing:.12em;margin:0 0 7px}
+html.dk .hub-type-group-h{color:#D8C69E}
 /* 百科「由場景睇」→ 場景詳情：16 型卡 grid 同下面測試入口卡要有距離（Roy 2026-10-01 報貼住） */
 #hubSceneDetail .hub-type-hint{margin-bottom:10px}
 #hubSceneDetail .hub-type-grid{margin-bottom:20px}
@@ -622,7 +627,7 @@ color:var(--ink);background:rgba(255,255,255,.92);border-radius:999px;padding:.1
 .deep-badge{margin-top:1px;font-size:.42em;font-weight:700;line-height:1.2;font-family:inherit;color:rgba(255,255,255,.92);background:rgba(0,0,0,.24);border-radius:999px;padding:.08em .3em;}
 .deep-badge.is-soon{color:rgba(255,255,255,.7);background:rgba(0,0,0,.16);font-weight:700;}
 /* 港物件 icon：置中 + 同下面 4 字母留 5px（全部用 em，跟色卡基準自動縮放） */
-.type-ico{display:block;width:.92em;height:.92em;margin:0 auto .21em;opacity:1}
+.type-ico{display:block;width:1.65em;height:1.65em;margin:0 auto .21em;opacity:1}
 .type-ico svg{display:block;width:100%;height:100%;margin:0 auto}
 /* 4 字母（同 icon 同一個容器）：強制繼承 .hub-type-code 嘅 Archivo Black，唔會因為包咗 span 而跌返 body 字型 */
 .type-code-txt{display:block;font-family:inherit;font-weight:inherit;font-size:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;white-space:nowrap}
@@ -2836,6 +2841,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 <script src="voice-data.js"></script>
 <script src="premium-data.js"></script>
 <script src="type-icons.js"></script>
+<script src="type-arts.js"></script>
 <script>
 window.QUESTIONS = [
  // E/I 軸 (12 題)
@@ -5617,7 +5623,7 @@ const bar = Math.max(8, Math.round(n / maxC * 100));
 const P = (window.getPalette ? window.getPalette(code) : null) || {};
 const color = P.c1 || "#8B6F3D";
 const accent = P.accent || color;
-const ico = (window.getTypeIcon ? window.getTypeIcon(code) : "");
+const ico = ((window.getTypeArt ? window.getTypeArt(code) : "") || (window.getTypeIcon ? window.getTypeIcon(code) : ""));
 return '<div class="hk-stats-item" style="--tc:' + color + ';--tc-dk:' + accent + '">' +
 '<div class="hk-stats-top"><span class="hk-stats-name"><span class="hk-stats-rank">' + (i+1) + '</span><span class="hk-stats-ico">' + ico + '</span><span class="hk-stats-code">' + code + '</span><span class="hk-stats-cn">' + (names[code] || "") + '</span></span><span class="hk-stats-pct">' + pct.toFixed(1) + '%</span></div>' +
 '<div class="stat-bar"><div class="stat-fill" style="width:' + bar + '%;background:' + color + '"></div></div>' +
@@ -6517,7 +6523,7 @@ try{ const _c = document.getElementById("deepCta"); if(_c) _c.style.display = "n
 const T = (window.TYPES && window.TYPES[t]) || {};
 const PL = window.getPalette(t);
 const _full = (window.getTier() === "full");
-box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]" style="display:flex;align-items:center;gap:9px"><span class="deep-ico-type" style="color:' + PL.c1 + ';width:26px;height:26px;flex:0 0 auto;line-height:0">' + (window.getTypeIcon ? window.getTypeIcon(t) : "") + '</span><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span><span style="color:#6b6560;font-weight:700">· ' + (T.cn || "") + '</span></div>' +
+box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]" style="display:flex;align-items:center;gap:9px"><span class="deep-ico-type" style="color:' + PL.c1 + ';width:34px;height:34px;flex:0 0 auto;line-height:0">' + ((window.getTypeArt ? window.getTypeArt(t) : "") || (window.getTypeIcon ? window.getTypeIcon(t) : "")) + '</span><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span><span style="color:#6b6560;font-weight:700">· ' + (T.cn || "") + '</span></div>' +
 '<div class="text-xs text-gray-500 mt-1">' + d.chapters.length + ' 章 · ' + (_full ? "深入分析" : "第 1 章免費，其餘要完整版") + '</div></div>' +
 d.chapters.map(function(c, i){
 const _tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
@@ -7151,7 +7157,7 @@ window.renderPairPick = function(myType){
     const T = (window.TYPES || {})[t] || {};
     const P = window.getPalette ? window.getPalette(t) : {};
     const color = (P && P.c1) || "#8B6F3D";
-    const ico = window.getTypeIcon ? window.getTypeIcon(t) : "";
+    const ico = (window.getTypeArt ? window.getTypeArt(t) : "") || (window.getTypeIcon ? window.getTypeIcon(t) : "");
     return '<button type="button" class="pair-pill" style="border-color:' + color + '" onclick="openPairFromGrid(\'' + t + '\')">'
       + '<span class="pair-ico" style="color:' + color + '">' + ico + '</span>'
       + '<span class="code" style="color:' + color + '">' + t + '</span>'
@@ -7392,7 +7398,7 @@ window._homeReelHold = false;
 window.pickTypeTile = function(ev){
 const btn = ev.currentTarget;
 if(!btn) return;
-const root = btn.closest(".hub-type-grid") || btn.closest(".home-type-reel") || btn.parentElement;
+const root = (btn.closest("#hubTypeGrid") || btn.closest(".home-type-reel") || btn.closest(".hub-type-grid") || btn.parentElement);
 if(!root) return;
 if(btn.classList.contains("is-on")){
 btn.classList.remove("is-on");
@@ -7409,7 +7415,17 @@ if(root.classList.contains("home-type-reel")) window._homeReelHold = true;
 window.TYPE_ORDER = ["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
 window.renderHubTypes = function(){
 const order = window.TYPE_ORDER;
-const gridHtml = order.map(code => window.hubTypeCardHtml(code, `openType('${code}','hub')`)).join("");
+// 2026-10-20 Roy：16 型按四大類分組（分析家／外交家／守護者／探索者），每組 4 個一行，保持 4 欄密格
+const groups = [
+ ["分析家", ["INTJ","INTP","ENTJ","ENTP"]],
+ ["外交家", ["INFJ","INFP","ENFJ","ENFP"]],
+ ["守護者", ["ISTJ","ISFJ","ESTJ","ESFJ"]],
+ ["探索者", ["ISTP","ISFP","ESTP","ESFP"]]
+];
+const gridHtml = groups.map(function(g){
+  return '<div class="hub-type-group"><div class="hub-type-group-h">' + g[0] + '</div>'
+    + '<div class="hub-type-grid">' + g[1].map(function(code){ return window.hubTypeCardHtml(code, `openType('${code}','hub')`); }).join("") + '</div></div>';
+}).join("");
 const reelHtml = order.map(code => window.hubTypeCardHtml(code, `openType('${code}','home')`)).join("");
 const grid = $("hubTypeGrid");
 if(grid) grid.innerHTML = gridHtml;

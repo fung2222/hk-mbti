@@ -134,7 +134,7 @@ setTimeout(() => {
   const foot = d.getElementById("dtFoot");
   check("#dtFoot 係 body 直系子女，喺 #app 後面", !!(foot && foot.parentElement === d.body && foot.previousElementSibling && foot.previousElementSibling.id === "app"));
   check("16 型色牌 32 張（前 16 唯一、後 16 重複）", d.querySelectorAll("#homeTypeReel .hub-type-card").length === 32);
-  const codes = [...d.querySelectorAll("#homeTypeReel .hub-type-card .hub-type-code")].map(e => e.textContent);
+  const codes = [...d.querySelectorAll("#homeTypeReel .hub-type-card .hub-type-code")].map(e => e.textContent.trim());
   check("前 16 同後 16 完全一樣；次序 NT/NF/SJ/SP（對應 4 個組別標籤）",
     JSON.stringify(codes.slice(0, 16)) === JSON.stringify(codes.slice(16, 32)) &&
     codes.slice(0, 16).join(",") === "INTJ,INTP,ENTJ,ENTP,INFJ,INFP,ENFJ,ENFP,ISTJ,ISFJ,ESTJ,ESFJ,ISTP,ISFP,ESTP,ESFP");
