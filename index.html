@@ -6523,7 +6523,7 @@ try{ const _c = document.getElementById("deepCta"); if(_c) _c.style.display = "n
 const T = (window.TYPES && window.TYPES[t]) || {};
 const PL = window.getPalette(t);
 const _full = (window.getTier() === "full");
-box.innerHTML = '<div class="card p-5 mb-4"><div class="font-black text-[17px]" style="display:flex;align-items:center;gap:9px"><span class="deep-ico-type" style="color:' + PL.c1 + ';width:34px;height:34px;flex:0 0 auto;line-height:0">' + ((window.getTypeArt ? window.getTypeArt(t) : "") || (window.getTypeIcon ? window.getTypeIcon(t) : "")) + '</span><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span><span style="color:#6b6560;font-weight:700">· ' + (T.cn || "") + '</span></div>' +
+box.innerHTML = '<div class="card p-5 mb-4" style="border:2px solid ' + PL.c1 + ';box-shadow:0 12px 28px -14px ' + PL.c1 + '80"><div class="font-black text-[17px]" style="display:flex;align-items:center;gap:9px"><span class="deep-ico-type" style="color:' + PL.c1 + ';width:34px;height:34px;flex:0 0 auto;line-height:0">' + ((window.getTypeArt ? window.getTypeArt(t) : "") || (window.getTypeIcon ? window.getTypeIcon(t) : "")) + '</span><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span><span style="color:#6b6560;font-weight:700">· ' + (T.cn || "") + '</span></div>' +
 '<div class="text-xs text-gray-500 mt-1">' + d.chapters.length + ' 章 · ' + (_full ? "深入分析" : "第 1 章免費，其餘要完整版") + '</div></div>' +
 d.chapters.map(function(c, i){
 const _tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
