@@ -133,6 +133,8 @@ chk("★ icon 唔係一個公仔走天涯（16 型用到 >=6 個語意家族）"
 })());
   chk("★ 性格 tab 保留「完整性格分析」長文", d.querySelectorAll("#typeFull p, #typeFull div").length>0 && $("#typeFull").innerHTML.length>200, $("#typeFull").innerHTML.length);
   chk("★ 長文唔再重複強項／弱項（卡已經有）", !/強項|弱項/.test($("#typeFull").textContent), ($("#typeFull").textContent.match(/強項|弱項/g)||[]).join(","));
+  chk("★ 長文冇「最佳配對」型號（研究顯示預測力接近隨機）", !/最佳配對/.test($("#typeFull").textContent));
+  chk("★ 長文尾有實證提示（依附風格／衝突處理）", /依附風格/.test($("#typeFull").parentElement.textContent) && /衝突處理/.test($("#typeFull").parentElement.textContent));
   chk("★ 長文其他段落仲在（核心特質／戀愛／工作）", /核心特質/.test($("#typeFull").textContent) && /戀愛/.test($("#typeFull").textContent) && /工作/.test($("#typeFull").textContent));
   chk("★ 性格刻度 bar 闊度跟分數（每個 bar = 分數 × 10%）", (function(){
   const rows=[...d.querySelectorAll("#typeScore .stat-bar")];
