@@ -491,10 +491,10 @@ html.dk .deep-ico{color:#C0A87A}
 .deep-star svg{width:18px;height:18px;display:block;fill:#C8A24C}
 .deep-t{display:block;font-size:14px;font-weight:700;color:var(--ink);margin:0 0 3px}
 .deep-ch{font-size:11px;font-weight:700;color:#8B6F3D;letter-spacing:.02em;margin-bottom:2px}
-.deep-ch-type-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px}
+.deep-ch-type-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;margin-bottom:6px}
 .type-full-note{margin:14px 0 0;font-size:13px;line-height:1.7;color:#6b6560}
-.deep-ch-ico{width:38px;height:38px;flex:0 0 auto;line-height:0;color:#fff}
-.deep-ch-ico svg{width:38px;height:38px;display:block}
+.deep-ch-ico{width:54px;height:54px;flex:0 0 auto;line-height:0;color:#fff;background:rgba(255,255,255,.94);border-radius:50%;padding:4px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+.deep-ch-ico svg{width:100%;height:100%;display:block}
 .deep-ch-ico:empty{display:none}
 .deep-go{color:#8B6F3D;font-size:12px;font-weight:700;flex-shrink:0}
 html.dk .deep-nav-btn{border-color:rgba(255,255,255,.16);color:#C2BAAD}
@@ -1292,6 +1292,7 @@ html.dk .pr-note{color:#A79E92}
 html.dk .hk-stats-code,html.dk .hk-stats-ico{color:var(--tc-dk,var(--tc))}
 html.dk .hk-stats-cn{color:#C9C2B6}
 html.dk .type-full-note{color:#A79E92}
+html.dk .deep-ch-ico{background:rgba(255,255,255,.26)}
 html.dk #personalReport .pr-pct-title,html.dk #personalReport .pr-gold{color:#D8C69E}
 html.dk{
   --paper:#12161C;--soft:#1B2129;--ink:#ECE7DE;--gold:#D9B26A;--accent:#F0736F;
@@ -6492,9 +6493,15 @@ try{ const _n = document.getElementById("deepHint"); if(_n) _n.style.display = "
 try{ const _c = document.getElementById("deepCta"); if(_c) _c.style.display = ""; }catch(e){}
 const box = document.getElementById("deepList");
 if(!box) return;
-box.innerHTML = '<div class="hub-type-grid" id="deepTypeGrid">' +
-window.DEEP_ORDER.map(function(t){ return window.deepTypeCardHtml(t); }).join("") +
-'</div>';
+box.innerHTML = '<div id="deepTypeGrid">' + [
+ ["分析家", ["INTJ","INTP","ENTJ","ENTP"]],
+ ["外交家", ["INFJ","INFP","ENFJ","ENFP"]],
+ ["守護者", ["ISTJ","ISFJ","ESTJ","ESFJ"]],
+ ["探索者", ["ISTP","ISFP","ESTP","ESFP"]]
+].map(function(g){
+  return '<div class="hub-type-group"><div class="hub-type-group-h">' + g[0] + '</div>'
+    + '<div class="hub-type-grid">' + g[1].map(function(t){ return window.deepTypeCardHtml(t); }).join("") + '</div></div>';
+}).join("") + '</div>';
 };
 window.DEEP_ICO_PATHS = [
 '<circle cx="12" cy="12" r="8.4"/><path d="M15.6 8.4l-2.1 5.1-5.1 2.1 2.1-5.1z"/>',
@@ -6523,7 +6530,7 @@ try{ const _c = document.getElementById("deepCta"); if(_c) _c.style.display = "n
 const T = (window.TYPES && window.TYPES[t]) || {};
 const PL = window.getPalette(t);
 const _full = (window.getTier() === "full");
-box.innerHTML = '<div class="card p-5 mb-4" style="border:2px solid ' + PL.c1 + ';box-shadow:0 12px 28px -14px ' + PL.c1 + '80"><div class="font-black text-[17px]" style="display:flex;align-items:center;gap:9px"><span class="deep-ico-type" style="color:' + PL.c1 + ';width:34px;height:34px;flex:0 0 auto;line-height:0">' + ((window.getTypeArt ? window.getTypeArt(t) : "") || (window.getTypeIcon ? window.getTypeIcon(t) : "")) + '</span><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span><span style="color:#6b6560;font-weight:700">· ' + (T.cn || "") + '</span></div>' +
+box.innerHTML = '<div class="card p-5 mb-4" style="border:2px solid ' + PL.c1 + ';box-shadow:0 12px 28px -14px ' + PL.c1 + '80;text-align:center"><div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span class="deep-ico-type" style="color:' + PL.c1 + ';width:52px;height:52px;flex:0 0 auto;line-height:0">' + ((window.getTypeArt ? window.getTypeArt(t) : "") || (window.getTypeIcon ? window.getTypeIcon(t) : "")) + '</span><div class="font-black text-[17px]"><span class="deep-code" style="--tc:' + PL.c1 + ';--tc-dk:' + PL.accent + '">' + t + '</span><span style="color:#6b6560;font-weight:700"> · ' + (T.cn || "") + '</span></div></div>' +
 '<div class="text-xs text-gray-500 mt-1">' + d.chapters.length + ' 章 · ' + (_full ? "深入分析" : "第 1 章免費，其餘要完整版") + '</div></div>' +
 d.chapters.map(function(c, i){
 const _tag = _full ? "" : (i === 0 ? '<span class="deep-tag is-free">免費</span>' : '<span class="deep-tag">完整版</span>');
@@ -6585,7 +6592,7 @@ document.getElementById("deepChapterTitle").textContent = ch.t;
 document.getElementById("deepChapterCrumb").textContent = t + " · " + (i + 1) + " / " + d.chapters.length;
 document.getElementById("deepChapterType").innerText = t;
 document.getElementById("deepChapterType").dataset.code = t;
-try{ const _ci = document.getElementById("deepChapterIco"); if(_ci) _ci.innerHTML = (window.getTypeIcon ? window.getTypeIcon(t) : ""); }catch(e){}
+try{ const _ci = document.getElementById("deepChapterIco"); if(_ci) _ci.innerHTML = (window.getTypeArt ? window.getTypeArt(t) : "") || (window.getTypeIcon ? window.getTypeIcon(t) : ""); }catch(e){}
 document.getElementById("deepChapterCn").textContent = T.cn || "";
 document.getElementById("deepChapterHead").textContent = ((i === 0 && window.getTier() !== "full") ? "第 1 章 · 免費試睇" : "完整版 · 第 " + (i + 1) + " 章");
 document.getElementById("deepChapterBody").innerHTML = window.formatChapterHtml(ch.b);

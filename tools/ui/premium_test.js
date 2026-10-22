@@ -173,6 +173,9 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
   chk('★ 文章牌匾 4 字母改用同 #typeBig 一組（text-5xl font-black）', ['socialArticleType','romanceArticleType'].every(id=>new RegExp('class="text-5xl font-black mb-1" id="'+id+'"').test(src)) && /class="text-5xl font-black" id="deepChapterType"/.test(src));
   chk('★ 場景／章節牌匾已經唔用 .hub-type-code（只剩 16 型 hub 卡用）', !/class="hub-type-code" id="/.test(src));
   // Roy 2026-10-03：章節色卡要同人格頁色卡一模一樣 → 4 字母改用同 #typeBig 一組 class
+  chk('★ 深入分析 16 型分四大類', /renderDeepList[\s\S]{0,1200}hub-type-group/.test(src));
+  chk('★ 9 章頂卡用新插畫', /deep-ico-type[\s\S]{0,400}getTypeArt/.test(src));
+  chk('★ 章節牌匾用新插畫，icon 喺名字上方居中', /deepChapterIco[\s\S]{0,200}getTypeArt/.test(src) && /\.deep-ch-type-row\{display:flex;flex-direction:column/.test(src));
   chk('★ 深入分析頂卡用型色框＋立體陰影（唔加底色）', /border:2px solid ' \+ PL\.c1 \+ ';box-shadow:0 12px 28px -14px ' \+ PL\.c1 \+ '80/.test(src));
   chk('★ 章節色卡 4 字母跟人格頁 #typeBig（text-5xl font-black）',
       /class="text-5xl font-black" id="deepChapterType"/.test(src) && /class="text-5xl font-black mb-1" id="typeBig"/.test(src));
