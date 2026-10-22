@@ -363,6 +363,10 @@ if not re.search(r'id="method"[\s\S]{0,600}?class="card[^"]*"[\s\S]{0,300}?mth-l
     _icon_problems.append("計分方法頁第一大句冇卡片框")
 if "測試定位" not in _m_seg:
     _icon_problems.append("計分方法頁第一張卡冇小標題（測試定位）")
+_dj = open("data.js", encoding="utf-8").read()
+for _kw in ("名人參考", "配最夾", "最佳配對"):
+    if _kw in _dj:
+        _icon_problems.append("data.js 仍有未證實聲稱：" + _kw)
 _about_i = _idx.find('id="about"')
 _about_seg = _idx[_about_i:_idx.find("</section>", _about_i)] if _about_i >= 0 else ""
 if "goPickVersion()" not in _about_seg:
