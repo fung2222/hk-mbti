@@ -131,6 +131,7 @@ chk("★ icon 唔係一個公仔走天涯（16 型用到 >=6 個語意家族）"
   Object.keys(F).forEach(c=>{ (F[c].strength||[]).concat(F[c].weakness||[]).forEach(x=>{ fams.add(M[x]||M[String(x).replace(/\s+/g,"")]); }); });
   return fams.size>=6 && !fams.has(undefined);
 })());
+  chk('★ 四塊彩色牌匾都有插畫（人格／相處／拍拖／章節）', ['typeHeroIco','socialHeroIco','romanceHeroIco','deepChapterIco'].every(id=>new RegExp('id="'+id+'"').test(src)) && /\.type-hero-ico\{[^}]*border-radius:50%/.test(src));
   chk("★ 性格 tab 保留「完整性格分析」長文", d.querySelectorAll("#typeFull p, #typeFull div").length>0 && $("#typeFull").innerHTML.length>200, $("#typeFull").innerHTML.length);
   chk("★ 長文唔再重複強項／弱項（卡已經有）", !/強項|弱項/.test($("#typeFull").textContent), ($("#typeFull").textContent.match(/強項|弱項/g)||[]).join(","));
   chk("★ 長文冇「最佳配對」型號（研究顯示預測力接近隨機）", !/最佳配對/.test($("#typeFull").textContent));

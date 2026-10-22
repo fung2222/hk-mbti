@@ -491,6 +491,9 @@ html.dk .deep-ico{color:#C0A87A}
 .deep-star svg{width:18px;height:18px;display:block;fill:#C8A24C}
 .deep-t{display:block;font-size:14px;font-weight:700;color:var(--ink);margin:0 0 3px}
 .deep-ch{font-size:11px;font-weight:700;color:#8B6F3D;letter-spacing:.02em;margin-bottom:2px}
+.type-hero-ico{width:54px;height:54px;margin:0 auto 8px;border-radius:50%;background:rgba(255,255,255,.94);padding:4px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+.type-hero-ico svg{width:100%;height:100%;display:block}
+.type-hero-ico:empty{display:none}
 .deep-ch-type-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;margin-bottom:6px}
 .type-full-note{margin:14px 0 0;font-size:13px;line-height:1.7;color:#6b6560}
 .deep-ch-ico{width:54px;height:54px;flex:0 0 auto;line-height:0;color:#fff;background:rgba(255,255,255,.94);border-radius:50%;padding:4px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.16)}
@@ -1293,6 +1296,7 @@ html.dk .hk-stats-code,html.dk .hk-stats-ico{color:var(--tc-dk,var(--tc))}
 html.dk .hk-stats-cn{color:#C9C2B6}
 html.dk .type-full-note{color:#A79E92}
 html.dk .deep-ch-ico{background:rgba(255,255,255,.26)}
+html.dk .type-hero-ico{background:rgba(255,255,255,.26)}
 html.dk #personalReport .pr-pct-title,html.dk #personalReport .pr-gold{color:#D8C69E}
 html.dk{
   --paper:#12161C;--soft:#1B2129;--ink:#ECE7DE;--gold:#D9B26A;--accent:#F0736F;
@@ -2216,6 +2220,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="type-hero-row">
  <button type="button" class="type-nav" aria-label="上一個場景" onclick="articleStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
  <div class="type-hero-mid">
+ <span class="type-hero-ico" id="socialHeroIco" aria-hidden="true"></span>
  <div class="text-5xl font-black mb-1" id="socialArticleType">INTJ</div>
  <h2 class="text-[19px] font-black mb-1" id="socialArticleCn"></h2>
  </div>
@@ -2247,6 +2252,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="type-hero-row">
  <button type="button" class="type-nav" aria-label="上一個場景" onclick="articleStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 3.6L6.2 12l9.2 8.4z"/></svg></button>
  <div class="type-hero-mid">
+ <span class="type-hero-ico" id="romanceHeroIco" aria-hidden="true"></span>
  <div class="text-5xl font-black mb-1" id="romanceArticleType">INTJ</div>
  <h2 class="text-[19px] font-black mb-1" id="romanceArticleCn"></h2>
  </div>
@@ -2275,6 +2281,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="type-hero-row">
  <button type="button" class="type-nav" id="typePrev" aria-label="上一個類型" onclick="typeStep(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.4 4.8L7.2 12l8.2 7.2z"/></svg></button>
  <div class="type-hero-mid">
+ <span class="type-hero-ico" id="typeHeroIco" aria-hidden="true"></span>
  <div class="text-5xl font-black mb-1" id="typeBig">INTJ</div>
  <h2 class="text-[19px] font-black mb-1" id="typeName">建築師</h2>
  <p class="text-sm" id="typeSlogan">「東鐵企到金鐘」</p>
@@ -7233,6 +7240,7 @@ window._lastArticleType = type;
  $("socialArticleTitle").innerText = s.name;
  $("socialArticleBreadcrumb").innerText = "社交 / " + s.name + " / " + type;
  $("socialArticleType").innerText = type;
+ try{ const _i=document.getElementById("socialHeroIco"); if(_i) _i.innerHTML=(window.getTypeArt?window.getTypeArt(type):"")||(window.getTypeIcon?window.getTypeIcon(type):""); }catch(e){}
  $("socialArticleType").dataset.code = type;
  $("socialArticleCn").innerText = T.cn;
  $("socialArticleScenario").innerText = s.name;
@@ -7255,6 +7263,7 @@ window._lastArticleType = type;
  $("romanceArticleTitle").innerText = s.name;
  $("romanceArticleBreadcrumb").innerText = "拍拖 / " + s.name + " / " + type;
  $("romanceArticleType").innerText = type;
+ try{ const _i=document.getElementById("romanceHeroIco"); if(_i) _i.innerHTML=(window.getTypeArt?window.getTypeArt(type):"")||(window.getTypeIcon?window.getTypeIcon(type):""); }catch(e){}
  $("romanceArticleType").dataset.code = type;
  $("romanceArticleCn").innerText = T.cn;
  $("romanceArticleScenario").innerText = s.name;
@@ -7368,6 +7377,7 @@ window._homeReelHold = false;
  window.clearTypePick();
 window._lastType = type;
  $("typeBig").innerText = type;
+ try{ const _i=document.getElementById("typeHeroIco"); if(_i) _i.innerHTML=(window.getTypeArt?window.getTypeArt(type):"")||(window.getTypeIcon?window.getTypeIcon(type):""); }catch(e){}
  // 分頁狀態還原（撳返回／下拉重整之後唔會跳返第一個 tab）
  try{ window.setTypeTab(window._typeTab || "basic", true); window.renderTypeTabs(type); }catch(e){}
  $("typeName").innerText = T.cn || T.name;
