@@ -42,6 +42,7 @@
 // 2026-10-20h：stats.html bar 10px 改 7px（減 30%）
 // 2026-10-20i：首頁 top 3 bar 一樣改 7px
 // 2026-10-20j：計分方法第一張卡加「測試定位」金標
+// 2026-10-20k：性格分頁長文剝走重複強項／弱項段（卡已保留）
 const CACHE = "hk-mbti-v2.0.0";
 const ASSETS = [
   "/hk-mbti/",

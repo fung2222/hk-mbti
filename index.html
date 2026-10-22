@@ -6812,7 +6812,7 @@ window.renderTypeTabs = function(code){
   + '<div class="pros-box is-wk" style="background:rgba(30,42,59,.03)">' + wk.map(function(x){ return '<div class="pros-item">' + window.prosIconHtml(x) + '<span>' + x + '</span></div>'; }).join("") + '</div>'
   + '</div></div>') : "";
  const fEl = _g("typeFull");
- if(fEl) fEl.innerHTML = window.formatTypeFullHtml(F && F.full);
+ if(fEl) fEl.innerHTML = window.formatTypeFullHtml(window.stripProsConsSection(F && F.full));
 
  // ---- 2 關係 ----
  const relCol = function(title, ico, items, col){
@@ -7059,6 +7059,15 @@ html += paras((chunks[i + 1] || "").trim());
 return html;
 };
 
+// 2026-10-20 Roy：長文內「強項／弱項」同上面張卡（pros-box）重複 → 剝走呢兩段，
+// 只刪「**強項**」「**弱項**」連佢下面嘅 bullet，其他段落（核心特質／戀愛／工作…）原封不動。
+window.stripProsConsSection = function(raw){
+  if(!raw) return raw;
+  return String(raw)
+    .replace(/\n*\*\*(?:強項|弱項)\*\*[^\n]*\n(?:-\s*[^\n]*\n?)*/g, "\n\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+};
 window.formatTypeFullHtml = function(raw){
 if(!raw) return "";
 const esc = function(s){

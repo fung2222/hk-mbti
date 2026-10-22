@@ -132,6 +132,8 @@ chk("★ icon 唔係一個公仔走天涯（16 型用到 >=6 個語意家族）"
   return fams.size>=6 && !fams.has(undefined);
 })());
   chk("★ 性格 tab 保留「完整性格分析」長文", d.querySelectorAll("#typeFull p, #typeFull div").length>0 && $("#typeFull").innerHTML.length>200, $("#typeFull").innerHTML.length);
+  chk("★ 長文唔再重複強項／弱項（卡已經有）", !/強項|弱項/.test($("#typeFull").textContent), ($("#typeFull").textContent.match(/強項|弱項/g)||[]).join(","));
+  chk("★ 長文其他段落仲在（核心特質／戀愛／工作）", /核心特質/.test($("#typeFull").textContent) && /戀愛/.test($("#typeFull").textContent) && /工作/.test($("#typeFull").textContent));
   chk("★ 性格刻度 bar 闊度跟分數（每個 bar = 分數 × 10%）", (function(){
   const rows=[...d.querySelectorAll("#typeScore .stat-bar")];
   const nums=[...d.querySelectorAll("#typeScore .font-bold.text-ink")].map(x=>parseInt(x.textContent,10));
