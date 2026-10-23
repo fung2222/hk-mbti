@@ -69,7 +69,6 @@ const ASSETS = [
   "/hk-mbti/record.html",
   "/hk-mbti/stats.html",
   "/hk-mbti/privacy.html",
-  "/hk-mbti/tee.html",
   "/hk-mbti/offline.html"
 ];
 

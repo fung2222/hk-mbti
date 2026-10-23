@@ -75,7 +75,7 @@ function load(opts){
 }
 
 
-// 載入其他頁（record/stats/tee/privacy）用嚟測選單連結
+// 載入其他頁（record/stats/privacy）用嚟測選單連結
 const PAGE_CACHE = {};
 function pageHtml(file){
   if(!PAGE_CACHE[file]) PAGE_CACHE[file] = inlineLocal(fs.readFileSync(path.join(REPO, file), "utf8"));
@@ -197,7 +197,7 @@ const visible = w => ["home","type","about","hub","method","privacy","result"]
     w.close();
   }
   {
-    const pages = ["record.html", "stats.html", "tee.html", "privacy.html"];
+    const pages = ["record.html", "stats.html", "privacy.html"];
     const out = [];
     for(const f of pages){
       const w = loadOther(f);
@@ -216,7 +216,7 @@ const visible = w => ["home","type","about","hub","method","privacy","result"]
   {
     const idxIds = new Set([...fs.readFileSync(REPO + "/index.html", "utf8").matchAll(/id="([\w-]+)"/g)].map(m => m[1]));
     const EXPECT = ["主頁","我的紀錄","關於港式 MBTI","性格百科","香港16型統計","計分方法同限制","私隱聲明"];
-    for(const f of ["record.html","stats.html","tee.html","privacy.html"]){
+    for(const f of ["record.html","stats.html","privacy.html"]){
       const s = fs.readFileSync(REPO + "/" + f, "utf8");
       const mm = s.match(/<div class="hero-popover"[\s\S]*?<div class="sep">/);
       const pop = mm ? mm[0] : s;

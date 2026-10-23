@@ -10,8 +10,8 @@ let ok = 0, total = 0;
 function chk(n, c, x) { total++; if (c) ok++; console.log((c ? '✓' : '✗') + ' ' + n + (c ? '' : '   <- ' + (x === undefined ? '' : x))); }
 const read = f => fs.readFileSync(path.join(REPO, f), 'utf8');
 
-const LOCKED = ['index.html', 'record.html', 'stats.html', 'tee.html', 'privacy.html']; // 要鎖選字 + 攔長按
-const NO_PULL = ['record.html', 'stats.html', 'tee.html'];   // index 刻意唔鎖 overscroll（下拉要還原狀態）
+const LOCKED = ['index.html', 'record.html', 'stats.html', 'privacy.html']; // 要鎖選字 + 攔長按
+const NO_PULL = ['record.html', 'stats.html'];   // index 刻意唔鎖 overscroll（下拉要還原狀態）
 const SEL = 'input,textarea,[contenteditable],img';          // 例外：輸入框同圖
 const NOBLANK = LOCKED.concat(['offline.html']);
 
@@ -101,8 +101,7 @@ chk('index.html 只喺測試期間鎖下拉（body.in-test）', (function(){
   // ---------- 真跑：長按真係攔到 / 例外真係放行 ----------
   const CASES = [
     ['record.html', []],
-    ['index.html', [['input', '#profileName']]],
-    ['tee.html', []]
+    ['index.html', [['input', '#profileName']]]
   ];
   for (const [file, extra] of CASES) {
     const dom = open(file);

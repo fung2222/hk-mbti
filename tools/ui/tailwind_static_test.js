@@ -4,7 +4,7 @@
 const fs=require("fs"), path=require("path"), zlib=require("zlib");
 const {JSDOM}=require("jsdom");
 const REPO=path.resolve(__dirname,"../..");
-const PAGES=["index.html","record.html","stats.html","tee.html","privacy.html"];
+const PAGES=["index.html","record.html","stats.html","privacy.html"];
 let ok=0,total=0;
 function chk(n,c,x){ total++; if(c)ok++; console.log((c?"✓":"✗")+" "+n+(c?"":"   <- "+(x===undefined?"":String(x).slice(0,180)))); }
 const R=f=>fs.readFileSync(path.join(REPO,f),encoding==="utf8"?f:undefined);
@@ -29,13 +29,13 @@ chk("★ 有 .hidden ／ .flex 基礎 utility", css.includes(".hidden{") && css.
 chk("★ 比 CDN 少好多（CDN 407,279 bytes JS）", css.length < 60000, css.length);
 
 // ───────── 三、覆蓋率：凡用到嘅 Tailwind class 一定要有 rule ─────────
-const siteCSS=["index.html","record.html","stats.html","tee.html","privacy.html","offline.html"]
+const siteCSS=["index.html","record.html","stats.html","privacy.html","offline.html"]
   .map(f=>(read(f).match(/<style[^>]*>[\s\S]*?<\/style>/g)||[]).join("\n")).join("\n");
 const esc=t=>t.replace(/[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~]/g,"\\$&");
 const TOKRE=/^[A-Za-z0-9:_\-\[\]\/\.%#!]+$/;
 const TWRE=/^(?:[a-z]+:)?(?:-)?(?:flex|grid|hidden|block|inline|relative|absolute|fixed|sticky|text-|bg-|border|rounded|p[xytrbl]?-|m[xytrbl]?-|w-|h-|min-|max-|gap-|space-|items-|justify-|self-|font-|leading-|tracking-|opacity-|overflow-|z-|top-|left-|right-|bottom-|inset-|shadow|ring|col-|row-|order-|truncate|uppercase|lowercase|capitalize|whitespace-|break-|cursor-|select-|pointer-events|transition|duration-|ease-|animate-|scale-|translate-|rotate-|aspect-|object-|align-|list-|underline|line-|decoration-|antialiased|sr-only|grid-cols|grid-rows)/;
 const toks=new Set();
-["index.html","record.html","stats.html","tee.html","privacy.html","offline.html"].forEach(f=>{
+["index.html","record.html","stats.html","privacy.html","offline.html"].forEach(f=>{
   const t=read(f);
   (t.match(/class="[^"]*"/g)||[]).forEach(m=>m.slice(7,-1).split(/\s+/).forEach(x=>TOKRE.test(x)&&toks.add(x)));
   (t.match(/class='[^']*'/g)||[]).forEach(m=>m.slice(7,-1).split(/\s+/).forEach(x=>TOKRE.test(x)&&toks.add(x)));

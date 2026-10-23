@@ -51,7 +51,7 @@ chk("★ restoreNav 會還原百科場景詳情（唔係淨係返列表）",
     /prev\.hubScene/.test(SRC) && /window\.openHubScene\(prev\.hubScene\)/.test(SRC));
 
 // ───────── 下拉重新整理審計 ─────────
-const sub=["record.html","stats.html","tee.html","privacy.html","offline.html"];
+const sub=["record.html","stats.html","privacy.html","offline.html"];
 const styleBlocks=[...SRC.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map(m=>m[1]).join("\n");
 const lockY=[...styleBlocks.matchAll(/[^\n{}]*\{[^}]*overscroll-behavior-y:\s*(contain|none)[^}]*\}/g)].map(m=>m[0].replace(/\s+/g,""));
 chk("★ index.html 只有 body.in-test 鎖 overscroll-y（其餘全開）",

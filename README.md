@@ -10,7 +10,7 @@
 | 檔案 | 用途 |
 |---|---|
 | `index.html` | 主 SPA（測驗、16 型、結果、相處／拍拖、設定）|
-| `record.html` `stats.html` `tee.html` `privacy.html` | 獨立頁（紀錄／統計／TEE 解鎖／私隱）|
+| `record.html` `stats.html` `privacy.html` | 獨立頁（紀錄／統計／私隱）|
 | `data.js` `social.js` `voice-data.js` | 題庫＋型格資料／場景內容／預錄語音 |
 | `sw.js` `manifest.json` `icon-*.png` | PWA |
 | `tools/` | 測試（jsdom）＋檢查腳本 |

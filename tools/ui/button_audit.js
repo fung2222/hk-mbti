@@ -45,7 +45,7 @@ function audit(file){
 }
 (async()=>{
   let bad=0;
-  for(const f of ['index.html','record.html','stats.html','tee.html','privacy.html']){
+  for(const f of ['index.html','record.html','stats.html','privacy.html']){
     const r=await audit(f);
     if(r.errs.length||r.bar.length) bad++;
     console.log(`\n===== ${f}：撳咗 ${r.count} 粒掣 =====`);

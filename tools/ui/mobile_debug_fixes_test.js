@@ -43,7 +43,7 @@ setTimeout(()=>{
     chk('P1-4 底色只有一個來源（_applyLetterHeroBg）', /window\._applyLetterHeroBg = function/.test(src) && (src.match(/_applyLetterHeroBg/g)||[]).length>=4, (src.match(/_applyLetterHeroBg/g)||[]).length);
     // P2-1 字重／字型
     let bad=[];
-    ["index.html","record.html","stats.html","tee.html","privacy.html","offline.html"].forEach(f=>{
+    ["index.html","record.html","stats.html","privacy.html","offline.html"].forEach(f=>{
       const t=fs.readFileSync(path.join(REPO,f),'utf8');
       if(/font-weight:\s*800/.test(t)) bad.push(f);
       if(/font-weight:\s*500/.test(t)) bad.push(f+'(500)');
@@ -57,7 +57,7 @@ setTimeout(()=>{
         chk('#1 320px 算術：一般 '+(320-32-88)+'px 盒 ≥ 164；章節 '+(320-32-72)+'px 盒 ≥ 209', (320-32-88)>=164 && (320-32-72)>=209);
     // ── #2 隨機灰統一（長文內文保留）
     let greyBad=[];
-    ['record.html','stats.html','tee.html','privacy.html','offline.html','index.html'].forEach(fn=>{
+    ['record.html','stats.html','privacy.html','offline.html','index.html'].forEach(fn=>{
       const tt=fs.readFileSync(path.join(REPO,fn),'utf8');
       ['#888','#555','#666','#6b6b6b','#4a4640','#9ca3af'].forEach(c=>{ if(new RegExp(':'+c+'\\b').test(tt)) greyBad.push(fn+':'+c); });
       if(/var\(--muted\)/.test(tt) && !/--muted:/.test(tt)) greyBad.push(fn+':--muted 冇定義');

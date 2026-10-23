@@ -9,7 +9,7 @@ const { JSDOM, VirtualConsole } = require('jsdom');
 const REPO = path.resolve(__dirname, '../..');
 let ok = 0, total = 0;
 function chk(n, c, x) { total++; if (c) ok++; console.log((c ? '✓' : '✗') + ' ' + n + (c ? '' : '   <- ' + (x === undefined ? '' : x))); }
-const PAGES = ['index.html', 'record.html', 'stats.html', 'tee.html', 'privacy.html', 'offline.html'];
+const PAGES = ['index.html', 'record.html', 'stats.html', 'privacy.html', 'offline.html'];
 const read = f => fs.readFileSync(path.join(REPO, f), 'utf8');
 const strip = css => css.replace(/\/\*[\s\S]*?\*\//g, '');
 
