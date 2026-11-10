@@ -215,7 +215,7 @@ const visible = w => ["home","type","about","hub","method","privacy","result"]
   console.log("\n【6】四個 sub-page 選單：唔可以有死 hash／死頁、要跟 index.html 同一套 7 項");
   {
     const idxIds = new Set([...fs.readFileSync(REPO + "/index.html", "utf8").matchAll(/id="([\w-]+)"/g)].map(m => m[1]));
-    const EXPECT = ["主頁","我的紀錄","關於港式 MBTI","性格百科","香港16型統計","計分方法同限制","私隱聲明"];
+    const EXPECT = ["主頁","我的紀錄","關於港式 MBTI","性格百科","16型參考比例","計分方法同限制","私隱聲明"];
     for(const f of ["record.html","stats.html","privacy.html"]){
       const s = fs.readFileSync(REPO + "/" + f, "utf8");
       const mm = s.match(/<div class="hero-popover"[\s\S]*?<div class="sep">/);

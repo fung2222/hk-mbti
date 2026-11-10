@@ -19,7 +19,7 @@ from playwright.async_api import async_playwright
 
 REPO = os.environ.get("HKMBTI_REPO") or os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 CHROME = os.environ.get("CHROME", "/usr/bin/google-chrome")
-BLOCK = ("goatcounter", "gc.zgo.at", "googlesyndication", "googletagmanager", "google-analytics")
+BLOCK = ("goatcounter", "gc.zgo.at", "googlesyndication", "googletagmanager", "google-analytics", "fonts.googleapis.com", "fonts.gstatic.com")
 passed = total = 0
 # ONLY=<關鍵字> 只跑名含該關鍵字嘅斷言（快速迭代用；唔相關嘅唔計入 total，唔影響 exit code）
 # 例：ONLY=弱項 python3 tools/desktop_render_test.py
@@ -197,14 +197,17 @@ async def run():
                       desc: pcts.every((v,i,arr) => i===0 || arr[i-1] >= v), cta: !!c,
                       sample: (document.getElementById('hkStatsSample')||{}).textContent || '',
                       baseN: (window.STAT_BASE_N||0).toLocaleString("en-HK"),
+                      refNote: (document.querySelector('#hk-stats .hk-stats-sub')||{}).textContent || '',
+                      hkEstimate: /約香港|對照香港人口/.test((document.getElementById('hk-stats')||{}).textContent || ''),
                       ctaBelow: !!(c && lastIt && c.getBoundingClientRect().top >= lastIt.getBoundingClientRect().bottom - 1),
                       ctaPlain: !!(csC && (csC.backgroundColor === 'rgba(0, 0, 0, 0)' || csC.backgroundColor === 'transparent')
                                   && csC.borderTopWidth === '0px' && csC.borderRadius === '0px'),
                       gapToAcc: acc ? Math.round(acc.getBoundingClientRect().top - el.getBoundingClientRect().bottom) : -1};
             }""")
-            check("%d×%d: 香港分佈齊（3 項、樣本＝基線、按鈕喺卡下面＋簡約、冇橫向捲軸）" % (_W, _H),
+            check("%d×%d: 16 型參考比例齊（3 項、固定基線、非香港人口估算、冇橫向捲軸）" % (_W, _H),
                   bool(_hk) and _hk.get("items") == 3 and _hk.get("desc") and _hk.get("cta") and _hk.get("hscroll", 99) <= 1
-                  and _hk.get("sample") == _hk.get("baseN")
+                  and _hk.get("sample") == "" and _hk.get("baseN") == "143,021"
+                  and "唔係香港調查或全港人口估算" in _hk.get("refNote", "") and not _hk.get("hkEstimate")
                   and _hk.get("ctaBelow") and _hk.get("ctaPlain"), str(_hk))
             _wantGap = 40 if _W <= 430 else 56
             check("%d×%d: 香港分佈 → 探索更多 空間 = %dpx（Roy 2026-10-11：原本太逼）" % (_W, _H, _wantGap),
@@ -451,8 +454,8 @@ async def run():
         # 或者 .hero-popover a 變返 display:block（每個連結霸一行），下面就會紅。
         for _nm, _f in (("首頁", "index.html"), ("統計", "stats.html"), ("紀錄", "record.html")):
             _dp = await b.new_page()
-            await _dp.goto(url, wait_until="networkidle")
-            await _dp.goto(url.rsplit("/", 1)[0] + "/" + _f, wait_until="networkidle")
+            await _dp.goto(url, wait_until="domcontentloaded")
+            await _dp.goto(url.rsplit("/", 1)[0] + "/" + _f, wait_until="domcontentloaded")
             await _dp.wait_for_timeout(1500)
             _dr = await _dp.evaluate("""() => {
               const bar=document.querySelector('#dtNav, .hero'); const cs=getComputedStyle(bar);
@@ -468,8 +471,8 @@ async def run():
             await _dp.close()
         for _nm, _f in (("統計", "stats.html"), ("紀錄", "record.html")):
             _mp2 = await b.new_page(viewport={"width": 390, "height": 844})
-            await _mp2.goto(url, wait_until="networkidle")
-            await _mp2.goto(url.rsplit("/", 1)[0] + "/" + _f, wait_until="networkidle")
+            await _mp2.goto(url, wait_until="domcontentloaded")
+            await _mp2.goto(url.rsplit("/", 1)[0] + "/" + _f, wait_until="domcontentloaded")
             await _mp2.wait_for_timeout(1200)
             _mr = await _mp2.evaluate("""() => {const h=document.querySelector('.hero'); const cs=getComputedStyle(h);
               const pop=document.querySelector('.hero-popover');
@@ -483,7 +486,7 @@ async def run():
         # 血例：「意見同支援」卡原本 padding:0（因為拆走內盒後冇補返）→ 文字貼邊、同其他卡唔一致。
         # 規則：關於頁每張 .card 嘅 padding-left 一定要 >= 16px（唔准有 0 padding 嘅卡）。
         _sp = await b.new_page()
-        await _sp.goto(url, wait_until="networkidle")
+        await _sp.goto(url, wait_until="domcontentloaded")
         await _sp.wait_for_timeout(1200)
         _sp_r = await _sp.evaluate("""() => {
           if (window.openAbout) window.openAbout();

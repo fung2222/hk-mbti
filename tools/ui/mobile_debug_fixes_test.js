@@ -95,16 +95,12 @@ setTimeout(()=>{
         !/id="hkStatsPop">—</.test(src) && !/id="hkStatsSample">—</.test(src));
     chk('★ 香港分佈：靜態 HTML 冇「—」佔位符（統計頁 累積樣本）',
         !/id="statTotal"[^>]*>—</.test(_stHtml));
-    chk('★ 香港分佈：載入後 人口／樣本 係數字，而且同靜態值一致（防漂移）', (function(){
-          const pop=d.getElementById('hkStatsPop'), sam=d.getElementById('hkStatsSample');
-          if(!pop||!sam) return false;
-          const stPop=(src.match(/id="hkStatsPop">([^<]+)</)||[])[1]||'';
-          const stSam=(src.match(/id="hkStatsSample">([^<]+)</)||[])[1]||'';
-          const num=v=>/^\d[\d,]*$/.test(String(v).trim());
-          return num(pop.textContent) && num(sam.textContent)
-              && pop.textContent.trim()===stPop.trim() && sam.textContent.trim()===stSam.trim();
-        })(), (function(){ const a=d.getElementById('hkStatsPop'), b=d.getElementById('hkStatsSample');
-                           return (a?a.textContent:'?')+' / '+(b?b.textContent:'?'); })());
+    chk('★ 16 型參考比例：冇香港人口换算或假樣本欄位，並有非代表性提示', (function(){
+          const sub=d.querySelector('#hk-stats .hk-stats-sub');
+          return !d.getElementById('hkStatsPop') && !d.getElementById('hkStatsSample')
+              && sub && /唔係香港調查或全港人口估算/.test(sub.textContent)
+              && !/約香港|對照香港人口/.test(d.getElementById('hk-stats').textContent);
+        })(), (d.querySelector('#hk-stats .hk-stats-sub')||{}).textContent);
     // ── 離線字型守門（2026-10-13 真機驗收發現）─────────────────────────
     // 血例：飛行模式下開 app，「字體變咗另一個」✗ —— 因為 Noto Sans HK（Android 嘅
     //       fallback 字型）靠 Google Fonts 即時下載，而 sw.js 完全冇 cache 字型。

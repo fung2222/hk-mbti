@@ -40,8 +40,8 @@ chk('★ 哨兵有防無限重載（sessionStorage 只試一次）', /sessionSto
 chk('★ 哨兵離線時唔郁（等連網先自癒）', /if\(!navigator\.onLine\) return;/.test(fs.readFileSync(path.join(REPO,'index.html'),'utf8')));
 chk('★ sw.js 封死 respondWith(undefined)（cache miss + 離線唔會 throw）', /Response\.error\(\)/.test(swsrc));
 
-chk('★ sw.js activate 做全量 cache 重置（唔止刪「唔同 cache 名」）',
-    /keys\.map\(k => caches\.delete\(k\)\)/.test(swsrc) && !/k !== CACHE/.test(swsrc));
+chk('★ sw.js activate 只清本 app 舊 cache（唔刪同源其他程式）',
+    /keys\.filter\(k =>[\s\S]{0,100}k\.indexOf\("hk-mbti-"\) === 0 && k !== CACHE[\s\S]{0,100}\)\.map\(k => caches\.delete\(k\)\)/.test(swsrc));
 chk('★ sw.js activate 重置後會重新抓齊 ASSETS（cache:"reload"）',
     /ASSETS\.map\(u =>/.test(swsrc) && /cache: "reload"/.test(swsrc.split('addEventListener("activate"')[1]||''));
 console.log(ok===total ? "===== 全部通過（"+total+" 項）=====" : "===== 有失敗（"+ok+"/"+total+"）=====");

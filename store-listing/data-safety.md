@@ -1,166 +1,42 @@
-# Google Play · Data Safety Form 答案（v2.0.0 · 2026-09-26 更新）
+# Google Play · Data Safety 核對指引（v2.0.1 · 2026-11-10）
 
-> **狀態**：✅ 站內私隱頁已完成（Step 1b-C · index.html `#privacy` section）
-> **狀態**：✅ 獨立 Privacy URL 已上線（Step 2a · `privacy.html`）
-> **Play Console 入口**：應用程式內容 → 資料安全（官方直達：`https://play.google.com/console/app/app-content/summary`）
-> **2026-10-13 完成**：✅ 已按第一節＋第八節改好並儲存（收集 = 應用程式活動／應用程式互動；用途 = 數據分析；加密傳輸 = 是；分享 = 否）。提交前預覽已核對：（應用程式互動 · 數據分析）（資料在傳輸時加密）
+> **重要：呢份係工程核對稿，唔係新提交紀錄。** 今次冇登入或更改 Play Console。舊稿同時寫過「完全本地、唔適用加密傳輸」同「GoatCounter 經 HTTPS 傳送」，互相矛盾，所以舊嘅 Step 1–6 唔好再直接複製。
 
-最終 Privacy URL：
-```
-https://fung2222.github.io/hk-mbti/privacy.html
-```
+## 已存在嘅歷史記錄
 
----
+- 舊文件記錄 2026-10-13 曾喺 Play Console 儲存：收集／分享資料＝是；資料類別包括「應用程式互動」；用途包括數據分析；傳輸加密＝是；分享＝否。
+- 以上只係 repo 內嘅歷史描述，並唔代表 v2.0.1 已重新提交，亦冇即時核對 Play Console 現時畫面。
 
-## 一、Data collected（資料收集）
+## v2.0.1 程式實際行為
 
-| 問題 | 答案 |
-|------|------|
-| App 是否收集或分享用戶資料？ | **是** |
-| 收集嘅資料會加密傳輸？ | **是（HTTPS）** ← 2026-10-13 修正：GoatCounter 嘅頁面瀏覽計數**係經網絡傳送**（HTTPS 加密 ✓），所以唔可以答「不適用」|
-| 用戶可否要求刪除資料？ | **是** |
+| 資料／連線 | 實際處理 |
+|---|---|
+| 姓名、暱稱、測試答案、結果、最近紀錄 | 存喺瀏覽器 localStorage；本項目冇把呢啲內容上傳到自己伺服器 |
+| 清除紀錄 | 用戶可以喺 App 內逐筆或全部刪除本機紀錄；呢個動作唔等於刪除第三方分析資料 |
+| GoatCounter | 頁面瀏覽計數會經 HTTPS 向第三方服務發出網絡請求；唔可以寫成「全站完全冇網絡傳送」 |
+| Google Fonts | 載入字型時會向 Google Fonts 發出請求，會產生一般連線資料；私隱聲明已披露 |
+| Google Play 購買 | 由 Google Play Billing／Digital Goods 流程處理；本項目冇自建收款伺服器 |
+| 離線模式 | 已快取內容可以離線用；首次載入字型、分析或付款恢復仍然需要網絡 |
 
----
-
-## 二、詳細資料類別
-
-| 類別 | 收集？ | 說明 |
-|------|--------|------|
-| 📍 位置 | ❌ 否 | |
-| 💬 個人資料（Personal info） | ✅ 是 | 姓名 / 稱呼（用戶可選） |
-| 💰 財務資料 | ❌ 否 | |
-| 🏥 健康資料 | ❌ 否 | 性格測試唔屬於醫療健康 |
-| 📱 訊息 | ❌ 否 | 聊天內容無；姓名屬「個人資料」 |
-| 🖼 媒體檔案 | ❌ 否 | |
-| 📂 檔案 / 文件 | ❌ 否 | |
-| 📅 行事曆 | ❌ 否 | |
-| 👥 聯絡人 | ❌ 否 | |
-| 📊 App 活動 | ✅ 是 | ① 測試結果、版本、稱呼（存 localStorage，留喺部機）② **頁面瀏覽**（GoatCounter 匿名彙總計數） |
-| 🌐 Web 瀏覽 | ❌ 否 | |
-| 📈 App 資訊 / 效能 | ❌ 否 | |
-| 🆔 裝置 ID | ❌ 否 | |
-
----
-
-## 三、Data handling（資料處理）
-
-| 項目 | 答案 |
-|------|------|
-| 收集 | ✅ 是（localStorage） |
-| 分享 | ❌ 否 |
-| 加密傳輸 | 不適用（本地） |
-| 加密儲存 | ✅ 是（瀏覽器管理 localStorage） |
-| 用戶可要求刪除 | ✅ 是（App 內「歷史紀錄」） |
-
----
-
-## 四、Play Console 填表指引（直接 copy）
-
-### Step 1 · 「Does your app collect or share any of the required user data types?」
-
-```
-☑ Yes
-```
-
-### Step 2 · 「Is all of the user data collected by your app encrypted in transit?」
-
-```
-☑ No (not applicable — local storage only, no transmission)
-```
-
-### Step 3 · 「Do you provide a way for users to request that their data is deleted?」
-
-```
-☑ Yes
-```
-
-### Step 4 · 個別資料類別勾選
-
-**Personal info**：
-
-```
-☑ Name  (Optional, user-provided nickname / display name)
-  → Collected: Yes
-  → Shared: No
-  → User can delete: Yes
-  → Purpose: App functionality (display on share card, history prefill)
-```
-
-**App activity**：
-
-```
-☑ App interactions  (Test results, version, timestamp
-                     ＋ 匿名頁面瀏覽計數：GoatCounter，唔記 IP、唔用 cookie、同答案完全分開)
-  → Collected: Yes
-  → Shared: No
-  → User can delete: Yes（App 內「歷史紀錄」可逐筆或全部刪除）
-  → Purpose: App functionality (history recall, last-5 record) ＋ Analytics (anonymous page-view count)
-```
-
-其他所有類別：**☑ No**
-
-### Step 5 · Privacy policy URL
+Privacy URL：
 
 ```
 https://fung2222.github.io/hk-mbti/privacy.html
 ```
 
-### Step 6 · 確認資料用途
+## 下次提交前嘅人工核對步驟
 
-```
-App functionality: Display user nickname on share card, recall test history
-```
+1. 先部署 v2.0.1，再用實機睇一次 `privacy.html`、紀錄刪除、離線模式同購買恢復。
+2. 開 Play Console → 應用程式內容 → 資料安全，逐項對照**當時**官方定義同現有答案。
+3. 核對姓名／暱稱同本機測試紀錄喺現行政策下應唔應該申報；唔好因為舊稿寫「Yes」就照抄，亦唔好未核對就改成「No」。
+4. GoatCounter 頁面瀏覽同 Google Fonts 網絡請求要納入判斷；如有改動第三方服務，要重新檢查。
+5. 網絡傳輸加密答案應同實際 HTTPS 請求一致；唔好再用「localStorage，所以傳輸加密不適用」概括全個 App。
+6. 「用戶可要求刪除」只可以承諾實際做到嘅範圍；本機刪除唔好描述成第三方伺服器刪除。
+7. 儲存前先預覽，確認私隱政策網址可公開瀏覽，再將實際提交內容同日誌寫返低。
 
----
+## 唔好再用嘅舊表述
 
-## 五、提交前 checklist
-
-- [ ] Data safety form 填妥（跟 Step 1–6）
-- [ ] Privacy URL 已經可以瀏覽：
-      `https://fung2222.github.io/hk-mbti/privacy.html`
-- [ ] 站內 `#privacy` section（風琴）已經可以開到
-- [ ] App 內「歷史紀錄」風琴可以逐筆刪除
-- [ ] 全部按鈕喺實機測試 OK（唔好只信 HTTP 200）
-
----
-
-## 六、⚠️ 重要陷阱（Play Console）
-
-1. **唔好聲稱收集「Health data」** — 性格測試唔屬於醫療，聲稱會被要求醫療器械註冊
-2. **唔好聲稱「Device ID」** — 我哋冇用，但 Play 預設有時會高亮，注意 uncheck
-3. **「App interactions」** — Play 預設「否」，要主動勾選並描述清楚
-4. **Privacy URL** — 必須係 HTTPS，加載成功（200），唔可以係 hash anchor
-5. **Data deletion 選項** — 必須有實際 in-app 機制（我哋嘅歷史紀錄刪除掣 ✓）
-
----
-
-## 七、審核後可能 follow-up
-
-Play 審核員可能會 email 問：
-
-- 「點解你哋收集 personal info 但唔上傳？」
-  - 答：本地儲存用於歷史紀錄 recall；無 server-side collection
-
-- 「點解 user 可以 delete data？」
-  - 答：App 內主頁「歷史紀錄」風琴每筆都有 🗑 掣
-
-- 「你哋嘅 Privacy URL 點解用 GitHub Pages？」
-  - 答：完全 self-contained，無第三方追蹤，符合 minimal data collection 原則
-
-預備呢啲答案喺心中，審核時間可由 7 日縮到 1–3 日。
-
----
-
-## 八、2026-10-13 實際填表步驟（Roy 用 · 手機）
-
-1. Play Console → **應用程式內容** → **資料安全** → 撳「**管理**」／「開始」
-2. 問題：「你嘅應用程式會唔會收集或分享任何必要嘅使用者資料類型？」→ **是**
-3. 問題：「係唔係所有收集到嘅使用者資料都經過加密傳輸？」→ **是（HTTPS）**
-   （原因：GoatCounter 嘅頁面瀏覽計數經網絡傳送，用嘅係 HTTPS）
-4. 問題：「你係唔係有提供方法俾使用者要求刪除佢哋嘅資料？」→ **是**
-5. **資料類型**：
-   - **個人資料 → 姓名**：勾 ✅（可選、用戶自己填；唔分享；用途 = 應用程式功能）
-   - **應用程式活動 → 應用程式互動**：勾 ✅（測試結果／版本／時間 ＋ **匿名頁面瀏覽計數**；唔分享；用途 = 應用程式功能 ＋ 分析）
-   - **其他所有類別：一律「否」**（特別留意：健康資料一定「否」；裝置 ID 一定「否」）
-6. **私隱政策網址**：`https://fung2222.github.io/hk-mbti/privacy.html`
-7. 儲存 → 送出
+- 「唔收集個人資料」（過度概括，忽略第三方連線）
+- 「完全 self-contained，無第三方追蹤」（同 GoatCounter／Google Fonts 唔一致）
+- 「加密儲存＝瀏覽器管理 localStorage」（唔足以證明加密儲存）
+- 「審核時間可由 7 日縮到 1–3 日」（冇可靠保證）

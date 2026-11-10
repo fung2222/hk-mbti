@@ -10,7 +10,7 @@
   document.documentElement.classList.toggle("dk", !!d);
 }catch(e){}})();
 </script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>私隱聲明 · 港式 MBTI</title>
 <meta name="description" content="港式 MBTI 私隱聲明 — 本 App 點處理你嘅資料、儲存喺邊、可唔可以刪。">
 <meta name="theme-color" content="#1E2A3B">
@@ -50,7 +50,7 @@ main{max-width:680px;margin:0 auto;padding:1rem 1rem 4rem}
 .header{display:none}
 .hero{background:linear-gradient(135deg,#1E2A3B 0%,#3B4960 100%);color:white;padding:14px 16px 16px;margin:0 0 1rem;position:relative}
 .hero-row{position:relative;display:flex;align-items:center;min-height:44px}
-.hero-row h1{position:absolute;left:0;right:0;margin:0;padding:0 4.5rem;font-size:18px;font-weight:900;text-align:center;pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:44px;color:#fff}
+.hero-row .hero-title{position:absolute;left:0;right:0;margin:0;padding:0 4.5rem;font-size:18px;font-weight:900;text-align:center;pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:44px;color:#fff}
 .back-nav{position:relative;z-index:2;font-size:14px;line-height:1.25;color:rgba(255,255,255,.75);text-decoration:none;font-weight:400;background:none;border:0;padding:0}
 .back-nav:hover{color:#fff}
 .hero-menu{position:absolute;right:0;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;flex-shrink:0;line-height:1;padding:0;z-index:2}
@@ -158,7 +158,7 @@ html.dm body{min-height:var(--dm-vh)}
   html.dt{--dt-w:min(920px,calc(100% - 40px));--dt-read:760px}
   html.dt .hero{padding:22px 0 18px}
   html.dt .hero-row{max-width:var(--dt-w);margin:0 auto;min-height:48px}
-  html.dt .hero-row h1{font-size:22px}
+  html.dt .hero-row .hero-title{font-size:22px}
   html.dt .hero p,html.dt .hero-sub{font-size:15px}
   html.dt .wrap,html.dt main{max-width:var(--dt-read);padding:24px 8px 56px}
   html.dt .section-title{max-width:var(--dt-w);margin:32px auto 10px;font-size:22px}
@@ -180,7 +180,7 @@ html.dm body{min-height:var(--dm-vh)}
   html.dt .wrap,html.dt main{max-width:var(--dt-read)}
   html.dt #historyList{grid-template-columns:1fr 1fr}
   html.dt .section-title{font-size:26px}
-  html.dt .hero-row h1{font-size:24px}
+  html.dt .hero-row .hero-title{font-size:24px}
 }
 @media (min-width:1280px){
   html.dt{--dt-w:min(1200px,calc(100% - 80px));--dt-read:820px}
@@ -220,7 +220,7 @@ html.dk .softbox-btn:hover{color:#D8C69E}
 <div class="hero">
  <div class="hero-row">
  <a href="./" class="back-nav" onclick="siteBack();return false;">返回</a>
- <h1>私隱聲明</h1>
+ <div class="hero-title">私隱聲明</div>
  <button type="button" class="hero-menu" onclick="toggleHeroMenu(event)" aria-label="更多">⋯</button>
  </div>
  <p class="hero-sub">本 App 點處理你嘅資料</p>
@@ -229,7 +229,7 @@ html.dk .softbox-btn:hover{color:#D8C69E}
  <a href="./record.html">我的紀錄</a>
  <a href="./#about">關於港式 MBTI</a>
  <a href="./#hub">性格百科</a>
- <a href="./stats.html">香港16型統計</a>
+ <a href="./stats.html">16型參考比例</a>
       <a href="./#method">計分方法同限制</a>
  <a href="./#privacy">私隱聲明</a>
  </div>
@@ -253,7 +253,7 @@ html.dk .softbox-btn:hover{color:#D8C69E}
 
  <div class="divider">
  <h2>2. 我哋點儲存</h2>
- <p>所有資料<b>只儲存喺你部機嘅瀏覽器</b>（localStorage），由系統管理。</p>
+ <p>你輸入嘅姓名、稱呼、測試答案同紀錄<b>只儲存喺你部機嘅瀏覽器</b>（localStorage），由瀏覽器管理。</p>
  <ul>
  <li>開發者 <b>無法存取</b>你嘅資料</li>
  <li>你嘅測試答案同紀錄 <b>唔會上載</b>到任何伺服器</li>
@@ -286,13 +286,18 @@ html.dk .softbox-btn:hover{color:#D8C69E}
  </div>
 
  <div class="divider">
- <h2>6. 聯絡</h2>
+ <h2>6. 字型服務</h2>
+ <p>頁面會向 <b>Google Fonts</b> 請求字型檔。對方會收到一般連線資料（例如 IP、瀏覽器同請求時間），但唔會收到你嘅測試答案、姓名或測試紀錄。離開呢個頁面唔會產生額外帳戶或 cookie 同意程序。</p>
+ </div>
+
+ <div class="divider">
+ <h2>7. 聯絡</h2>
  <p>如對私隱有任何查詢，可以直接 email 我：<br>
  <a href="mailto:fung22222@gmail.com?subject=%E6%B8%AF%E5%BC%8F%20MBTI%20%E7%A7%81%E9%9A%B1%E6%9F%A5%E8%A9%A2" rel="noopener">fung22222@gmail.com</a></p>
  </div>
 
  <div class="callout" style="margin-top:1rem">
- <b>最後更新：</b>2026-10-15 · v2.0
+ <b>最後更新：</b>2026-11-10 · v2.0.1
  </div>
 
  </div>
@@ -305,7 +310,7 @@ html.dk .softbox-btn:hover{color:#D8C69E}
  </div>
 
  <p class="meta">
-港式 MBTI · v2.0.0<br>
+港式 MBTI · v2.0.1<br>
 廣東話繁體
  </p>
 </main>

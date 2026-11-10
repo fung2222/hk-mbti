@@ -49,7 +49,7 @@
 // 2026-10-20o：深入分析頂卡改型色 2px 框＋立體陰影（唔加底色）
 // 2026-10-20p：深入分析 16 型分四類；9 章頂卡同章節牌匾換插畫、icon 上居中
 // 2026-10-20q：人格頁／相處／拍拖牌匾都加插畫（四塊統一）
-const CACHE = "hk-mbti-v2.0.0";
+const CACHE = "hk-mbti-v2.0.1";
 const ASSETS = [
   "/hk-mbti/",
   "/hk-mbti/index.html",
@@ -101,7 +101,7 @@ self.addEventListener("activate", e => {
   e.waitUntil((async () => {
     try {
       const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k)));
+      await Promise.all(keys.filter(k => k.indexOf("hk-mbti-") === 0 && k !== CACHE).map(k => caches.delete(k)));
       const c = await caches.open(CACHE);
       await Promise.allSettled(ASSETS.map(u =>
         fetch(u, { cache: "reload" }).then(r => (r && r.status === 200) ? c.put(u, r) : null)

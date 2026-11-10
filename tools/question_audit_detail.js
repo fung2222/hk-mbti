@@ -1,5 +1,5 @@
 const fs = require("fs");
-const src = fs.readFileSync("/opt/data/repos/hk-mbti/index.html", "utf8");
+const src = fs.readFileSync(process.argv[2] || require("path").join(__dirname, "..", "index.html"), "utf8");
 function grab(name){
   // 2026-10-13 修：只認「賦值定義」（window.X = ），唔可以認第一個提及 ——
   // 其他地方引用 window.QUESTIONS 會令 grab 由嗰度 parse，題庫靜靜讀成 0 條（question_audit 照樣報綠 = 假綠）。
@@ -29,7 +29,7 @@ const show = n => { const q = Q[n-1];
 };
 console.log("===== #50 冇問號 ====="); show(50);
 console.log("===== #12（求救標籤 / 場景太窄）====="); show(12);
-console.log("===== 長短差大 ====="); [18,38,46,100,112].forEach(show);
+console.log("===== 長短差大 ====="); [18,38,46,100,Q.length].filter((v,i,a)=>a.indexOf(v)===i).forEach(show);
 console.log("===== 太短嘅 alt =====");
 ["S/N - 溫習","S/N - 學煮餸","S/N - 揀家電","T/F - 朋友失戀","S/N - 睇戲"].forEach(k => console.log(`「${k}」主：「${Q.find(q=>q.d===k)?.t}」／ALT：${JSON.stringify(ALTS[k]||[])}`));
 console.log("===== 兩極「似唔好」標記掃描（P/N/E 邊，中性化後剩返嘅）=====");

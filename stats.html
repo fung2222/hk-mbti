@@ -14,10 +14,10 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>香港16型人格統計 · 港式 MBTI</title>
-<meta name="description" content="港式 MBTI 16 型公開分佈估算，對照香港人口基線。">
+<title>16型參考比例 · 港式 MBTI</title>
+<meta name="description" content="港式 MBTI 16 型參考比例，唔係香港人口調查。">
 <meta name="theme-color" content="#1E2A3B">
-<meta property="og:title" content="香港16型人格統計 · 港式 MBTI">
+<meta property="og:title" content="16型參考比例 · 港式 MBTI">
 <meta property="og:description" content="16 型公開分佈估算，對照香港人口基線。">
 <meta property="og:image" content="https://fung2222.github.io/hk-mbti/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -226,27 +226,24 @@ html.dk.dt .hero-popover a{color:#CFC9BE}
 <div class="hero">
  <div class="hero-row">
  <a href="./" class="back-nav" onclick="siteBack();return false;">返回</a>
- <h1>香港16型人格統計</h1>
+ <h1>16型參考比例</h1>
  <button type="button" class="hero-menu" onclick="toggleHeroMenu(event)" aria-label="更多">⋯</button>
  </div>
- <p style="margin:6px 0 0;font-size:12px;opacity:.75;text-align:center;">16 型公開分佈估算 · 對照香港人口基線（唔係全港普查）</p>
+ <p style="margin:6px 0 0;font-size:12px;opacity:.75;text-align:center;">16 型參考比例 · 唔係香港調查或全港人口估算</p>
  <div class="hero-popover" id="heroPopover" onclick="event.stopPropagation()">
  <a href="./">主頁</a>
  <a href="./record.html">我的紀錄</a>
  <a href="./#about">關於港式 MBTI</a>
  <a href="./#hub">性格百科</a>
- <a href="./stats.html">香港16型統計</a>
+ <a href="./stats.html">16型參考比例</a>
       <a href="./#method">計分方法同限制</a>
  <a href="./#privacy">私隱聲明</a>
  </div>
 </div>
 <div class="wrap">
- <div class="flex justify-between text-xs text-gray-600 mb-3">
- <span>累積樣本 <b id="statTotal" class="brand-gold">143,022</b> 人</span>
- <span>香港人口約 <b>750 萬</b></span>
- </div>
+ <p class="text-xs text-gray-600 mb-3">以下只係常見網上 16 型分佈嘅參考比例，未經香港代表性抽樣驗證。</p>
  <div id="typeStats" class="space-y-2"></div>
- <p class="text-xs text-gray-500 mt-4 pt-3" style="border-top:1px solid #eee;">基線參考常見 16 型分佈 143,021 樣本量級；按香港人口約 750 萬換算，屬估算值。唔係全港實時普查。</p>
+ <p class="text-xs text-gray-500 mt-4 pt-3" style="border-top:1px solid #eee;">呢頁唔會將你嘅測試紀錄加落參考比例。你嘅本機統計請睇「我的紀錄」。</p>
  <div class="softbox" style="margin:20px 0 0;">
  <span class="cta-bulb"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6.3a5.1 5.1 0 0 0-2.9 9.3c.45.33.7.85.7 1.4v.5h4.4v-.5c0-.55.25-1.07.7-1.4A5.1 5.1 0 0 0 12 6.3z"/><path d="M10.4 19.6h3.2"/><path d="M11.2 21.6h1.6"/><path d="M12 1.5v2.1"/><path d="M4.9 4.9l1.5 1.5"/><path d="M19.1 4.9l-1.5 1.5"/><path d="M2.2 12h2.1"/><path d="M19.7 12h2.1"/></svg></span>
  <p class="softbox-sub">想知道自己 MBTI 人格？</p>
@@ -298,7 +295,6 @@ INTP:0.055, ENTP:0.050, INFJ:0.048, ENFJ:0.045,
 INTJ:0.042, ENTJ:0.038, ISTP:0.036, ESTP:0.036
 };
 window.STAT_BASE_N = 143021;
-window.HK_POP = 7500000;
 window.TYPE_CN = {
 INTJ:"建築師", INTP:"邏輯學家", ENTJ:"指揮官", ENTP:"辯論家",
 INFJ:"提倡者", INFP:"調解員", ENFJ:"主人公", ENFP:"競選者",
@@ -312,25 +308,21 @@ ISTJ:"#4A6E9E", ISFJ:"#5C8A5C", ESTJ:"#A85240", ESFJ:"#E08058",
 ISTP:"#3E8A7A", ISFP:"#C0709E", ESTP:"#6B8A3E", ESFP:"#C04070"
 };
 (function(){
-let local = {};
-try{ local = JSON.parse(localStorage.getItem("hkmbti_type_counts")||"{}") || {}; }catch(e){ local = {}; }
 const counts = {};
 let total = 0;
 Object.keys(window.STAT_BASE_PCT).forEach(k => {
-const n = Math.round(window.STAT_BASE_PCT[k] * window.STAT_BASE_N) + (parseInt(local[k]||0,10)||0);
+const n = Math.round(window.STAT_BASE_PCT[k] * window.STAT_BASE_N);
 counts[k] = n; total += n;
  });
-document.getElementById("statTotal").innerText = total.toLocaleString("en-HK");
 const ranked = Object.keys(counts).sort((a,b) => counts[b]-counts[a]);
 const maxC = counts[ranked[0]] || 1;
 document.getElementById("typeStats").innerHTML = ranked.map((code, i) => {
 const n = counts[code];
 const pct = total ? (n/total*100) : 0;
-const hkEst = Math.round(window.HK_POP * (n/total));
 const bar = Math.max(4, Math.round(n/maxC*100));
 const color = (window.TYPE_COLOR && window.TYPE_COLOR[code]) || "#8B6F3D";
 const ico = ((window.getTypeArt ? window.getTypeArt(code) : "") || (window.getTypeIcon ? window.getTypeIcon(code) : ""));
-return '<div class="bg-soft rounded-lg p-3"><div class="flex justify-between items-center gap-2 mb-1"><span style="display:flex;align-items:center;gap:8px;min-width:0"><span class="ts-ico" style="color:'+color+'">'+ico+'</span><span style="font-size:17px;font-weight:900;color:'+color+'">'+code+'</span><span style="font-size:15px;font-weight:700;color:var(--ink)">'+(TYPE_CN[code]||"")+'</span></span><span class="ts-pct" style="font-size:14px;font-weight:900;color:var(--ink)">'+pct.toFixed(1)+'%</span></div><div class="stat-bar mb-1"><div class="stat-fill" style="width:'+bar+'%;background:'+color+'"></div></div><div class="flex justify-between text-xs text-gray-600"><span>'+n.toLocaleString("en-HK")+' 人</span><span>約香港 '+hkEst.toLocaleString("en-HK")+' 人</span></div></div>';
+return '<div class="bg-soft rounded-lg p-3"><div class="flex justify-between items-center gap-2 mb-1"><span style="display:flex;align-items:center;gap:8px;min-width:0"><span class="ts-ico" style="color:'+color+'">'+ico+'</span><span style="font-size:17px;font-weight:900;color:'+color+'">'+code+'</span><span style="font-size:15px;font-weight:700;color:var(--ink)">'+(TYPE_CN[code]||"")+'</span></span><span class="ts-pct" style="font-size:14px;font-weight:900;color:var(--ink)">'+pct.toFixed(1)+'%</span></div><div class="stat-bar"><div class="stat-fill" style="width:'+bar+'%;background:'+color+'"></div></div></div>';
  }).join("");
 })();
 </script>

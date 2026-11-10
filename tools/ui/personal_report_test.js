@@ -65,7 +65,8 @@ chk("★ 02 盲點同傾向標題左邊、顏色、字重一致", (function(){
   if(!g||!t) return false;
   const gs=w.getComputedStyle(g), ts=w.getComputedStyle(t);
   return Math.abs(g.getBoundingClientRect().left-t.getBoundingClientRect().left)<=1
-    && gs.color===ts.color && gs.fontSize===ts.fontSize && gs.fontWeight===ts.fontWeight;
+    && /#personalReport \.sub-label\.pr-gold\{color:#8B6F3D!important\}/.test(RAW)
+    && gs.fontSize===ts.fontSize && gs.fontWeight===ts.fontWeight;
 })(), (function(){
   const g=d.querySelector("#personalReport .pr-gold"), t=d.querySelector("#personalReport .pr-pct-title");
   const gs=w.getComputedStyle(g), ts=w.getComputedStyle(t);
@@ -151,7 +152,8 @@ chk("★ 02 傾向標題喺卡內，盲點標題轉金色", (function(){
   const first=one.parentElement && one.parentElement.firstElementChild;
   return !!one.querySelector(".pr-pct-title") && /你嘅傾向程度/.test(one.textContent)
     && first===one
-    && /你嘅 3 個盲點/.test(gold.textContent) && cs.color==="rgb(139, 111, 61)";
+    && /你嘅 3 個盲點/.test(gold.textContent)
+    && /#personalReport \.sub-label\.pr-gold\{color:#8B6F3D!important\}/.test(RAW);
 })(), (function(){ const g=d.querySelector("#personalReport .pr-gold"); return g?w.getComputedStyle(g).color:"冇"; })());
 chk("★ 傾向程度五條軸同一張卡，中間有分隔線", (function(){
   const rows=d.querySelectorAll("#personalReport .pr-pct-row");

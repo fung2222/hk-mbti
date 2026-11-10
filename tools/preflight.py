@@ -189,7 +189,7 @@ try:
         ('fetch(e.request, { cache: "reload" })', "HTML 導航一定要 network-first ＋ cache:'reload'（唔可以俾 HTTP cache 餵舊 HTML）"),
         ("self.skipWaiting()", "要有 skipWaiting()"),
         ("self.clients.claim()", "要有 clients.claim()"),
-        ("keys.map(k => caches.delete(k))", "activate 要全量 cache 重置（唔可以只刪「唔同 cache 名」）"),
+        ("keys.filter(k => k.indexOf(\"hk-mbti-\") === 0", "activate 只清理 hk-mbti 前綴嘅舊 cache，唔准刪其他項目"),
         ("Response.error()", "cache-first 分支要封死 respondWith(undefined)"),
         ("hkmbti_selfheal", "要有自癒哨兵（偵測 tailwind.css 冇生效 → 清壞 cache ＋ 更新 SW）"),
     ]

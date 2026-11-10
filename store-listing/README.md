@@ -1,7 +1,7 @@
 # 港式 MBTI · Google Play Store 上架文案
 
 > **用途**：將本文案直接複製到 Play Console。
-> **狀態**：**v2.0.0 / 2026-09-26**（最新版本說明見 `changelog.md` 最頂一段）。
+> **狀態**：v2.0.1 文案係 **2026-11-10 建議稿，尚未提交 Play Console**；舊文件入面嘅「已提交」只係歷史記錄。
 > **語言**：zh-HK（繁體中文），Play 接受 zh-HK / zh-TW。
 
 ---
@@ -52,7 +52,7 @@
 3. **`full-desc-play.txt` 直接複製貼到 Play**（純文字、冇 markdown、冇 emoji；字數由 `wc -m` 自己數，唔好信文件寫死嘅數）；`full-desc.md` 係 source 稿，**唔好直接貼**（有 `**` 等 markdown）。
 4. 填 `content-rating.md` 答案
 5. 填 `data-safety.md` 答案
-6. `changelog.md` 最近版本拎一段
+6. `whats-new.txt` 入面嘅 v2.0.1 建議稿（核對後先貼；500 字內）
 7. 上載 `feature-graphic-v2.png`
 8. 上載 `screenshots/01-hero.png` ~ `06-encyclopedia.png`（v2.0 六張）
 9. 填 Privacy URL = `https://fung2222.github.io/hk-mbti/privacy.html`

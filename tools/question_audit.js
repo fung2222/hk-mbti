@@ -1,5 +1,5 @@
 const fs = require("fs");
-const src = fs.readFileSync(process.argv[2] || "/opt/data/repos/hk-mbti/index.html", "utf8");
+const src = fs.readFileSync(process.argv[2] || require("path").join(__dirname, "..", "index.html"), "utf8");
 
 function grab(name){
   // 2026-10-13 修：只認「賦值定義」（window.X = ），唔可以認第一個提及 ——
