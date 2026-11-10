@@ -2,7 +2,40 @@
 
 日期：2026-11-10  
 適用對象：下一位接手開發嘅 AI／開發者  
-狀態：**本機修改及測試完成；尚未 commit、push、部署到 GitHub Pages，亦尚未更新 Google Play Console。**
+狀態：**已於 2026-11-10 部署（commit `ec8104d`）。下方「§0 部署後驗收記錄」為 push 後實測結果；本文其餘章節保留 push 前嘅修改說明。**
+
+
+## 0. 部署後驗收記錄（2026-11-10，接手 AI 實測）
+
+**部署**
+- Commit：`ec8104d`（`main`）；工作區乾淨，冇再追加 commit。
+- GitHub Pages 已更新：live `index.html` md5 同本地一致（`2641ea3e18ac16a252d2ea1825eda0b7`）。
+- live `sw.js` CACHE = `hk-mbti-v2.0.1`，activate 只清 `hk-mbti-` 前綴舊 cache；live `VERSION` 及 `manifest.json` 均為 `2.0.1`。
+
+**測試（全綠）**
+- `SHIP_DRY=1 sh tools/ship.sh x` → 11/11 組閘通過（exit 0）。
+- `python3 tools/preflight.py` → 35 項；`node tools/question_audit.js` → 109 題、0 錯；`node tools/voice_test.js` → 12 項。
+- 音檔：本地 767 個 MP3；`tools/voice-manifest.json` count 767／items 767／rate `+15%`；live 抽驗 200。
+- Owner 已親耳聽 18 段新錄音（`audio/o/*` 17 段 + `audio/q/2e2424a30cf7.mp3`），音量／語速 OK。
+
+**真瀏覽器實測（live，390×844）**
+- BB 10 題 → 結果 ESTP；進階 30 題 → INTJ；生活 60 題 → ENTP；進度字樣為 `1 / 10 · BB版`、`1 / 30 · 進階版`、`1 / 60 · 生活版`。
+- 分享卡生成 720×1280 PNG；下載成功，檔名 `港式MBTI-ENTP-T.png`。
+- 紀錄：3 筆新紀錄 reload 後仍在；另塞 2 筆 v2.0.0 格式（**冇 `id`**）舊紀錄，reload 後原封不動，`record.html` 正常顯示。
+- 離線：Service Worker 接管後斷網 reload 仍可開 App（只有預期嘅 `ERR_INTERNET_DISCONNECTED` console 記錄）。
+- 無障礙：viewport 可縮放；`.option` 係 `<button>`＋`aria-pressed`；`#qProgress` 有 `aria-live="polite"`；鍵盤 Enter 可答題並前進；`#appDialog` 有 `role/aria-modal/aria-labelledby/aria-describedby`；可見 `<h1>` 只有「港式 MBTI」；`lang=zh-HK`。
+
+**Play**
+- 商店頁 live：`com.fung2222.hkmbti`（HTTP 200）。PWA／TWA 內容隨網頁更新，**唔需要新 AAB**；今次冇改 wrapper／權限／billing，亦冇提交新 AAB 或改商店正式資料。
+
+**仍未做（交下一位）**
+1. **Google Play 沙盒付款**：owner 決定暫緩（暫時冇人會買）。測試者帳號本身已解鎖（full），所以見唔到解鎖頁；要另開未購買帳號或退款後再測。五個情境：成功／取消／斷網／恢復／退款後。
+2. TalkBack／VoiceOver、放大字體、外接鍵盤實機驗收。
+3. 商店截圖未因 v2.0.1 UI 改動重拍；Data safety 未按實際請求核對。
+4. 心理測量驗證（認知訪談、item analysis、test-retest、因素結構）仍未做；未做前唔可以聲稱「準確診斷／香港常模」。
+5. 商店文案（`store-listing/*`）仍係建議稿，未提交。
+
+---
 
 ## 1. 今次目標同範圍
 
