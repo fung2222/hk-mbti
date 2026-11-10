@@ -9,7 +9,7 @@
  * 離開碼：0 = 全部過；1 = 有問題（會列出）
  *
  * 驗嘅嘢：
- *   1. voice-map.js 覆蓋率：每條題目、每個 Q_ALTS 變體、每個選項都有音檔 key
+ *   1. voice-map.js 覆蓋率：每條題目、每個 Q_ALTS/Q_CONTEXT 變體、每個選項都有音檔 key
  *   2. 每個 map 指向嘅檔真係存在喺 repo，而且 > 1KB
  *   3. speakQuestionSet 讀嘅次序：題目 → A → B → C → D，src 正確
  *   4. 缺 key 時跌返 speechSynthesis（唔會靜）
@@ -52,6 +52,9 @@ function grab(src, name){
 const html = fs.readFileSync(path.join(REPO, "index.html"), "utf8");
 const QUESTIONS = grab(html, "QUESTIONS");
 const Q_ALTS = grab(html, "Q_ALTS");
+// 情境分流（v2.1.0）：student/worker 變體文字都要有音檔
+let Q_CONTEXT = {};
+try { Q_CONTEXT = grab(html, "Q_CONTEXT"); } catch(e){}
 
 // ---------- 由 index.html 抽出朗讀邏輯，喺 vm 裏面行 ----------
 const startTag = "// ---- 朗讀（v2 聲）";
@@ -104,6 +107,15 @@ QUESTIONS.forEach(q => {
   const pool = [q.t].concat(Q_ALTS[q.k || q.d] || []);
   pool.forEach(t => { needQ++; if(!Q_AUDIO[t]) missQ.push(t); });
   q.o.forEach(o => { needO++; if(!O_AUDIO[o.t]) missO.push(o.t); });
+  // v2.1.0 情境分流：student/worker 變體（題目字 + 選項字）都要有音檔
+  const cvs = Q_CONTEXT[q.k || q.d] || {};
+  Object.keys(cvs).forEach(ctx => {
+    const cvr = cvs[ctx] || {};
+    if(cvr.t){ needQ++; if(!Q_AUDIO[cvr.t]) missQ.push("[" + ctx + "] " + cvr.t); }
+    (function(){ const oo = cvr.o || {}; Object.keys(oo).forEach(l => {
+      needO++; if(!O_AUDIO[oo[l]]) missO.push("[" + ctx + " " + l + "] " + oo[l]);
+    }); })();
+  });
 });
 if(missQ.length === 0) ok.push(`題目覆蓋 ${needQ}/${needQ}（含 Q_ALTS 變體）`);
 else fail.push(`題目音檔缺 ${missQ.length} 條，例如「${missQ[0]}」`);

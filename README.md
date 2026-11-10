@@ -3,7 +3,7 @@
 廣東話／港式情境 MBTI 16 型人格測試 PWA。
 
 - **Live**：<https://fung2222.github.io/hk-mbti/>
-- **版本**：`VERSION` 檔（現時 2.0.2）
+- **版本**：`VERSION` 檔（現時 2.1.0）
 - **技術**：單一 `index.html` SPA + `data.js`／`social.js`／`voice-data.js`，GitHub Pages 發佈，Service Worker 離線快取
 
 ## 檔案
@@ -20,7 +20,7 @@
 
 ## 給 AI 接手：睇呢兩份
 1. [`AGENTS.md`](AGENTS.md) — 30 秒版規則
-2. [`docs/AI-HANDOFF-v2.0.2.md`](docs/AI-HANDOFF-v2.0.2.md) — **最新首頁標題修正、驗證、部署同後續工作**（2026-11-10；內含 v2.0.1 文件連結）
+2. [`docs/AI-HANDOFF-v2.1.0.md`](docs/AI-HANDOFF-v2.1.0.md) — **最新學生／在職情境分流、驗證、部署同後續工作**（2026-11-10；內含 v2.0.2／v2.0.1 文件連結）
 3. [`docs/DESKTOP-HANDOFF.md`](docs/DESKTOP-HANDOFF.md) — 桌面版主頁原有規則
 
 ## 本機測試

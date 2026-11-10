@@ -17,7 +17,7 @@ const dom=new JSDOM(html,{runScripts:'dangerously',pretendToBeVisual:true,url:'h
 setTimeout(()=>{
   const w=dom.window, d=w.document;
   const vis=(n)=>!d.getElementById('wizStep'+n).classList.contains('hidden');
-  const stepNow=()=>[1,2,3,4].filter(vis).join()||'none';
+  const stepNow=()=>[1,2,3,4,5].filter(vis).join()||'none';
   const nextBtn=(n)=>d.querySelector('#wizStep'+n+' .btn-gold');
   const click=(el)=>el.dispatchEvent(new w.MouseEvent('click',{bubbles:true,cancelable:true}));
   const reset=()=>{ notices.length=0; dialogs.length=0; };
@@ -45,7 +45,25 @@ setTimeout(()=>{
   chk('撳「男」→ 記住 + 著燈', w.state.gender==='男' && d.getElementById('genderM').className.indexOf('on')>=0, w.state.gender);
   reset();
   click(nextBtn(3));
-  chk('揀咗性別 → 唔彈 + 跳第 4 步', notices.length===0 && stepNow()==='4', JSON.stringify(notices)+' '+stepNow());
+  chk('揀咗性別 → 唔彈 + 跳第 4 步（身份情境）', notices.length===0 && stepNow()==='4', JSON.stringify(notices)+' '+stepNow());
+
+  // ===== 第 4 步：身份情境（v2.1.0，可略過，唔驗證）=====
+  reset();
+  click(nextBtn(4));
+  chk('第 4 步唔揀身份 → 唔彈提示直接跳第 5 步', notices.length===0 && dialogs.length===0 && stepNow()==='5', JSON.stringify(notices)+' '+stepNow());
+  w.wizGo(4);
+  const ctxBtn=(c)=>d.querySelector('.ctx-btn[data-ctx="'+c+'"]');
+  click(ctxBtn('student'));
+  chk('撳「學生」→ state.qContext=student + 著燈 + aria-pressed', w.state.qContext==='student' && ctxBtn('student').className.indexOf('on')>=0 && ctxBtn('student').getAttribute('aria-pressed')==='true', w.state.qContext+' '+ctxBtn('student').className);
+  click(ctxBtn('worker'));
+  chk('轉撳「在職」→ 學生掣熄返、在職著燈', w.state.qContext==='worker' && ctxBtn('student').className.indexOf('on')<0 && ctxBtn('worker').className.indexOf('on')>=0, w.state.qContext);
+  click(ctxBtn('skip'));
+  chk('撳「略過」→ qContext=skip', w.state.qContext==='skip', w.state.qContext);
+  const ctxCount=d.querySelectorAll('.ctx-btn').length;
+  chk('身份選擇有齊 4 個掣（學生/在職/兩者/略過）', ctxCount===4, 'count='+ctxCount);
+  // 觸控目標 ≥44px：jsdom 冇 layout，用 computed min-height 守（真幾何由 desktop_render_test.py 守）
+  const mh=w.getComputedStyle(ctxBtn('student')).minHeight;
+  chk('身份掣 min-height ≥44px', parseFloat(mh)>=44, 'min-height='+mh);
 
   w.wizGo(1); d.getElementById('profileName').value=''; reset();
   click(nextBtn(1));
@@ -56,8 +74,10 @@ setTimeout(()=>{
 
   d.getElementById('profileName').value=''; w.state.nickname=''; w.state.gender='';
   w.wizSkip();
-  chk('「匿名港人 · 跳過」→ 直接第 4 步', stepNow()==='4', stepNow());
-  chk('跳過後第 4 步有「正式開始」掣', !!d.querySelector('#wizStep4 .btn-gold'));
+  chk('「匿名港人 · 跳過」→ 直接第 5 步', stepNow()==='5', stepNow());
+  chk('跳過後第 5 步有「正式開始」掣', !!d.querySelector('#wizStep5 .btn-gold'));
+  chk('步驟指示寫「共 5 步」', d.getElementById('profileStep').textContent.indexOf('共 5 步')>=0, d.getElementById('profileStep').textContent);
+  chk('進度圓點有 5 粒', d.querySelectorAll('.wiz-dot').length===5, 'dots='+d.querySelectorAll('.wiz-dot').length);
   console.log('');
   console.log('===== '+(ok===total?'全部通過':'有失敗')+'（'+ok+'/'+total+'） =====');
   process.exit(ok===total?0:1);

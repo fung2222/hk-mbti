@@ -27,6 +27,8 @@ function grab(name){
 
 const Q = grab("QUESTIONS");
 const ALTS = grab("Q_ALTS");
+let CTX = {};
+try { CTX = grab("Q_CONTEXT"); } catch(e){}
 const AX = { "E/I":["E","I"], "S/N":["S","N"], "T/F":["T","F"], "J/P":["J","P"], "T/A":["T","A"] };
 const axisOf = d => { const h = String(d).split(" - ")[0].replace(/\s/g,""); return AX[h] ? h : ("?" + h); };
 
@@ -131,6 +133,47 @@ Object.keys(ALTS).forEach(k => {
 });
 Object.keys(altDupText).forEach(t => { if(altDupText[t] > 1) out.altIssues.push(`重複 alt 文字 ×${altDupText[t]}：「${t}」`); });
 
+// ===== Q_CONTEXT 檢查（v2.1.0 情境分流）=====
+// 情境變體只改文字唔改向量（向量跟原題行），所以要守：
+//   1. 每個 key 必須對應到真題目（同 Q_ALTS 用同一個 q.k || q.d）
+//   2. 情境名只可以係 student / worker
+//   3. 題目字：唔可以同正題／Q_ALTS 一字不差（否則變體機制無效）；要有「？」結尾；長度合理
+//   4. 選項字：label 只可以 A–D；唔可以同該題任何選項一字不差
+let ctxCount = 0;
+const ctxDupText = {};
+Object.keys(CTX).forEach(k => {
+  const ax = axisOf(k);
+  if(!AX[ax]) out.altIssues.push(`Q_CONTEXT「${k}」唔屬任何軸`);
+  const prim = qByD[k];
+  if(!prim){ out.altIssues.push(`Q_CONTEXT「${k}」搵唔到對應題目`); return; }
+  const base = Q[prim[0]];
+  const baseTitles = [String(base.t).trim()].concat((ALTS[k]||[]).map(String));
+  Object.keys(CTX[k]).forEach(ctx => {
+    if(ctx !== "student" && ctx !== "worker")
+      out.altIssues.push(`Q_CONTEXT「${k}」用咗未知情境「${ctx}」（只准 student/worker）`);
+    const cvr = CTX[k][ctx];
+    if(!cvr || typeof cvr !== "object"){ out.altIssues.push(`Q_CONTEXT「${k}」${ctx} 唔係物件`); return; }
+    if(cvr.t){
+      ctxCount++;
+      const s = String(cvr.t).trim();
+      if(!/？$/.test(s)) out.altIssues.push(`Q_CONTEXT ${k} ${ctx} 冇「？」結尾`);
+      if(s.length < 8) out.altIssues.push(`Q_CONTEXT ${k} ${ctx} 太短（${s.length}）`);
+      if(s.length > 34) out.altIssues.push(`Q_CONTEXT ${k} ${ctx} 太長（${s.length}）`);
+      if(baseTitles.includes(s)) out.altDup.push(`Q_CONTEXT ${k} ${ctx} 同正題/alt 一字不差：「${s}」`);
+      ctxDupText[s] = (ctxDupText[s]||0)+1;
+    }
+    if(cvr.o){
+      Object.keys(cvr.o).forEach(l => {
+        if(!/^[A-D]$/.test(l)) out.altIssues.push(`Q_CONTEXT ${k} ${ctx} 選項 label「${l}」唔係 A–D`);
+        const s = String(cvr.o[l]).trim();
+        if(base.o.some(bo => String(bo.t).trim() === s)) out.altDup.push(`Q_CONTEXT ${k} ${ctx} 選項${l} 同原選項一字不差：「${s}」`);
+        ctxDupText[s] = (ctxDupText[s]||0)+1;
+      });
+    }
+  });
+});
+Object.keys(ctxDupText).forEach(t => { if(ctxDupText[t] > 1) out.altIssues.push(`重複 Q_CONTEXT 文字 ×${ctxDupText[t]}：「${t}」`); });
+
 // 題目文字完全重複（跨題）—— 原本只查選項，題目撞字冇人捉（2026-10-05 RED 驗證發現）
 const qSeen = {};
 Q.forEach((q, i) => { const t = String(q.t).trim(); (qSeen[t] = qSeen[t] || []).push(i + 1); });
@@ -141,6 +184,8 @@ Object.keys(qSeen).forEach(t => {
 out.counts.total = Q.length;
 out.counts.alts = altCount;
 out.counts.altKeys = Object.keys(ALTS).length;
+out.counts.contextKeys = Object.keys(CTX).length;
+out.counts.contextTexts = ctxCount;
 ["struct","scoring","grammar","lens","dup","sparse","altDup","altIssues"].forEach(k => { if(!out[k].length) out[k] = ["（0）"]; });
 ["struct","scoring","grammar","sparse","altDup"].forEach(k => { out[k] = out[k].slice(0, 12); });
 ["lens","dup"].forEach(k => { out[k] = out[k].slice(0, 15); });

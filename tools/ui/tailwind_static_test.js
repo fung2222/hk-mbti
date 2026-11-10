@@ -75,7 +75,7 @@ const assetsArr=(sw.split("const ASSETS = [")[1]||"").split("];")[0];
 const assets=(assetsArr.match(/"[^"]+"/g)||[]);
 chk("★ SW ASSETS 冇重複", assets.length===new Set(assets).size, assets.join(","));
 chk("★ SW 用 allSettled 逐個 precache（唔會一個 404 拖死全部）", sw.includes("allSettled"));
-chk("★ SW cache 名係 hk-mbti-v2.0.2（四處版本一致）", sw.includes('hk-mbti-v2.0.2'));
+chk("★ SW cache 名係 hk-mbti-v2.1.0（四處版本一致）", sw.includes('hk-mbti-v2.1.0'));
 
 // ───────── 五、og:image／分享預覽 ─────────
 const BASE="https://fung2222.github.io/hk-mbti";

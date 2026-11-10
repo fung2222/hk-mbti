@@ -49,7 +49,7 @@
 // 2026-10-20o：深入分析頂卡改型色 2px 框＋立體陰影（唔加底色）
 // 2026-10-20p：深入分析 16 型分四類；9 章頂卡同章節牌匾換插畫、icon 上居中
 // 2026-10-20q：人格頁／相處／拍拖牌匾都加插畫（四塊統一）
-const CACHE = "hk-mbti-v2.0.2";
+const CACHE = "hk-mbti-v2.1.0";
 const ASSETS = [
   "/hk-mbti/",
   "/hk-mbti/index.html",

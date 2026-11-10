@@ -32,4 +32,5 @@ function grab(name){
 
 const out = { questions: grab("QUESTIONS") };
 try { out.alts = grab("Q_ALTS"); } catch(e){ out.alts = {}; }
+try { out.context = grab("Q_CONTEXT"); } catch(e){ out.context = {}; }
 process.stdout.write(JSON.stringify(out));

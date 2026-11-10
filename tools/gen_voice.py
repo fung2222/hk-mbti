@@ -63,14 +63,15 @@ def _grab_array(html, name):
 def load_bank():
     """題庫係 JS object literal（key 冇引號）→ 交畀 node 抽，避免自己寫 parser。
 
-    回傳 (questions, alts)。alts = Q_ALTS：buildDeck 會隨機將題目字換成變體，
+    回傳 (questions, alts, context)。alts = Q_ALTS：buildDeck 會隨機將題目字換成變體，
     所以變體文字一樣要有音檔，否則一半題目會跌返落舊 speechSynthesis 聲。
+    context = Q_CONTEXT（v2.1.0 情境分流）：學生／在職情境文字一樣要有音檔。
     """
     import subprocess
     extractor = os.path.join(REPO, "tools", "extract_bank.js")
     out = subprocess.run(["node", extractor, INDEX], capture_output=True, text=True, check=True)
     data = json.loads(out.stdout)
-    return data["questions"], data.get("alts", {})
+    return data["questions"], data.get("alts", {}), data.get("context", {})
 
 
 # ---------- 文字正規化：只改讀音相關嘅符號，唔改意思 ----------
@@ -93,15 +94,17 @@ def key_of(text, voice, rate):
     return hashlib.sha1(raw.encode("utf-8")).hexdigest()[:12]
 
 
-def collect_items(questions, alts=None, voice=DEFAULT_VOICE, rate="+0%"):
+def collect_items(questions, alts=None, context=None, voice=DEFAULT_VOICE, rate="+0%"):
     """回傳 [(kind, raw_text, spoken_text, path)]
 
     raw_text  = index.html 原本嘅字（前端用佢做 lookup key，唔需要喺 JS 重做正規化）
     spoken    = 真正讀出嚟嘅字（正規化過、選項加字母前綴）
 
     kind='q' 包含正題 + Q_ALTS 變體（buildDeck 會隨機揀其中一個）。
+    kind='q'/'o' 亦包含 Q_CONTEXT 情境變體文字（v2.1.0 學生／在職分流）。
     """
     alts = alts or {}
+    context = context or {}
     items = []
     seen = set()
 
@@ -114,21 +117,34 @@ def collect_items(questions, alts=None, voice=DEFAULT_VOICE, rate="+0%"):
         items.append(("q", raw, spoken,
                       os.path.join(AUDIO_Q, key_of(spoken, voice, rate) + ".mp3")))
 
+    def add_o(raw):
+        raw = (raw or "").strip()
+        if not raw or ("o", raw) in seen:
+            return
+        # 注意：唔加字母前綴：buildDeck 會打亂選項次序再重派 A/B/C/D
+        ospoken = normalize(raw)
+        seen.add(("o", raw))
+        items.append(("o", raw, ospoken,
+                      os.path.join(AUDIO_O, key_of(ospoken, voice, rate) + ".mp3")))
+
     for q in questions:
         add_q(q.get("t"))
+        qkey = q.get("k") or q.get("d")
         # 題目變體：key 同 buildDeck 一致 = q.k || q.d
-        for variant in alts.get(q.get("k") or q.get("d"), []):
+        for variant in alts.get(qkey, []):
             if isinstance(variant, str):
                 add_q(variant)
-        for opt in q.get("o", []):
-            oraw = (opt.get("t") or "").strip()
-            if not oraw or ("o", oraw) in seen:
+        # 情境變體（v2.1.0）：student/worker 嘅題目字 + 選項字
+        for cvr in (context.get(qkey) or {}).values():
+            if not isinstance(cvr, dict):
                 continue
-            # 注意：唔加字母前綴：buildDeck 會打亂選項次序再重派 A/B/C/D
-            ospoken = normalize(oraw)
-            seen.add(("o", oraw))
-            items.append(("o", oraw, ospoken,
-                          os.path.join(AUDIO_O, key_of(ospoken, voice, rate) + ".mp3")))
+            if cvr.get("t"):
+                add_q(cvr["t"])
+            for _l, otext in (cvr.get("o") or {}).items():
+                if otext:
+                    add_o(otext)
+        for opt in q.get("o", []):
+            add_o(opt.get("t"))
 
     # 選項字母短檔（4 個）— 前端跟當時顯示嘅 o.l 播
     for letter in LETTERS:
@@ -282,8 +298,8 @@ def main():
         asyncio.run(sample(args.voice, args.only_sample, args.rate))
         return
 
-    questions, alts = load_bank()
-    items = collect_items(questions, alts, args.voice, args.rate)
+    questions, alts, context = load_bank()
+    items = collect_items(questions, alts, context, args.voice, args.rate)
     nq = sum(1 for k, _, _, _ in items if k == "q")
     no = sum(1 for k, _, _, _ in items if k == "o")
     nl = sum(1 for k, _, _, _ in items if k == "l")
