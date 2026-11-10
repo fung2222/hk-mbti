@@ -1,6 +1,7 @@
 # 桌面版 — 交接文件（Handoff for incoming AI/dev）
 
-> 更新於 2026-09-28 · 桌面層 **v3（全面重做）** · VERSION `2.0.0` · branch `main`
+> 更新於 2026-11-10 · 桌面層 **v3（全面重做）** · VERSION `2.0.2` · branch `main`
+> 版本對照已更新；桌面層 v3 嘅版面規則冇改。
 > 目的：接手嘅人睇完呢份，就明白**現況、鐵律、點驗證**。
 
 Live：<https://fung2222.github.io/hk-mbti/>

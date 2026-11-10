@@ -282,7 +282,7 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
   chk('新內容冇 emoji', !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test($('#upgrade').textContent + $('#deepChapter').textContent + prem.replace(/\/\/[^\n]*/g,'')));
   chk('等級掣有黑暗模式覆蓋（html.dk .tier-btn）', /html\.dk \.tier-btn/.test(src));
   chk('升級頁／深入分析走 dark 覆蓋（html.dk .up-cmp / .deep-ch / .deep-star）', /html\.dk \.up-cmp/.test(src) && /html\.dk \.deep-ch/.test(src) && /html\.dk \.deep-star svg/.test(src));
-  chk('版本號已同步到 2.0.1', /"version":\s*"2\.0\.1"/.test(fs.readFileSync(path.join(REPO,'manifest.json'),'utf8')));
+  chk('版本號已同步到 2.0.2', /"version":\s*"2\.0\.2"/.test(fs.readFileSync(path.join(REPO,'manifest.json'),'utf8')));
 
   // ---------- 真跑：完整返回鏈（4 層）----------
   const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));

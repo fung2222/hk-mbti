@@ -406,6 +406,9 @@ line-height:.9;
 letter-spacing:-.01em;
 color:var(--ink);
 }
+/* 主頁左上 logo：視覺維持 36px，連結保留 44px 觸控範圍。 */
+#homeLogoLink{padding:4px;margin:-4px;border-radius:12px}
+#homeLogoLink:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 /* 主頁右上選單 */
 .home-top-actions{display:flex;align-items:center;gap:8px;}
 .theme-btn{padding:0;}
@@ -787,7 +790,7 @@ margin-right:11px;
 #typeBig{font-family:'Archivo Black',Georgia,'Times New Roman',serif;letter-spacing:.01em;}
 /* 維度分頁大字母：同全站色卡同一隻字型（原本漏咗，會跌返 body 字型） */
 #letterBig{font-family:'Archivo Black',Georgia,'Times New Roman',serif;letter-spacing:.01em;}
-.home-hero h1{font-size:2.35rem;line-height:1.25;letter-spacing:-.02em}
+/* 主標題只保留中間 .home-hero-mbti；唔好用元素 selector 覆蓋響應式字級。 */
 .bg-gold{background:var(--gold)}
 .bg-paper{background:var(--paper)}
 .bg-soft{background:var(--soft)}
@@ -2411,9 +2414,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <section id="home" class="fade-up">
  <div class="home-hero">
  <div class="flex items-center justify-between mb-8">
- <a href="./" id="homeLogoLink" onclick="goHome();return false;" class="flex items-center gap-2 cursor-pointer" style="-webkit-tap-highlight-color:transparent;text-decoration:none;color:inherit;">
- <img src="icon-192.png" class="w-9 h-9 rounded-lg flex-shrink-0" alt="港MBTI">
- <h1 class="font-black text-[19px] tracking-tight">港式 MBTI</h1>
+ <a href="./" id="homeLogoLink" onclick="goHome();return false;" class="flex items-center cursor-pointer" aria-label="港式 MBTI 主頁" style="-webkit-tap-highlight-color:transparent;text-decoration:none;color:inherit;">
+ <img src="icon-192.png" class="w-9 h-9 rounded-lg flex-shrink-0" alt="">
  </a>
  <div class="home-top-actions">
  <button type="button" class="tier-btn" id="tierBtn" onclick="openUpgrade()" aria-label="免費版"><span class="tier-dot"></span><span id="tierLabel">免費版</span></button>
@@ -2435,7 +2437,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  </div>
 
  <div class="home-hero-copy">
- <div class="home-hero-mbti">MBTI</div>
+ <h1 class="home-hero-mbti" aria-label="港式 MBTI">MBTI</h1>
  <p class="text-sm text-gray-600 leading-relaxed mt-5">60 題廣東話版 16 型人格測試<br>多種生活情景 · 港人嘅日常<br>約 5 分鐘完成測試</p>
    <div id="dtHeroCta">
     <button type="button" class="dt-cta-gold" onclick="goPickVersion()">立即測試</button>
