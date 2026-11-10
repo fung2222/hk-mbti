@@ -60,14 +60,19 @@ man = json.loads(read("manifest.json"))
 sw = read("sw.js")
 cache = re.search(r'const CACHE = "hk-mbti-v([0-9.]+)"', sw)
 idx = read("index.html")
-chrome = re.search(r"版本\s*v([0-9]+\.[0-9]+)", idx)
+chrome = re.search(r"版本\s*v([0-9]+\.[0-9]+\.[0-9]+)", idx)
 if man.get("version") != ver:
     fails.append("manifest.json version=%s ≠ VERSION %s" % (man.get("version"), ver))
 if not cache or cache.group(1) != ver:
     fails.append("sw.js CACHE=%s ≠ VERSION %s" % (cache.group(1) if cache else "冇", ver))
-if not chrome or chrome.group(1) != ".".join(ver.split(".")[:2]):
-    fails.append("index.html chrome 文字「版本 v%s」≠ VERSION %s（應該 v%s）" % (
-        chrome.group(1) if chrome else "?", ver, ".".join(ver.split(".")[:2])))
+if not chrome or chrome.group(1) != ver:
+    fails.append("index.html chrome 文字「版本 v%s」≠ VERSION %s（版本號要三段齊，唔准只對大版）" % (
+        chrome.group(1) if chrome else "?", ver))
+priv = read("privacy.html")
+if ("v" + ver) not in priv:
+    fails.append("privacy.html 冇標示現行版本 v%s" % ver)
+if idx.count('class="ver-more"') != 3:
+    fails.append("三個測試版本卡各自要有 .ver-more 詳細說明（而家 %d 個）" % idx.count('class="ver-more"'))
 notes.append("版本 %s（manifest/sw/chrome 一致）" % ver)
 
 # ---------- 3. onclick 有冇定義 ----------

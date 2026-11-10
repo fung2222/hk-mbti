@@ -950,6 +950,15 @@ html.dk #personalReport .pr-method{color:#12161C;background-color:#D4A95F}
 :root:not(.dk) .mth-key{filter:brightness(.62)}
 /* 桌面層：金標前面嘅線條 icon 唔可以漏（佢有自己嘅 color 規則） */
 :root:not(.dk) .home-acc-label .scenes-title-ico{color:#756440}
+
+/* 2026-11-10 Roy：三個版本定位（BB 娛樂／進階探索／生活主推），撳開卡片先顯示詳細說明 */
+.ver-tag { display:inline-block; margin-left:6px; padding:1px 8px; border-radius:999px; font-size:10px; font-weight:700; color:var(--ink); background:var(--soft); border:1px solid rgba(26,26,26,.12); vertical-align:middle; }
+.ver-legend { margin-left:8px; font-size:10px; font-weight:400; letter-spacing:0; color:rgba(26,26,26,.55); }
+.ver-more { display:none; }
+.ver-btn.ver-lit .ver-more { display:block; margin-top:8px; padding-top:8px; border-top:1px solid rgba(26,26,26,.10); font-size:13px; line-height:1.7; color:rgba(26,26,26,.72); }
+html.dk .ver-tag { color:#F0E9D8; background:#2E2A22; border-color:rgba(255,255,255,.18); }
+html.dk .ver-legend { color:rgba(255,255,255,.55); }
+html.dk .ver-btn.ver-lit .ver-more { color:rgba(255,255,255,.75); border-top-color:rgba(255,255,255,.12); }
 </style>
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
 <script data-goatcounter="https://fung2222.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -2439,7 +2448,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <a href="./stats.html" onclick="closeHomeMenu()">16型參考比例</a>
  <button type="button" onclick="openMethod();closeHomeMenu();">計分方法同限制</button>
  <button type="button" onclick="openPrivacy();closeHomeMenu();">私隱聲明</button>
- <div class="home-menu-foot">版本 v2.1.1</div>
+ <div class="home-menu-foot">版本 v2.1.0</div>
  </div>
  </div>
  </div>
@@ -2466,13 +2475,14 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <!-- 版本選擇（一按著燈，再按進入） -->
  <div class="card p-5 mb-4" id="homeBelow">
- <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h6v6H4zM14 6h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>選擇 MBTI 測試版本</div>
+ <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h6v6H4zM14 6h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>選擇 MBTI 測試版本<span class="ver-legend">10 題玩下 · 30 題探索 · 60 題完整</span></div>
  <div class="space-y-2.5" id="versionList">
  <div data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
- <div class="text-[15px] font-black text-ink flex items-center gap-2"><svg class="ver-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7h11M9 12h11M9 17h11"/><path d="M4.6 7h.01M4.6 12h.01M4.6 17h.01"/></svg><span>生活版（完整測試）</span></div>
- <div class="text-xs text-gray-600 mt-0.5">60 題 · 約 5 分鐘 · 題目最多</div>
+ <div class="text-[15px] font-black text-ink flex items-center gap-2"><svg class="ver-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7h11M9 12h11M9 17h11"/><path d="M4.6 7h.01M4.6 12h.01M4.6 17h.01"/></svg><span>生活版（完整測試）</span><span class="ver-tag">主推</span></div>
+ <div class="text-xs text-gray-600 mt-0.5">60 題 · 約 5 分鐘 · 完整結果</div>
+ <div class="ver-more">最完整版本：五大維度平均覆蓋，結果頁有性格分析、盲點、港人情境同朋友配對。想真正認識自己，由呢個開始。</div>
  <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('life')">立即測試</button>
  </div>
  <span class="ver-chev" aria-hidden="true">▼</span>
@@ -2482,7 +2492,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
  <div class="text-[15px] font-black text-ink flex items-center gap-2"><svg class="ver-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 3 6.5 13.5h4.6L11 21l7-10.5h-4.6z"/></svg><span>進階版（快速版）</span></div>
- <div class="text-xs text-gray-600 mt-0.5">30 題 · 3 分鐘 · 平衡選擇</div>
+ <div class="text-xs text-gray-600 mt-0.5">30 題 · 3 分鐘 · 初步探索</div>
+ <div class="ver-more">初步人格探索：每個維度都有覆蓋，快啲有四個字母同基本傾向；想再深入，之後返嚟做完整版就得。</div>
  <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('advanced')">立即測試</button>
  </div>
  <span class="ver-chev" aria-hidden="true">▼</span>
@@ -2492,7 +2503,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
  <div class="flex items-center justify-between gap-3 w-full">
  <div class="min-w-0 flex-1">
  <div class="text-[15px] font-black text-ink flex items-center gap-2"><svg class="ver-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.6"/></svg><span>BB 版（極簡版）</span></div>
- <div class="text-xs text-gray-600 mt-0.5">10 題 · 1 分鐘 · 純粹試下</div>
+ <div class="text-xs text-gray-600 mt-0.5">10 題 · 1 分鐘 · 娛樂體驗</div>
+ <div class="ver-more">娛樂體驗：10 條輕鬆問題玩下，唔強調準確度，適合分享、試玩，或者幫朋友起個頭。</div>
  <button type="button" class="ver-hint text-xs" onclick="event.stopPropagation();goVersion('bb')">立即測試</button>
  </div>
  <span class="ver-chev" aria-hidden="true">▼</span>
@@ -2858,7 +2870,7 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 <!-- 桌面頁尾（只喺 html.dt ≥1024px 顯示；手機係 display:none） -->
 <footer id="dtFoot" aria-label="頁尾">
  <div class="dt-foot-in">
-  <span>港式 MBTI · 版本 v2.1.1</span>
+  <span>港式 MBTI · 版本 v2.1.0</span>
   <span class="dt-foot-links">
    <button type="button" onclick="openMethod()">計分方法同限制</button>
    <button type="button" onclick="openPrivacy()">私隱聲明</button>
