@@ -2,7 +2,17 @@
 
 日期：2026-11-10  
 適用對象：下一位接手開發嘅 AI／開發者  
-狀態：**本機修改及最終測試完成；建立此文件時尚未 commit、push 或部署。部署後請補上實際 commit 同 live 驗收。**
+狀態：**已於 2026-11-10 部署。程式 commit 為 `8f2712506c3d39f8b0c0d5a7f358739ad1d3426b`；live 版本、內容雜湊及手機 DOM 已核實，詳見下方部署後驗收。**
+
+## 部署後驗收記錄
+
+- GitHub `main` 已核實為 `8f2712506c3d39f8b0c0d5a7f358739ad1d3426b`。
+- GitHub Pages 已生效：live `index.html` MD5 `bfb4a45d1d3164308fa1c458a846108a`，同本地一致。
+- live `VERSION` 及 `manifest.json` 均為 `2.0.2`；`sw.js` 為 `hk-mbti-v2.0.2`。
+- 390×844 live DOM 實測：上方品牌連結冇可見文字，無障礙名稱為「港式 MBTI 主頁」；中間「MBTI」係唯一 H1，無障礙名稱為「港式 MBTI」。
+- 上述 live 檢查冇 JavaScript page error，亦冇橫向溢出。
+- Android App 實機重開、舊紀錄、進度、離線及分享卡仍應由 owner 再確認；唔將瀏覽器驗收當成實機驗收。
+- Play Console 未更新；今次冇提交新 AAB。
 
 ## 0. 今次用戶問題同設計決定
 
