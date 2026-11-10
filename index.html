@@ -144,13 +144,13 @@ background:linear-gradient(135deg,#FDF8EC,#F5EBD3);
 .ver-btn .ver-hint{
 display:block;width:fit-content;max-height:0;overflow:hidden;opacity:0;margin-top:0;padding:0 16px;
 font-family:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;line-height:1.25;text-align:left;
-background:rgba(212,169,95,.12);color:#7C6B45;border-radius:999px;font-size:13px;font-weight:600;
+background:linear-gradient(180deg,#B98B33,#8E671C);color:#FFF6E4;border-radius:999px;font-size:13px;font-weight:700;
 border:0 solid transparent;pointer-events:none;
 transition:max-height .7s cubic-bezier(.22,1,.36,1),opacity .5s ease,margin .5s ease,padding .5s ease,border-color .4s ease
 }
 .ver-btn.ver-lit .ver-hint{
 max-height:48px;opacity:1;margin-top:.55rem;padding:7px 16px;pointer-events:auto;
-border-width:1px;border-color:rgba(212,169,95,.35)
+border-width:1px;border-color:rgba(0,0,0,.18);box-shadow:0 2px 8px rgba(80,54,10,.28)
 }
 .ver-chev{
 flex-shrink:0;width:28px;height:28px;border-radius:999px;
@@ -952,12 +952,14 @@ html.dk #personalReport .pr-method{color:#12161C;background-color:#D4A95F}
 :root:not(.dk) .home-acc-label .scenes-title-ico{color:#756440}
 
 /* 2026-11-10 Roy：三個版本定位（BB 娛樂／進階探索／生活主推），撳開卡片先顯示詳細說明 */
-.ver-tag { display:inline-block; margin-left:6px; padding:1px 8px; border-radius:999px; font-size:10px; font-weight:700; color:var(--ink); background:var(--soft); border:1px solid rgba(26,26,26,.12); vertical-align:middle; }
-.ver-legend { margin-left:8px; font-size:10px; font-weight:400; letter-spacing:0; color:rgba(26,26,26,.55); }
+.ver-tag { display:inline-block; flex-shrink:0; white-space:nowrap; writing-mode:horizontal-tb; margin-left:6px; padding:2px 8px; border-radius:999px; font-size:10px; font-weight:700; line-height:1.2; color:var(--ink); background:var(--soft); border:1px solid rgba(26,26,26,.12); vertical-align:middle; }
+.ver-sub { margin:-2px 0 10px; font-size:12px; font-weight:400; letter-spacing:.02em; color:rgba(26,26,26,.55); }
+.btn-deep { background:linear-gradient(180deg,#B98B33,#8E671C); color:#FFF6E4; border:1px solid rgba(0,0,0,.18); box-shadow:0 2px 8px rgba(80,54,10,.28); }
 .ver-more { display:none; }
 .ver-btn.ver-lit .ver-more { display:block; margin-top:8px; padding-top:8px; border-top:1px solid rgba(26,26,26,.10); font-size:13px; line-height:1.7; color:rgba(26,26,26,.72); }
 html.dk .ver-tag { color:#F0E9D8; background:#2E2A22; border-color:rgba(255,255,255,.18); }
-html.dk .ver-legend { color:rgba(255,255,255,.55); }
+html.dk .ver-sub { color:rgba(255,255,255,.55); }
+html.dk .btn-deep { background:linear-gradient(180deg,#C9A24F,#9A742A); color:#1E1A12; border-color:rgba(0,0,0,.3); }
 html.dk .ver-btn.ver-lit .ver-more { color:rgba(255,255,255,.75); border-top-color:rgba(255,255,255,.12); }
 </style>
 <!-- GoatCounter 訪客統計（只記頁面瀏覽；唔記 IP、唔用 cookie）-->
@@ -1363,7 +1365,7 @@ html.dk .ver-btn[data-ver="bb"]{background:linear-gradient(135deg,#261D13,#33251
 html.dk .ver-btn[data-ver="bb"].ver-lit{background:linear-gradient(135deg,#33251A,#412E1E)}
 html.dk .ver-btn[data-ver="record"]{background:linear-gradient(135deg,#221F16,#2B261B)}
 html.dk .ver-btn[data-ver="record"].ver-lit{background:linear-gradient(135deg,#2B261B,#362F20)}
-html.dk .ver-btn .ver-hint{background:rgba(217,178,106,.15);color:#D8C69E}
+html.dk .ver-btn .ver-hint{background:linear-gradient(180deg,#C9A24F,#9A742A);color:#1E1A12}
 html.dk .ver-btn.ver-lit .ver-chev{color:#12161C}
 /* 灰字 → 深底上嘅淺灰 */
 html.dk .scene-sub,html.dk .wiz-ghost,html.dk .home-acc-desc,html.dk .home-acc-go,html.dk .softbox-sub,html.dk .softbox-btn,
@@ -2475,7 +2477,8 @@ MBTI（Myers-Briggs Type Indicator）源自心理學家 <b>榮格（Carl Jung）
 
  <!-- 版本選擇（一按著燈，再按進入） -->
  <div class="card p-5 mb-4" id="homeBelow">
- <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h6v6H4zM14 6h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>選擇 MBTI 測試版本<span class="ver-legend">10 題玩下 · 30 題探索 · 60 題完整</span></div>
+ <div class="text-xs tracking-widest brand-gold font-bold mb-2"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h6v6H4zM14 6h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>選擇 MBTI 測試版本</div>
+ <div class="ver-sub">10 題玩下 · 30 題探索 · 60 題完整</div>
  <div class="space-y-2.5" id="versionList">
  <div data-ver="life" onclick="selectVersion('life')" class="ver-btn w-full rounded-xl text-left" role="button" tabindex="0">
  <div class="flex items-center justify-between gap-3 w-full">
@@ -6397,7 +6400,7 @@ el.innerHTML = `
  <div class="text-xs brand-gold font-bold tracking-widest mb-1"><svg class="scenes-title-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/></svg>上次未完成</div>
  <div class="text-ink"><span class="text-xs text-gray-500 font-bold">${verName}</span> <span class="text-sm font-bold">第 ${next} / ${total} 題</span></div>
  </div>
- <button type="button" id="resumeGo" class="btn-gold px-4 py-2.5 rounded-xl text-sm font-bold flex-shrink-0">開始</button>
+ <button type="button" id="resumeGo" class="btn-deep px-4 py-2.5 rounded-xl text-sm font-bold flex-shrink-0">開始</button>
  <button type="button" id="resumeDrop" aria-label="放棄進度" style="-webkit-appearance:none;appearance:none;background:none;border:0;color:#6b6560;font-size:19px;cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0;"><svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
  </div>`;
 const go = $("resumeGo");
