@@ -2,7 +2,20 @@
 
 日期：2026-11-10
 適用對象：下一位接手開發嘅 AI／開發者
-狀態：**已完成本機開發同全部出貨閘（11/11 綠）。Roy 已刪除 GitHub token，所以今次係「push-ready」狀態：本地 commit 完成、bundle 已出，等下一位有權限嘅 agent 按交付嘅推送指示 merge --ff-only 之後 push。推送後要補做「部署後驗收」（見文末清單）。**
+狀態：**已於 2026-11-10 部署。程式 commit 為 `98b052731346f5db2f544381f679e6e48303820a`；live 版本、內容雜湊、身份步驟 DOM、學生版題目及新音檔已核實，詳見下方部署後驗收。**
+
+## 部署後驗收記錄
+
+- GitHub `main` 已核實為 `98b052731346f5db2f544381f679e6e48303820a`（push：`2170475..98b0527`）。
+- 推送前重跑出貨閘 11/11 全綠（`SHIP_DRY=1 sh tools/ship.sh x`）。
+- GitHub Pages 已生效：live `index.html` 同 commit blob **逐 byte 一致**（415,729 bytes，cmp IDENTICAL）。
+- live `VERSION` = `2.1.0`；`manifest.json` version = `2.1.0`；`sw.js` cache = `hk-mbti-v2.1.0`。
+- 390×844 live DOM 實測：wizard 第 4 步顯示「第 4 步 · 共 5 步」，身份掣齊 4 個（student／worker／both／skip）；揀 student 後 `buildDeck` 出學生版題（實測「報學會／比賽要交個人介紹，你會點整理經歷？」）。
+- live 新音檔 `audio/q/5f3487c52a1c.mp3` HTTP 200。
+- 上述 live 檢查冇 JavaScript page error，冇橫向溢出。
+- 注意：驗證期間 sandbox→GitHub Pages 網絡不穩（curl 間中截斷／超時），以上結果已係重試後確認；如見類似情況重試即可。
+- Android App 實機重開、舊進度、離線及分享卡仍應由 owner 再確認；唔將瀏覽器驗收當成實機驗收。
+- Play Console 未更新；今次冇提交新 AAB（TWA 內容更新）。
 
 ## 0. 今次用戶問題同設計決定
 
