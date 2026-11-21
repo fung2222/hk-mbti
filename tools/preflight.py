@@ -20,6 +20,12 @@ ALLOWED_SYMBOLS = set("✓✗▼▲→·—–‘’“”「」《》…％")
 fails, warns, notes = [], [], []
 
 
+def run_node_check(path):
+    # Windows 得 node.cmd（CreateProcess 搵唔到冇副檔名嘅 "node"）→ 用 shell 等系統自己解
+    q = '"%s"' % path.replace('"', '\\"')
+    return subprocess.run('node --check ' + q, shell=True, capture_output=True, text=True)
+
+
 def read(p):
     with open(os.path.join(ROOT, p), encoding="utf-8") as f:
         return f.read()
@@ -46,7 +52,7 @@ for f in html_files():
         with tempfile.NamedTemporaryFile("w", suffix=".js", delete=False, encoding="utf-8") as t:
             t.write(b)
             tmp = t.name
-        r = subprocess.run(["node", "--check", tmp], capture_output=True, text=True)
+        r = run_node_check(tmp)
         os.unlink(tmp)
         if r.returncode != 0:
             err = [l for l in r.stderr.splitlines() if "SyntaxError" in l or "Error:" in l]

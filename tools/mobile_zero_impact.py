@@ -105,7 +105,13 @@ def main():
     base_dir = os.path.join(tmp, "baseline"); os.makedirs(base_dir)
     for f in os.listdir(REPO):
         if f in (".git", "index.html"): continue
-        os.symlink(os.path.join(REPO, f), os.path.join(base_dir, f))
+        src = os.path.join(REPO, f); dst = os.path.join(base_dir, f)
+        try:
+            os.symlink(src, dst)
+        except OSError:
+            # Windows 冇權限整 symlink（WinError 1314）→ 用複製，效果一樣
+            if os.path.isdir(src): shutil.copytree(src, dst)
+            else: shutil.copy2(src, dst)
     with open(os.path.join(REPO, "index.html"), encoding="utf-8") as fh: html = fh.read()
     with open(os.path.join(base_dir, "index.html"), "w", encoding="utf-8") as fh: fh.write(strip_desktop(html))
     out = a.keep or os.path.join(tmp, "shots"); os.makedirs(out, exist_ok=True)

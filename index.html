@@ -1161,6 +1161,10 @@ html.dk .ver-btn.ver-lit .ver-more { color:rgba(255,255,255,.75); border-top-col
   html.dt .home-acc-item:nth-last-child(1){grid-column:4 / span 2}
   html.dt #hub .hub-type-grid,html.dt #deepList .hub-type-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
   html.dt #socialArticle,html.dt #romanceArticle,html.dt #deepChapter{max-width:min(840px,var(--dt-w))}
+  /* 2026-11-22 Roy：平板「香港分佈」Top 3 卡原本跟 768+ 區塊做 3 欄 → 數據欄得 ~400px，
+     每卡 ~124px 唔夠位，百分比壓住類型名（836px 實測截圖證實）→ 平板改單欄直排。
+     桌面 ≥1024 維持 3 欄（1068 行），手機 <768 本來就單欄，兩邊零影響。 */
+  html.dt #hk-stats .hk-stats-list{grid-template-columns:minmax(0,1fr)}
 }
 
 /* ── 桌面 >=1024：左右分欄 hero、單行導覽、探索更多 5 欄、內頁多分欄 ── */

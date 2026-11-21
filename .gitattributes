@@ -1,0 +1,3 @@
+# 全 repo 鎖 LF：Windows clone 唔會再被 autocrlf 轉做 CRLF
+# （CRLF 會令 jsdom 測試入面嘅多行 regex 斷言誤報紅，例如 result_page_test.js）
+* text=auto eol=lf

@@ -16,6 +16,11 @@ fails = []
 def fail(msg):
     fails.append(msg); print("✗ " + msg)
 
+def run_node_check(path):
+    # Windows 得 node.cmd（CreateProcess 搵唔到冇副檔名嘅 "node"）→ 用 shell 等系統自己解
+    q = '"%s"' % path.replace('"', '\\"')
+    return subprocess.run('node --check ' + q, shell=True, capture_output=True, text=True)
+
 def walk(sub):
     for root, dirs, files in os.walk(os.path.join(REPO, sub)):
         dirs[:] = [d for d in dirs if d not in ("node_modules", ".git", "browsers", "__pycache__")]
@@ -30,7 +35,7 @@ for p in walk("tools"):
         if r.returncode:
             fail("py_compile %s：%s" % (rel, (r.stderr.strip().splitlines() or [""])[-1]))
     elif p.endswith(".js"):
-        r = subprocess.run(["node", "--check", p], capture_output=True, text=True)
+        r = run_node_check(p)
         if r.returncode:
             fail("node --check %s：%s" % (rel, (r.stderr.strip().splitlines() or [""])[-1]))
 
