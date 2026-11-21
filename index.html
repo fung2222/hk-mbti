@@ -1174,6 +1174,12 @@ html.dk .ver-btn.ver-lit .ver-more { color:rgba(255,255,255,.75); border-top-col
   html.dt .dt-nav-links{order:0;flex:1 1 auto;width:auto;margin-left:auto;height:100%;gap:14px;overflow-x:auto;scrollbar-width:none}
   html.dt .dt-nav-links::-webkit-scrollbar{display:none}
   html.dt .dt-nav-cta{margin-left:0;padding:10px 18px}
+  /* 2026-11-22 Roy：「香港分佈」Top 3 卡喺桌面都重疊 —— 原本成段做「左文案｜右數據」兩欄，
+     數據欄只有 ~490–660px，3 欄卡每張 151–213px，但卡內容（排名＋icon＋型號＋中文名＋%）
+     實需 ~225px → 中文名同百分比實字重疊（1024／1280／1920 全部中）。
+     改：桌面成段改單欄（文案上、數據下），3 張卡攞全闊 --dt-w（每張 ≥310px）→ 真正夠位。
+     平板 768–1023 維持單欄直排（上面 1167 行），手機零影響。 */
+  html.dt #hk-stats:not(.hidden){grid-template-columns:minmax(0,1fr);row-gap:6px;align-items:start}
   html.dt .home-hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:48px;align-items:center;padding:48px 0 36px}
   html.dt .home-hero-copy{grid-column:1;grid-row:1;text-align:left;align-items:flex-start;justify-content:center}
   html.dt .home-hero-copy::before{content:"";position:absolute;z-index:-1;pointer-events:none;left:-12%;top:-28%;width:120%;height:160%;
