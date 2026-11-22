@@ -452,7 +452,7 @@ async def run():
         # ── 2026-10-13 · 桌面頂欄一致性（stats.html／record.html 要同首頁同一款淺色 sticky 欄）──
         # 守門理由：呢兩頁原本係深藍標題板（第二種風格）；改動之後假如有人再整返深藍、
         # 或者 .hero-popover a 變返 display:block（每個連結霸一行），下面就會紅。
-        for _nm, _f in (("首頁", "index.html"), ("統計", "stats.html"), ("紀錄", "record.html")):
+        for _nm, _f in (("首頁", "index.html"), ("統計", "stats.html"), ("紀錄", "record.html"), ("私隱", "privacy.html")):
             _dp = await b.new_page()
             await _dp.goto(url, wait_until="domcontentloaded")
             await _dp.goto(url.rsplit("/", 1)[0] + "/" + _f, wait_until="domcontentloaded")
@@ -469,7 +469,7 @@ async def run():
             check("桌面 %s：頂欄 sticky" % _nm, _dr.get("pos") == "sticky", str(_dr))
             check("桌面 %s：選單連結全部同一行（唔准逐個掉行變成側欄；容許 30px 基線差）" % _nm, 0 <= _dr.get("rows", 999) <= 30, str(_dr))
             await _dp.close()
-        for _nm, _f in (("統計", "stats.html"), ("紀錄", "record.html")):
+        for _nm, _f in (("統計", "stats.html"), ("紀錄", "record.html"), ("私隱", "privacy.html")):
             _mp2 = await b.new_page(viewport={"width": 390, "height": 844})
             await _mp2.goto(url, wait_until="domcontentloaded")
             await _mp2.goto(url.rsplit("/", 1)[0] + "/" + _f, wait_until="domcontentloaded")

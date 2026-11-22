@@ -163,7 +163,11 @@ body{font-family:"PingFang HK","PingFang TC","Noto Sans HK","Microsoft JhengHei"
 .ts-ico{width:30px;height:30px;flex:0 0 auto;line-height:0;display:flex;align-items:center;justify-content:center}
 .ts-ico svg{width:30px;height:30px;display:block}
 @media (min-width:1440px){
-  html.dt{--dt-w:min(1280px,calc(100% - 96px));--dt-read:840px}
+  html.dt{--dt-w:min(1360px,calc(100% - 96px));--dt-read:840px}
+}
+/* 2026-11-22：加 ≥1680 斷點，同主站一致（主站同衛星頁之間切換時，頂 bar 內容寬度唔再跳） */
+@media (min-width:1680px){
+  html.dt{--dt-w:min(1440px,calc(100% - 112px))}
 }
 </style>
 

@@ -186,7 +186,11 @@ html.dm body{min-height:var(--dm-vh)}
   html.dt{--dt-w:min(1200px,calc(100% - 80px));--dt-read:820px}
 }
 @media (min-width:1440px){
-  html.dt{--dt-w:min(1280px,calc(100% - 96px));--dt-read:840px}
+  html.dt{--dt-w:min(1360px,calc(100% - 96px));--dt-read:840px}
+}
+/* 2026-11-22：加 ≥1680 斷點，同主站一致（主站同衛星頁之間切換時，頂 bar 內容寬度唔再跳） */
+@media (min-width:1680px){
+  html.dt{--dt-w:min(1440px,calc(100% - 112px))}
 }
 </style>
 
@@ -215,10 +219,86 @@ html.dk .softbox-btn:hover{color:#D8C69E}
    只係搬入頁面自己嘅樣式，令「隱藏」唔再依賴外部檔案。 */
 .hidden{display:none}
 </style>
+<style>
+/* 2026-11-22 · 桌面層：同首頁 #dtNav 完全一致（同 record.html／stats.html 2026-11-22 版）。
+   只喺 html.dt 生效 → 手機零影響。必須排最後（同特異度後者勝）。
+   注意：原本 .hero-popover a 係 display:block（下拉選單用），
+   所以一定要覆寫做 inline-block，否則每個連結會霸滿一整行。 */
+html.dt .hero{
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  min-height:65px;padding:0 max(0px,calc((100% - var(--dt-w)) / 2));
+  background:rgba(250,247,240,.92);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border-bottom:1px solid #EDE6D8;
+  color:#1c1b19;position:sticky;top:0;z-index:60;
+}
+html.dk.dt .hero{background:rgba(18,22,28,.92);border-bottom-color:rgba(236,231,222,.13);color:#ECE7DE}
+html.dt .hero-row{min-height:0;margin:0;gap:16px;flex:0 0 auto;align-items:baseline}
+html.dt .hero-row .hero-title{font-size:17px;font-weight:900;margin:0;color:inherit}
+html.dt .hero .back-nav{color:inherit;font-size:15px;opacity:.72}
+html.dt .hero p,html.dt .hero .hero-sub{display:none}
+html.dt .hero-menu{display:none}
+html.dt .hero-popover{
+  display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-end;
+  position:static;background:none;border:0;box-shadow:none;
+  padding:0;gap:20px;min-width:0;max-width:none;flex:0 1 auto;
+}
+html.dt .hero-popover a{
+  display:inline-block;width:auto;white-space:nowrap;
+  color:#4a463f;font-size:16px;text-decoration:none;padding:4px 0;
+}
+html.dk.dt .hero-popover a{color:#CFC9BE}
+
+/* 2026-11-22 Roy：衛星頁頂 bar 對齊主站 #dtNav —— 品牌左置（取代「返回」＋「主頁」連結）、
+   選單次序同主站一致（百科→關於→比例→紀錄→計分→私隱）、當前頁金下線、右端金 CTA。
+   全部只喺 html.dt 生效；手機 hero／彈出選單一個像素都唔郁。
+   寬度策略（同主站斷點）：768–1023 淨 logo（位唔夠）；1024–1279 品牌全名＋CTA，頁面標題收埋；
+   ≥1280 先加返頁面指示（港式 MBTI ｜ 私隱聲明），連結同主站一樣升 15px。 */
+.dt-brand,.dt-cta-link{display:none}
+html.dt .dt-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex-shrink:0}
+html.dt .dt-brand img{width:32px;height:32px;border-radius:9px}
+html.dt .dt-brand span{font-size:18px;font-weight:900;letter-spacing:-.01em;white-space:nowrap}
+html.dt .hero .back-nav{display:none}
+html.dt .hero-row{display:flex;align-items:center;gap:14px}
+html.dt .hero-row .hero-title{position:static;line-height:1.3;padding:0 0 0 14px;font-size:15px;font-weight:700;color:#6b6560;border-left:1px solid #EDE6D8;white-space:nowrap}
+html.dk.dt .hero-row .hero-title{color:#A79E92;border-left-color:rgba(236,231,222,.13)}
+html.dt .hero-popover a[href="./"]{display:none}
+html.dt .hero-popover a[href="./#hub"]{order:1}
+html.dt .hero-popover a[href="./#about"]{order:2}
+html.dt .hero-popover a[href="./stats.html"]{order:3}
+html.dt .hero-popover a[href="./record.html"]{order:4}
+html.dt .hero-popover a[href="./#method"]{order:5}
+html.dt .hero-popover a[href="./#privacy"]{order:6}
+html.dt .hero-popover a,html.dt .hero-popover button{position:relative;font-size:14px;font-weight:700;color:#6b6560}
+html.dt .hero-popover a:hover{color:#1c1b19}
+html.dk.dt .hero-popover a{color:#A79E92}
+html.dk.dt .hero-popover a:hover{color:#ECE7DE}
+html.dt .hero-popover a[aria-current="page"]{color:#1c1b19}
+html.dk.dt .hero-popover a[aria-current="page"]{color:#ECE7DE}
+html.dt .hero-popover a[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;border-radius:2px;background:var(--gold)}
+html.dt .dt-cta-link{display:inline-block;background:var(--gold);color:#1c1b19;font-size:14px;font-weight:900;border-radius:12px;padding:10px 16px;text-decoration:none;white-space:nowrap;flex-shrink:0}
+html.dt .dt-cta-link:hover{background:#c89a4d}
+html.dk.dt .dt-cta-link{color:#12161C}
+@media (min-width:768px) and (max-width:1279px){
+  html.dt .hero-row .hero-title{display:none}
+}
+@media (min-width:768px) and (max-width:1023px){
+  html.dt .dt-brand span{display:none}
+  html.dt .dt-cta-link{display:none}
+  html.dt .hero-popover{gap:14px}
+}
+@media (min-width:1024px) and (max-width:1279px){
+  html.dt .hero-popover{gap:14px}
+}
+@media (min-width:1280px){
+  html.dt .hero-popover a,html.dt .hero-popover button{font-size:15px}
+}
+</style>
 </head>
 <body>
 <div class="hero">
  <div class="hero-row">
+ <a href="./" class="dt-brand" aria-label="港式 MBTI 主頁"><img src="icon-192.png" alt=""><span>港式 MBTI</span></a>
  <a href="./" class="back-nav" onclick="siteBack();return false;">返回</a>
  <div class="hero-title">私隱聲明</div>
  <button type="button" class="hero-menu" onclick="toggleHeroMenu(event)" aria-label="更多">⋯</button>
@@ -231,8 +311,9 @@ html.dk .softbox-btn:hover{color:#D8C69E}
  <a href="./#hub">性格百科</a>
  <a href="./stats.html">16型參考比例</a>
       <a href="./#method">計分方法同限制</a>
- <a href="./#privacy">私隱聲明</a>
+ <a href="./#privacy" aria-current="page">私隱聲明</a>
  </div>
+ <a href="./" class="dt-cta-link">立即測試</a>
 </div>
 <main>
 
