@@ -1212,6 +1212,18 @@ html.dk .ver-btn.ver-lit .ver-more { color:rgba(255,255,255,.75); border-top-col
   html.dt #app .scenes-head > .text-xs:first-child,
   html.dt #app .home-acc-label{font-size:26px;margin-bottom:22px}
   html.dt #hub .hub-type-grid,html.dt #deepList .hub-type-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:8px}
+  /* 2026-11-22 Roy：百科 16 型格桌面放大 —— #hubTypeGrid 係 4 個組別各 4 張卡，
+     跟 8 欄規則會得左半邊 4 張、右半全空（1920 實測截圖證實）。
+     改：#hubTypeGrid 變 2×2 組合佈局（分析家＋外交家 / 守護者＋探索者），
+     每組內 4 張卡撐滿半闊（≥1680 時每張 ~167px，同主頁轉盤 168px 級數一致）。
+     注意：selector 一定要 `html.dt #hub #hubTypeGrid`（specificity 2,1,1）——
+     淨寫 `html.dt #hubTypeGrid`（1,1,1）會輸俾上面 8 欄規則（1,2,1），實測會 4 組擠晒一橫行。
+     #hubSceneDetail 嘅 16 卡格唔喺 #hubTypeGrid 入面，唔受影響（佢 8 欄係啱嘅）。 */
+  html.dt #hub #hubTypeGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 16px}
+  html.dt #hub #hubTypeGrid .hub-type-group{margin:0}
+  html.dt #hub #hubTypeGrid .hub-type-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  html.dt #hub #hubTypeGrid .hub-type-group-h{font-size:14px;margin-bottom:10px}
+  html.dt #hub #hubTypeGrid .hub-type-card{font-size:clamp(24px,1.7vw,30px)}
   html.dt #hubDims .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
   html.dt #hubSceneList{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
   html.dt #hubSceneList > .card{margin:0}
