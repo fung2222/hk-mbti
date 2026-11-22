@@ -353,6 +353,20 @@ chk('★ deepIntro 同 16 型格真係有上下距離（真 DOM 次序）', (fun
     chk('★ 已購買但未 acknowledge：補 acknowledge onetime', acked.length===1 && acked[0][0]==='tok-1' && acked[0][1]==='onetime', JSON.stringify(acked));
     chk('★ 已購買：等級掣變完整版', $('#tierLabel').textContent.trim()==='完整版', $('#tierLabel').textContent);
 
+    // 2026-11-22：退款／撤銷之後，Play 唔再報 owned → 本機要降返免費
+    w.localStorage.setItem('hkmbti_tier','full'); w.renderTier();
+    w._billingService = null; w._billingPrice = '';
+    w.getDigitalGoodsService = async ()=>({ listPurchases: async ()=>[], getDetails: async ()=>[{itemId:'hkmbti_full_analysis_unlocked', price:{currency:'HKD', value:'18.00'}}], acknowledge: async ()=>{} });
+    await w.restorePlayPurchases();
+    chk('★ 已退款／撤銷：Play 報冇擁有 → 本機降返免費', w.localStorage.getItem('hkmbti_tier')==='free' && $('#tierLabel').textContent.trim()==='免費版', String(w.localStorage.getItem('hkmbti_tier')));
+
+    // 但係查詢失敗（離線／API 出錯）唔可以降級，否則付費用戶一離線就變免費
+    w.localStorage.setItem('hkmbti_tier','full'); w.renderTier();
+    w._billingService = null; w._billingPrice = '';
+    w.getDigitalGoodsService = async ()=>({ listPurchases: async ()=>{ throw new Error('offline'); }, getDetails: async ()=>[], acknowledge: async ()=>{} });
+    await w.restorePlayPurchases();
+    chk('★ 查詢失敗（離線）：保持完整版，唔可以誤降級', w.localStorage.getItem('hkmbti_tier')==='full', String(w.localStorage.getItem('hkmbti_tier')));
+
     const svc = {
       listPurchases: async ()=>[],
       getDetails: async ()=>[{itemId:'hkmbti_full_analysis_unlocked', price:{currency:'USD', value:'9.99'}}],

@@ -53,6 +53,12 @@
 - `tools/desktop_render_test.py`：1024 係 2 欄 × 2 行，舊斷言要求四張卡跨行等高——「詳情長開」之後上排（有 `.ver-more`）同下排高度唔同，Linux fallback 字型下會紅。
   改為**每行內等高**（≥1280 一行 4 張 = 四張等高），另加「1024 排 2 行／≥1280 排 1 行」斷言；冇放寬其他檢查。
 
+## 2026-11-22 · 付款狀態同步（退款／撤銷）
+
+- 問題：`getTier()` 只讀 localStorage，`restorePlayPurchases()` 只會寫 full，**從來冇降級**；Play 退款／撤銷之後本機仍然「完整版」，等於永久解鎖。
+- 修正：新增 `_setTierFree()`；`listPurchases()` **查詢成功而 Play 話冇擁有** → 降返免費；查詢失敗（離線／API 未接）保持現狀，避免誤降付費用戶。
+- 守門：`tools/ui/premium_test.js` 加兩條（退款降級／離線唔降級）。
+
 ## 備註
 
 - 版本仍 2.1.0（未 bump、未 tag）。
