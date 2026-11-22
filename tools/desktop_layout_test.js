@@ -72,9 +72,10 @@ check("桌面／平板：16 型係橫向可滑滑輪，唔係 grid",
   !/html\.dt \.home-type-reel\{[^}]*display:grid/.test(layer));
 check("滑輪左右箭嘴冇被桌面層收埋", !/html\.dt \.home-type-nav\{[^}]*display:\s*none/.test(layer));
 check("桌面／平板 #app 冇 padding-bottom:72px 死白", !/padding-bottom:\s*72px/.test(layer));
-check("寬度分級：平板 920 / 桌面 1120 / 1280 / 1440 各唔同",
+check("寬度分級：平板 920 / 桌面 1120 / 1280 / 1440 / 1680 各唔同",
   ["--dt-w:min(920px,calc(100% - 40px))", "--dt-w:min(1120px,calc(100% - 64px))",
-   "--dt-w:min(1200px,calc(100% - 80px))", "--dt-w:min(1280px,calc(100% - 96px))"].every(s => layer.includes(s)));
+   "--dt-w:min(1200px,calc(100% - 80px))", "--dt-w:min(1360px,calc(100% - 96px))",
+   "--dt-w:min(1440px,calc(100% - 112px))"].every(s => layer.includes(s)));
 check("桌面：scenes-grid 真係 display:grid（舊版漏咗）", /html\.dt \.scenes-grid\{display:grid/.test(layer));
 check("桌面：探索更多 5 欄（5 格唔會剩一格）", /html\.dt \.home-acc\{[^}]*grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/.test(layer));
 check("平板：探索更多 6 欄 span 2，尾兩格置中（3+2）；用 nth-last-child 唔用 nth-child",
