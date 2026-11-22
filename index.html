@@ -1277,6 +1277,32 @@ html.dk .ver-btn.ver-lit .ver-more { color:rgba(255,255,255,.75); border-top-col
   html.dt .home-hero-mbti{font-size:164px}
 }
 
+/* ── 2026-11-22 Roy：平板（768–1023）都要兩欄；桌面結果頁分享卡 sticky、類型頁說明分兩欄 ── */
+@media (min-width:768px) and (max-width:1023.98px){
+  html.dt #result:not(.hidden){display:grid;grid-template-columns:minmax(220px,290px) minmax(0,1fr);column-gap:22px;align-items:start;
+    grid-template-areas:"hero hero" "meta analysis" "card analysis" "btns analysis" "status analysis" "hint analysis" "scene scene" "cta cta" "note note"}
+  html.dt #result > .page-hero{grid-area:hero}
+  html.dt #result > .text-center{grid-area:meta}
+  html.dt #result > .mx-auto{grid-area:card;width:100%;max-width:290px;justify-self:center}
+  html.dt #result > .mb-2{grid-area:btns}
+  html.dt #result > #shareStatus{grid-area:status}
+  html.dt #result > #shareHint{grid-area:hint}
+  html.dt #result > .result-bleed{grid-area:analysis;margin:0}
+  html.dt #result > .rf-list{grid-area:analysis;margin:0}
+  html.dt #result > .card.p-5{grid-area:scene}
+  html.dt #typeTabBasic:not(.hidden){display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:14px;align-items:start}
+  html.dt #typeTabBasic > .article-guide,html.dt #typeTabBasic > #typeProsCons{grid-column:1/-1}
+}
+@media (min-width:1024px){
+  /* 分享卡跟住捲，右邊長分析唔會令左邊變成空白 */
+  html.dt #result > .mx-auto{position:sticky;top:88px}
+}
+@media (min-width:1280px){
+  /* 類型頁下面嘅長文用兩欄，填滿右邊空白又唔會拉長每行 */
+  html.dt #typeTabBasic > .article-guide{max-width:none;column-count:2;column-gap:44px}
+  html.dt #typeTabBasic > .article-guide h3,html.dt #typeTabBasic > .article-guide h4{break-after:avoid}
+}
+
 /* ── >=1680：大芒再闊一檔，轉盤卡做真正主角 ── */
 @media (min-width:1680px){
   html.dt{--dt-w:min(1440px,calc(100% - 112px))}
