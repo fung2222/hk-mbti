@@ -98,9 +98,10 @@ Live：<https://fung2222.github.io/hk-mbti/>
 5. **探索更多**：`.home-acc` 桌面 `repeat(5)` 一行 5 格（平板 `repeat(6)` + span 2 做 3+2 置中）；每格白色圓角方塊、等高、連結 `margin-top:auto` 貼底；桌面唔摺疊（`pointer-events:none`），手機風琴 JS 保留。2026-11-22 起段距放寬（上 80px／下 48px，唔再貼住上段同頁尾）。
 6. ▼／▲ Top 按鈕桌面隱藏；**頁尾 `#dtFoot`**：版本 + 私隱聲明／香港統計／我的紀錄；`body` 桌面變 flex column，頁尾永遠貼底。
 
-### 衛星頁（`record.html`／`stats.html`／`privacy.html`）頂 bar（2026-11-22 統一）
-三頁桌面頂 bar 同主站同一款：品牌左置（icon + 「港式 MBTI」，撳返主頁）、中間 6 入口 popover 連結（同主站同序：百科→關於→比例→紀錄→計分→私隱；**當前頁加 `aria-current="page"`**，金下線用 `::after`）、右端金 CTA「立即測試」返主頁。
-做法：HTML 喺 `.hero-row` 最前加 `<a class="dt-brand">`、`.hero-popover` 後加 `<a class="dt-cta-link">`；CSS 寫喺各頁**最尾無 id `<style>`**（唔係 `desktop-layer`，閘唔掃）：`.dt-brand,.dt-cta-link{display:none}` 預設隱藏；html.dt 下品牌左置、`.back-nav` 收埋、**`.hero-row` 個 h1／`.hero-title` 一定要 `position:static`**（base 係 absolute 置中，唔改會疊埋品牌）、popover 用 `order:1-6` 排序、主頁連結 `display:none`；768–1279 收埋頁面標題、768–1023 再收埋品牌字同 CTA、≥1280 連結升 15px。record.html 獨有 `.sep`（order:7）同「全部清除紀錄」button（order:8），`.sep` 淺底嘅 dk 覆蓋喺 record.html 嘅 `dark-layer`。三頁 `--dt-w` 分級已拉齊主站（1120／1200／1360／1440）。手機 hero 原樣（深藍漸變）。
+### 衛星頁（`record.html`／`stats.html`／`privacy.html`）頂 bar（2026-11-22 統一；同日深夜修正）
+三頁桌面頂 bar 同主站 **#dtNav 一模一樣**：品牌左置（icon + 「港式 MBTI」，撳返主頁）→ 選單**貼住品牌偏左**（6 入口同主站同序：百科→關於→比例→紀錄→計分→私隱；**當前頁加 `aria-current="page"`**，金下線用 `::after`）→ 右端金 CTA「立即測試」（`margin-left:auto` 推最右）。
+**2026-11-22 深夜 Roy 修正（`6354905`）**：① 頂 bar `.hero` 由 `space-between` 改 `flex-start`＋CTA `margin-left:auto`——原本三份均分會令選單飛去中間（Roy 話「呢兩頁特別置中」）；② **頁面標題（h1／`.hero-title`）桌面全部 `display:none`**——之前設計係 ≥1280 顯示「港式 MBTI ｜ 頁面名」分隔線指示，但會同選單 `aria-current` 金線重複（Roy 話「多重複咗一個標題」）；③ stats／record 內容由 `--dt-read` 拉闊至 `--dt-w`（同其他入口一樣偏左全闊；privacy 係長文，保留 `--dt-read` 閱讀闊度）。
+做法：HTML 喺 `.hero-row` 最前加 `<a class="dt-brand">`、`.hero-popover` 後加 `<a class="dt-cta-link">`；CSS 寫喺各頁**最尾無 id `<style>`**（唔係 `desktop-layer`，閘唔掃）：`.dt-brand,.dt-cta-link{display:none}` 預設隱藏；html.dt 下品牌左置、`.back-nav` 收埋、popover 用 `order:1-6` 排序、主頁連結 `display:none`；768–1023 收埋品牌字同 CTA、≥1280 連結升 15px。record.html 獨有 `.sep`（order:7）同「全部清除紀錄」button（order:8），`.sep` 淺底嘅 dk 覆蓋喺 record.html 嘅 `dark-layer`。三頁 `--dt-w` 分級已拉齊主站（1120／1200／1360／1440）。手機 hero 原樣（深藍漸變）。
 
 ### 其他畫面（桌面）
 `#app > section:not(#home)`：720px 置中欄、左右 16px padding → 深藍頁頭（`margin:-24px -16px`）剛好同欄一樣闊，底部圓角 18px。
@@ -121,6 +122,9 @@ Live：<https://fung2222.github.io/hk-mbti/>
 | `8846954`（2026-11-22）| **桌面 hero 重做**：MBTI 加級、轉盤卡 168–220px 分級、新增 ≥1680 斷點、組別標籤 space-between、轉盤箭咀 hover 先現身 | 出貨 |
 | `5f71037`（2026-11-22）| 桌面版本卡詳情長開＋stretch 等高；「探索更多」段距放寬；record／stats 頂 bar 對齊主站 | 出貨 |
 | `7209ecc`（2026-11-22）| privacy.html 頂 bar 統一（補返 sticky nav 塊）＋三衛星頁 `--dt-w` 拉齊主站 | 出貨 |
+| `9b96716`（2026-11-22）| 文件更新：AGENTS／DESKTOP-HANDOFF 對齊現況；`tools/audit_shots.py` 入 tools | 出貨 |
+| `5fa0619`（2026-11-22）| 百科頁桌面 16 型格放大：#hubTypeGrid 改 2×2 組合佈局（唔再淨佔左半）；新增 `tools/audit_inner.py` | 出貨 |
+| `6354905`（2026-11-22）| 衛星頁頂 bar 對齊主站：選單偏左、頁面標題收埋（唔再同金線重複）、stats/record 內容拉闊 | 出貨 |
 
 ### 2026-09-28 審計發現（舊 ① 版）
 - 主頁永遠收唔埋（`.hidden` 被蓋）→ 撳「開始測試」／揀版本之後，畫面頂部冇變，內容喺主頁下面
