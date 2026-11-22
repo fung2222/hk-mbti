@@ -1,5 +1,7 @@
 # AGENTS.md — 給接手嘅 AI／開發者
 
+> **接手第一步：先讀 [`docs/HANDOVER.md`](docs/HANDOVER.md)**（現況、已完成、未完成、陷阱、驗證指令、文件地圖）。本文係 30 秒規則摘要。
+
 呢個 repo 係 **港式 MBTI**（廣東話 MBTI PWA）：live <https://fung2222.github.io/hk-mbti/>
 **現況、鐵律、驗證方法，全部寫喺 → [`docs/DESKTOP-HANDOFF.md`](docs/DESKTOP-HANDOFF.md)（先睇呢份）**
 

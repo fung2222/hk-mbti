@@ -78,6 +78,11 @@
 - Roy 實機驗收：系統**字體放到最大**冇爆版；**朗讀**正常 → 無障礙部分收工，唔再開正式項目。
 - 已在 v2.0.1 完成嘅基本可及性保留：可雙指縮放、`.option` 用 `<button>` + `aria-pressed`、`#qProgress` `aria-live`、彈窗 focus trap／Escape、鍵盤答題。
 
+## 2026-11-22 · 文件重整（可直接交接）
+
+- 新增 **`docs/HANDOVER.md`**：單一入口，寫齊現況（v2.1.0／live／Play 已發佈／Billing 4/4／稅務／15%）、已完成、未完成、鐵律、驗證指令、已知陷阱、文件地圖、下一位上手路線。
+- `AGENTS.md`／`README.md`／`PROJECT-INVENTORY.md` 頂部改為指向 HANDOVER（舊 AI-HANDOFF／UI-TODO／v2.0-release-pack 等一律標明「歷史，唔好當現況」）。
+
 ## 備註
 
 - 版本仍 2.1.0（未 bump、未 tag）。

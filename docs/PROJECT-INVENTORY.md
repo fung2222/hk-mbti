@@ -3,7 +3,7 @@
 > 由 Roy 2026-09-26 要求「完整 backup + 整理所有對話及資料」生成。
 > 呢份係 SSOT 索引，任何檔案／狀態／歷史都可以由呢度追到。
 
-> **⚡ 接手請先睇（2026-11-22 更新）**：最新交接文件係 [`AGENTS.md`](../AGENTS.md)（30 秒規則）＋ [`DESKTOP-HANDOFF.md`](DESKTOP-HANDOFF.md)（桌面版權威 v3.1）；今個月改動見 [CHANGELOG-2026-11.md](CHANGELOG-2026-11.md)。本文 §1–§11 係 2026-09/10 舊環境（`/opt/data/...`）嘅紀錄，路徑同 commit hash 只供參考——repo 歷史曾經重整，現存 13 個 commit（`08899f6` → 而家 HEAD）。
+> **⚡ 接手請先睇（2026-11-22 更新）**：總交接 = [`HANDOVER.md`](HANDOVER.md)；規則 = [`AGENTS.md`](../AGENTS.md)；桌面層 = [`DESKTOP-HANDOFF.md`](DESKTOP-HANDOFF.md)（v3.1）；今個月改動見 [CHANGELOG-2026-11.md](CHANGELOG-2026-11.md)。本文 §1–§11 係 2026-09/10 舊環境（`/opt/data/...`）嘅紀錄，路徑同 commit hash 只供參考——repo 歷史曾經重整，現存 13 個 commit（`08899f6` → 而家 HEAD）。
 
 ---
 

@@ -17,9 +17,10 @@
 | `docs/` | 報告、上架資料、**交接文件** |
 | `store-listing/` | Google Play 上架文案／素材 |
 
-## 給 AI 接手：睇呢兩份（權威）
-1. [`AGENTS.md`](AGENTS.md) — 30 秒版規則（鐵律、出貨閘、禁字）
-2. [`docs/DESKTOP-HANDOFF.md`](docs/DESKTOP-HANDOFF.md) — **現況權威**（2026-11-22 v3.1）：桌面層／平板／衛星頁全部做法同坑
+## 給 AI 接手：睇呢三份（權威）
+1. [`docs/HANDOVER.md`](docs/HANDOVER.md) — **總交接（先讀）**：現況、已完成、未完成、陷阱、驗證、文件地圖
+2. [`AGENTS.md`](AGENTS.md) — 30 秒版規則（鐵律、出貨閘、禁字）
+3. [`docs/DESKTOP-HANDOFF.md`](docs/DESKTOP-HANDOFF.md) — 桌面層／平板／衛星頁全部做法同坑（v3.1）
 
 歷史文件（只作背景，唔係現況）：`docs/AI-HANDOFF-v2.1.0.md`（2026-11-10 學生／在職分流；內含 v2.0.2／v2.0.1 連結）、`docs/LAUNCH-FINAL-2026-10-13.md`（上架 ★ 未完成總清單）、`docs/UI-TODO.md`（⏳ 已過時）。
 
