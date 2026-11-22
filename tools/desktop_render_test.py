@@ -111,7 +111,17 @@ async def run():
                   all(abs(a - 16 / 9) < 0.03 for a in g["aspects"]), g["aspects"][:4])
             check("%d: 卡直角（border-radius 0）" % W, g["radius"] in ("0px", "0"), g["radius"])
             v = g["vers"]
-            check("%d: 版本卡 4 張等高" % W, len(v) == 4 and max(k["h"] for k in v) - min(k["h"] for k in v) < 1, [k["h"] for k in v])
+            # 2026-11-22: 版本卡詳情長開之後，1024 係 2 欄 × 2 行，跨行唔應該互相比高度
+            # （上排有 .ver-more 詳情，下排最後一張係「我的記錄」）。正確語意：
+            #   同一行內必須等高；≥1280 一行 4 張就係四張都要等高。
+            vrows = rows_by_y(v)
+            v_ok = len(v) == 4 and all(len(r) in (2, 4) for r in vrows) and all(
+                max(k["h"] for k in r) - min(k["h"] for k in r) < 1 for r in vrows)
+            check("%d: 版本卡每行等高（%d 行）" % (W, len(vrows)), v_ok,
+                  [[round(k["h"], 1) for k in r] for r in vrows])
+            expect_rows = 1 if W >= 1280 else 2
+            check("%d: 版本卡排 %d 行" % (W, expect_rows), len(vrows) == expect_rows,
+                  sorted(set(round(k["y"]) for k in v))[:6])
             s = g["scenes"]
             check("%d: 情景 4 欄（同一行）" % W, len(s) == 4 and len(set(round(k["y"]) for k in s)) == 1 and len(set(round(k["x"]) for k in s)) == 4)
             a = g["accItems"]
