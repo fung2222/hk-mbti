@@ -101,6 +101,7 @@ Live：<https://fung2222.github.io/hk-mbti/>
 ### 衛星頁（`record.html`／`stats.html`／`privacy.html`）頂 bar（2026-11-22 統一；同日深夜修正）
 三頁桌面頂 bar 同主站 **#dtNav 一模一樣**：品牌左置（icon + 「港式 MBTI」，撳返主頁）→ 選單**貼住品牌偏左**（6 入口同主站同序：百科→關於→比例→紀錄→計分→私隱；**當前頁加 `aria-current="page"`**，金下線用 `::after`）→ 右端金 CTA「立即測試」（`margin-left:auto` 推最右）。
 **2026-11-22 深夜 Roy 修正（`6354905`）**：① 頂 bar `.hero` 由 `space-between` 改 `flex-start`＋CTA `margin-left:auto`——原本三份均分會令選單飛去中間（Roy 話「呢兩頁特別置中」）；② **頁面標題（h1／`.hero-title`）桌面全部 `display:none`**——之前設計係 ≥1280 顯示「港式 MBTI ｜ 頁面名」分隔線指示，但會同選單 `aria-current` 金線重複（Roy 話「多重複咗一個標題」）；③ stats／record 內容由 `--dt-read` 拉闊至 `--dt-w`（同其他入口一樣偏左全闊；privacy 係長文，保留 `--dt-read` 閱讀闊度）。
+**2026-11-22 晚三次修正（`b4003a6`）**：頂 bar 加埋主站嘅「免費版＋主題掣」（Roy 要求轉頁完全一樣）——`.dt-tools`（`.dt-tier-btn`＋`.dt-theme-btn`）只喺 html.dt 顯示；**popover 必須 `flex:1 1 auto`**（同主站 `.dt-nav-links`）先會將 tools＋CTA 推去最右，否則 tools 停喺中間偏左；主題切換即時 toggle `html.dk`＋寫 `hkmbti_theme`（同主站共用 key，互通）；tier 狀態讀 `hkmbti_tier`（免費版／完整版＋is-full）；**升級流程（openUpgrade）淨係主站有**——衛星頁撳「免費版」= 返主站（`location.href="./"`）；record 嘅 `.sep`＋清除掣喺 768–1279 收埋（位唔夠會屈折換行，實測 1024 品牌跌落第二行）；平板 768–1023 改兩行式（品牌＋掣／選單，同主站平板概念一致）。JS 函數：`toggleDtTheme/syncDtThemeBtn/goDtTier/syncDtTier`。
 **2026-11-22 深夜二次修正（褪位）**：Roy 轉頁時見頂 bar 褪位——逐項對齊主站 #dtNav 幾何數值（≥1024）：hero `gap:16`（原 20，第一條 link 差 4px）、CTA `padding:10px 18px`＋`align-self:center`（原 16，窄 4px；stretch 後要補 center 否則拉滿 64px）、連結 `align-self:stretch` 直向拉滿＋金下線 `bottom:0`（原 -2px，喺 bar 中間高度；主站係 bottom:0）。**必須包喺 ≥1024 media**（平板 hero 高度唔同，stretch 會出事）；record 嘅 `.sep` 有固定 height 要補 `align-self:center`。驗證方法：Playwright 逐元素量 `getBoundingClientRect`，四頁數值一致（1920：gap 16、CTA x1588 w92 y12 h41）。
 做法：HTML 喺 `.hero-row` 最前加 `<a class="dt-brand">`、`.hero-popover` 後加 `<a class="dt-cta-link">`；CSS 寫喺各頁**最尾無 id `<style>`**（唔係 `desktop-layer`，閘唔掃）：`.dt-brand,.dt-cta-link{display:none}` 預設隱藏；html.dt 下品牌左置、`.back-nav` 收埋、popover 用 `order:1-6` 排序、主頁連結 `display:none`；768–1023 收埋品牌字同 CTA、≥1280 連結升 15px。record.html 獨有 `.sep`（order:7）同「全部清除紀錄」button（order:8），`.sep` 淺底嘅 dk 覆蓋喺 record.html 嘅 `dark-layer`。三頁 `--dt-w` 分級已拉齊主站（1120／1200／1360／1440）。手機 hero 原樣（深藍漸變）。
 
@@ -127,6 +128,7 @@ Live：<https://fung2222.github.io/hk-mbti/>
 | `5fa0619`（2026-11-22）| 百科頁桌面 16 型格放大：#hubTypeGrid 改 2×2 組合佈局（唔再淨佔左半）；新增 `tools/audit_inner.py` | 出貨 |
 | `6354905`（2026-11-22）| 衛星頁頂 bar 對齊主站：選單偏左、頁面標題收埋（唔再同金線重複）、stats/record 內容拉闊 | 出貨 |
 | 2026-11-22 深夜 | 衛星頁頂 bar 幾何數值對齊主站（gap 16／CTA 10px 18px／連結 stretch／金線 bottom:0），轉頁零褪位 | 出貨 |
+| `b4003a6`（2026-11-22）| 衛星頁頂 bar 加「免費版＋主題掣」（同主站互通）；record 窄闊度收清除掣；平板兩行式 | 出貨 |
 
 ### 2026-09-28 審計發現（舊 ① 版）
 - 主頁永遠收唔埋（`.hidden` 被蓋）→ 撳「開始測試」／揀版本之後，畫面頂部冇變，內容喺主頁下面
