@@ -160,5 +160,5 @@ commit `1a811f0`（已 push + live 已同步）：
 **未做**（2026-10-13 更新：開放事項以 `docs/LAUNCH-FINAL-2026-10-13.md` 最頂總清單為準）
 - ~~其餘 15 型嘅 9 章內容~~ ✅ 已完成（16 型 × 9 章 = 144 章）
 - ~~D 模組（個人化報告）~~ ✅ 已完成（2026-10-04，入口＝結果頁）
-- **真 Play Billing**（product `hkmbti_full_analysis_unlocked`）⏳ 上架審核通過之後做，要新 versionCode
+- ~~真 Play Billing~~ ✅ **2026-11-22 真機驗收完成**（product `hkmbti_full_analysis_unlocked` HK$18）：購買 → 解鎖 → 剷 app 重裝再開仍然完整版 → 退款後自動降返免費（修正 commit `5b335b5`）。日常要維持完整版可用測試員帳號再買或促銷代碼
 - 版本號未動（仍 2.0.0；未叫唔好 bump）
