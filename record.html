@@ -347,6 +347,20 @@ html.dk.dt .dt-cta-link{color:#12161C}
 @media (min-width:1024px) and (max-width:1279px){
   html.dt .hero-popover{gap:14px}
 }
+/* 2026-11-22 深夜 Roy：轉頁時頂 bar 褪位 —— 逐項對齊主站 #dtNav 嘅幾何數值：
+   hero gap 16（原 20，否則第一條 link 差 4px）、CTA padding 10px 18px（原 16，否則 CTA 窄 4px）、
+   連結直向拉滿 64px＋金下線 bottom:0 貼 bar 底（原本 -2px 喺 bar 中間高度，主站 ::after 係 bottom:0）。
+   .sep 有固定 height:18px，stretch 會變 flex-start → 要補 align-self:center。
+   注意：① 一定要包喺 ≥1024 media（平板 hero 高度唔同，stretch 會出事）；
+   ② selector 以 html.dt 開頭（閘規矩）。 */
+@media (min-width:1024px){
+  html.dt .hero{gap:16px;align-items:stretch}
+  html.dt .hero-popover{align-items:stretch}
+  html.dt .hero-popover a,html.dt .hero-popover button{display:flex;align-items:center;align-self:stretch}
+  html.dt .hero-popover .sep{align-self:center}
+  html.dt .hero-popover a[aria-current="page"]::after{bottom:0}
+  html.dt .dt-cta-link{display:inline-flex;align-items:center;align-self:center;padding:10px 18px}
+}
 @media (min-width:1280px){
   html.dt .hero-popover a,html.dt .hero-popover button{font-size:15px}
 }
