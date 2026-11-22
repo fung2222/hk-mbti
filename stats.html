@@ -258,10 +258,33 @@ html.dt .hero-popover a[aria-current="page"]::after{content:"";position:absolute
 html.dt .dt-cta-link{display:inline-block;background:var(--gold);color:#1c1b19;font-size:14px;font-weight:900;border-radius:12px;padding:10px 16px;text-decoration:none;white-space:nowrap;flex-shrink:0;margin-left:auto}
 html.dt .dt-cta-link:hover{background:#c89a4d}
 html.dk.dt .dt-cta-link{color:#12161C}
+/* 2026-11-22 晚 Roy：頂 bar 加埋主站嘅「免費版＋主題掣」——轉頁零差異。
+   只喺 html.dt 顯示（手機衛星頁原樣）；配色同主站 .tier-btn/.theme-btn 逐項一致。
+   popover 要 flex:1 1 auto 先會同主站 .dt-nav-links 一樣，將 tools＋CTA 推去最右
+   （主站 links 容器都係 flex:1 1 auto；淨係自然闊度會令 tools 停喺中間偏左）。 */
+.dt-tools{display:none}
+html.dt .dt-tools{display:flex;align-items:center;gap:8px;flex-shrink:0;align-self:center}
+html.dt .dt-tier-btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border-radius:999px;background:rgba(30,42,59,.06);border:1px solid rgba(30,42,59,.12);color:#1c1b19;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;-webkit-appearance:none;appearance:none;letter-spacing:.02em}
+html.dt .dt-tier-btn .tier-dot{width:6px;height:6px;border-radius:50%;background:#B9B2A6;flex-shrink:0}
+html.dt .dt-tier-btn.is-full{background:rgba(212,169,95,.16);border-color:rgba(212,169,95,.5);color:#8B6F3D}
+html.dt .dt-tier-btn.is-full .tier-dot{background:var(--gold)}
+html.dt .dt-theme-btn{width:36px;height:36px;border-radius:50%;background:rgba(30,42,59,.06);border:1px solid rgba(30,42,59,.12);color:#1c1b19;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit}
+html.dt .dt-theme-btn svg{width:18px;height:18px;display:block;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+html.dk .dt-tier-btn{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);color:#C2BAAD}
+html.dk .dt-tier-btn .tier-dot{background:#6E675C}
+html.dk .dt-tier-btn.is-full{background:rgba(217,178,106,.18);border-color:rgba(217,178,106,.5);color:#D8C69E}
+html.dk .dt-tier-btn.is-full .tier-dot{background:#D9B26A}
+html.dk .dt-theme-btn{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.16);color:#C2BAAD}
+html.dt .hero-popover{flex:1 1 auto;justify-content:flex-start}
 @media (min-width:768px) and (max-width:1023px){
   html.dt .dt-brand span{display:none}
   html.dt .dt-cta-link{display:none}
   html.dt .hero-popover{gap:14px}
+  /* 2026-11-22 晚：跟主站平板兩行式（品牌＋掣第一行、選單第二行）——
+     一行擺唔落（實測 768 record 品牌跌落第二行）；popover 落第二行全闊。 */
+  html.dt .hero{flex-wrap:wrap;row-gap:0}
+  html.dt .hero-popover{order:5;flex:1 0 100%;overflow-x:auto;scrollbar-width:none}
+  html.dt .dt-tools{margin-left:auto}
 }
 @media (min-width:1024px) and (max-width:1279px){
   html.dt .hero-popover{gap:14px}
@@ -301,6 +324,10 @@ html.dk.dt .dt-cta-link{color:#12161C}
       <a href="./#method">計分方法同限制</a>
  <a href="./#privacy">私隱聲明</a>
  </div>
+ <span class="dt-tools">
+ <button type="button" class="dt-tier-btn" onclick="goDtTier()" aria-label="免費版"><span class="tier-dot"></span><span class="dt-tier-label">免費版</span></button>
+ <button type="button" class="dt-theme-btn" onclick="toggleDtTheme()" aria-label="切換日頭 / 黑夜模式"></button>
+ </span>
  <a href="./" class="dt-cta-link">立即測試</a>
 </div>
 <div class="wrap">
@@ -427,6 +454,40 @@ document.addEventListener("contextmenu", function(e){
     });
   }catch(e){}
 })();
+</script>
+<script>
+/* 2026-11-22 晚：頂 bar「免費版＋主題掣」，同主站 #dtNav 同款邏輯（localStorage 互通：
+   hkmbti_theme / hkmbti_tier，同主站共用，衛星頁切完主站都會跟）。 */
+var DT_THEME_SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.4 5.4l1.7 1.7M16.9 16.9l1.7 1.7M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7"/></svg>';
+var DT_THEME_MOON = '<svg viewBox="0 0 24 24"><path d="M20.6 14.7A8.7 8.7 0 0 1 9.3 3.4a8.7 8.7 0 1 0 11.3 11.3z"/></svg>';
+function dtThemeIsDark(){ return document.documentElement.classList.contains("dk"); }
+function syncDtThemeBtn(){
+  var b = document.querySelector(".dt-theme-btn"); if(!b) return;
+  var m = document.querySelector('meta[name="theme-color"]');
+  if(m) m.setAttribute("content", dtThemeIsDark() ? "#12161C" : "#1E2A3B");
+  var dark = dtThemeIsDark();
+  b.innerHTML = dark ? DT_THEME_SUN : DT_THEME_MOON;
+  b.setAttribute("aria-label", dark ? "轉日頭模式" : "轉黑夜模式");
+}
+function toggleDtTheme(){
+  var d = !dtThemeIsDark();
+  document.documentElement.classList.toggle("dk", d);
+  try{ localStorage.setItem("hkmbti_theme", d ? "dark" : "light"); }catch(e){}
+  syncDtThemeBtn();
+}
+/* 升級流程（openUpgrade）淨係主站有：衛星頁撳「免費版」→ 返主站繼續 */
+function goDtTier(){ location.href = "./"; }
+function syncDtTier(){
+  try{
+    var full = localStorage.getItem("hkmbti_tier") === "full";
+    var b = document.querySelector(".dt-tier-btn"), l = document.querySelector(".dt-tier-label");
+    if(!b || !l) return;
+    l.textContent = full ? "完整版" : "免費版";
+    b.classList.toggle("is-full", full);
+    b.setAttribute("aria-label", full ? "完整版" : "免費版 · 升級請返主站");
+  }catch(e){}
+}
+syncDtThemeBtn(); syncDtTier();
 </script>
 </body>
 </html>
