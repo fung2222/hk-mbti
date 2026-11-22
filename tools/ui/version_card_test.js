@@ -108,7 +108,7 @@ setTimeout(()=>{
   chk('全程冇 JS 錯誤', jerr.length===0, JSON.stringify(jerr.slice(0,2)));
   console.log('');
 // 桌面：版本卡係 grid，唔准 stretch（展開一格會拉高整行 → 其他卡扮到一齊展開）
-chk('桌面 #versionList grid 有 align-items:start', /html\.dt #versionList\{[^}]*align-items:start/.test(src));
+chk('桌面 #versionList grid 冇 align-items:start（2026-11-22 起詳情長開、冇咗展開推高問題 → stretch 等高）', !/html\.dt #versionList\{[^}]*align-items:start/.test(src));
 chk('桌面 #versionList 仍然係 grid（欄數分級 2／4）', /html\.dt #versionList\{display:grid/.test(src) && /html\.dt #versionList\{grid-template-columns:repeat\(4/.test(src));
   console.log('===== '+(ok===total?'全部通過':'有失敗')+'（'+ok+'/'+total+'） =====');
   process.exit(ok===total?0:1);

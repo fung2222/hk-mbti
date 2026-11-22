@@ -65,8 +65,9 @@ check("桌面：滑輪自動轉（tick 一律用 AUTO_V ＋ 一律 wrapLoop）",
 check("桌面：滑輪卡係 9/16 直角（唔要正方形／圓角）",
   !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*aspect-ratio:1\/1/.test(layer) &&
   !/html\.dt \.home-type-reel \.hub-type-card\{[^}]*border-radius/.test(layer));
-check("桌面：版本卡 grid 唔 stretch（展開一格唔會拉高其他）",
-  /html\.dt #versionList\{[^}]*align-items:start/.test(layer));
+check("桌面：版本卡 grid stretch 等高（2026-11-22 起詳情長開，冇咗展開推高問題；render test 要 4 張等高）",
+  /html\.dt #versionList\{[^}]*display:grid/.test(layer) &&
+  !/html\.dt #versionList\{[^}]*align-items:start/.test(layer));
 check("桌面／平板：16 型係橫向可滑滑輪，唔係 grid",
   /html\.dt \.home-type-reel\{[^}]*display:flex[^}]*overflow-x:auto/.test(layer) &&
   !/html\.dt \.home-type-reel\{[^}]*display:grid/.test(layer));

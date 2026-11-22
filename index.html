@@ -1051,7 +1051,15 @@ html.dk .ver-btn.ver-lit .ver-more { color:rgba(255,255,255,.75); border-top-col
   html.dt #dtTypeRows span{font-size:12px;font-weight:700;letter-spacing:.12em;color:#A08A5C}
 
   html.dt #homeBelow{width:var(--dt-w);margin:8px auto 0;padding:8px 0 40px;background:none;border-radius:0;box-shadow:none;scroll-margin-top:88px}
-  html.dt #versionList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+  /* 2026-11-22 Roy：桌面版本卡詳情長開 —— 之前撳卡先彈出 .ver-more，一開一闔會將下面內容推上推落。
+     桌面位夠，直接長期顯示；著燈（accent 邊框）邏輯唔變。手機版維持撳開先見（空間寶貴）。 */
+  html.dt .ver-btn .ver-more{display:block;margin-top:8px;padding-top:8px;border-top:1px solid rgba(26,26,26,.10);font-size:13px;line-height:1.7;color:rgba(26,26,26,.72)}
+  /* 黑夜版：閘規矩 @media 入面 selector 必須 html.dt 開頭 → 用 html.dt.dk（同 html.dk.dt 一樣意思，特異度仲高過日光版） */
+  html.dt.dk .ver-btn .ver-more{color:rgba(255,255,255,.75);border-top-color:rgba(255,255,255,.12)}
+  html.dt #versionList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  /* 2026-11-22：詳情長開之後冇咗「展開推高其他卡」問題 → 回復 stretch 等高；
+     內容垂直置中，等「我的紀錄」嗰張被拉高都唔會上重下空 */
+  html.dt .ver-btn{display:flex;flex-direction:column;justify-content:center}
   html.dt #versionList > *{margin:0;width:auto}
   html.dt .ver-btn{min-height:104px;padding:20px 20px;border-radius:16px}
   html.dt #resumeBanner{width:var(--dt-w);margin:0 auto 28px}
@@ -1079,8 +1087,10 @@ html.dk .ver-btn.ver-lit .ver-more { color:rgba(255,255,255,.75); border-top-col
   html.dt .scene-sub{font-size:15px;line-height:1.7;color:#6b6560}
 
   html.dt #home > div.mb-4{width:var(--dt-w);margin:0 auto;padding:48px 0 8px}
-  /* 2026-10-11 Roy：香港分佈 → 探索更多 桌面空間 48 → 56px（只針對呢個 wrapper，唔影響版本卡） */
-  html.dt #home #hk-stats + div.mb-4{padding-top:56px}
+  /* 2026-10-11 Roy：香港分佈 → 探索更多 桌面空間 48 → 56px（只針對呢個 wrapper，唔影響版本卡）
+     2026-11-22 Roy：56 仍然太逼（版本卡→場景帶有 64、場景帶→分佈有 125）→ 上 80px；
+     順手補底距 8 → 48px（之前探索更多卡同頁尾淨係爭 8px，幾乎黐埋） */
+  html.dt #home #hk-stats + div.mb-4{padding-top:80px;padding-bottom:48px}
   html.dt .home-acc{display:grid;gap:16px;background:none;border-radius:0;box-shadow:none;overflow:visible}
   html.dt .home-acc-label{grid-column:1/-1}
   html.dt .home-acc-item{display:flex;flex-direction:column;border:0;border-radius:16px;background:#fff;padding:22px 20px 20px}

@@ -209,8 +209,8 @@ async def run():
                   and _hk.get("sample") == "" and _hk.get("baseN") == "143,021"
                   and "唔係香港調查或全港人口估算" in _hk.get("refNote", "") and not _hk.get("hkEstimate")
                   and _hk.get("ctaBelow") and _hk.get("ctaPlain"), str(_hk))
-            _wantGap = 40 if _W <= 430 else 56
-            check("%d×%d: 香港分佈 → 探索更多 空間 = %dpx（Roy 2026-10-11：原本太逼）" % (_W, _H, _wantGap),
+            _wantGap = 40 if _W <= 430 else 80
+            check("%d×%d: 香港分佈 → 探索更多 空間 = %dpx（Roy 2026-10-11：原本太逼；2026-11-22：56 仲係太逼 → 80）" % (_W, _H, _wantGap),
                   abs(_hk.get("gapToAcc", -999) - _wantGap) <= 1, str(_hk.get("gapToAcc")))
             await _ch.close()
         # 2026-10-07：桌面金掣喺黑夜模式原本用 var(--ink)（淺色）→ 對比 1.62 睇唔到。
