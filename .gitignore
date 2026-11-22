@@ -11,3 +11,6 @@ dev/
 # Python 快取（gate py_compile 會產生）
 __pycache__/
 *.pyc
+
+# 設計審計截圖輸出（tools/audit_shots.py）
+shots/
