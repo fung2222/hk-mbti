@@ -3,6 +3,8 @@
 > 由 Roy 2026-09-26 要求「完整 backup + 整理所有對話及資料」生成。
 > 呢份係 SSOT 索引，任何檔案／狀態／歷史都可以由呢度追到。
 
+> **⚡ 接手請先睇（2026-11-22 更新）**：最新交接文件係 [`AGENTS.md`](../AGENTS.md)（30 秒規則）＋ [`DESKTOP-HANDOFF.md`](DESKTOP-HANDOFF.md)（桌面版權威 v3.1）；今個月改動見 [CHANGELOG-2026-11.md](CHANGELOG-2026-11.md)。本文 §1–§11 係 2026-09/10 舊環境（`/opt/data/...`）嘅紀錄，路徑同 commit hash 只供參考——repo 歷史曾經重整，現存 13 個 commit（`08899f6` → 而家 HEAD）。
+
 ---
 
 ## 1. 網站基本資料
@@ -11,7 +13,7 @@
 |---|---|
 | Live | https://fung2222.github.io/hk-mbti |
 | Repo | https://github.com/fung2222/hk-mbti · branch `main` |
-| 工作目錄 | `/opt/data/repos/hk-mbti/`（唯一，禁止改 `/opt/data/pwa-source/`） |
+| 工作目錄 | `/opt/data/repos/hk-mbti/`（唯一，禁止改 `/opt/data/pwa-source/`）⚠️ 舊環境路徑；而家工作樹 = 本 repo |
 | 包名（Play） | `com.fung2222.hkmbti` |
 | 商店標題 | 港式 MBTI（唔好改成「16型人格測試」） |
 | 聯絡／登入電郵 | fung22222@gmail.com（五個 2） |
@@ -32,6 +34,8 @@
 | v1.9.0 | d599b20 | 2026-09-26 題庫準確度 freeze（112 題 2:2） |
 | v2.0.0 | 31b7166 | 2026-09-26 正式推 v2.0.0（四 surface 一致） |
 | （未 tag） | 346bab7 | 2026-09-26 題庫 A/B/C 徹底修復（109 題） |
+| （未 tag） | 08899f6 | 2026-11-11 版本卡小修（副標深色＋標籤橫向） |
+| （未 tag） | af4bd02 | 2026-11-22 桌面版大修完（hero／版本卡長開／衛星頁頂 bar／百科 2×2；詳見 CHANGELOG-2026-11） |
 
 完整 commit 歷史：`git log --oneline --all --decorate`
 

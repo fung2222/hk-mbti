@@ -8,7 +8,7 @@
   ≥1024：sticky 導覽（6 入口＋主題／等級）→ hero（左文案／右 **16 型橫向滑輪做主角**，卡片 **9/16 直角**、168–220px 分級放大、自動轉、32 張無縫、箭咀 hover 先現身）→ 版本卡（**桌面詳情長開**、grid stretch 等高）→ 全闊情景帶 → 香港分佈摘要 → 探索更多 5 欄 → 頁尾。
   768–1023：**平板另一套**（內容 920、內頁寬度分級、唔係「放大的手機」）。
   寬度分級 `--dt-w`：**920 / 1120 / 1200 / 1360 / 1440px**（≥1680 斷點）。
-- **衛星頁**（`record.html`／`stats.html`／`privacy.html`）：2026-11-22 起桌面頂 bar **同主站同一款**（品牌左置、選單同序、當前頁金下線用 `aria-current="page"`、右端金 CTA「立即測試」）；三頁共享同一寫法嘅 CSS 塊（各頁最尾 `<style>`，冇 id）；寬度分級已拉齊主站。手機 hero 原樣（深藍漸變）。
+- **衛星頁**（`record.html`／`stats.html`／`privacy.html`）：2026-11-22 起桌面頂 bar **同主站 #dtNav 逐像素一致**（品牌左置、選單貼品牌偏左、當前頁金下線貼 bar 底、右端「免費版＋主題掣＋金 CTA」）；三頁共享同一寫法嘅 CSS 塊（各頁最尾 `<style>`，冇 id）；主題／tier 同主站共用 localStorage（`hkmbti_theme`／`hkmbti_tier`）互通；寬度分級已拉齊主站。手機 hero 原樣（深藍漸變）。做法同坑全部喺 DESKTOP-HANDOFF §4「衛星頁」。
 - ⚠️ 版本卡：桌面 `.ver-more` **長期顯示**（2026-11-22 起；之前撳開先見會推鬱下面內容）。`#versionList` 用 **stretch 等高**——舊規矩「一定要 align-items:start」已廢（嗰陣係為咗展開唔拉高其他卡；長開之後冇呢個問題）。
 - **唔可以碰**：手機版任何排版 ✗。所有桌面規則必須 `@media (min-width:…)` **＋** `html.dt`；
   唯一例外：`#dtNav,#dtHeroCta,#dtTypeRows,#dtFoot{display:none}`。

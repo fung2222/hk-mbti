@@ -14,14 +14,14 @@
 | `data.js` `social.js` `voice-data.js` | 題庫＋型格資料／場景內容／預錄語音 |
 | `sw.js` `manifest.json` `icon-*.png` | PWA |
 | `tools/` | 測試（jsdom）＋檢查腳本 |
-| `demo/` | 版式示範頁（`noindex`，唔影響 live）|
 | `docs/` | 報告、上架資料、**交接文件** |
 | `store-listing/` | Google Play 上架文案／素材 |
 
-## 給 AI 接手：睇呢兩份
-1. [`AGENTS.md`](AGENTS.md) — 30 秒版規則
-2. [`docs/AI-HANDOFF-v2.1.0.md`](docs/AI-HANDOFF-v2.1.0.md) — **最新學生／在職情境分流、驗證、部署同後續工作**（2026-11-10；內含 v2.0.2／v2.0.1 文件連結）
-3. [`docs/DESKTOP-HANDOFF.md`](docs/DESKTOP-HANDOFF.md) — 桌面版主頁原有規則
+## 給 AI 接手：睇呢兩份（權威）
+1. [`AGENTS.md`](AGENTS.md) — 30 秒版規則（鐵律、出貨閘、禁字）
+2. [`docs/DESKTOP-HANDOFF.md`](docs/DESKTOP-HANDOFF.md) — **現況權威**（2026-11-22 v3.1）：桌面層／平板／衛星頁全部做法同坑
+
+歷史文件（只作背景，唔係現況）：`docs/AI-HANDOFF-v2.1.0.md`（2026-11-10 學生／在職分流；內含 v2.0.2／v2.0.1 連結）、`docs/LAUNCH-FINAL-2026-10-13.md`（上架 ★ 未完成總清單）、`docs/UI-TODO.md`（⏳ 已過時）。
 
 ## 本機測試
 ```bash
